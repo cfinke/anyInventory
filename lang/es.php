@@ -1,9 +1,5 @@
 <?php
 
-define('SUBMIT_REPORT','You can assist in the development of anyInventory by <a href="https://sourceforge.net/tracker/?func=add&group_id=110239&atid=655777">submitting this error as a bug report</a>.');
-
-define('LANGUAGE','Lengua');
-
 // Dates (Fechas)
 define('MONTH_1','Enero');
 define('MONTH_2','Febrero');
@@ -41,6 +37,7 @@ define('DOWNLOAD_LINK','descagar');
 define('DOWNLOAD_AS_XML','Descargar el inventario en un archivo XML');
 define('SELECT_NONE','Ninguna selección');
 define('SUBMIT_REPORT','Tu puedes colaborar con el desarrollo de anyInventory al <a href="https://sourceforge.net/tracker/?func­d&amp;group_id.0239&amp;atide5777">enviar este error como un reporte de fallo</a>.');
+define('LANGUAGE','Idioma');
 
 // Buscar(Search)
 define('SEARCH','Buscar');

@@ -175,47 +175,6 @@ class alert {
 		
 		return $output;
 	}
-	
-	/*
-	
-	function trip($item_id = null){
-		$query = "UPDATE `anyInventory_alerts` SET `tripped`='1' WHERE `id`='".$this->id."'";
-		mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
-		
-		$this->tripped = true;
-		
-		if ($this->email != ''){
-			$headers .= "From: anyInventory Alert System <chris@efinke.com>\n";
-			$headers .= "Return-Path: anyInventory Alert System <chris@efinke.com>\n";
-			$headers .= "Reply-To: anyInventory Alert System <chris@efinke.com>\n";
-			
-			$item = new item($item_id);
-			
-			$to = $this->email;
-			$subject = 'anyInventory Alert: '.$this->title;
-			
-			$field = new field($this->field_id);
-			
-			$message .= "The following alert has been activated in anyInventory.\n\n";
-			
-			$message .= $this->title."\n";
-			$message .= ACTIVE_WHEN." ".$field->name." ".$this->condition;
-			$message .= (trim($this->value) == '') ? " ''" : ' '.$this->value."\n\n";
-			
-			$message .= EFFECTIVE_DATE.": ".date("Y m d",$this->unix_time)."\n";
-			
-			if ($this->expires){
-				$message .= EXPIRATION_DATE.": ".date("Y m d",$this->unix_expiration_date)."\n";
-			}
-			
-			$message .= "\n".ALERT_ACTIVATED_BY.": ";
-			$message .= $item->name;
-			
-			mail($to, $subject, $message, $headers);
-		}
-	}
-	
-	*/
 }
 
 ?>

@@ -97,8 +97,8 @@ if ($_POST["action"] == "install"){
 		
 		// Begin writing the database information.
 		$query = "DROP TABLE `anyInventory_categories` ,
-			`anyInventory_fields` ,
-			`anyInventory_items` ,
+			`anyInventory_fields`,
+			`anyInventory_items`,
 			`anyInventory_files`,
 			`anyInventory_alerts`,
 			`anyInventory_config`,

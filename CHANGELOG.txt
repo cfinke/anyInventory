@@ -6,32 +6,19 @@ Added alert expiration
 
 2004/07/14
 Adding XML export
-Multi-db support
 Removed extra "t" on the end of the "Edit" link.
 Added code to remove the extra ", " at the end of the item teaser.
 Added code so that item teaser now truncates with an ellipsis (...) instead of just getting cut off.
-Converting the mysql API calls to PEAR db API calls
 
 2004/07/15
-Made $db global where it's needed (not sure if this is necessary) and also fixed the  definitions (for mysql, at least)
 Finished first round of changes due to item table change
-
-2004/07/16
-Working on finishing changeover to PEAR DB abstraction
 
 2004/07/17
 Added error checking for all DB queries, finished changes to INSERT queries
-Added error checking for all DB queries, finished changes to INSERT queries
 Removed extra session_start()
-
-2004/07/20
-Fixed minor bug in error handling -- when an invalid DSN was given the site would crash
 
 2004/07/22
 Added exits after header redirects
-
-2004/07/23
-Changed the backtick symbols to db->quoteIdentifier
 
 2004/07/25
 Added Spanish documentation

@@ -2,17 +2,9 @@
 
 // Trim all of the global variables
 
-if (is_array($_GET)){
-	foreach($_GET as $key => $value){
-		if (!is_array($_GET[$key])) $_GET[$key] = trim($value);
-	}
-}
+if (is_array($_GET)) foreach($_GET as $key => $value) if (!is_array($_GET[$key])) $_GET[$key] = trim($value);
 
-if (is_array($_POST)){
-	foreach($_POST as $key => $value){
-		if (!is_array($_POST[$key])) $_POST[$key] = trim($value);
-	}
-}
+if (is_array($_POST)) foreach($_POST as $key => $value) if (!is_array($_POST[$key])) $_POST[$key] = trim($value);
 
 include($DIR_PREFIX."functions.php");
 

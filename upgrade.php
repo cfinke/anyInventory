@@ -324,6 +324,46 @@ if ($_POST["action"] == "upgrade"){
 				
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `expire_time` TIMESTAMP NOT NULL AFTER `time`";
 				@mysql_query($query);
+				
+				$query = "CREATE TABLE `anyInventory_values` (
+					`item_id` int( 11 ) NOT NULL default '0',
+					`field_id` int( 11 ) NOT NULL default '0',
+					`value` text NOT NULL ,
+					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
+					)";
+				@mysql_query($query);
+				
+				$query = "SELECT * FROM `anyInventory_categories`";
+				$result = mysql_query($query);
+				
+				while ($row = mysql_fetch_array($result)){
+					$newquery = "SELECT * FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$row["id"]."\"%'";
+					$newresult = mysql_query($newquery) or die(mysql_error() . '<br />' . $newquery);
+					
+					$newestquery = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."' ORDER BY `id`";
+					$newestresult = mysql_query($newestquery) or die(mysql_error() . '<br />' . $newestquery);
+					
+					while ($newestrow = mysql_fetch_array($newestresult)){
+						while ($newrow = mysql_fetch_array($newresult)){
+							$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES (?, ?, ?)";
+							$query_data = array($newestrow["id"],$newrow["id"],$newestrow[$newrow["name"]]);
+							$pquery = $db->prepare($query);
+							$xresult = $db->execute($pquery, $query_data);
+						}
+						
+						@mysql_data_seek($newresult, 0);
+					}
+				}
+				
+				$query = "SHOW COLUMNS FROM `anyInventory_items`";
+				$result = mysql_query($query);
+				
+				while ($row = mysql_fetch_array($result)){
+					if (($row["Field"] != 'id') && ($row["Field"] != 'name') && ($row["Field"] != 'item_category')){
+						$newquery = "ALTER TABLE `anyInventory_items` DROP `".$row["Field"]."`";
+						mysql_query($newquery) or die(mysql_error() . '<br />' . $newquery);
+					}
+				}
 		}
 		
 		// Attempt to write the globals file.

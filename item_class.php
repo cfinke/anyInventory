@@ -3,53 +3,48 @@
 error_reporting(E_ALL ^ E_NOTICE);
 
 class item {
-	var $id;					// The id of the item, matches up with id field in anyInventory_items
-	
-	var $category;				// A category object of the category to which this item belongs.
-	
+	var $id;					// The id of the item, matches up with id field in anyInventory_items	
+	var $category;				// A category object of the category to which this item belongs.	
 	var $name;					// The name of this item.
-	var $fields = array();		// An associative array, keyed by the field name, consisting of the field values.
-	var $files = array();		// An array of file objects that belong to this item.
-	
+	var $fields = array();		// An associative array, keyed by the field name, consisting of the field values.	var $files = array();		// An array of file objects that belong to this item.	
 	function item($item_id){
-		// Set the item id.
-		$this->id = $item_id;
+		global $db;
+		
+		// Set the item id.		$this->id = $item_id;
 		
 		// Get the information about this item.
-		$query = "SELECT * FROM `anyInventory_items` WHERE `id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$query = "SELECT * FROM `anyInventory_items` WHERE `id` = '".$this->id."'";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 		$row = mysql_fetch_array($result);
 		
-		// Set the item name.
-		$this->name = $row["name"];
+		// Set the item name.		$this->name = $row["name"];
 		
-		// Create the category object.
-		$this->category = new category($row["item_category"]);
+		// Create the category object.		$this->category = new category($row["item_category"]);
 		
-		// Add each field and its value to the array.
-		if (is_array($this->category->field_ids)){
-			foreach($this->category->field_ids as $field_id){
-				$field = new field($field_id);
+		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 				
-				if ($field->input_type == 'file'){
-					$this->fields[$field->name] = array("is_file"=>true,"file_id"=>$row[$field->name]);
-				}
-				elseif($field->input_type == 'item'){
-					$this->fields[$field->name] = unserialize($row[$field->name]);
-				}
-				elseif($field->input_type == 'divider'){
-					$this->fields[$field->name] = array("is_divider"=>true);
-				}
-				elseif ($field->input_type != "checkbox"){
-					$this->fields[$field->name] = $row[$field->name];
-				}
-				else{
-					if (strstr($row[$field->name],",") !== false){
-						$this->fields[$field->name] = explode(",",$row[$field->name]);
-						if (is_array($this->fields[$field->name])){
-							foreach($this->fields[$field->name] as $key => $value){
-								$this->fields[$field->name][$key] = trim($value);
-							}
+		while($row = mysql_fetch_array($result)){
+			$field = new field($row["field_id"]);
+			
+			if ($field->input_type == 'file'){
+				$this->fields[$field->name] = array("is_file"=>true,"file_id"=>$row["value"]);
+			}
+			elseif($field->input_type == 'item'){
+				$this->fields[$field->name] = unserialize($row["value"]);
+			}
+			elseif($field->input_type == 'divider'){
+				$this->fields[$field->name] = array("is_divider"=>true);
+			}
+			elseif ($field->input_type != "checkbox"){
+				$this->fields[$field->name] = $row["value"];
+			}
+			else{
+				if (strstr($row["value"],",") !== false){
+					$this->fields[$field->name] = explode(",",$row["value"]);
+					if (is_array($this->fields[$field->name])){
+						foreach($this->fields[$field->name] as $key => $value){
+							$this->fields[$field->name][$key] = trim($value);
 						}
 					}
 				}
@@ -57,16 +52,15 @@ class item {
 		}
 		
 		// Get each of this item's files and add it to the array.
-		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		
+		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key_value` = '".$this->id."'";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+				
 		while ($row = mysql_fetch_array($result)){
 			$this->files[] = new file_object($row["id"]);
 		}
 	}
 	
 	// This function returns a "teaser" or short description and link for the item.
-	
 	function export_teaser(){
 		global $DIR_PREFIX;
 		
@@ -79,10 +73,16 @@ class item {
 					$output .= '<b>'.$key.':</b> '.$value.', ';
 				}
 			}
+			$output = rtrim($output, ", ");
 			$output .= '</span>';
 		}
 		
-		$output = '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'" style="text-decoration: none;">'.substr($output,0,135).'</a>';
+		// Limit the "teaser" to 135 chars; if it's larger, truncate it with "..."
+		if(strlen($output) > 135) {
+			$output = substr($output,0,132)."...";
+		}
+		
+		$output = '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'" style="text-decoration: none;">'.$output.'</a>';
 		
 		return $output;
 	}
@@ -90,6 +90,7 @@ class item {
 	// This function returns a full description of the item.
 	
 	function export_description(){
+		global $db;
 		global $DIR_PREFIX;
 		global $admin_user;
 		
@@ -111,19 +112,14 @@ class item {
 						<table cellspacing="0" cellpadding="3">';
 		
 		if ($this->category->auto_inc_field){
-			$query = "SELECT * FROM `anyInventory_config` WHERE `key`='AUTO_INC_FIELD_NAME'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
-			
-			if (mysql_num_rows($result) > 0){
-				$output .= '
-					<tr class="highlighted_field">
-						<td style="width: 5%;">
-							&nbsp;
-						</td>
-						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.mysql_result($result, 0, 'value').':</b></nobr></td>
-						<td style="width: 85%;"></b> '.$this->id.'</td>
-					</tr>';
-			}
+			$output .= '
+				<tr class="highlighted_field">
+					<td style="width: 5%;">
+						&nbsp;
+					</td>
+					<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.AUTO_INC_FIELD_NAME.':</b></nobr></td>
+					<td style="width: 85%;"></b> '.$this->id.'</td>
+				</tr>';
 		}
 		
 		// Output each field with its value.
@@ -135,29 +131,29 @@ class item {
 					if ($this->fields[$field->name]["file_id"] > 0){
 						$output .= '
 							<tr';
-								
+						
 						if ($field->highlight){
 							$output .= ' class="highlighted_field"';
 						}
-							
+						
 						$output .= '>
 								<td>&nbsp;</td>
 								<td style="white-space: nowrap; text-align: right;"><b>'.$field->name.':</b></td>
 								<td>';
-							
+						
 						$file = new file_object($this->fields[$field->name]["file_id"]);
-							
+						
 						if ($file->is_image()){
 							$output .= '<a href="'.$file->web_path.'"><img src="';
 							if ($file->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$file->id;
 							else $output .= $DIR_PREFIX."item_files/no_thumb.gif";
-								
+							
 							$output .= '" class="thumbnail" /></a>';
 						}
 						else{
 							$output .= $file->get_download_link();
 						}
-							
+						
 						$output .= '
 								</td>
 							</tr>';
@@ -169,7 +165,7 @@ class item {
 					if (is_array($this->fields[$field->name]) && (count($this->fields[$field->name]) > 0)){
 						$output .= '
 							<tr';
-								
+						
 						if ($field->highlight){
 							$output .= ' class="highlighted_field"';
 						}
@@ -203,7 +199,7 @@ class item {
 					}
 					
 					$output .= '><td>&nbsp;</td><td><b>'.$field->name.':</b></td><td> ';
-						
+					
 					foreach($this->fields[$field->name] as $val){
 						$output .= $val.", ";
 					}
@@ -222,7 +218,7 @@ class item {
 					
 					$output .= '>
 							<td style="width: 5%;">
-								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;">'.LABEL.'</a>
+								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$field->id.'" style="color: #000000;">'.LABEL.'</a>
 							</td>
 							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$field->name.'</b>:</nobr></td>
 							<td style="width: 85%;">'.$this->fields[$field->name].'</td>
@@ -232,19 +228,21 @@ class item {
 				}
 			}
 			
-			$query = "SELECT `name` FROM `anyInventory_fields` WHERE `input_type`='item'";
+			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type` = 'item'";
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 			
-			while ($row = mysql_fetch_array($result)){
-				$new_query = "SELECT `id` FROM `anyInventory_items` WHERE `".$row["name"]."` LIKE '%\"".$this->id."\"%'";
-				$new_result = mysql_query($new_query) or die(mysql_error() . '<br /><br />' . $new_query);
-				
-				while ($newrow = mysql_fetch_array($new_result)){
-					$backlinks[] = $newrow["id"];
+			while ($row = $result->fetchRow()){
+				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%' GROUP BY `item_id`";
+				$result2 = mysql_query($query2) or die(mysql_error() . '<br /><br />' . $query2);				
+
+				while ($row2 = mysql_fetch_array($result2)){
+					$backlinks[] = $row2["item_id"];
 				}
 			}
 			
 			if (is_array($backlinks)){
+				$backlinks = array_unique($backlinks);
+				
 				if (!$last_divider){
 					$output .= '<tr><td colspan="3"><hr /></td></tr>';
 					$last_divider = true;

@@ -1,13 +1,14 @@
-2004/06/11
-Removed the scrollbars from the DIV
-Fixed missing offsite_link column
-Reorganized search page
-
-2004/06/15
-Added check to make sure all necessary files are readable.
-Moved alert box functionality to alert class.
-Error-checked all foreaches
-Changed category class to only remember the ids of its children rather than children objects.  Also evaluated all 'SELECT *' statements
-Added error handling file
-Added some introductory text
-Fixed bug where choosing Cancel would delete a field.
+2004/06/16
+Fixed bug in README upgrade section
+Added label documentation
+Added error for labels to error_handler
+Removed Top Level from most category lists
+Fixed get_item_options function
+Removed $nonempty variables
+Added 'labels' to menu
+Added ability to create a label by clicking on the field name in an item description.
+Fixed label offset
+Added check to make sure necessary functions are installed to make labels
+When the last item in an alert is deleted, the alert is now deleted
+Added category separator in the items admin
+Added barcode font

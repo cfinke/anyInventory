@@ -37,7 +37,7 @@ if ($_REQUEST["id"]){
 					$tripped = true;
 				}
 				
-				$output .= alert_box($alert->title);
+				$output .= $alert->export_box();
 			}
 		}
 	}
@@ -105,7 +105,7 @@ else{
 						$tripped = true;
 					}
 					
-					$output .= alert_box($row["title"],$item_id);
+					$output .= $alert->export_box($item_id);
 				}
 			}
 		}

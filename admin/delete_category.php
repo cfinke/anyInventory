@@ -60,7 +60,7 @@ else{
 	
 	if ($category->num_items() > 0){
 		$output .= '		<tr>
-								<td class="form_label"><input type="radio" name="item_action" value="delete" /></td>
+								<td class="form_label"><input type="radio" name="item_action" value="delete" checked="checked" /></td>
 								<td>'.DELETE_ALL_ITEMS.'</td>
 							</tr>
 							<tr>
@@ -85,7 +85,7 @@ else{
 		
 		$output .= '
 			<tr>
-				<td class="form_label"><input type="radio" name="subcat_action" value="delete" /></td>
+				<td class="form_label"><input type="radio" name="subcat_action" value="delete" checked="checked" /></td>
 				<td>'.DELETE_ALL_SUBCATS.'</td>
 			</tr>
 			<tr>

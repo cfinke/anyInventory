@@ -51,10 +51,18 @@ class field {
 			$key = array_search($cat_id, $this->categories);
 			
 			// If the category id is in the array, remove it.
-			if ($key) unset($this->categories[$key]);
+			if ($key !== false) unset($this->categories[$key]);
 			
 			// Synchronize with the DB.
 			$this->refresh_categories($this->categories);
+			
+			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$cat_id."'";
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			while($row = mysql_fetch_array($result)){
+				$newquery = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$row["id"]."' AND `field_id`='".$this->id."'";
+				$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
+			}
 		}
 	}
 	

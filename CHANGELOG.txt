@@ -1,14 +1,21 @@
-2004/06/16
-Fixed bug in README upgrade section
-Added label documentation
-Added error for labels to error_handler
-Removed Top Level from most category lists
-Fixed get_item_options function
-Removed $nonempty variables
-Added 'labels' to menu
-Added ability to create a label by clicking on the field name in an item description.
-Fixed label offset
-Added check to make sure necessary functions are installed to make labels
-When the last item in an alert is deleted, the alert is now deleted
-Added category separator in the items admin
-Added barcode font
+2004/06/18
+Finished timed alerts
+Added timed alerts
+Added 'timed' variable to alert class
+Fixed get_item_options and get_category_options when the first item in the array is 0
+Changed behavior of get_item_options and get_category_options: they both return the lists with all of the options selected
+Added inHead and inBodyTag variables
+Changed 'values' and 'size' visibilty values to disabled value
+Added timed alerts documentation
+
+2004/06/21
+Changed some task priorities
+Fixed backwards stristr call
+
+2004/06/22
+Changed file uploading to be a specific field type
+Finished file input type task, moving on to testing
+Added file as an input type
+Added a buffer Generic File field
+Updated documentation for fields
+Removed features present in 1.6 from What's Next documentation

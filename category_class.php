@@ -254,6 +254,82 @@ class category {
 		
 		return $output;
 	}
+	
+	function move_subcats($parent_id = 0){
+		$query = "UPDATE `anyInventory_categories` SET `parent`='".$parent_id."' WHERE `parent`='".$this->id."'";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	}
+	
+	function move_items($cat_id = null){
+		if ($cat_id == null){
+			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			while ($row = mysql_fetch_array($result)){
+				$item = new item($row["id"]);
+				$item->delete_self();
+			}
+		}
+		else{
+			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+
+			while($row = mysql_fetch_array($result)){
+				$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%' AND `category_ids` NOT LIKE '%\"".$cat_id."\"%' GROUP BY `id`";
+				$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
+		
+				while ($newrow = mysql_fetch_array($newresult)){
+					$alert = new alert($newrow["id"]);
+					$alert->remove_item($row["id"]);
+				}
+			}
+	
+			$query = "UPDATE `anyInventory_items` SET `item_category`='".$cat_id."' WHERE `item_category`='".$this->id."'";
+			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		}
+	}
+	
+	function delete_self(){
+		global $admin_user;
+		
+		if (!$admin_user->can_admin($_POST["id"])){
+			header("Location: ../error_handler.php?eid=13");
+			exit;
+		}
+		else{
+			// Delete the category			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$this->id."'"; 
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			// Remove all of the fields from this category.
+			if (is_array($this->field_ids)){
+				foreach($this->field_ids as $field_id){
+					$field = new field($field_id);
+					$field->remove_category($this->id);
+				}
+			}
+			
+			$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `category_ids` LIKE '%\"".$this->id."\"%'";
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			while ($row = mysql_fetch_array($result)){
+				$alert = new alert($row["id"]);
+				$alert->remove_category($this->id);
+			}
+		}
+	}
+	
+	function delete_subcats(){
+		if ($this->num_children > 0){
+			foreach($this->children_ids as $child_id){
+				$child = new category($child_id);
+				$child->delete_subcats();
+			}
+		}
+		else{
+			$this->move_items();
+			$this->delete_self();
+		}
+	}
 }
 
 ?>

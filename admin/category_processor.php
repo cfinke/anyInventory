@@ -147,85 +147,23 @@ elseif($_POST["action"] == "do_edit"){
 elseif($_POST["action"] == "do_delete"){
 	// Make sure the user clicked "Delete" and not "Cancel"
 	if ($_POST["delete"] == _DELETE){
-		if (!$admin_user->can_admin($_POST["id"])){
-			header("Location: ../error_handler.php?eid=13");
-			exit;
-		}
-		else{
-			// Create an object from the category
-			$category = new category($_POST["id"]);
-			
-			// Delete the category
-			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_POST["id"]."'"; 
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-			
-			if ($_POST["item_action"] == "delete"){
-				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-				
-				while ($row = mysql_fetch_array($result)){
-					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-					$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
+		$category = new category($_POST["id"]);
 		
-					while ($newrow = mysql_fetch_array($newresult)){
-						$alert = new alert($newrow["id"]);
-			
-						$alert->remove_item($row["id"]);
-			
-						if (count($alert->item_ids) == 0){
-							$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-							mysql_query($newerquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newerquery);
-						}
-					}
-				}
-				
-				// Delete all of the items in the category
-				$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-			}
-			elseif($_POST["item_action"] == "move"){
-				$newcategory = new category($_POST["move_items_to"]);
-				
-				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-
-				while($row = mysql_fetch_array($result)){
-					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-					$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
-		
-					while ($newrow = mysql_fetch_array($newresult)){
-						$alert = new alert($newrow["id"]);
-						
-						if (!in_array($alert->field_id, $newcategory->field_ids)){
-							$alert->remove_item($row["id"]);
-			
-							if (count($alert->item_ids) == 0){
-								$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-								mysql_query($newerquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newerquery);
-							}
-						}
-					}
-				}
-				
-				// Move the items to a different category
-				
-				$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-			}
-			
-			if ($_POST["subcat_action"] == "delete"){
-				// Delete the subcategories
-				delete_subcategories($category);
-			}
-			elseif($_POST["subcat_action"] == "move"){
-				// Move the subcategories
-				$query = "UPDATE `anyInventory_categories` SET `parent`='".$_POST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-			}
-			
-			// Remove all of the fields from this category.
-			remove_from_fields($category->id);
+		if ($_POST["item_action"] == 'delete'){
+			$category->move_items();
 		}
+		elseif($_POST["item_action"] == "move"){
+			$category->move_items($_POST["move_items_to"]);
+		}
+			
+		if ($_POST["subcat_action"] == "delete"){
+			$category->delete_subcats();
+		}
+		elseif($_POST["subcat_action"] == "move"){
+			$category->move_subcats($_POST["move_subcats_to"]);
+		}
+		
+		$category->delete_self();
 	}
 }
 

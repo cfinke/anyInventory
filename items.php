@@ -28,7 +28,7 @@ if (mysql_num_rows($result) > 0){
 	}
 }
 else{
-	$table_set .= '<tr class="row_off"><td colspan="2">There are no fields to display.</td></tr>';
+	$table_set .= '<tr class="row_off"><td colspan="2">There are no items to display.</td></tr>';
 }
 
 $table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();

@@ -28,7 +28,7 @@ if (count($rows) > 0){
 	}
 }
 else{
-	$table_set .= '<tr class="row_off"><td>There are no categories to display.</td></tr>';
+	$table_set .= '<tr class="row_off"><td colspan="3">There are no categories to display.</td></tr>';
 }
 
 $output .= '

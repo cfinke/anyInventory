@@ -18,4 +18,4 @@ BEFORE NEXT RELEASE
 Files: If a file has a previewable format (ie. thumbnails for images) then show that on the item description page and item edit page)
 
 Instructions for use
-Install script
+

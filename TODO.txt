@@ -27,7 +27,8 @@ DONE - Add input type of "File" to replace generic file uploads and remote files
 BEFORE 1.7
 ===================
 DREW - Thumbnails of remote images
-CHRIS - Internal password protection
+DONE - Internal password protection
+CHRIS - Alerts across multiple categories
 
 BEFORE 1.8
 ===================
@@ -42,3 +43,4 @@ Label Sheets
 BUGS
 ========================================
 When a remote file's URL is too long, it stretches the page
+The category drop down returns with the last item selected instead of the first

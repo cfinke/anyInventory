@@ -40,8 +40,8 @@ $offset = ($boundaries[2] - (strlen($item->name) * $char_width)) / 2;
 imagestring($im, 1, $offset, 0, $item->name, $black);
 
 // Crop the image
-$new_image = imagecreate($boundaries[2], $boundaries[1]);
-imagecopyresized($new_image, $im, 0, 0, 0, 0, $boundaries[2], $boundaries[1], $boundaries[2], $boundaries[1]);
+$new_image = imagecreate($boundaries[2], $boundaries[1] + 10);
+imagecopyresized($new_image, $im, 0, 0, 0, 0, $boundaries[2], $boundaries[1] + 10, $boundaries[2], $boundaries[1] + 10);
 
 // Delete the old image.
 imagedestroy($im);

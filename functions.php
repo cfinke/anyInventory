@@ -33,6 +33,9 @@ function display($output){
 	// $title should be declared before calling display()
 	
 	global $title;
+	global $inHead;
+	global $inBodyTag;
+	
 	global $DIR_PREFIX;
 	
 	header("Content-Type: text/html; charset=ISO-8859-1");
@@ -75,7 +78,7 @@ function get_options_children($id, $pre = null, $selected = null){
 			$category = $row["name"];
 			
 			$list .= '<option value="'.$row["id"].'"';
-			if (($selected[0] == null) || (in_array($row["id"],$selected))) $list .= ' selected="selected"';
+			if (($selected[0] === null) || (in_array($row["id"],$selected))) $list .= ' selected="selected"';
 			$list .= '>'.$pre . $category.'</option>';
 			
 			$list .= get_options_children($row["id"], $pre, $selected);
@@ -93,7 +96,7 @@ function get_item_options($cat = 0, $selected = null){
 	
 	while ($row = mysql_fetch_array($result)){
 		$options .= '<option value="'.$row["id"].'"';
-		if (($selected[0] == null) || (in_array($row["id"],$selected))) $options .= ' selected="selected"';
+		if (($selected[0] === null) || (in_array($row["id"],$selected))) $options .= ' selected="selected"';
 		$options .= '>'.$row["name"].'</option>';
 	}
 	

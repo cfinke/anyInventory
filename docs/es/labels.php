@@ -12,14 +12,13 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData">
-				<p>anyInventory, a partir de la versi&oacute;n 1.5, te permite crear c&oacute;digos de barras para cualquier campo de cualquier art&iacute;culo.  Por ejemplo, digamos que compraste el DVD de la pel&iacute;cula "Animal House," y lo agregaste a tu inventario, guardando el UPC, ISBN, y el nombre.  Puedes producir una etiqueta del UPC de dos maneras:</p>
+				<p>anyInventory, a partir de la versi&oacute;n 1.5, te permite crear c&oacute;digos de barras para cualquier campo de cualquier art&iacute;culo.  Por ejemplo, digamos que compraste el DVD de la pel&iacute;cula "Shrek," y lo agregaste a tu inventario, guardando el UPC, ISBN, y el nombre.  Puedes producir una etiqueta del UPC de dos maneras:</p>
 				<ol>
-					<li>En la p&aacute;gina del art&iacute;culo "Animal House," a un lado del nombre de cada campo se encuentra un enlace a la etiqueta de ese campo.  Para generar la etiqueta del campo UPC, solo necesitar&iacute;as seleccionar el enlace "Etiqueta" junto al campo UPC.</li>
-					<li>Tambi&eacute;n puedes ir a la <a href="'.$DIR_PREFIX.'labels.php">p&aacute;gina de etiquetas</a> y seguir las instrucciones para generar la etiqueta del campo UPC del art&iacute;culo "Animal House."  Este m&eacute;todo tambi&eacute;n de permite generar m&uacute;ltiples etiquetas.</li>
+					<li>En la p&aacute;gina del art&iacute;culo "Shrek," a un lado del nombre de cada campo se encuentra un enlace a la etiqueta de ese campo.  Para generar la etiqueta del campo UPC, solo necesitar&iacute;as seleccionar el enlace "Etiqueta" junto al campo UPC.</li>
+					<li>Tambi&eacute;n puedes ir a la <a href="'.$DIR_PREFIX.'labels.php">p&aacute;gina de etiquetas</a> y seguir las instrucciones para generar la etiqueta del campo UPC del art&iacute;culo "Shrek."  Este m&eacute;todo tambi&eacute;n de permite generar m&uacute;ltiples etiquetas.</li>
 				</ol>
 				<p>Despu&eacute;s de esto, se te mostrar&aacute; una imagen, similar a esta:</p>
-				<p style="text-align: center;"><img src="'.$DIR_PREFIX.'images/sample_label.png" alt="Animal House, etiqueta del UPC" /></p>
-				<p>En una pr&oacute;xima versi&oacute;n de anyInventory ser&aacute; posible crear archivos PDF con la etiquetas, para poder imprimirlas en hojas de tamaño estandar especiales para etiquetas.</p>
+				<p style="text-align: center;"><img src="'.$DIR_PREFIX.'images/sample_label.png" alt="Shrek, etiqueta del UPC" /></p>
 				<p><i>Nota: Esta opci&oacute;n solamente funciona si las librer&iacute;as necesarias se encuentran instaladas.  <b>De acuerdo a una auto-prueba, estas funciones ';
 
 if (!function_exists('imagecreate') ||

@@ -18,7 +18,6 @@ $output .= '
 				<p><b>Soporte a archivos XML:</b> Esta funcionalidad permitir&aacute; descargar y enviar el inventario como un archivo XML, para hacer mas sencillos los respaldos y recuperaciones.</p>
 				<p><b>B&uacute;squeda avanzada mejorada:</b> La p&aacute;gina de b&uacute;squeda ser&aacute; mejorada, para permitir especificar condiciones tales como si los resultados puedan ser mayores que, iguales a, menores que, etc.</p>
 				<p><b>Mejor soporte a archivos remotos:</b> A partir de la versi&oacute; 1.7, es posible enviar im&aacute;genes solamente si la librer&iacute;a libcurl est&aacute; instalada.  Esto se espera sea implementado a partir de la versi&oacute;n 1.8.</p>
-				<p><b>Hojas de etiquetas:</b> Nos permitir&aacute;n crear etiquetas de tamaño estandar para los art&iacute;culos del inventario.</p>
 				<p>Si tienes alguna sugerencia, comentario o queja, contacta a <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
 			</td>
 		</tr>

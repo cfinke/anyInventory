@@ -126,7 +126,7 @@ elseif (!isset($_POST["i"])){
 							</tr>
 							<tr>
 								<td class="form_label">
-									'.LABEL_TEMPLATE.'
+									'.LABEL_TEMPLATE.':
 								</td>
 								<td class="form_input">
 									<table>

@@ -1,6 +1,12 @@
 <?php
 
 // German language file
+
+define('PAGE_DIMENSIONS','Ma&szlig;e');
+define('LABEL_DIMENSIONS','Ma&szlig;e des Aufklebers');
+define('ROWS','Reihen');
+define('COLUMNS','Spalten');
+define('LABEL_TEMPLATE','Schablone');
 define('LANGUAGE','Sprache');
 define('SWITCH_TO_LIST','&Auml;ndern Sie zur Liste');
 define('SWITCH_TO_TABLE','&Auml;ndern Sie zum Rasterfield');

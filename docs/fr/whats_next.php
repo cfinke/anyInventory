@@ -38,8 +38,6 @@ $output .= '
 
 				<p><b>Un soutien amélioré des fichiers:</b> Depuis la version 1.7, des images peuvent être ajoutées en tant que fichiers locaux si la bibliothèque libcurl est installée.  Cette fonctionalitée sans cette bibliothèque est prévu pour la version 1.8.</p>
 
-				<p><b>Feuilles d\'étiquettes:</b>Ce dispositif vous permettra de créer des feuilles de taille standard d\'étiquettes pour tous les articles de votre inventaire.</p>
-
 				<p>Si vous avez des suggestions, descommentaires, ou des plaintes, contactez <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
 
 			</td>

@@ -18,7 +18,6 @@ $output .= '
 				<p><b>XML File Support:</b> This feature will allow you to download and upload your inventory as an XML file, for easy backups and easy restores.</p>
 				<p><b>Improved advanced search:</b> The search page will be improved to allow for specify whether the entered search terms should be equal to, not equal to, less than, etc. the intended resulting items.</p>
 				<p><b>Wider support for remote files:</b> As of version 1.7, images can be added as local files remotely if the libcurl library is installed.  Support for systems without this library is expected as of version 1.8.</p>
-				<p><b>Label sheets:</b> This feature will allow you to create standard-size sheets of labels for any items in your inventory.</p>
 				<p>If you have any suggestions, comments, or complaints, contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
 			</td>
 		</tr>

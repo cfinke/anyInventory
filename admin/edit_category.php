@@ -27,11 +27,15 @@ $output = '
 				<td class="form_label">Fields:</td>
 				<td class="form_input">';
 
-if($category->num_children > 0){
-	$output .= '<input type="checkbox" name="apply_fields" id="apply_fields" value="yes" /> Apply this category\'s fields to all subcategories.<br /><br />';
+if($category->id != 0){
+	$output .= '<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" checked="checked" /> Inherit fields from this category\'s parent.<br />';
 }
 
-$output .= get_fields_checkbox_area($category->field_ids).'
+if($category->num_children > 0){
+	$output .= '<input type="checkbox" name="apply_fields" id="apply_fields" value="yes" checked="checked" /> Apply this category\'s fields to all subcategories.<br />';
+}
+
+$output .= '<br />'.get_fields_checkbox_area($category->field_ids).'
 				</td>
 			</tr>
 			<tr>

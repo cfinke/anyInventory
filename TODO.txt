@@ -24,9 +24,9 @@ DONE - Labels
 
 BEFORE 1.6
 ===================
-CHRIS - Timed Alerts
+DONE - Timed Alerts
 DREW - Thumbnails of remote images
-Better advanced search, like phpMyAdmin's Search page
+CHRIS - Better advanced search, like phpMyAdmin's Search page
 
 BEFORE 1.7
 ===================

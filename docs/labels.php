@@ -14,7 +14,7 @@ $output .= '
 			<td class="tableData">
 	<p>anyInventory, as of version 1.5, allows you to create a barcode label from any field of an item.  For example, let\'s say that you had bought the DVD of the movie "Animal House," and you added it to your inventory, tracking the UPC, the ISBN, and the name.  You could produce a label from the UPC in one of two ways:</p>
 	<ol>
-		<li>On the item page for "Animal House," each field name is a link to a barcode label of that field\'s value.  To get the UPC label, you would just click on UPC.</li>
+		<li>On the item page for "Animal House," next to each field name is a link to a barcode label of that field\'s value.  To get the UPC label, you would just click on the "Label" link next to the UPC field.</li>
 		<li>You could go to the <a href="../labels.php">labels page</a> and follow the directions to produce a label for the UPC field of "Animal House."  This method also allows you to make labels for multiple items.</li>
 	</ol>
 	<p>After you choose one of these two methods, you will be presented with a graphic that looks like this:</p>

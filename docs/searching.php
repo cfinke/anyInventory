@@ -12,9 +12,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData">
-	<p>You can search your inventory from two places: the search box at the top of each page and the <a href="../search.php">advanced search page</a>.</p>
-	<p>When you search from the search box at the top of any of the pages, anyInventory searches the "Name" field of each item for whatever term you enter.</p>
-	<p>For a more powerful search, you can search from the advanced search page.  This page allows you to specify conditions for each available field.  (The fields you leave blank will be ignored.)  As of version 1.1, you can limit your search to a category and its subcategories.</p>
+<p>The search page allows you to specify conditions for each available field.  (The fields you leave blank will be ignored.)  As of version 1.1, you can limit your search to a category and its subcategories.</p>
 		</td>
 	</tr>
 	</table><div style="float: left;"><a href="labels.php">&lt;&lt; Previous: Labels</a></div>

@@ -43,6 +43,15 @@ class category {
 		
 		$this->breadcrumbs = array_reverse($this->breadcrumbs);
 		
+		foreach($this->breadcrumbs as $crumb){
+			$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
+			$result = query($query);
+			
+			$this->breadcrumb_names .= result($result, 0, 'name') . ' > ';
+		}
+		
+		$this->breadcrumb_names = substr($this->breadcrumb_names, 0, strlen($this->breadcrumb_names) - 3);
+		
 		$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%,".$this->id.",' OR `categories` LIKE '%,".$this->id."'";
 		$result = query($query);
 		

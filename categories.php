@@ -17,9 +17,10 @@ if ($_REQUEST["action"] == "do_add"){
 	
 	header("Location: ".$_SERVER["PHP_SELF"]);
 }
-elseif($_REQUEST["action"] == "delete"){
-	// 
-	$query = "DELETE FROM `categories`"; 
+elseif($_REQUEST["action"] == "do_delete"){
+	if ($_REQUEST["delete"] == "Delete"){
+		//	$query = "DELETE FROM `categories` WHERE `id`='".$_REQUEST["id"]"; 
+	}
 
 	header("Location: ".$_SERVER["PHP_SELF"]);
 }
@@ -58,6 +59,37 @@ if ($_REQUEST["action"] == "add"){
 			</table>
 		</form>';
 }
+elseif($_REQUEST["action"] == "delete"){
+	$category = new category($_REQUEST["id"]);
+	
+	$output .= '
+		<form method="post" action="'.$_SERVER["PHP_SELF"].'">
+			<p>Are you sure you want to delete this category?</p>';
+	
+	$output .= '
+		<div class="category_info">
+			<p class="category_name"><b>Name:</b> '.$category->breadcrumb_names.'</p>
+			<p class="category_fields"><b>Fields:</b> ';
+			
+	if(is_array($category->fields)){
+		foreach($category->fields as $field){
+			$output .= $field["name"].', ';
+		}
+		$output = substr($output, 0, strlen($output) - 2);
+	}
+	
+	$output .= '</p>
+		<p class="category_num_items">Number of items inventoried in this category: '.$category->num_items().'</p>';
+		
+	if ($category->num_items() > 0){
+		$output .= '<p><input type="radio" name="item_action" value="delete" /> Delete all items in this category<br />
+			<input type="radio" name="item_action" value="move_up" /> Move all items in this category to <select name="move_to" id="move_to">'.get_category_dropdown($category->parent).'</select></p>';
+	}
+	
+	$output .= '<p class="submit_buttons"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="cancel" /></p>
+			</form>';
+		
+}	
 else{
 	$output .= '<p><a href="'.$_SERVER["PHP_SELF"].'?action=add">Add a Category.</a></p>';
 	

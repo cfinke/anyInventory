@@ -16,8 +16,8 @@ if (is_array($search_terms)){
 		$search_query = "SELECT `id` FROM `anyInventory_items` WHERE `id`='".$search_terms[0]."'";
 		$search_result = mysql_query($search_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $search_query);
 		
-		if (mysql_num_rows($search_query) > 0){
-			$row = mysql_fetch_array($search_query);
+		if (mysql_num_rows($search_result) > 0){
+			$row = mysql_fetch_array($search_result);
 			
 			$item = new item($row["id"]);
 			
@@ -37,9 +37,11 @@ if (is_array($search_terms)){
 	}
 	
 	$search_query = "SELECT `id` FROM `anyInventory_items` WHERE 1 AND ";
+	
 	foreach($search_terms as $search_term){
 		$search_query .= " `name` LIKE '%".$search_term."%' AND ";
 	}
+	
 	$search_query = substr($search_query,0,strlen($search_query) - 5);
 	$search_result = mysql_query($search_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'  .$search_query);
 	
@@ -49,7 +51,7 @@ if (is_array($search_terms)){
 				<td colspan="2">'.NAME_MATCH.'</td>
 			</tr>';
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = mysql_fetch_array($search_result)){
 			$item = new item($row["id"]);
 			
 			if ($view_user->can_view($item->category->id)){
@@ -76,10 +78,10 @@ if (is_array($search_terms)){
 	if (mysql_num_rows($search_result) > 0){
 		$output .= '
 			<tr class="tableHeader">
-				<td colspan="2">&nbsp;</td>
+				<td colspan="2">'.SEARCH_RESULTS.'</td>
 			</tr>';
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = mysql_fetch_array($search_result)){
 			$item = new item($row["item_id"]);
 			
 			if ($view_user->can_view($item->category->id)){

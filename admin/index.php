@@ -32,6 +32,7 @@ if ($admin_user->usertype == 'Administrator'){
 									<option value="en"';if(LANG == "en") $output .= ' selected="selected"'; $output .= '>English</option>
 									<option value="es"';if(LANG == "es") $output .= ' selected="selected"'; $output .= '>Espa&ntilde;ol</option>
 									<option value="fr"';if(LANG == "fr") $output .= ' selected="selected"'; $output .= '>Fran&ccedil;ais</option>
+									<option value="no"';if(LANG == "no") $output .= ' selected="selected"'; $output .= '>Norweigan (Bokmal)</option>
 								</select>
 								<input type="submit" name="submit" value="'.SUBMIT.'" />
 							</form>';

@@ -370,6 +370,7 @@ elseif(!$set_config_error){
 									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
 									<option value="es"';if($_REQUEST["lang"] == "es") $output .= ' selected="selected"'; $output .= '>Espa&ntilde;ol</option>
 									<option value="fr"';if($_REQUEST["lang"] == "fr") $output .= ' selected="selected"'; $output .= '>Fran&ccedil;ais</option>
+									<option value="no"';if($_REQUEST["lang"] == "no") $output .= ' selected="selected"'; $output .= '>Norweigan (Bokmal)</option>
 								</select>
 							</td>
 						</tr>

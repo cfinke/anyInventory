@@ -13,7 +13,9 @@ img {
 	border: 0;
 }
 
-a { color: #554E48; }
+a {
+	color: #554E48;
+}
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 	color: #000000;
@@ -33,9 +35,9 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 
 #maintable {
-	width: 80%;
-	margin-left: 10%;
-	margin-right: 10%;
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
 	margin-top: 20px;
 	margin-bottom: 20px;
 	border-width: 0;
@@ -51,11 +53,25 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 	color: #D3D3A6;
 }
 
-.row_head {background-color : #554E48; color: #ffffff;}
-.row_on {background-color : #D3D3A6;}
-.row_off {background-color : #CCCC99;}
-.row_head a { color: #ffffff;}
-.row_on a, .row_off a { color: #000000; }
+.row_head {
+	background-color : #554E48; color: #ffffff;
+}
+
+.row_on {
+	background-color : #D3D3A6;
+}
+
+.row_off {
+	background-color : #CCCC99;
+}
+
+.row_head a {
+	color: #ffffff;
+}
+
+.row_on a, .row_off a {
+	color: #000000;
+}
 
 .thumbnail {
 	float: left;
@@ -70,4 +86,25 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 #searchbox form{
 	margin: 0;
 	padding: 0;
+}
+
+#header_cell {
+	background-repeat: no-repeat;
+	background-color: rgb(77,57,34);
+	border-width: 1em 0em 0em 0em;
+	border-color: #000000;
+	border-style: solid;
+	height: 80px;
+	color: #ffffff;
+}
+
+.title {
+	margin: 0;
+	padding: 6px;
+	font-size: 36pt;
+}
+
+.form_elements {
+	padding: 0;
+	margin: 0;
 }

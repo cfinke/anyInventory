@@ -1,8 +1,9 @@
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<div align="center" style="width: 100%; height: 100%; color: #cccccc; FONT-SIZE: 10px; padding:4px">
+					<div style="text-align: center; width: 100%; color: #cccccc; font-size: 10px; padding: 4px;">
 						you have inventoried <b><?php
 						
 						$query = "SELECT `id` FROM `anyInventory_items`";

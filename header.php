@@ -1,30 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
 		<title><?php echo $title; ?></title>
-		<link rel="stylesheet" type="text/css" href="<?php echo $DIR_PREFIX; ?>style.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $DIR_PREFIX; ?>style.css">
 	</head>
 	<body>
-		<table align="center" id="maintable" cellspacing="1" cellpadding="0" border="0" width="90%">
+		<table id="maintable" cellspacing="1" cellpadding="0" border="0">
 			<tr>
-				<td colspan="2">
-					&nbsp;
+				<td id="header_cell" style="background: url(<?php echo $DIR_PREFIX; ?>images/header_bg.jpg);">
+					<h1 class="title">anyInventory 1.3</h1>		
 				</td>
 			</tr>
 			<tr>
-				<td valign="top" class="row_head" style="background: rgb(213,175,112);">
-					<h1 style="padding: 6px; font-size: 36pt;">anyInventory 1.2</h1>		
-				</td>
-			</tr>
-			<tr>
-				<td align="top">
+				<td>
 					<div id="searchbox">
 						<form method="get" action="<?php echo $DIR_PREFIX; ?>search.php">
-							<input type="hidden" name="action" value="search" />
-							<input type="text" name="name" value="" />
-							<input type="submit" name="submit" value="Search" />
+							<div class="form_elements">
+								<input type="hidden" name="action" value="search" />
+								<input type="text" name="name" value="" />
+								<input type="submit" name="submit" value="Search" />
+							</div>
 						</form>
 					</div>
-					<div id="mainmenu"style="">
+					<div id="mainmenu">
 						<b>Main Menu: </b>
 						[ <a href="<?php echo $DIR_PREFIX; ?>index.php">home</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>search.php">advanced search</a> ]
@@ -35,5 +33,6 @@
 					</div>	
 				</td>
 			</tr>
-			<tr height="100%">
-				<td bgcolor="#ffffff" width="100%" align="left" valign="top" style="padding:5px">
+			<tr>
+				<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
+					<div style="height: 400px; padding: 5px; overflow: auto;">

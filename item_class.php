@@ -9,11 +9,9 @@ class item {
 	
 	var $name;					// The name of this item.
 	var $fields = array();		// An associative array, keyed by the field name, consisting of the field values.
-	var $files = array();		// An array of file objects that belong to this item.
+	var $files;		// An array of file objects that belong to this item.
 	
 	function item($item_id){
-		global $db;
-		
 		// Set the item id.
 		$this->id = $item_id;
 		

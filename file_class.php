@@ -175,19 +175,14 @@ class file_object{
 		if ($this->is_remote){
 			$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$this->id."'";
 			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-			
-			return false;
 		}
 		else{
-			if (unlink(realpath($DIR_PREFIX."item_files/")."/".$this->file_name)){
-				$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$this->id."'";
-				mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-				
-				return true;
+			if (is_file(realpath($DIR_PREFIX."item_files/")."/".$this->file_name)){
+				@unlink(realpath($DIR_PREFIX."item_files/")."/".$this->file_name);
 			}
-			else{
-				return false;
-			}
+			
+			$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$this->id."'";
+			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 	}
 }

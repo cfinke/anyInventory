@@ -200,7 +200,7 @@ if ($_REQUEST["action"] == "upgrade"){
 							$cat_ids[] = $catrow["id"];
 						}
 						
-						for($i = 1; $i <= $max_files; $i++){
+						for($i = 1; $i <= $max_files + 1; $i++){
 							$query = "ALTER TABLE `anyInventory_items` ADD `Generic File ".$i."` INT NOT NULL";
 							query($query);
 							

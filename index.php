@@ -123,11 +123,11 @@ else{
 		}
 		
 		$output .= '</td>
-					<td style="text-align: right;">[<a href="'.$DIR_PREFIX.'admin/special_processor.php?action=switch_view&amp;c='.$_GET["c"].'">'.SWITCH_TO.' ';
+					<td style="text-align: right;">[<a href="'.$DIR_PREFIX.'admin/special_processor.php?action=switch_view&amp;c='.$_GET["c"].'">';
 		
-		$output .= (ITEM_VIEW == 'list') ? TABLE : _LIST;
+		$output .= (ITEM_VIEW == 'list') ? SWITCH_TO_TABLE : SWITCH_TO_LIST;
 		
-		$output .= ' '.VIEW.'</a>] [<a href="docs/'.LANG.'/items.php">'.HELP.'</a>]</td>
+		$output .= '</a>] [<a href="docs/'.LANG.'/items.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

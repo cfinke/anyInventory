@@ -2,6 +2,9 @@
 
 // French language file
 
+define('SWITCH_TO_TABLE','Afficher en vue tableau');
+define('SWITCH_TO_LIST','Afficher en vue liste');
+
 define('ID_MATCH','Identifiant Unique Correspondant');
 define('NAME_MATCH',NAME_FIELD_NAME.' correspondant');
 

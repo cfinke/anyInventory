@@ -2,8 +2,8 @@
 
 require("globals.php");
 
-$title = "Labels";
-$breadcrumbs = "Labels";
+$title = LABELS;
+$breadcrumbs = LABELS;
 
 if (!function_exists('imagecreate') ||
     !function_exists('imagecolorallocate') ||

@@ -2,10 +2,8 @@
 
 // English language file
 
-define('SWITCH_TO','Switch to');
-define('TABLE','table');
-define('_LIST','list');
-define('VIEW','view');
+define('SWITCH_TO_TABLE','Switch to table view');
+define('SWITCH_TO_LIST','Switch to list view');
 
 // Dates
 define('MONTH_1','January');

@@ -3,6 +3,7 @@
 require("globals.php");
 
 $title = "anyInventory: Labels";
+$breadcrumbs = "Labels";
 
 if (!function_exists('imagecreate') ||
     !function_exists('imagecolorallocate') ||
@@ -13,8 +14,16 @@ if (!function_exists('imagecreate') ||
 	!function_exists('imagepng')){
 	
 	$output .= '
-		<h2>Generate Labels</h2>
-		<p>You do not have all of the PHP functions needed to create labels installed.  These functions are <a href="http://us3.php.net/manual/en/function.imagecreate.php">imagecreate</a>, <a href="http://us3.php.net/manual/en/function.imagecolorallocate.php">imagecolorallocate</a>, <a href="http://us3.php.net/manual/en/function.imagettftext.php">imagettftext</a>, <a href="http://us3.php.net/manual/en/function.imagestring.php">imagestring</a>, <a href="http://us3.php.net/manual/en/function.imagecopyresized.php">imagecopyresized</a>, <a href="http://us3.php.net/manual/en/function.imagedestroy.php">imagedestroy</a>, and <a href="http://us3.php.net/manual/en/function.imagepng.php">imagepng</a>.  One or more of these functions is not installed.</p>';
+		<table class="standardTable">
+			<tr class="tableHeader">
+				<td>Generate Labels</td>
+			</tr>
+			<tr>
+				<td class="tableData" style="text-align: center;">
+					You do not have all of the PHP functions needed to create labels installed.  These functions are <a href="http://us3.php.net/manual/en/function.imagecreate.php">imagecreate</a>, <a href="http://us3.php.net/manual/en/function.imagecolorallocate.php">imagecolorallocate</a>, <a href="http://us3.php.net/manual/en/function.imagettftext.php">imagettftext</a>, <a href="http://us3.php.net/manual/en/function.imagestring.php">imagestring</a>, <a href="http://us3.php.net/manual/en/function.imagecopyresized.php">imagecopyresized</a>, <a href="http://us3.php.net/manual/en/function.imagedestroy.php">imagedestroy</a>, and <a href="http://us3.php.net/manual/en/function.imagepng.php">imagepng</a>.  One or more of these functions is not installed.
+				</td>
+			</tr>
+		</table>';
 }
 elseif ($_REQUEST["action"] == "generate"){
 	if (!is_array($_REQUEST["i"])) $_REQUEST["i"] = array($_REQUEST["i"]);
@@ -27,24 +36,33 @@ elseif ($_REQUEST["action"] == "generate"){
 }
 elseif (!isset($_REQUEST["c"])){
 	$output .= '
-		<table style="width: 100%;"><tr><td><h2>Generate Labels</h2></td><td style="text-align: right;"><a href="docs/labels.php">Help with labels</a></td></tr></table>
-		<p>Select the categories top which the items belong for which you want to produce labels.  All categories that you select must have at least one field in common.</p>
-		<form action="labels.php" method="post">
-			<table>
-				<tr>
-					<td class="form_label">Categories:</td>
-					<td class="form_input">
-						<select name="c[]" id="c[]" multiple="multiple" size="10">
-							'.get_category_options().'
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td style="text-align: center;"><input type="submit" name="submit" value="Submit" /></td>
-				</tr>
-			</table>
-		</form>';
+		<table class="standardTable" cellspacing="0">
+			<tr class="tableHeader">
+				<td>Generate Labels</td>
+				<td style="text-align: right;">[<a href="docs/labels.php">Help</a>]</td>
+			</tr>
+			<tr>
+				<td class="tableData" colspan="2">
+					<form action="labels.php" method="post">
+						<table>
+							<tr><td colspan="2" style="padding: 10px 0px 10px 0px;">Select the categories to which the items belong for which you want to produce labels.  All categories that you select must have at least one field in common.</td></tr>
+							<tr>
+								<td class="form_label">Categories:</td>
+								<td class="form_input">
+									<select name="c[]" id="c[]" multiple="multiple" size="10" style="width: 100%;">
+										'.get_category_options().'
+								</select>
+								</td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td style="text-align: center;"><input type="submit" name="submit" value="Submit" class="submitButton" /></td>
+							</tr>
+						</table>
+					</form>
+				</td>
+			</tr>
+		</table>';
 }
 elseif (!isset($_REQUEST["i"])){
 	if (!is_array($_REQUEST["c"])){
@@ -66,16 +84,22 @@ elseif (!isset($_REQUEST["i"])){
 	}
 	else{
 		$output .= '
-			<table style="width: 100%;"><tr><td><h2>Generate Labels</h2></td><td style="text-align: right;"><a href="docs/labels.php">Help with labels</a></td></tr></table>
-			<p>Select the field from which you want to produce the barcode and the items for which you want to produce a label.</p>
-			<form action="labels.php" method="post">
-				<input type="hidden" name="action" value="generate" />
-				<table>
-					<tr>
-						<td class="form_label">
-							Generate from:
-						</td>
-						<td class="form_input">';
+			<table class="standardTable" cellspacing="0">
+				<tr class="tableHeader">
+					<td>Generate Labels</td>
+					<td style="text-align: right;">[<a href="docs/labels.php">Help</a>]</td>
+				</tr>
+				<tr>
+					<td class="tableData" colspan="2">
+						<form action="labels.php" method="post">
+							<input type="hidden" name="action" value="generate" />
+							<table>
+								<tr><td colspan="2" style="padding: 10px 0px 10px 0px;"><p>Select the field from which you want to produce the barcode and the items for which you want to produce a label.</td></tr>
+								<tr>
+									<td class="form_label">
+										Generate from:
+									</td>
+									<td class="form_input">';
 		
 		while ($row = mysql_fetch_array($result)){
 			$field = new field($row["id"]);
@@ -83,30 +107,34 @@ elseif (!isset($_REQUEST["i"])){
 			$output .= '<input type="radio" name="f" value="'.$field->name.'" />'.$field->name.'<br />';
 		}
 		
-		$output .= '</td>
-				</tr>
-				<tr>
-					<td class="form_label">
-						Generate for:
-					</td>
-					<td class="form_input">';
+		$output .= '
+									</td>
+								</tr>
+								<tr>
+									<td class="form_label">
+										Generate for:
+									</td>
+									<td class="form_input">';
 		
 		foreach($_REQUEST["c"] as $cat_id){
 			$options .= get_item_options($cat_id);
 		}
 		
 		$output .= '
-							<select name="i[]" id="i[]" multiple="multiple" size="10">
-								'.$options.'
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td style="text-align: center;"><input type="submit" name="submit" value="Submit" /></td>
-					</tr>
-				</table>
-			</form>';
+									<select name="i[]" id="i[]" multiple="multiple" size="10">
+										'.$options.'
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td style="text-align: center;"><input type="submit" name="submit" value="Submit" class="submitButton" /></td>
+							</tr>
+						</table>
+					</form>
+				</td>
+			</tr>
+		</table>';
 	}
 }
 

@@ -11,7 +11,7 @@ if ($admin_pass != ''){
 	
 	if ($_REQUEST["action"] == "log_in"){
 		if ($_REQUEST["password"] != $admin_pass){
-			header("Location: ".$DIR_PREFIX."error_handler.php?eid=4&return_to=".$_SERVER["PHP_SELF"]);
+			header("Location: ".$DIR_PREFIX."error_handler.php?eid=4&return_to=".$_SERVER["REQUEST_URI"]);
 			exit;
 		}
 		else{

@@ -3,44 +3,48 @@
 include("globals.php");
 
 $title = 'anyInventory: Categories';
-
-$output .= '<table style="width: 100%;"><tr><td><a href="add_category.php">Add a category.</a></td><td style="text-align: right;"><a href="../docs/categories.php">Help with categories</a></td></tr></table>';
+$breadcrumbs = 'Administration > Categories';
 
 $rows = get_category_array();
 
 if (count($rows) > 0){
-	// Display all of the categories.
-	
-	$i = 0;
-	
 	foreach($rows as $row){
 		$temp = new category($row["id"]);
 		
-		$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
-		$table_set .= '<tr class="'.$color_code.'">';
-		$table_set .= '
-			<td align="center" style="white-space: nowrap;">
-				<a href="edit_category.php?id='.$row["id"].'">[edit]</a>
-				<a href="delete_category.php?id='.$row["id"].'">[delete]</a>
-			</td>';
-		$table_set .= '<td style="white-space: nowrap;">'.$row["name"].'</td>';
-		$table_set .= '<td>'.$temp->num_items().'</td>';
-		$table_set .= '</tr>';
-		$i++;
+		$table_rows .= '
+			<tr>
+				<td align="center" style="width: 15ex; white-space: nowrap;">
+					<nobr>
+						[<a href="edit_category.php?id='.$row["id"].'">edit</a>]
+						[<a href="delete_category.php?id='.$row["id"].'">delete</a>]
+					</nobr>
+				</td>
+				<td style="white-space: nowrap;">'.$row["name"].' ('.$temp->num_items_r().')</td>
+			</tr>';
 	}
+	
+	$table_rows = '<table>'.$table_rows.'</table>';
 }
 else{
-	$table_set .= '<tr class="row_off"><td colspan="3">There are no categories to display.</td></tr>';
+	$table_rows = 'There are no categories to display.';
 }
 
 $output .= '
-	<table style="width: 100%; background-color: #000000;" cellspacing="1" cellpadding="2">
-		<tr class="row_head">
-			<td style="width: 12ex;">&nbsp;</td>
-			<td>Category</td>
-			<td># of Items</td>
+	<table class="standardTable" cellspacing="0" cellpadding="3">
+		<tr class="tableHeader">
+			<td>
+				Categories (<a href="add_category.php">Add a category</a>)
+			</td>
+			<td style="text-align: right;">
+				[ <a href="../docs/categories.php">Help</a> ]
+			</td>
 		</tr>
-		'.$table_set.'</table>';
+		<tr>
+			<td class="tableData" colspan="2">
+				'.$table_rows.'
+			</td>
+		</tr>
+	</table>';
 
 display($output);
 

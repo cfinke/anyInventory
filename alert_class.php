@@ -105,16 +105,16 @@ class alert {
 		}
 		
 		$output = '
-			<table cellspacing="1" cellpadding="2" style="background: #000000; width: 25ex; margin-bottom: 10px;" border="0">
-				<tr style="background: #000000; color: #D3D3A6;">
-						<td>
+			<table class="alertBox" cellspacing="0" cellpadding="2" border="0">
+				<tr class="alertTitle">
+					<td>
 						Alert
 					</td>
 					<td style="text-align: right;">
-						<a style="color: #D3D3A6;" href="'.$DIR_PREFIX.'docs/alerts.php">?</a>
+						<a href="'.$DIR_PREFIX.'docs/alerts.php">?</a>
 					</td>
 				</tr>
-				<tr style="background: #D3D3A6;">
+				<tr class="alertContent">
 					<td style="text-align: center;" colspan="2">
 						<b>'.$this->title.'</b>'.$item_link.'
 					</td>

@@ -6,36 +6,33 @@
 		<?php echo $inHead; ?>
 	</head>
 	<body<?php echo $inBodyTag; ?>>
-		<table id="maintable" cellspacing="1" cellpadding="0" border="0">
+		<table style="width: 97%; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">
 			<tr>
-				<td id="header_cell" style="background-image: url(<?php echo $DIR_PREFIX; ?>images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-					<h1 class="title">anyInventory 1.7</h1>		
+				<td id="appTitle">
+					anyInventory 1.7
+				</td>
+			</tr>
+			<tr>
+				<td id="mainMenu">
+					<table style="width: 100%;">
+						<tr>
+							<td style="width: 5%; text-align: center;"><a href="<?php echo $DIR_PREFIX; ?>index.php">Home</a></td>
+							<td style="width: 5%; text-align: center;"><a href="<?php echo $DIR_PREFIX; ?>search.php">Search</a></td>
+							<td style="width: 5%; text-align: center;"><a href="<?php echo $DIR_PREFIX; ?>labels.php">Labels</a></td>
+							<td style="width: 5%; text-align: center;"><a href="<?php echo $DIR_PREFIX; ?>docs/">Help</a></td>
+							<td style="width: 40%; text-align: right;">Administration:</td>
+							<td style="width: 5%; text-align: center;"><a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">Fields</a></td>
+							<td style="width: 5%; text-align: center;"><a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">Categories</a></td>
+							<td style="width: 5%; text-align: center;"><a href="<?php echo $DIR_PREFIX; ?>admin/items.php">Items</a></td>
+							<td style="width: 5%; text-align: center;"><a href="<?php echo $DIR_PREFIX; ?>admin/alerts.php">Alerts</a></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td id="breadCrumbs">
+					<?php echo $breadcrumbs; ?>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<div id="searchbox">
-						<form method="get" action="<?php echo $DIR_PREFIX; ?>search.php">
-							<div class="form_elements">
-								<input type="hidden" name="action" value="search" />
-								<input type="text" name="name" value="" />
-								<input type="submit" name="submit" value="Search" />
-							</div>
-						</form>
-					</div>
-					<div id="mainmenu">
-						<b>Main Menu: </b>
-						[ <a href="<?php echo $DIR_PREFIX; ?>index.php">home</a> ]
-						[ <a href="<?php echo $DIR_PREFIX; ?>search.php">advanced search</a> ]
-						[ <a href="<?php echo $DIR_PREFIX; ?>labels.php">labels</a> ]
-						[ <a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">fields</a> ]
-						[ <a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">categories</a> ]
-						[ <a href="<?php echo $DIR_PREFIX; ?>admin/items.php">items</a> ]
-						[ <a href="<?php echo $DIR_PREFIX; ?>admin/alerts.php">alerts</a> ]
-						[ <a href="<?php echo $DIR_PREFIX; ?>docs/">help</a> ]
-					</div>	
-				</td>
-			</tr>
-			<tr>
-				<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
-					<div style="min-height: 400px; padding: 5px;">

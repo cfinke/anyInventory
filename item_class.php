@@ -74,24 +74,26 @@ class item {
 		global $DIR_PREFIX;
 		
 		// Create the header with the name.
-		$output .= '<h2>'.$this->name.'</h2>';
-		
-		// Get the number of fields that have no value.
-		$num_empty_fields = $this->count_empty_fields();
+		$output .= '
+			<table class="standardTable">
+				<tr class="tableHeader">
+					<td>'.$this->name.' ( <a href="admin/move_item.php?id='.$this->id.'">Move</a> | <a href="admin/edit_item.php?id='.$this->id.'">Edit</a> | <a href="admin/delete_item.php?id='.$this->id.'">Delete</a> )</td>
+				</tr>
+				<tr>
+					<td class="tableData">
+						<table>';
 		
 		// Output each field with its value.
-		if (is_array($this->fields) && ((count($this->fields) - $num_empty_fields) > 0)){
-			$output .= '
-				<table style="width: 100%; margin: 0px; padding: 0px;">
-					<tr>
-						<td style="width: 50%; vertical-align: top;">';
-			
-			$i = 0;
+		if (is_array($this->fields)){
 			foreach($this->fields as $key => $value){
 				if (is_array($value)){
 					if ($value["is_file"] == true){
 						if ($value["file_id"] > 0){
-							$output .= '<p><b>'.$key.':</b> ';
+							$output .= '
+								<tr>
+									<td>&nbsp;</td>
+									<td style="white-space: nowrap; text-align: right;"><b>'.$key.':</b></td>
+									<td>';
 							
 							$file = new file_object($value["file_id"]);
 							
@@ -100,31 +102,43 @@ class item {
 								if ($file->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$file->id;
 								else $output .= "item_files/no_thumb.gif";
 								
-								$output .= '" class="thumbnail" /></a><br style="clear: both;" />';
+								$output .= '" class="thumbnail" /></a>';
 							}
 							else{
 								$output .= $file->get_download_link();
 							}
+							
+							$output .= '
+									</td>
+								</tr>';
 						}
 					}
 					elseif (count($value) > 0){
-						$output .= '<p><b>'.$key.':</b> ';
+						$output .= '<tr><td>&nbsp;</td><td><b>'.$key.':</b></td><td> ';
 						
 						foreach($value as $val){
 							$output .= $val.", ";
 						}
 						
 						$output = substr($output, 0, strlen($output) - 2);
-						if ($i++ == floor((count($this->fields) - $num_empty_fields)/ 2)) $output .= '</td><td style="width: 50%;">';
+						
+						$output .= '</td></tr>';
 					}
 				}
 				elseif (trim($value) != ""){
-					$output .= '<p><b><a href="label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;" title="Create a barcode label for the '.$key.' field">'.$key.'</a>:</b> '.$value.'</p>';
-					if ($i++ == floor((count($this->fields) - $num_empty_fields)/ 2)) $output .= '</td><td style="width: 50%;">';
+					$output .= '
+						<tr>
+							<td style="width: 5%;">
+								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;" title="Create a barcode label for the '.$key.' field">Label</a>
+							</td>
+							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$key.'</a>:</nobr></td>
+							<td style="width: 85%;"></b> '.$value.'</td>
+						</tr>';
 				}
 			}
 			
 			$output .= '
+							</table>
 						</td>
 					</tr>
 				</table>';

@@ -321,42 +321,45 @@ elseif(!$set_config_error){
 $output .= '</form>';
 
 echo '
-	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-	<html>
-		<head>
-			<title>anyInventory 1.7 Install</title>
-			<link rel="stylesheet" type="text/css" href="style.css">
-		</head>
-		<body'.$inBodyTag.'>
-			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
-				<tr>
-					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-						<h1 class="title">anyInventory 1.7</h1>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>Install anyInventory 1.7</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		'.$inHead.'
+	</head>
+	<body'.$inBodyTag.'>
+		<table style="width: 97%; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">
+			<tr>
+				<td id="appTitle">
+					anyInventory 1.7
+				</td>
+			</tr>
+			<tr>
+				<td id="mainMenu">
+					<table style="width: 100%;">
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
 						<div style="min-height: 400px; padding: 5px;">
 						<h2>Install anyInventory 1.7</h2>
 						<p>Welcome to the installation page of anyInventory.  To install, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the installation will continue.  After the installation has finished, you will be redirected to the home page of you anyInventory installation.  If you need any help, feel free to contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
 						'.$output.'
 						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div style="text-align: center; width: 100%; color: #cccccc; font-size: 10px; padding: 4px;">
-							<a href="http://anyinventory.sourceforge.net/">anyInventory, the web\'s most flexible and powerful inventory system</a>
-						</div>
-					</td>
-				</tr>
-			</table>
-		</body>
-	</html>';
+				</td>
+			</tr>
+			<tr class="footerCell">
+				<td>
+					<a href="http://anyinventory.sourceforge.net/">anyInventory, the web\'s most flexible and powerful inventory system</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>';
 
 ?>

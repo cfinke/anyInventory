@@ -18,7 +18,7 @@ $output = '
 				<td class="form_input">
 					<select name="parent" id="parent">
 						<option value="0">Top Level</option>
-						'.get_category_options(null, false).'
+						'.get_category_options($_REQUEST["c"], false).'
 					</select>
 				</td>
 			</tr>

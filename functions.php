@@ -27,6 +27,8 @@ function display($output){
 	global $title;
 	global $inHead;
 	global $inBodyTag;
+	global $breadcrumbs;
+	global $sectionTitle;
 	
 	global $DIR_PREFIX;
 	

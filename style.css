@@ -1,7 +1,11 @@
 body {
-	font-family: arial, verdana, sans-serif;
+	font-family: verdana, sans-serif;
 	font-size: 10pt;
-	background : url(images/bg.gif);
+	margin: 0;
+}
+
+table {
+	width: 100%;
 }
 
 td {
@@ -14,7 +18,7 @@ img {
 }
 
 a {
-	color: #554E48;
+	color: rgb(49,73,82);
 }
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
@@ -22,55 +26,18 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 
 .form_input {
-	width: 100%;
+	width: 80%;
 	vertical-align: top;
 }
 
 .form_label {
 	width: 20%;
 	font-weight: bold;
+	font-size: 9pt;
 	text-align: right;
 	vertical-align: top;
 	white-space: nowrap;
-}
-
-#maintable {
-	width: 90%;
-	margin-left: 5%;
-	margin-right: 5%;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	border-width: 0;
-	background: #000000;
-}
-
-#mainmenu {
-	padding: 4px;
-	color: #ffffff;
-}
-
-#mainmenu a {
-	color: #D3D3A6;
-}
-
-.row_head {
-	background-color : #554E48; color: #ffffff;
-}
-
-.row_on {
-	background-color : #D3D3A6;
-}
-
-.row_off {
-	background-color : #CCCC99;
-}
-
-.row_head a {
-	color: #ffffff;
-}
-
-.row_on a, .row_off a {
-	color: #000000;
+	color: rgb(49,73,82);
 }
 
 .thumbnail {
@@ -78,33 +45,90 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 	padding: 10px;
 }
 
-#searchbox {
-	float: right;
-	white-space: nowrap;
+#appTitle {
+	color: #000000;
+	font-family: arial;
+	font-size: 24pt;
+	padding-bottom: 10px;
 }
 
-#searchbox form{
-	margin: 0;
-	padding: 0;
-}
-
-#header_cell {
-	background-repeat: no-repeat;
-	background-color: rgb(77,57,34);
-	border-width: 1em 0em 0em 0em;
-	border-color: #000000;
+#mainMenu {
+	background-color: rgb(123, 158, 173);
+	color: #ffffff;
+	border-width: 1px 0px 1px 0px;
 	border-style: solid;
-	height: 80px;
+	border-color: rgb(153,153,153);
+}
+
+#mainMenu a {
+	text-decoration: none;
+	font-weight: bold;
 	color: #ffffff;
 }
 
-.title {
-	margin: 0;
-	padding: 6px;
-	font-size: 36pt;
+#breadCrumbs {
+	padding: 10px 0px 10px 0px;
 }
 
-.form_elements {
-	padding: 0;
-	margin: 0;
+.alertBox{
+	width: 25ex;
+	margin-bottom: 10px;
+	border-style: solid;
+	border-color: #000000;
+	border-width: 1px;
+}
+
+.alertTitle td {
+	background: rgb(198, 211, 222);
+	color: #000000;
+	border-style: solid;
+	border-color: #000000;
+	border-width: 0px 0px 1px 0px;
+}
+
+.alertContent{
+	background: rgb(247, 247, 247);
+}
+
+.alertTitle a {
+	color: #000000;
+}
+
+.standardTable {
+	width: 100%;
+	background-color: rgb(247, 247, 247);
+}
+
+.tableHeader td {
+	background: rgb(198, 211, 222);
+	border-style: solid;
+	border-width: 1px 0px 1px 0px;
+	border-color: rgb(153, 153, 153);
+	color: rgb(49,73,82);
+	font-size: 10pt;
+	font-weight: bold;
+	padding: 5px;
+}
+
+.tableData {
+	border-style: solid;
+	border-width: 0px 0px 1px 0px;
+	border-color: rgb(153, 153, 153);
+}
+
+.footerCell td {
+	padding: 10px 4px 4px 4px;
+	border-color: rgb(153,153,153);
+	border-width: 1px 0px 0px 0px;
+	border-style: solid;
+	text-align: center;
+	width: 100%;
+	font-size: 7pt;
+}
+
+.submitButton {
+	background-color: #ffffff;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #000000;
 }

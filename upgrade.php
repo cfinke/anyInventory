@@ -173,13 +173,12 @@ if ($_REQUEST["action"] == "upgrade"){
 				break;
 			case '1.4.':
 			case '1.4.1':
-				# Changes introduced in 1.5
+			case '1.5':
+				# Changes introduced in 1.6
 				
 				// Added timed alerts
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `timed` TINYINT( 1 ) DEFAULT '0' NOT NULL";
-				query($query);
-			case '1.5':
-				# Changes introduced in 1.6
+				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file' ) DEFAULT 'text' NOT NULL ";
 				query($query);

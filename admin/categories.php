@@ -9,6 +9,8 @@ $output .= '<p><a href="add_category.php">Add a category.</a></p>';
 $rows = get_category_array();
 
 if (count($rows) > 0){
+	// Display all of the categories.
+	
 	$i = 0;
 	
 	foreach($rows as $row){

@@ -1,0 +1,16 @@
+body, td {
+	font-family: arial, verdana, sans-serif;
+	font-size: 10pt;
+}
+
+.form_input {
+	width: 100%;
+	vertical-align: top;
+}
+
+.form_label {
+	width: 20%;
+	font-weight: bold;
+	text-align: right;
+	vertical-align: top;
+}

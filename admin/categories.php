@@ -25,15 +25,12 @@ if (count($rows) > 0){
 	
 	$table_rows = '<table>'.$table_rows.'</table>';
 }
-else{
-	$table_rows = 'There are no categories to display.';
-}
 
 $output .= '
-	<table class="standardTable" cellspacing="0" cellpadding="3">
+	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
 			<td>
-				Categories (<a href="add_category.php">Add a category</a>)
+				Categories
 			</td>
 			<td style="text-align: right;">
 				[<a href="../docs/categories.php">Help</a>]
@@ -41,6 +38,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
+				<p style="padding-left: 5px;"><a href="add_category.php">Add a category</a></p>
 				'.$table_rows.'
 			</td>
 		</tr>

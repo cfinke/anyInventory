@@ -35,15 +35,12 @@ if (mysql_num_rows($result) > 0){
 	
 	$table_rows = '<table>'.$table_rows.'</table>';
 }
-else{
-	$table_rows .= 'There are no alerts to display.';
-}
 
 $output .= '
-	<table class="standardTable" cellspacing="0" cellpadding="3">
+	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
 			<td>
-				Alerts (<a href="add_alert.php">Add an Alert</a>)
+				Alerts
 			</td>
 			<td style="text-align: right;">
 				[ <a href="../docs/alerts.php">Help</a> ]
@@ -51,6 +48,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
+				<p style="padding-left: 5px;"><a href="add_alert.php">Add an Alert</a></p>
 				'.$table_rows.'
 			</td>
 		</tr>

@@ -19,14 +19,13 @@ if (!isset($_REQUEST["c"])){
 							<tr>
 								<td class="form_label"><label for="c">Add Item to:</label></td>
 								<td class="form_input">
-									<select name="c" id="c">
+									<select name="c" id="c" style="width: 100%;">
 										'.get_category_options(null, false).'
 									</select>
 								</td>
 							</tr>
 							<tr>
-								<td class="form_label">&nbsp;</td>
-								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 							</tr>
 						</table>
 					</td>

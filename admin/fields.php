@@ -29,22 +29,20 @@ if (mysql_num_rows($result) > 0){
 	
 	$table_rows = '<table>'.$table_rows.'</table>';
 }
-else{
-	$table_rows = 'There are no fields to display.';
-}
 
 $output .= '
-	<table class="standardTable" cellspacing="0" cellpadding="3">
+	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
 			<td>
-				Fields (<a href="add_field.php">Add a field</a>)
+				Fields
 			</td>
 			<td style="text-align: right;">
-				[ <a href="../docs/fields.php">Help</a> ]
+				[<a href="../docs/fields.php">Help</a>]
 			</td>
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
+				<p style="padding: 5px;"><a href="add_field.php">Add a field</a></p>
 				'.$table_rows.'
 			</td>
 		</tr>

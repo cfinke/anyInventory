@@ -82,13 +82,13 @@ if (is_array($cat_ids)){
 }
 
 $output .= '
-	<table class="standardTable" cellspacing="0" cellpadding="0">
+	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
 			<td>
 				Items
 			</td>
 			<td style="text-align: right;">
-				[ <a href="../docs/items.php">Help</a> ]
+				[<a href="../docs/items.php">Help</a>]
 			</td>
 		</tr>
 		<tr>

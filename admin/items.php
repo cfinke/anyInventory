@@ -30,7 +30,7 @@ if (mysql_num_rows($result) > 0){
 						[<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">delete</a>]
 					</nobr>
 				</td>
-				<td>'.$row["name"].'</td>
+				<td><a href="../index.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.$row["name"].'</a></td>
 			</tr>';
 	}
 }
@@ -68,7 +68,7 @@ if (is_array($cat_ids)){
 								<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[delete]</a>
 							</nobr>
 						</td>
-						<td>'.$row["name"].'</td>
+						<td><a href="../index.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.$row["name"].'</a></td>
 					</tr>';
 			}
 			

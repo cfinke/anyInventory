@@ -2,11 +2,17 @@
 
 include("globals.php");
 
+$replace = array("'",'"','&',"\\",':',';','`','[',']');
+
 if ($_REQUEST["action"] == "do_add"){
 	if (!is_array($_REQUEST["i"])){
 		header("Location: ../error_handler.php?eid=6");
 		exit;
 	}
+	
+	$_REQUEST["title"] = stripslashes($_REQUEST["title"]);
+	$_REQUEST["title"] = str_replace($replace,"",$_REQUEST["title"]);
+	$_REQUEST["title"] = trim(addslashes($_REQUEST["title"]));
 	
 	$timestamp = $_REQUEST["year"];
 	$timestamp .= ($_REQUEST["month"] < 10) ? '0' . $_REQUEST["month"] : $_REQUEST["month"];
@@ -39,6 +45,10 @@ elseif($_REQUEST["action"] == "do_edit_cat_ids"){
 		exit;
 	}
 	else{
+		$_REQUEST["title"] = stripslashes($_REQUEST["title"]);
+		$_REQUEST["title"] = str_replace($replace,"",$_REQUEST["title"]);
+		$_REQUEST["title"] = trim(addslashes($_REQUEST["title"]));
+		
 		$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
 		
 		foreach($_REQUEST["c"] as $cat_id){

@@ -5,7 +5,7 @@ include("globals.php");
 $title = "anyInventory: Search Results";
 
 if ($_REQUEST["action"] == "quick_search"){
-	$breadcrumbs = "Search Results: ".$_REQUEST["q"];
+	$breadcrumbs = "Search Results: ".stripslashes($_REQUEST["q"]);
 	
 	$search_terms = explode(" ",$_REQUEST["q"]);
 	$search_fields = array("name");
@@ -20,17 +20,21 @@ if ($_REQUEST["action"] == "quick_search"){
 			$search_fields[] = $row["name"];
 		}
 		
-		$search_query = "SELECT `id`,`item_category` FROM `anyInventory_items` WHERE 1 AND ( ";
+		$search_query = "SELECT `id`,`item_category` FROM `anyInventory_items` WHERE 1 AND ((( ";
+		
+		if ((count($search_terms) == 1) && (is_numeric($search_terms[0]))){
+			$search_query .= " `id`='".$search_terms[0]."')) OR (( ";
+		}
 		
 		foreach($search_terms as $search_term){
 			foreach($search_fields as $search_field){
 				$search_query .= " `".$search_field."` LIKE '%".$search_term."%' OR ";
 			}
 			
-			$search_query = substr($search_query,0,strlen($search_query) - 3)." ) AND ( ";
+			$search_query = substr($search_query,0,strlen($search_query) - 3).") AND (";
 		}
 		
-		$search_query = substr($search_query,0,strlen($search_query) - 6)." ORDER BY `item_category`";
+		$search_query = substr($search_query,0,strlen($search_query) - 6).")) ORDER BY `item_category`";
 		$search_result = mysql_query($search_query) or die(mysql_error() . '<br /><br />' . $search_query);
 		
 		$cat_id = -1;
@@ -43,10 +47,20 @@ if ($_REQUEST["action"] == "quick_search"){
 					$cat_id = $row["item_category"];
 					$output .= '
 						<tr class="tableHeader">
-							<td>In '.$item->category->get_breadcrumb_links().'</td></tr><tr><td class="tableData">';
+							<td colspan="2">In '.$item->category->get_breadcrumb_links().'</td>
+						</tr>';
 				}
 				
-				$output .= '<tr><td>'.$item->export_teaser().'</td></tr>';
+				$output .= '<tr>';
+				
+				if ($item->category->auto_inc_field){
+					$output .= '<td>'.$item->id.'</td>';
+				}
+				else{
+					$output .= '<td>&nbsp;</td>';
+				}
+				
+				$output .= '<td>'.$item->export_teaser().'</td></tr>';
 			}
 		}
 		else{

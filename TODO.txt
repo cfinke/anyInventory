@@ -45,16 +45,18 @@ DONE - Customization of Name field
 
 BEFORE 1.9
 ===================
+Stronger CSS support
+In-line editor for long text fields
+Multi-language support
 Item associations ("Item" Field type)
-Remote image thumbnailing - backup in case of missing libcurl
-? Better advanced search, like phpMyAdmin's Search page
-Multiple-condition alerts
-Required fields
+Download inventory as XML file
 
 BEFORE 2.0
 ===================
-Download inventory as XML file
+Multiple-condition alerts
+DREW - Remote image thumbnailing - backup in case of missing libcurl
 Upload inventory as XML file
+Required fields
 ? Label Sheets
 
 BUGS

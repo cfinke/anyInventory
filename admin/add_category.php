@@ -38,9 +38,9 @@ if (PP_VIEW){
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = $db->query($query) or die(db->error() . '<br /><br />' . $query);
 
-while($row = mysql_fetch_array($result)){
+while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 	$output .= '<option value="'.$row["id"].'" selected="selected">'.$row["username"].'</option>';
 }
 
@@ -58,9 +58,9 @@ if (PP_ADMIN){
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = $db->query($query) or die(db->error() . '<br /><br />' . $query);
 
-while($row = mysql_fetch_array($result)){
+while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 	$output .= '<option value="'.$row["id"].'">'.$row["username"].'</option>';
 }
 

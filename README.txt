@@ -1,7 +1,7 @@
 anyInventory Inventory System
 =============================
 Thank you for downloading anyInventory, a flexible inventory system
-that can be used by anyone to track anything.  Because anyInventory
+that can be used to track anything.  Because anyInventory
 is designed in a way that allows the user to decide what type of 
 information to keep track of, it is powerful enough to inventory items
 from the food in your refrigerator to the stock of a department store.
@@ -20,8 +20,9 @@ to these functions.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.3, simply overwrite the files from your current
-version.
+To upgrade to anyInventory 1.4, simply overwrite the files from your current
+version, and then run the included upgrade.php script from the Web browser
+of your choice.
 
 Using anyInventory
 ==================

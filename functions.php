@@ -49,28 +49,12 @@ function get_category_options($selected = null, $nonempty = null){
 	
 	if (!is_array($selected)) $selected = array($selected);
 	
-	if ($nonempty){
-		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='0'";
-		$result = query($query);
-		
-		if (mysql_num_rows($result) > 0){
-			$output = '<option value="0"';
-			if (in_array(0,$selected)) $output .= ' selected="selected"';
-			$output .= '>Top Level</option>';
-		}
-	}
-	else{
-		$output = '<option value="0"';
-		if (in_array(0,$selected)) $output .= ' selected="selected"';
-		$output .= '>Top Level</option>';
-	}
-	
-	$output .= get_options_children(0, '', $selected, $nonempty);
+	$output .= get_options_children(0, '', $selected);
 	
 	return $output;
 }
 
-function get_options_children($id, $pre = null, $selected = null, $nonempty = null){
+function get_options_children($id, $pre = null, $selected = null){
 	// This function creates select box options for the children of a category
 	// with the id $id.
 	
@@ -90,14 +74,9 @@ function get_options_children($id, $pre = null, $selected = null, $nonempty = nu
 		while ($row = mysql_fetch_array($result)){
 			$category = $row["name"];
 			
-//			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."'";
-//			$item_result = query($query);
-			
-//			if ((mysql_num_rows($item_result) > 0) || ($nonempty)){
-				$list .= '<option value="'.$row["id"].'"';
-				if (in_array($row["id"],$selected)) $list .= ' selected="selected"';
-				$list .= '>'.$pre . $category.'</option>';
-//			}
+			$list .= '<option value="'.$row["id"].'"';
+			if (in_array($row["id"],$selected)) $list .= ' selected="selected"';
+			$list .= '>'.$pre . $category.'</option>';
 			
 			$list .= get_options_children($row["id"], $pre, $selected);
 		}
@@ -180,9 +159,6 @@ function get_category_array($top = 0){
 		else{
 			return $array;
 		}
-	}
-	else{
-		$array[] = array("name"=>"Top Level","id"=>0);
 	}
 	
 	get_array_children($top, $array);

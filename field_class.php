@@ -57,7 +57,7 @@ class field {
 	
 	function add_category($cat_id){
 		// Add the category id to the array
-		$this->categories[] = (string) $cat_id;
+		$this->categories[] = (string) ($cat_id / 1);
 		
 		// Remove any duplicate values.
 		$this->categories = array_unique($this->categories);

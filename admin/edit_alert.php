@@ -21,7 +21,7 @@ $output = '
 				<tr>
 					<td class="form_label"><label for="c">Applies to:</label></td>
 					<td class="form_input">
-						<select name="i[]" id="i[]" multiple="multiple">
+						<select name="i[]" id="i[]" multiple="multiple" size="10">
 							'.get_item_options($item->category->id, $alert->item_ids).'
 						</select>
 					</td>

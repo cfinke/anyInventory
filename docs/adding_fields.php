@@ -42,7 +42,7 @@ $output .= '
 			<tr style="display: auto;">
 				<td class="form_label">Apply field to:</td>
 				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple">
+					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
 					</select>
 				</td>
 			</tr>
@@ -84,7 +84,7 @@ $output .= '
 			<tr style="display: auto;">
 				<td class="form_label">Apply field to:</td>
 				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple">
+					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
 					</select>
 				</td>
 			</tr>
@@ -125,7 +125,7 @@ $output .= '
 			<tr style="display: auto;">
 				<td class="form_label">Apply field to:</td>
 				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple">
+					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
 					</select>
 				</td>
 			</tr>
@@ -170,7 +170,7 @@ $output .= '
 			<tr style="display: auto;">
 				<td class="form_label">Apply field to:</td>
 				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple">
+					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
 					</select>
 				</td>
 			</tr>
@@ -215,7 +215,7 @@ $output .= '
 			<tr style="display: auto;">
 				<td class="form_label">Apply field to:</td>
 				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple">
+					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
 					</select>
 				</td>
 			</tr>
@@ -256,7 +256,7 @@ $output .= '
 			<tr style="display: auto;">
 				<td class="form_label">Apply field to:</td>
 				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple">
+					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
 					</select>
 				</td>
 			</tr>

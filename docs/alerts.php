@@ -19,7 +19,7 @@ $output .= '
 			<tr>
 				<td class="form_label"><label for="c">Applies to:</label></td>
 				<td class="form_input">
-					<select name="i[]" id="i[]" multiple="multiple">
+					<select name="i[]" id="i[]" multiple="multiple" size="10">
 						<option value="">Printer Cartridges</option>
 						<option value="">Paper</option>
 						<option value="">Toner</option>
@@ -87,7 +87,7 @@ $output .= '
 			<tr>
 				<td class="form_label"><label for="c">Applies to:</label></td>
 				<td class="form_input">
-					<select name="i[]" id="i[]" multiple="multiple">
+					<select name="i[]" id="i[]" multiple="multiple" size="10">
 						<option value="" selected="selected">Printer Cartridges</option>
 						<option value="">Paper</option>
 						<option value="">Toner</option>
@@ -154,7 +154,7 @@ $output .= '
 			<tr>
 				<td class="form_label"><label for="c">Applies to:</label></td>
 				<td class="form_input">
-					<select name="i[]" id="i[]" multiple="multiple">
+					<select name="i[]" id="i[]" multiple="multiple" size="10">
 						<option value="" selected="selected">Printer Cartridges</option>
 						<option value="">Paper</option>
 						<option value="">Toner</option>

@@ -34,7 +34,7 @@ elseif (!isset($_REQUEST["c"])){
 				<tr>
 					<td class="form_label">Categories:</td>
 					<td class="form_input">
-						<select name="c[]" id="c[]" multiple="multiple">
+						<select name="c[]" id="c[]" multiple="multiple" size="10">
 							'.get_category_options().'
 						</select>
 					</td>
@@ -96,7 +96,7 @@ elseif (!isset($_REQUEST["i"])){
 		}
 		
 		$output .= '
-							<select name="i[]" id="i[]" multiple="multiple">
+							<select name="i[]" id="i[]" multiple="multiple" size="10">
 								'.$options.'
 							</select>
 						</td>

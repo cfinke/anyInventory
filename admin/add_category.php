@@ -17,6 +17,7 @@ $output = '
 				<td class="form_label"><label for="parent">Parent Category:</label></td>
 				<td class="form_input">
 					<select name="parent" id="parent">
+						<option value="0">Top Level</option>
 						'.get_category_options().'
 					</select>
 				</td>

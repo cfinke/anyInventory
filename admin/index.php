@@ -74,17 +74,6 @@ $output .= '			</td>
 					</tr>';
 
 if ($admin_user->usertype == 'Administrator'){
-	$output .= '
-					<tr>
-						<td style="width: 10%; text-align: center;">
-							[<a href="xml_export.php">'.DOWNLOAD_LINK.'</a>]
-						</td>
-						<td>
-							<b>'.DOWNLOAD_AS_XML.'</b>
-						</td>
-					</tr>';
-}
-if ($admin_user->usertype == 'Administrator'){
 	include("../label_templates.php");
 	$output .= '
 					<tr>
@@ -96,10 +85,7 @@ if ($admin_user->usertype == 'Administrator'){
 							'.LABEL_DIMENSIONS.': '.$templates[BAR_TEMPLATE]["label_width"].'" x '. $templates[BAR_TEMPLATE]["label_height"].'" ('.($templates[BAR_TEMPLATE]["label_width"] * 2.54) .' cm x '. ($templates[BAR_TEMPLATE]["label_height"] * 2.54).' cm)<br />
 							'.$templates[BAR_TEMPLATE]["num_cols"].' '.COLUMNS.', '.$templates[BAR_TEMPLATE]["num_rows"].' '.ROWS.' ('.($templates[BAR_TEMPLATE]["num_cols"] * $templates[BAR_TEMPLATE]["num_rows"]).' '.LABELS.')
 						</td>
-					</tr>';
-}
-if ($admin_user->usertype == 'Administrator'){
-	$output .= '
+					</tr>
 					<tr>
 						<td style="width: 10%; text-align: center;">
 							[<a href="edit_special.php?id=label_padding">'.EDIT_LINK.'</a>]
@@ -107,10 +93,7 @@ if ($admin_user->usertype == 'Administrator'){
 						<td>
 							<b>'._LABEL_PADDING.':</b> '.LABEL_PADDING.'</td>
 						</td>
-					</tr>';
-}
-if ($admin_user->usertype == 'Administrator'){
-	$output .= '
+					</tr>
 					<tr>
 						<td style="width: 10%; text-align: center;">
 							[<a href="edit_special.php?id=pad_char">'.EDIT_LINK.'</a>]
@@ -118,10 +101,7 @@ if ($admin_user->usertype == 'Administrator'){
 						<td>
 							<b>'._PAD_CHAR.':</b> '.PAD_CHAR.'</td>
 						</td>
-					</tr>';
-}
-if ($admin_user->usertype == 'Administrator'){
-	$output .= '
+					</tr>
 					<tr>
 						<td style="width: 10%; text-align: center;">
 							[<a href="edit_special.php?id=barcode">'.EDIT_LINK.'</a>]

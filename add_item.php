@@ -54,7 +54,7 @@ else{
 				foreach($field->values as $value){
 					$output .= '<option value="'.$value.'"';
 					if ($value == $field->default_value) $output .= ' selected="selected"';
-					$output .= '>'.$value.'</option>';
+					$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
 				}
 				$output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$field->default_value.'" />';
 				break;

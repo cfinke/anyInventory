@@ -3,19 +3,14 @@ TODO
 Fields
 ======
 
-
 Categories
 ==========
-When option is chosen in 'multiple' field, text box should take that value
 
 Items
 =====
 Alerts
 
-
 BEFORE NEXT RELEASE
 ===================
-Files: If a file has a previewable format (ie. thumbnails for images) then show that on the item description page and item edit page)
-
 Instructions for use
 

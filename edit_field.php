@@ -28,7 +28,11 @@ $output = '
 						</select>
 					</td>
 				</tr>
-				<tr id="values_row" style="display: none;">
+				<tr id="values_row" style="display: ';
+
+$output .= ($field->input_type != 'text') ? 'auto' : 'none';
+
+$output .= ';">
 					<td class="form_label"><label for="values">Values:</label><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
 					<td class="form_input"><input type="text" name="values" id="values" value="';
 					if (is_array($field->values)){
@@ -43,7 +47,11 @@ $output = '
 					<td class="form_label"><label for="default_value">Default value:</label></td>
 					<td class="form_input"><input type="text" name="default_value" id="default_value" value="'.$field->default_value.'" /></td>
 				</tr>
-				<tr style="display: auto;" id="size_row">
+				<tr style="display: ';
+
+$output .= ($field->input_type == 'text') ? 'auto' : 'none';
+
+$output .= ';" id="size_row">
 					<td class="form_label"><label for="size">Size, in characters:</label><br /><small>Only for \'text\' data type.</small></td>
 					<td class="form_input"><input type="text" name="size" id="size" value="'.$field->size.'" /></td>
 				</tr>

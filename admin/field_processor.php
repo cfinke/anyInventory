@@ -221,11 +221,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 		}
 		
 		if ($field->input_type == 'file'){
-			$query = "SELECT `".$field->name."` FROM `anyInventory_items` GROUP BY `".$field->name."`";
+			$query = "SELECT `item_id` FROM `anyInventory_values` WHERE `field_id`='".$_REQUEST["id"]."' GROUP BY `item_id`";
 			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			while ($row = mysql_fetch_array($result)){
-				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row[$field->name]."'";
+				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row["value"]."'";
 				$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 				$newrow = mysql_fetch_array($newresult);
 				

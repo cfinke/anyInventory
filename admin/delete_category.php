@@ -40,12 +40,11 @@ if (count($category->children) > 0){
 		<p>
 			<input type="radio" name="subcat_action" value="delete" /> Delete all sub-categories<br />
 		   	<input type="radio" name="subcat_action" value="move" /> Move all sub-categories to <select name="move_subcats_to" id="move_subcats_to">'.get_category_options($category->parent_id).'</select>.
-		</p>';
+		</p>
+		<p><b>Number of items inventoried in this category and its subcategories:</b> '.$category->num_items_r().'</p>';
 }
 
-$output .= '
-		<p><b>Number of items inventoried in this category\'s subcategories:</b> '.$category->num_items_r().'</p>
-		<p style="text-align: center;"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></p>
+$output .= '<p style="text-align: center;"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></p>
 	</form>';
 
 display($output);

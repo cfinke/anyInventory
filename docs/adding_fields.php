@@ -177,7 +177,104 @@ $output .= '
 		</table>
 	</form>
 	<p>The last field, "Apply to," deals with applying this field to a set of categories.  We don\'t need to worry about this, since we have not added any categories yet.</p>
-	<p>Adding the total price and item purchased fields will work the same way, but let\'t take a look at one of the other fields to see how adding an enumered field works, "enumerated" meaning that you can specify a set of values to choose from.</p>
+	<p>Adding the total price and item purchased fields will work the same way, but let\'s take a look at one of the other fields to see how adding an enumered field works, "enumerated" meaning that you can specify a set of values to choose from.</p>
+	
+	<p>Let\'s add the "place of purchase" field now, which is of type "multiple."  (We set it as multiple instead of select in order 
+	to allow us to type in a place if it doesn\'t appear in the list.)</p>
+	<p>Back to the purchase date: first, we enter in the field name and choose the field type:</p>
+   <form method="post" action="#">
+		<table>
+			<tr style="display: auto;">
+				<td class="form_label"><label for="name">Name:</label></td>
+				<td class="form_input"><input type="text" name="name" id="name" value="Place of Purchase" /></td>
+			</tr>
+			<tr>
+				<td class="form_label"><label for="name">Data type:</label></td>
+				<td class="form_input">
+					<select name="input_type" id="input_type"">
+						<option onclick="document.getElementById(\'values_row_x\').style.display = \'none\';document.getElementById(\'size_row_x\').style.display = \'\';" value="text"';if($field->input_type == 'text') $output .= ' selected="selected"';$output.='>Text</option>
+						<option onclick="document.getElementById(\'values_row_x\').style.display = \'\';document.getElementById(\'size_row_x\').style.display = \'none\';" value="select"';if($field->input_type == 'select') $output .= ' selected="selected"';$output.='>Select Box</option>
+						<option selected="selected" onclick="document.getElementById(\'values_row_x\').style.display = \'\';document.getElementById(\'size_row_x\').style.display = \'none\';" value="multiple"';if($field->input_type == 'multiple') $output .= ' selected="selected"';$output.='>Multiple (Select + Text)</option>
+						<option onclick="document.getElementById(\'values_row_x\').style.display = \'\';document.getElementById(\'size_row_x\').style.display = \'none\';" value="checkbox"';if($field->input_type == 'checkbox') $output .= ' selected="selected"';$output.='>Checkboxes</option>
+						<option onclick="document.getElementById(\'values_row_x\').style.display = \'\';document.getElementById(\'size_row_x\').style.display = \'none\';" value="radio"';if($field->input_type == 'radio') $output .= ' selected="selected"';$output.='>Radio Buttons</option>
+					</select>
+				</td>
+			</tr>
+			<tr id="values_row_x" style="display: auto;">
+				<td class="form_label"><label for="values">Values:</label></td>
+				<td class="form_input"><input type="text" name="values" id="values" value="" /></td>
+			</tr>
+			<tr style="display: auto;">
+				<td class="form_label"><label for="default_value">Default value:</label></td>
+				<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
+			</tr>
+			<tr style="display: none;" id="size_row_x">
+				<td class="form_label"><label for="size">Size, in characters:</label></td>
+				<td class="form_input"><input type="text" name="size" id="size" value="" /></td>
+			</tr>
+			<tr style="display: auto;">
+				<td class="form_label">Apply field to:</td>
+				<td class="form_input">
+					<select name="add_to[]" id="add_to[]" multiple="multiple">
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<p>As you can see, a new field has appeared (appears) and one field has disappeared (size).  This is because the size field only applies to text fields and the values field only applies to enumerated fields.  By changing the field type, you can see what fields need to be filled in.</p>
+	<p>The next thing we need to do is to give this field some values. We do this by entering in the values we want to appear in the list, separated by commas. So, let\'s put in the five stores we shop at the most often, and we\'ll set the default to the store that we shop at the most.</p>
+   <form method="post" action="#">
+		<table>
+			<tr style="display: auto;">
+				<td class="form_label"><label for="name">Name:</label></td>
+				<td class="form_input"><input type="text" name="name" id="name" value="Place of Purchase" /></td>
+			</tr>
+			<tr>
+				<td class="form_label"><label for="name">Data type:</label></td>
+				<td class="form_input">
+					<select name="input_type" id="input_type"">
+						<option onclick="document.getElementById(\'values_row_y\').style.display = \'none\';document.getElementById(\'size_row_y\').style.display = \'\';" value="text"';if($field->input_type == 'text') $output .= ' selected="selected"';$output.='>Text</option>
+						<option onclick="document.getElementById(\'values_row_y\').style.display = \'\';document.getElementById(\'size_row_y\').style.display = \'none\';" value="select"';if($field->input_type == 'select') $output .= ' selected="selected"';$output.='>Select Box</option>
+						<option selected="selected" onclick="document.getElementById(\'values_row_y\').style.display = \'\';document.getElementById(\'size_row_y\').style.display = \'none\';" value="multiple"';if($field->input_type == 'multiple') $output .= ' selected="selected"';$output.='>Multiple (Select + Text)</option>
+						<option onclick="document.getElementById(\'values_row_y\').style.display = \'\';document.getElementById(\'size_row_y\').style.display = \'none\';" value="checkbox"';if($field->input_type == 'checkbox') $output .= ' selected="selected"';$output.='>Checkboxes</option>
+						<option onclick="document.getElementById(\'values_row_y\').style.display = \'\';document.getElementById(\'size_row_y\').style.display = \'none\';" value="radio"';if($field->input_type == 'radio') $output .= ' selected="selected"';$output.='>Radio Buttons</option>
+					</select>
+				</td>
+			</tr>
+			<tr id="values_row_y" style="display: auto;">
+				<td class="form_label"><label for="values">Values:</label></td>
+				<td class="form_input"><input type="text" name="values" id="values" value="Staples, Office Max, Office Depot, Radio Shack, Sam Goody" /></td>
+			</tr>
+			<tr style="display: auto;">
+				<td class="form_label"><label for="default_value">Default value:</label></td>
+				<td class="form_input"><input type="text" name="default_value" id="default_value" value="Office Max" /></td>
+			</tr>
+			<tr style="display: none;" id="size_row_y">
+				<td class="form_label"><label for="size">Size, in characters:</label></td>
+				<td class="form_input"><input type="text" name="size" id="size" value="" /></td>
+			</tr>
+			<tr style="display: auto;">
+				<td class="form_label">Apply field to:</td>
+				<td class="form_input">
+					<select name="add_to[]" id="add_to[]" multiple="multiple">
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<p>Once again, since we have not added any categories yet, we can ignore the "Apply to" field.<p>
+	<p>This field, when it is shown on an item addition page, will look like this:</p>
+	<form style="padding-left: 50px; margin: 10px;">
+		<input type="text" value="Office Max" id="country"/>
+		<select name="values">
+			<option onclick="document.getElementById(\'country\').value = \'Staples\';">Staples</option>
+			<option onclick="document.getElementById(\'country\').value = \'Office Max\';">Office Max</option>
+			<option onclick="document.getElementById(\'country\').value = \'Office Depot\';">Office Depot</option>
+			<option onclick="document.getElementById(\'country\').value = \'Radio Shack\';">Radio Shack</option>
+			<option onclick="document.getElementById(\'country\').value = \'Sam Goody\';">Sam Goody</option>
+		</select>
+	</form>
+	<p>Adding a radio button, checkbox, or select box field works in the same way.</p>
 	<div style="float: left;"><a href="fields.php">&lt;&lt; Previous: Fields</a></div>
 	<div style="text-align: right;"><a href="editing_fields.php">Next: Editing Fields &gt;&gt;</a></div>';
 

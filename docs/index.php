@@ -18,22 +18,21 @@ $output .= '
 			<li><a href="deleting_fields.php">Deleting</a></li>
 			<li><a href="field_order.php">Field Order</a></li>
 		</ol>
-		<li>Categories</li>
+		<li><a href="categories.php">Categories</a></li>
 		<ol>
-			<li>Adding</li>
-			<li>Editing</li>
-			<li>Deleting</li>
+			<li><a href="categories.php#adding">Adding</a></li>
+			<li><a href="editing_categories.php">Editing</a></li>
+			<li><a href="deleting_categories.php">Deleting</a></li>
 		</ol>
-		<li>Items</li>
+		<li><a href="items.php">Items</a></li>
 		<ol>
-			<li>Adding</li>
-			<li>Editing</li>
-			<li>Moving</li>
-			<li>Deleting</li>
-			<li>File Uploads</li>
+			<li><a href="items.php#adding">Adding</a></li>
+			<li><a href="editing_items.php">Editing</a></li>
+			<li><a href="moving_items.php">Moving</a></li>
+			<li><a href="deleting_items.php">Deleting</a></li>
 		</ol>
-		<li>Searching</li>
-		<li>What\'s Next?</li>
+		<li><a href="searching.php">Searching</a></li>
+		<li><a href="whats_next.php">What\'s Next?</a></li>
 	</ol>';
 
 display($output);

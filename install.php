@@ -126,7 +126,7 @@ if ($_POST["action"] == "install"){
 			`anyInventory_config`,
 			`anyInventory_users`,
 			`anyInventory_values`";
-		@$db->query($query);
+		$db->query($query);
 		
 		$query = "CREATE TABLE `anyInventory_categories` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -263,10 +263,8 @@ if ($_POST["action"] == "install"){
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		if (count($config_errors) == 0){
-			// Delete the install file.
-			if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);
-			
 			header("Location: ./index.php");
+			exit;
 		}
 		else{
 			$set_config_error = true;
@@ -323,9 +321,8 @@ if($_POST["action"] == "try_again"){
 	}
 	
 	if (count($config_errors) == 0){
-		if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);
-		
 		header("Location: index.php");
+		exit;
 	}
 	else{
 		$output .= '

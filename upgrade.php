@@ -106,10 +106,10 @@ if ($_POST["action"] == "upgrade"){
 					`time` timestamp( 14 ) NOT NULL ,
 					UNIQUE KEY `id` ( `id` )
 					)";
-				@$db->query($query);
+				$db->query($query);
 				
 				$query = "ALTER TABLE `anyInventory_files` ADD `offsite_link` VARCHAR(255) NOT NULL";
-				@$db->query($query);
+				$db->query($query);
 				
 				// Fix field values data type
 				
@@ -171,10 +171,10 @@ if ($_POST["action"] == "upgrade"){
 				
 				// Added timed alerts
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `timed` INT( 1 ) DEFAULT '0' NOT NULL";
-				@$db->query($query);
+				$db->query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file' ) DEFAULT 'text' NOT NULL ";
-				@$db->query($query);
+				$db->query($query);
 				
 				$query = "SELECT COUNT(`key`) AS `num_files` FROM `anyInventory_files` GROUP BY `key` ORDER BY `key` DESC LIMIT 1";
 				$result = $db->query($query);
@@ -226,7 +226,7 @@ if ($_POST["action"] == "upgrade"){
 				# Changes introduced in 1.7
 				
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `category_ids` TEXT NOT NULL";
-				@$db->query($query);
+				$db->query($query);
 				
 				// Run script to add a category array for each alert
 				
@@ -250,13 +250,13 @@ if ($_POST["action"] == "upgrade"){
 				# Changes introduced in 1.7.1
 				
 				$query = "ALTER TABLE `anyInventory_categories` ADD `auto_inc_field` INT( 1 ) DEFAULT '0' NOT NULL";
-				@$db->query($query);
+				$db->query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` ADD `highlight` INT( 1 ) DEFAULT '0' NOT NULL";
-				@$db->query($query);
+				$db->query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `name` `name` VARCHAR( 64 ) NOT NULL";
-				@$db->query($query); 
+				$db->query($query); 
 			case '1.7.1':
 				# Changes introduced in 1.8
 				

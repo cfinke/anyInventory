@@ -8,33 +8,6 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 include("functions.php");
 
-switch ($_POST['db_type']) {
-   case 'Oracle':
-	$dbtype = 'oci8';
-	break;
-   case 'MSSQL':
-        $dbtype = 'mssql';
-        break;
-   case 'FrontBase':
-        $dbtype = 'fbsql';
-        break;
-   case 'MySQL':
-        $dbtype = 'mysql';
-        break;
-   case 'PostgreSQL':
-        $dbtype = 'pgsql';
-        break;
-   case 'SQLite':
-        $dbtype = 'SQLite';
-        break;
-   case 'MiniSQL':
-        $dbtype = 'msql';
-        break;
-   case 'ODBC':
-        $dbtype = 'odbc';
-        break;
-}
-
 // Set the text of globals.php
 $writetoglobals = '<?php
 
@@ -48,7 +21,7 @@ $db_host = "'.$_POST["db_host"].'";
 $db_name = "'.$_POST["db_name"].'";
 $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
-$db_type = "'.$db_type.'";
+$db_type = "'.$_POST["db_type"].'";
 
 include($DIR_PREFIX."environment.php");
 
@@ -99,11 +72,11 @@ if ($_POST["action"] == "install"){
 		
 		// check for Oracle 8 - data source name syntax is different
 
-		if ($db_type != 'oci8'){
-		      $dsn = $db_type."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
-		} else {
-		      $net8name = 'www';
-		      $dsn = $db_type."://".$_POST['db_user'].":".$_POST['db_pass']."@".$net8name;
+		if ($_POST["db_type"] != 'oci8'){
+			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
+		}
+		else {
+			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@www";
 		}
 	
 		// establish the connection
@@ -421,15 +394,16 @@ elseif(!$set_config_error){
 						<tr>
 							<td class="form_label"><label for="db_type">DB Type:</label></td>
 							<td class="form_input">
-                                                                <select name="db_type">
-                                                                       <option';if($_REQUEST["db_type"] == 'MySQL') $output .= ' selected="selected"'; $output .= '>MySQL</option>
-                                                                       <option';if($_REQUEST["db_type"] == 'PostgreSQL') $output .= ' selected="selected"'; $output .= '>PostgreSQL</option>
-                                                                       <option';if($_REQUEST["db_type"] == 'MSSQL') $output .= ' selected="selected"'; $output .= '>MSSQL</option>
-                                                                       <option';if($_REQUEST["db_type"] == 'ODBC') $output .= ' selected="selected"'; $output .= '>ODBC</option>
-                                                                       <option';if($_REQUEST["db_type"] == 'FrontBase') $output .= ' selected="selected"'; $output .= '>FrontBase</option>
-                                                                       <option';if($_REQUEST["db_type"] == 'MiniSQL') $output .= ' selected="selected"'; $output .= '>MiniSQL</option>
-                                                                       <option';if($_REQUEST["db_type"] == 'SQLite') $output .= ' selected="selected"'; $output .= '>SQLite</option>
-                                                                </select>
+								<select name="db_type">
+								       <option value="mysql"';if($_REQUEST["db_type"] == 'mysql') $output .= ' selected="selected"'; $output .= '>MySQL</option>
+								       <option value="pgsql"';if($_REQUEST["db_type"] == 'pgsql') $output .= ' selected="selected"'; $output .= '>PostgreSQL</option>
+								       <option value="mssql"';if($_REQUEST["db_type"] == 'mssql') $output .= ' selected="selected"'; $output .= '>MSSQL</option>
+								       <option value="odbc"';if($_REQUEST["db_type"] == 'odbc') $output .= ' selected="selected"'; $output .= '>ODBC</option>
+								       <option value="fbsql"';if($_REQUEST["db_type"] == 'fbsql') $output .= ' selected="selected"'; $output .= '>FrontBase</option>
+								       <option value="msql"';if($_REQUEST["db_type"] == 'msql') $output .= ' selected="selected"'; $output .= '>MiniSQL</option>
+								       <option value="SQLite"';if($_REQUEST["db_type"] == 'SQLite') $output .= ' selected="selected"'; $output .= '>SQLite</option>
+									   <option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
+								</select>
 							</td>
 						</tr>
 						<tr>

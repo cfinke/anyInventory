@@ -9,34 +9,6 @@ require_once("item_class.php");
 
 $errors = array();
 
-switch ($_POST['db_type']) {
-   case 'Oracle':
-       $dbtype = 'oci8';
-       break;
-   case 'MSSQL':
-       $dbtype = 'mssql';
-       break;
-   case 'FrontBase':
-       $dbtype = 'fbsql';
-       break;
-   case 'MySQL':
-       $dbtype = 'mysql';
-       break;
-   case 'PostgreSQL':
-       $dbtype = 'pgsql';
-       break;
-   case 'SQLite':
-       $dbtype = 'SQLite';
-       break;
-   case 'MiniSQL':
-       $dbtype = 'msql';
-       break;           
-   case 'ODBC':
-       $dbtype = 'odbc';
-       break;
-}
-																										       
-
 // Set the text of globals.php
 $writetoglobals = '<?php
 
@@ -50,7 +22,7 @@ $db_host = "'.$_POST["db_host"].'";
 $db_name = "'.$_POST["db_name"].'";
 $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
-$db_type = "'.$db_type.'";
+$db_type = "'.$_POST["db_type"].'";
 
 include($DIR_PREFIX."environment.php");
 
@@ -97,19 +69,20 @@ if ($_POST["action"] == "upgrade"){
 	
 	// Check for the correct database information.	
 	if (count($errors) == 0){
-
 		// check for Oracle 8 - data source name syntax is different
-		if ($dbtype != 'oci8'){
-                      $dsn = $dbtype."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
-                } else {
-                      $net8name = 'www';
-                      $dsn = $db_type."://".$_POST['db_user'].":".$_POST['db_pass']."@".$net8name;
+		if ($_POST["db_type"] != 'oci8'){
+			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
 		}
-	        // establish the connection
-                $db = DB::connect($dsn);
+		else {
+			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@www";
+		}
+		
+	    // establish the connection
+		$db = DB::connect($dsn);
+		
 		if($DB::isError($db)){
-	                  $errors[] = 'anyInventory could not connect to the SQL server with the information you provided.';
-	         }
+			$errors[] = 'anyInventory could not connect to the SQL server with the information you provided.';
+		}
 	}
 	
 	// Make the appropriate changes, depending on the old version.	

@@ -12,7 +12,7 @@
 					<table cellspacing="0">
 						<tr>
 							<td id="appTitle">
-								<?php echo APP_TITLE; ?>
+								<?php echo APP_TITLE; ?> 1.9
 							</td>
 							<td>
 								<?php

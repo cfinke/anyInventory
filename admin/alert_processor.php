@@ -9,35 +9,47 @@ if ($_REQUEST["action"] == "do_add"){
 		header("Location: ../error_handler.php?eid=6");
 		exit;
 	}
-	
-	$_REQUEST["title"] = stripslashes($_REQUEST["title"]);
-	$_REQUEST["title"] = str_replace($replace,"",$_REQUEST["title"]);
-	$_REQUEST["title"] = trim(addslashes($_REQUEST["title"]));
-	
-	$timestamp = $_REQUEST["year"];
-	$timestamp .= ($_REQUEST["month"] < 10) ? '0' . $_REQUEST["month"] : $_REQUEST["month"];
-	$timestamp .= ($_REQUEST["day"] < 10) ? '0' . $_REQUEST["day"] : $_REQUEST["day"];
-	$timestamp .= '000000';
-	
-	$query = "INSERT INTO `anyInventory_alerts` 
-				(`title`,
-				 `item_ids`,
-				 `field_id`,
-				 `condition`,
-				 `value`,
-				 `time`,
-				 `timed`,
-				 `category_ids`)
-				VALUES
-				('".$_REQUEST["title"]."',
-				 '".serialize($_REQUEST["i"])."',
-				 '".$_REQUEST["field"]."',
-				 '".$_REQUEST["condition"]."',
-				 '".$_REQUEST["value"]."',
-				 '".$timestamp."',
-				 '".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."',
-				 '".$_REQUEST["c"]."')";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	else{
+		$cat_ids = unserialize(stripslashes($_REQUEST["c"]));
+		
+		if (is_array($cat_ids)){
+			foreach($cat_ids as $cat_id){
+				if (!$admin_user->can_admin($cat_id)){
+					header("Location: ../error_handler.php?eid=13");
+					exit;
+				}
+			}
+		}
+		
+		$_REQUEST["title"] = stripslashes($_REQUEST["title"]);
+		$_REQUEST["title"] = str_replace($replace,"",$_REQUEST["title"]);
+		$_REQUEST["title"] = trim(addslashes($_REQUEST["title"]));
+		
+		$timestamp = $_REQUEST["year"];
+		$timestamp .= ($_REQUEST["month"] < 10) ? '0' . $_REQUEST["month"] : $_REQUEST["month"];
+		$timestamp .= ($_REQUEST["day"] < 10) ? '0' . $_REQUEST["day"] : $_REQUEST["day"];
+		$timestamp .= '000000';
+		
+		$query = "INSERT INTO `anyInventory_alerts` 
+					(`title`,
+					 `item_ids`,
+					 `field_id`,
+					 `condition`,
+					 `value`,
+					 `time`,
+					 `timed`,
+					 `category_ids`)
+					VALUES
+					('".$_REQUEST["title"]."',
+					 '".serialize($_REQUEST["i"])."',
+					 '".$_REQUEST["field"]."',
+					 '".$_REQUEST["condition"]."',
+					 '".$_REQUEST["value"]."',
+					 '".$timestamp."',
+					 '".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."',
+					 '".$_REQUEST["c"]."')";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	}
 }
 elseif($_REQUEST["action"] == "do_edit_cat_ids"){
 	if (!is_array($_REQUEST["c"])){
@@ -45,6 +57,13 @@ elseif($_REQUEST["action"] == "do_edit_cat_ids"){
 		exit;
 	}
 	else{
+		foreach($_REQUEST["c"] as $cat_id){
+			if (!$admin_user->can_admin($cat_id)){
+				header("Location: ../error_handler.php?eid=13");
+				exit;
+			}
+		}
+		
 		$_REQUEST["title"] = stripslashes($_REQUEST["title"]);
 		$_REQUEST["title"] = str_replace($replace,"",$_REQUEST["title"]);
 		$_REQUEST["title"] = trim(addslashes($_REQUEST["title"]));
@@ -77,6 +96,17 @@ elseif($_REQUEST["action"] == "do_edit"){
 		exit;
 	}
 	else{
+		$cat_ids = unserialize(stripslashes($_REQUEST["c"]));
+		
+		if (is_array($cat_ids)){
+			foreach($cat_ids as $cat_id){
+				if (!$admin_user->can_admin($cat_id)){
+					header("Location: ../error_handler.php?eid=13");
+					exit;
+				}
+			}
+		}
+		
 		$timestamp = $_REQUEST["year"];
 		$timestamp .= ($_REQUEST["month"] < 10) ? '0' . $_REQUEST["month"] : $_REQUEST["month"];
 		$timestamp .= ($_REQUEST["day"] < 10) ? '0' . $_REQUEST["day"] : $_REQUEST["day"];
@@ -96,6 +126,17 @@ elseif($_REQUEST["action"] == "do_edit"){
 }
 elseif($_REQUEST["action"] == "do_delete"){
 	if ($_REQUEST["delete"] == "Delete"){
+		$alert = new alert($_REQUEST["id"]);
+		
+		if (is_array($alert->category_ids)){
+			foreach($alert->category_ids as $cat_id){
+				if (!$admin_user->can_admin($cat_id)){
+					header("Location: ../error_handler.php?eid=13");
+					exit;
+				}
+			}
+		}
+		
 		$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_REQUEST["id"]."'";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}

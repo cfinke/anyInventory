@@ -28,7 +28,49 @@ $output = '
 									'.$admin_user->get_admin_categories_options($_REQUEST["c"]).'
 								</select>
 							</td>
-						</tr>
+						</tr>';
+
+if (get_config_value('PP_VIEW')){
+	$output .= '
+						<tr>
+							<td class="form_label"><label for="parent">Give viewing priveleges to:</label></td>
+							<td class="form_input">
+								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
+
+$query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+
+while($row = mysql_fetch_array($result)){
+	$output .= '<option value="'.$row["id"].'" selected="selected">'.$row["username"].'</option>';
+}
+
+$output .= '
+								</select>
+							</td>
+						</tr>';
+}
+
+if (get_config_value('PP_ADMIN')){
+	$output .= '
+						<tr>
+							<td class="form_label"><label for="parent">Give admin priveleges to:</label></td>
+							<td class="form_input">
+								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
+
+$query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+
+while($row = mysql_fetch_array($result)){
+	$output .= '<option value="'.$row["id"].'">'.$row["username"].'</option>';
+}
+
+$output .= '
+								</select>
+							</td>
+						</tr>';
+}
+
+$output .= '
 						<tr>
 							<td class="form_label">Fields:</td>
 							<td class="form_input">

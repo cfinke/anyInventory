@@ -20,8 +20,9 @@ to these functions.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.4, simply overwrite the files from your current
-version, and then run the included upgrade.php script from the Web browser
+To upgrade to anyInventory 1.4.1, simply overwrite the files from 
+your current version.  If you are upgrading from a version before 1.4, you 
+should then run the included upgrade.php script from the Web browser
 of your choice.
 
 Using anyInventory
@@ -35,5 +36,5 @@ all comments and questions are welcomed.
 
 Other
 =====
-You can test out anyInventory at the anyInventory homepage, which is
+You can test out a demo of anyInventory at the anyInventory homepage, which is
 located at http://anyinventory.sf.net/ .

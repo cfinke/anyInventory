@@ -140,7 +140,6 @@ if ($_REQUEST["action"] == "upgrade"){
 						$new_query = "UPDATE `anyInventory_fields` SET `values`='".$sql_values."' WHERE `id`='".$row["id"]."'";
 						query($new_query);
 					}
-					
 				}
 				
 				// Fix field categories data type
@@ -170,6 +169,8 @@ if ($_REQUEST["action"] == "upgrade"){
 					}
 				}
 				
+				break;
+			case '1.4.':
 				break;
 		}
 		
@@ -281,6 +282,7 @@ elseif(!$globals_error){
 							<td>From which version of anyInventory are you upgrading?</td>
 							<td>
 								<select name="old_version">
+									<option value="1.4">1.4</option>
 									<option value="1.3">1.3</option>
 									<option value="1.2">1.2</option>
 									<option value="1.1">1.1</option>

@@ -14,9 +14,11 @@ $title = "anyInventory: ".$category->breadcrumb_names;
 $num_per_column = ceil($category->num_children / 2);
 
 // Display the breadcrumb links to this category.
-$output .= '<p style="padding-bottom: 5px; padding-top: 0px; padding-left: 0; padding-right: 0; margin-bottom: 10px;border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;">'.$category->get_breadcrumb_links().'</p>';
-
-$output .= '<table style="width: 100%;"><tr><td style="width: 85%;">';
+$output .= '
+	<p style="padding-bottom: 5px; padding-top: 0px; padding-left: 0; padding-right: 0; margin-bottom: 10px;border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;">'.$category->get_breadcrumb_links().'</p>
+	<table style="width: 100%;">
+		<tr>
+			<td style="width: 85%;">';
 
 if ($_REQUEST["id"]){
 	// A specific item has been requested.
@@ -43,7 +45,6 @@ if ($_REQUEST["id"]){
 	}
 }
 else{
-	// We are in a specific category.
 	if ($_REQUEST["c"] == 0){
 		// Display introductory text, check for alerts
 		$output .= '<p style="padding: 15px;">This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.</p>';
@@ -69,6 +70,9 @@ else{
 		
 		$output .= '</td></tr></table>';
 	}
+	else{
+		$output .= '<p style="text-align: center;">There are no sub-categories in this category.</p>';
+	}
 	
 	// Display any items in this category.
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
@@ -78,14 +82,13 @@ else{
 		$output .= '
 			<table style="width: 100%; margin-top: 20px;">
 				<tr>
-					<td style="white-space: nowrap; width: 5%; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000; font-weight: bold;">ID #</td>
-					<td style="border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;">Name</td>
+					<td style="border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;">Items in this Category</td>
 				</tr>';
 		
 		while ($row = mysql_fetch_array($result)){
 			$item = new item($row["id"]);
 			
-			$output .= '<tr><td style="vertical-align: top;">'.$item->id.'</td><td style="vertical-align: top;">'.$item->export_teaser().'</td></tr>';
+			$output .= '<tr><td style="vertical-align: top;">'.$item->export_teaser().'</td></tr>';
 		}
 		
 		$output .= '</table>';

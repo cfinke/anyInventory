@@ -51,8 +51,8 @@ class file_object{
 	function get_download_link(){
 		$link = '<a href="'.$this->web_path.'">';
 		if ($this->is_remote){
-			if (strlen($this->web_path) > 64){
-				$link .= substr($this->web_path, 0, 64) . '...';
+			if (strlen($this->web_path) > 32){
+				$link .= substr($this->web_path, 0, 32) . '...';
 			}
 			else{
 				$link .= $this->web_path;

@@ -21,7 +21,7 @@ $output = '
 				<td class="form_input">
 					<select name="parent" id="parent">
 						<option value="0">Top Level</option>
-						'.get_category_options($category->parent_id).'
+						'.get_category_options($category->parent_id, false).'
 					</select>
 				</td>
 			</tr>

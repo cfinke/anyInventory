@@ -14,7 +14,7 @@ if (!isset($_REQUEST["c"])){
 					<td class="form_label"><label for="c">Add Item to:</label></td>
 					<td class="form_input">
 						<select name="c" id="c">
-							'.get_category_options().'
+							'.get_category_options(null, false).'
 						</select>
 					</td>
 				</tr>

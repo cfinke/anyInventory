@@ -37,19 +37,19 @@ function display($output){
 	exit;
 }
 
-function get_category_options($selected = null, $nonempty = null){
+function get_category_options($selected = null, $multiple = true){
 	// This function returns the options for a category dropdown.
 	// Any category id's in the array $selected will be selected in the 
 	// resulting list.
 	
 	if (!is_array($selected)) $selected = array($selected);
 	
-	$output .= get_options_children(0, '', $selected);
+	$output .= get_options_children(0, '', $selected, $multiple);
 	
 	return $output;
 }
 
-function get_options_children($id, $pre = null, $selected = null){
+function get_options_children($id, $pre = null, $selected = null, $multiple = true){
 	// This function creates select box options for the children of a category
 	// with the id $id.
 	
@@ -70,20 +70,30 @@ function get_options_children($id, $pre = null, $selected = null){
 			$category = $row["name"];
 			
 			$list .= '<option value="'.$row["id"].'"';
-			if (($selected[0] === null) || (in_array($row["id"],$selected))) $list .= ' selected="selected"';
+			if ((($selected[0] === null) && ($multiple == true)) || (in_array($row["id"],$selected))) $list .= ' selected="selected"';
 			$list .= '>'.$pre . $category.'</option>';
 			
-			$list .= get_options_children($row["id"], $pre, $selected);
+			$list .= get_options_children($row["id"], $pre, $selected, $multiple);
 		}
 	}
 	
 	return $list;
 }
 
-function get_item_options($cat = 0, $selected = null){
+function get_item_options($cat_ids = 0, $selected = null){
 	// This function creates select box options for the items in the category $cat.
 	if (!is_array($selected)) $selected = array($selected);
-	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category`='".$cat."' ORDER BY `name` ASC";
+	if (!is_array($cat_ids)) $cat_ids = array($cat_ids);
+	
+	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (";
+	
+	foreach($cat_ids as $cat_id){
+		$query .= $cat_id.", ";
+	}
+	
+	$query = substr($query, 0, strlen($query) - 2);
+	
+	$query .= ")";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	while ($row = mysql_fetch_array($result)){

@@ -31,7 +31,7 @@ if ($category->num_items() > 0){
 	$output .= '
 		<p>
 			<input type="radio" name="item_action" value="delete" /> Delete all items in this category<br />
-		   	<input type="radio" name="item_action" value="move" /> Move all items in this category to <select name="move_items_to" id="move_items_to">'.get_category_options($category->parent_id).'</select>.
+		   	<input type="radio" name="item_action" value="move" /> Move all items in this category to <select name="move_items_to" id="move_items_to">'.get_category_options($category->parent_id, false).'</select>.
 		</p>';
 }
 
@@ -41,7 +41,7 @@ if ($category->num_children > 0){
 	$output .= '
 		<p>
 			<input type="radio" name="subcat_action" value="delete" /> Delete all sub-categories<br />
-		   	<input type="radio" name="subcat_action" value="move" /> Move all sub-categories to <select name="move_subcats_to" id="move_subcats_to">'.get_category_options($category->parent_id).'</select>.
+		   	<input type="radio" name="subcat_action" value="move" /> Move all sub-categories to <select name="move_subcats_to" id="move_subcats_to">'.get_category_options($category->parent_id, false).'</select>.
 		</p>
 		<p><b>Number of items inventoried in this category and its subcategories:</b> '.$category->num_items_r().'</p>';
 }

@@ -212,6 +212,27 @@ if ($_REQUEST["action"] == "upgrade"){
 				}
 			case '1.6':
 				# Changes introduced in 1.7
+				
+				$query = "ALTER TABLE `anyInventory_alerts` ADD `category_ids` TEXT NOT NULL";
+				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				
+				// Run script to add a category array for each alert
+				
+				$query = "SELECT * FROM `anyInventory_alerts`";
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+					$items = unserialize($row["item_ids"]);
+					
+					$item = new item($items[0]);
+					
+					$category_ids = array($item->category->id);
+					
+					$newquery = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($category_ids)."' WHERE `id`='".$row["id"]."'";
+					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+				}
+				
+				/////////////////////////////////////////////////////
 		}
 		
 		// Attempt to write the globals file.

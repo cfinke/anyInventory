@@ -28,7 +28,8 @@ BEFORE 1.7
 ===================
 DREW - Thumbnails of remote images
 DONE - Internal password protection
-CHRIS - Alerts across multiple categories
+DONE - Alerts across multiple categories
+? New layout option
 
 BEFORE 1.8
 ===================
@@ -42,5 +43,5 @@ Label Sheets
 
 BUGS
 ========================================
-When a remote file's URL is too long, it stretches the page
-The category drop down returns with the last item selected instead of the first
+FIXED - When a remote file's URL is too long, it stretches the page
+FIXED - The category drop down returns with the last item selected instead of the first

@@ -10,6 +10,7 @@ $output = '
 		<form method="post" action="item_processor.php" enctype="multipart/form-data">
 		<table style="width: 100%;"><tr><td><h2>Edit an Item</h2></td><td style="text-align: right;"><a href="../docs/editing_items.php">Help with editing items</a></td></tr></table>
 			<input type="hidden" name="action" value="do_edit" />
+			<input type="hidden" name="c" value="'.$_REQUEST["c"].'" />
 			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 			<table>
 				<tr>

@@ -10,40 +10,7 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 	
 	// Add the field to the items table
-	$query = "ALTER TABLE `anyInventory_items` ADD `".$_REQUEST["name"]."`";
-	
-	// Get the MySQL field type
-	switch($_REQUEST["input_type"]){
-		case 'text':
-			if ($_REQUEST["size"] < 256){
-				$query .= " VARCHAR(".$_REQUEST["size"].") DEFAULT '".$_REQUEST["default_value"]."' ";
-			}
-			else{
-				$query .= " TEXT ";
-			}
-			break;
-		case 'multiple':
-			$query .= " VARCHAR(64) DEFAULT '' ";
-			break;
-		case 'radio':
-		case 'checkbox':
-			$extra = "'',";
-		case 'select':
-			$query .= " ENUM(".$extra;
-			
-			$enums = explode(",",trim($_REQUEST["values"]));
-			
-			foreach($enums as $enum){
-				$query .= "'".trim(str_replace("'","",str_replace('"','',$enum)))."',";
-			}
-			
-			$query = substr($query, 0, strlen($query) - 1);
-			
-			$query .= ") DEFAULT '".$_REQUEST["default_value"]."' ";
-			break;
-	}
-	
-	$query .= " NOT NULL";
+	$query = "ALTER TABLE `anyInventory_items` ADD `".$_REQUEST["name"]."` ".get_mysql_column_type($_REQUEST["input_type"],$_REQUEST["size"],$_REQUEST["values"],$_REQUEST["default_value"]);
 	$result = query($query);
 	
 	$values = explode(",",$_REQUEST["values"]);

@@ -2,8 +2,16 @@
 
 include("globals.php");
 
+$replace = array("'",'"','&',"\\",':',';','`','[',']');
+
 if ($_REQUEST["action"] == "do_add"){
 	// Check for duplicate fields
+	
+	$_REQUEST["name"] = stripslashes($_REQUEST["name"]);
+	$_REQUEST["name"] = str_replace($replace,"",$_REQUEST["name"]);
+	$_REQUEST["name"] = str_replace("_"," ",$_REQUEST["name"]);
+	$_REQUEST["name"] = trim(addslashes($_REQUEST["name"]));
+	
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_REQUEST["name"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
@@ -12,18 +20,26 @@ if ($_REQUEST["action"] == "do_add"){
 		exit;
 	}
 	else{
+		$_REQUEST["values"] = stripslashes($_REQUEST["values"]);
+		$_REQUEST["values"] = str_replace("'","",$_REQUEST["values"]);
+		$_REQUEST["values"] = trim(str_replace($replace,"",$_REQUEST["values"]));
+		
+		$_REQUEST["default_value"] = stripslashes($_REQUEST["default_value"]);
+		$_REQUEST["default_value"] = str_replace("'","",$_REQUEST["default_value"]);
+		$_REQUEST["default_value"] = trim(str_replace($replace,"",$_REQUEST["default_value"]));
+		
 		if (($_REQUEST["input_type"] == "select") || ($_REQUEST["input_type"] == "radio")){
-			$_REQUEST["values"] = str_replace("'","",str_replace('"','',stripslashes($_REQUEST["values"])));
-			$_REQUEST["default_value"] = str_replace("'","",str_replace('"','',stripslashes($_REQUEST["default_value"])));
-			
 			if (($_REQUEST["default_value"] == '') || (stristr($_REQUEST["values"],$_REQUEST["default_value"]) === false)){
 				header("Location: ../error_handler.php?eid=1");
 				exit;
 			}
-			elseif(trim($_REQUEST["values"]) == ''){
+			elseif($_REQUEST["values"] == ''){
 				header("Location: ../error_handler.php?eid=7");
 				exit;
 			}
+		}
+		elseif($_REQUEST["input_type"] == "checkbox"){
+			$_REQUEST["default_value"] = '';
 		}
 		
 		// Add a field
@@ -60,7 +76,7 @@ if ($_REQUEST["action"] == "do_add"){
 		$importance = mysql_result($result, 0, 'biggest') + 1;
 		
 		// Add this field.
-		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["input_type"]."','".$values."','".$_REQUEST["default_value"]."','".$_REQUEST["size"]."','".$categories."','".$importance."')";
+		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`,`highlight`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["input_type"]."','".$values."','".$_REQUEST["default_value"]."','".$_REQUEST["size"]."','".$categories."','".$importance."','".((int) (($_REQUEST["highlight"] == "yes") / 1))."')";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$field = new field(mysql_insert_id());
@@ -82,12 +98,39 @@ elseif($_REQUEST["action"] == "do_edit"){
 		exit;
 	}
 	
+	$_REQUEST["values"] = stripslashes($_REQUEST["values"]);
+	$_REQUEST["values"] = str_replace("'","",$_REQUEST["values"]);
+	$_REQUEST["values"] = trim(str_replace($replace,"",$_REQUEST["values"]));
+	
+	$_REQUEST["default_value"] = stripslashes($_REQUEST["default_value"]);
+	$_REQUEST["default_value"] = str_replace("'","",$_REQUEST["default_value"]);
+	$_REQUEST["default_value"] = trim(str_replace($replace,"",$_REQUEST["default_value"]));
+	
+	$_REQUEST["name"] = stripslashes($_REQUEST["name"]);
+	$_REQUEST["name"] = str_replace($replace,"",$_REQUEST["name"]);
+	$_REQUEST["name"] = str_replace("_"," ",$_REQUEST["name"]);	
+	$_REQUEST["name"] = trim(addslashes($_REQUEST["name"]));
+	
+	if (($_REQUEST["input_type"] == "select") || ($_REQUEST["input_type"] == "radio")){
+		if (($_REQUEST["default_value"] == '') || (stristr($_REQUEST["values"],$_REQUEST["default_value"]) === false)){
+			header("Location: ../error_handler.php?eid=1");
+			exit;
+		}
+		elseif($_REQUEST["values"] == ''){
+			header("Location: ../error_handler.php?eid=7");
+			exit;
+		}
+	}
+	elseif($_REQUEST["input_type"] == "checkbox"){
+		$_REQUEST["default_value"] = '';
+	}
+	
 	// Make an object from the unchanged field.
 	$old_field = new field($_REQUEST["id"]);
 	
 	if ($_REQUEST["input_type"] == "text"){
 		// Set the default text size
-		if($_REQUEST["size"] == 0){
+		if(($_REQUEST["size"] == 0) || (!is_numeric($_REQUEST["size"]))){
 			$_REQUEST["size"] = 255;
 		}
 	}
@@ -117,7 +160,8 @@ elseif($_REQUEST["action"] == "do_edit"){
 				`input_type`='".$_REQUEST["input_type"]."',
 				`values`='".$values."',
 				`default_value`='".$_REQUEST["default_value"]."',
-				`size`='".$_REQUEST["size"]."'
+				`size`='".$_REQUEST["size"]."',
+				`highlight`='".((int) (($_REQUEST["highlight"] == "yes") / 1))."'
 				WHERE `id`='".$_REQUEST["id"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	

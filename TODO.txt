@@ -11,3 +11,8 @@ When option is chosen in 'multiple' field, text box should take that value
 Items
 =====
 Alerts
+
+
+Misc
+====
+Change image uploading to a more generic file upload - ie. allow uploads of PDFs, word docs related to item

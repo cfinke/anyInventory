@@ -68,27 +68,30 @@ function get_fields_checkbox_area($checked = array()){
 	$query = "SELECT * FROM `anyInventory_fields` WHERE 1 ORDER BY `name` ASC";
 	$result = query($query);
 	
-	$num_fields = mysql_num_rows($result);
+	$output .= '<table>';
 	
-	$output .= '<div id="field_checkboxes">
-		<div style="float: left;">';
-	
-	for ($i = 0; $i < ceil($num_fields / 2); $i++){
-		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.mysql_result($result, $i, "id").']" value="yes" ';
-		if ((is_array($checked)) && (in_array(mysql_result($result, $i, "id"), $checked))) $output .= ' checked="checked"';
-		$output .= ' /> '.mysql_result($result, $i, "name").'</div>';
+	while($row = mysql_fetch_array($result)){
+		$field = new field($row["id"]);
+		
+		$output .= '
+			<tr>
+				<td style="vertical-align: top;">
+					<input type="checkbox" name="fields['.$field->id.']" value="yes" ';
+				if ((is_array($checked)) && (in_array($field->id, $checked))) $output .= ' checked="checked"';
+				$output .= ' />
+				</td>
+				<td>'.$field->name.' ('.$field->input_type.'; ';
+				if ($field->input_type == "text"){
+					$output .= ' '.$field->size.' characters';
+				}
+				else{
+					$output .= ' values: '.$row["values"];
+				}
+				
+				$output .= ')</td></tr>';
 	}
 	
-	$output .= '</div>
-		<div>';
-	
-	for (; $i < $num_fields; $i++){
-		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.mysql_result($result, $i, "id").']" value="yes" ';
-		if ((is_array($checked)) && (in_array(mysql_result($result, $i, "id"), $checked))) $output .= ' checked="checked"';
-		$output .= '/> '.mysql_result($result, $i, "name").'</div>';	
-	}
-	
-	$output .= '</div>';
+	$output .= '</table>';
 	
 	return $output;
 }

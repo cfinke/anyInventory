@@ -42,7 +42,7 @@ class category {
 			
 			foreach($this->breadcrumbs as $crumb){
 				if ($crumb == 0){
-					$this->breadcrumb_names .= "Top";
+					$this->breadcrumb_names .= "Top > ";
 				}
 				else{
 					$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
@@ -99,7 +99,7 @@ class category {
 		
 		if (is_array($this->children)){
 			foreach($this->children as $child){
-				$total += $child->num_items();
+				$total += $child->num_items_r();
 			}
 		}
 		

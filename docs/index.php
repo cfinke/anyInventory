@@ -53,7 +53,6 @@ switch (LANG){
 						</ol>
 						<li><a href="labels.php">Etiquetas</a></li>
 						<li><a href="searching.php">Buscando</a></li>
-						<li><a href="whats_next.php">¿Qu&eacute; sigue?</a></li>
 					</ol>
 				</td>
 			</tr>
@@ -111,7 +110,6 @@ switch (LANG){
 						</ol>
 						<li><a href="labels.php">Etiquettes</a></li>
 						<li><a href="searching.php">Recherche</a></li>
-						<li><a href="whats_next.php">Quelles futures évolutions?</a></li>
 					</ol>
 				</td>
 			</tr>
@@ -170,7 +168,6 @@ switch (LANG){
 						</ol>
 						<li><a href="labels.php">Labels</a></li>
 						<li><a href="searching.php">Searching</a></li>
-						<li><a href="whats_next.php">What\'s Next?</a></li>
 					</ol>
 				</td>
 			</tr>

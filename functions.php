@@ -657,4 +657,23 @@ function create_label($item_id, $field_id, $as_file = null, $max_width = null){
 	imagedestroy($new_image);
 }
 
+function incision_sort($arr, $col){
+	for($k = 0; $k < sizeof($arr)-1; $k++){
+		// $arr[$k+1] is possibly in the wrong place. Take it out.
+		$t = $arr[$k+1];
+		$i = $k;
+		
+		// Push $arr[i] to the right until we find the right place for $t.
+		while($i >= 0 && $arr[$i][$col] > $t[$col]){
+			$arr[$i+1] = $arr[$i];
+			$i--;
+		}
+		
+		// Insert $t into the right place.
+		$arr[$i+1] = $t;
+	}	// End sort
+	
+	return $arr;
+}
+
 ?>

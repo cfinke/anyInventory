@@ -285,6 +285,26 @@ class item {
 		return $output;
 	}
 	
+	function export_assoc_array(){
+		$array = array();
+		
+		$array["id"] = $this->id;
+		
+		$array["name"] = $this->name;
+		
+		if (is_array($this->category->field_ids)){
+			foreach($this->category->field_ids as $fid){
+				$field = new field($fid);
+				
+				if (($field->input_type != 'divider') && ($field->input_type != 'file') && ($field->input_type != 'item')){
+					$array["field_".$fid] = $this->fields[$field->name];
+				}
+			}
+		}
+		
+		return $array;
+	}
+	
 	function delete_self(){
 		global $admin_user;
 		
@@ -299,7 +319,8 @@ class item {
 			}
 		}
 
-		// Remove this item from any alerts		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$this->id."\"%'";
+		// Remove this item from any alerts
+		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$this->id."\"%'";
 		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		while ($row = mysql_fetch_array($result)){

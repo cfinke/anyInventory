@@ -21,7 +21,10 @@
 									echo '
 										<td style="width: 5%; text-align: center; vertical-align: middle; white-space: nowrap;">[ <a href="'.$DIR_PREFIX.'login_processor.php?action=log_out">'.LOG_OUT.'</a> ]</td>';
 								}
-								
+								elseif (!isset($_SESSION["user"]["id"]) && PP_ADMIN){
+									echo '
+										<td style="width: 5%; text-align: center; vertical-align: middle; white-space: nowrap;">[ <a href="'.$DIR_PREFIX.'login.php?return_to='.$_SERVER["PHP_SELF"].'">'.LOGIN.'</a> ]</td>';
+								}
 								?>
 							</td>
 						</tr>

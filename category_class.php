@@ -231,21 +231,28 @@ class category {
 		return $breadcrumbs;
 	}
 	
-	function export_table_header(){
+	function export_table_header($sortfid = 0, $sort_dir = "DESC"){
 		$output .= '<tr class="tableHeader">';
 		
 		if ($this->auto_inc_field){
 			$output .= '<td>&nbsp;</td>';
 		}
 		
-		$output .= '<td style="white-space: nowrap;"><nobr>'.NAME_FIELD_NAME.'</td>';
+		$output .= '<td style="white-space: nowrap;"><nobr>'.NAME_FIELD_NAME.'</nobr></td>';
 		
 		if (is_array($this->field_ids)){
 			foreach($this->field_ids as $fid){
 				$field = new field($fid);
 				
 				if (($field->input_type != 'divider') && ($field->input_type != 'file') && ($field->input_type != 'item')){
-					$output .= '<td style="white-space: nowrap;"><nobr>'.$field->name.'</nobr></td>';
+					if ($sortfid == $field->id){
+						$dir = ($sort_dir == "DESC") ? "ASC" : "DESC";
+					}
+					else{
+						$dir = "DESC";
+					}
+					
+					$output .= '<td style="white-space: nowrap;"><nobr><a href="'.$_SERVER["PHP_SELF"].'?c='.$this->id.'&amp;fid='.$field->id.'&amp;dir='.$dir.'">'.$field->name.'</a></nobr></td>';
 				}
 			}
 		}
@@ -297,7 +304,8 @@ class category {
 			exit;
 		}
 		else{
-			// Delete the category			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$this->id."'"; 
+			// Delete the category
+			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$this->id."'"; 
 			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			// Remove all of the fields from this category.

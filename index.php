@@ -148,11 +148,30 @@ else{
 			}
 			else{
 				$output .= '<table cellspacing="0" cellpadding="3">';
-				$output .= $category->export_table_header();
+				$output .= $category->export_table_header($_GET["fid"],$_GET["dir"]);
 				
-				while ($row = mysql_fetch_array($result)){
-					$item = new item($row["id"]);
-					$output .= $item->export_table_row();
+				if (isset($_GET["fid"])){
+					while ($row = mysql_fetch_array($result)){
+						$item = new item($row["id"]);
+						$item_rows[] = $item->export_assoc_array();
+					}
+					
+					$item_rows = incision_sort($item_rows, "field_".$_GET["fid"]);
+					
+					if ($_GET["dir"] == "DESC"){
+						$item_rows = array_reverse($item_rows);
+					}
+					
+					foreach ($item_rows as $item_row){
+						$item = new item($item_row["id"]);
+						$output .= $item->export_table_row();
+					}
+				}
+				else{
+					while ($row = mysql_fetch_array($result)){
+						$item = new item($row["id"]);
+						$output .= $item->export_table_row();
+					}
 				}
 			}
 		}

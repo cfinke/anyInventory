@@ -1,7 +1,6 @@
 <?php
 
 require_once("globals.php");
-require_once("remote_functions.php");
 
 if ($_POST["action"] == "do_add"){
 	if (!$admin_user->can_admin($_POST["c"])){

@@ -446,6 +446,7 @@ if ($_POST["action"] == "upgrade"){
 				}
 				
 				@exec("rm -rf item_files");
+			case '2.0rc1':
 		}
 		
 		// Attempt to write the globals file.
@@ -567,6 +568,7 @@ elseif(!$globals_error){
 							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
 							<td class="form_input">
 								<select name="old_version">
+									<option value="2.0rc1"';if($_REQUEST["old_version"] == '2.0rc1')$output .= ' selected="selected"'; $output .= '>2.0rc1</option>
 									<option value="1.9.2"';if($_REQUEST["old_version"] == '1.9.2')$output .= ' selected="selected"'; $output .= '>1.9.2</option>
 									<option value="1.9.1"';if($_REQUEST["old_version"] == '1.9.1')$output .= ' selected="selected"'; $output .= '>1.9.1</option>
 									<option value="1.9"';if($_REQUEST["old_version"] == '1.9')$output .= ' selected="selected"'; $output .= '>1.9</option>

@@ -32,6 +32,11 @@ if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "
 	
 	if (get_config_value('PP_ADMIN')){
 		$admin_user = new user($_SESSION["user"]["id"]);
+		
+		if (!isset($_SESSION["user"]["id"])){
+			$admin_user->user_type = 'User';
+			$admin_user->categories_admin = array();
+		}
 	}
 	else{
 		$admin_user = new user(get_config_value('ADMIN_USER_ID'));

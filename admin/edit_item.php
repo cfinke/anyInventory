@@ -41,10 +41,13 @@ if (is_array($item->category->field_ids)){
 		
 		$field = new field($field_id);
 		
-		if ($field->input_type == 'divider'){
+		if (!$last_divider && ($field->input_type == 'divider')){
 			$output .= '<tr><td colspan="2"><hr /></td></tr>';
+			$last_divider = true;
 		}
 		else{
+			$last_divider = false;
+			
 			if ($field->highlight) $extra = ' class="highlighted_field"';
 			else $extra = '';
 			

@@ -51,6 +51,23 @@ class user {
 		}
 	}
 	
+	function can_admin_field($field_id){
+		$field = new field($field_id);
+		
+		if (is_array($field->categories)){
+			foreach($field->categories as $cat_id){
+				if (!$this->can_admin($cat_id)){
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		else{
+			return true;
+		}
+	}
+	
 	function get_admin_categories_options($selected = null, $multiple = true){
 		if ($this->usertype == 'Administration'){
 			return get_category_options($selected, $multiple);

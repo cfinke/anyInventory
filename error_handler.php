@@ -31,6 +31,8 @@ $errors[9] = array('Error','Not logged in. Please <a href='.$DIR_PREFIX.'index.p
 $errors[10] = array('Access Denied','You must be a privileged used to edit, add, or delete. ','breadcrumbs'=>'Access Denied');
 $errors[11] = array('Access Denied','You must be an administrator to add, edit, or delete users. ','breadcrumbs'=>'Access Denied');
 $errors[12] = array('Access Denied','You do not have viewing priveleges for this category.','breadcrumbs'=>'Access Denied');
+$errors[13] = array('Access Denied','You do not have editing priveleges for this category.','breadcrumbs'=>'Access Denied');
+$errors[14] = array('Access Denied','You cannot delete your own user account.','breadcrumbs'=>'Access Denied');
 $breadcrumbs = $errors[$_REQUEST["eid"]]["breadcrumbs"];
 
 $output = '

@@ -26,6 +26,7 @@ $errors[4] = array("Sign In",'
 $errors[5] = array('Error','An alert must apply to at least one category.','breadcrumbs'=>'Error');
 $errors[6] = array('Error','An alert must apply to at least one item.','breadcrumbs'=>'Error');
 $errors[7] = array('Error','The Top Level category cannot be edited or deleted.','breadcrumbs'=>'Error');
+$errors[8] = array('Error','You must supply a list of values for this field.','breadcrumbs'=>'Error');
 
 $breadcrumbs = $errors[$_REQUEST["eid"]]["breadcrumbs"];
 

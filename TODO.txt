@@ -53,6 +53,7 @@ DONE - Download inventory as XML file
 
 BEFORE 2.0
 ===================
+Table view
 ? DREW - Stronger CSS support
 DREW - Remote image thumbnailing - backup in case of missing libcurl
 Multiple-condition alerts

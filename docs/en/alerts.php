@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = "anyInventory: Help > Alerts and Adding Alerts";
 $inHead = '

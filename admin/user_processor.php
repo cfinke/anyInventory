@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($_POST["action"] == "do_add"){
 	if ($admin_user->usertype != 'Administrator'){

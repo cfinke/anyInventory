@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = ADD_ALERT;
 $breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.ADD_ALERT;
@@ -17,7 +17,7 @@ if (!is_array($_GET["c"])){
 					<td class="tableData">
 						<table style="width: 100%;">
 							<tr>
-								<td class="form_label"><label for="c">'.ADD_ALERT_IN.':</label></td>
+								<td class="form_label"><label for="c">'.ADD_ALERT_IN.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c[]\');">'.SELECT_NONE.'</a></small></td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="20" style="width: 100%;">
 										'.$admin_user->get_admin_categories_options(null).'

@@ -1,8 +1,18 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
-foreach($_REQUEST as $key => $value) $_REQUEST[$key] = stripslashes($value);
+foreach($_POST as $key => $value){
+	if (!is_array($_POST[$key])){
+		$_POST[$key] = stripslashes($value);
+	}
+}
+
+foreach($_GET as $key => $value){
+	if (!is_array($_GET[$key])){
+		$_GET[$key] = stripslashes($value);
+	}
+}
 
 $replace = array("'",'"','&',"\\",':',';','`','[',']');
 

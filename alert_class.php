@@ -115,23 +115,27 @@ class alert {
 		}
 		
 		$output .= '</td>
-						</tr>
-						<tr>
-							<td class="form_label">'.ACTIVE_WHEN.':</td>
-							<td>';
+						</tr>';
 		
-		$field = new field($this->field_id);
-		
-		$output .= $field->name." ";
-		$output .= $this->condition;
-		$output .= (trim($this->value) == '') ? " ''" : ' '.$this->value;
-		
-		$output .= '</td>
-							</tr>
-							<tr>
-								<td class="form_label">'.EFFECTIVE_DATE.':</td>
-								<td>'.date("Y m d",$this->unix_time).'</td>
-							</tr>';
+		if (!$this->timed){
+			$output .= '
+				<tr>
+					<td class="form_label">'.ACTIVE_WHEN.':</td>
+					<td>';
+			
+			$field = new field($this->field_id);
+			
+			$output .= $field->name." ";
+			$output .= $this->condition;
+			$output .= (trim($this->value) == '') ? " ''" : ' '.$this->value;
+			
+			$output .= '</td>
+				</tr>
+				<tr>
+					<td class="form_label">'.EFFECTIVE_DATE.':</td>
+					<td>'.date("Y m d",$this->unix_time).'</td>
+				</tr>';
+		}
 		
 		if ($this->expires){
 			$output .= '

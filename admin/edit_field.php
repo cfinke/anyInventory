@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!$admin_user->can_admin_field($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");

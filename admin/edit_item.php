@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = EDIT_ITEM;
 $inHead = '
@@ -53,7 +53,14 @@ if (is_array($item->category->field_ids)){
 			
 			$output .= '
 				<tr'.$extra.'>
-					<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
+					<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label>';
+			
+			if ($field->input_type == 'item'){
+				$output .= '<br /><small><a href="javascript:void(0);" onclick="selectNone(\''.str_replace(" ","_",$field->name).'[]\');">'.SELECT_NONE.'</a></small>';
+			}
+			
+			$output .= '
+					</td>
 					<td class="form_input">';
 			
 			switch($field->input_type){

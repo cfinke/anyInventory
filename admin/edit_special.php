@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($admin_user->usertype != 'Administrator'){
 	header("Location: ../error_handler.php?eid=15");
@@ -38,7 +38,7 @@ switch($_GET["id"]){
 										<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',AUTO_INC_FIELD_NAME).'" maxlength="64" /></td>
 									</tr>
 									<tr>
-										<td class="form_label">'.APPLIES_TO.':</td>
+										<td class="form_label"><label for="add_to[]">'.APPLIES_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'add_to[]\');">'.SELECT_NONE.'</a></small></td>
 										<td class="form_input">
 											<select name="add_to[]" id="add_to[]" multiple="multiple" size="10" style="width: 100%;">
 												'.get_category_options($categories).'

@@ -35,6 +35,7 @@ define('DELETE_LINK','eliminar');
 define('TYPE','Tipo');
 define('DOWNLOAD_LINK','descagar');
 define('DOWNLOAD_AS_XML','Descargar el inventario en un archivo XML');
+define('SELECT_NONE','');
 
 // Buscar(Search)
 define('SEARCH','Buscar');

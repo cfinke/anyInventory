@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = "anyInventory: Help > Categories > Deleting Categories";
 $breadcrumbs = '<a href="./">Help</a> > <a href="categories.php">Categories</a> > Deleting Categories';

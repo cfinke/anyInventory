@@ -1,7 +1,7 @@
 <?php
 
-include("globals.php");
-include("remote_functions.php");
+require_once("globals.php");
+require_once("remote_functions.php");
 
 foreach($_REQUEST as $key => $value) $_REQUEST[$key] = stripslashes($value);
 

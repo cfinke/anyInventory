@@ -41,9 +41,9 @@ function display($output){
 	global $DIR_PREFIX;
 	
 	header("Content-Type: text/html; charset=ISO-8859-1");
-	include($DIR_PREFIX."header.php");
+	require_once($DIR_PREFIX."header.php");
 	echo $output;
-	include($DIR_PREFIX."footer.php");
+	require_once($DIR_PREFIX."footer.php");
 	exit;
 }
 
@@ -413,11 +413,11 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 	if ($timed) $timed_checked = ' checked="checked"';
 	if ($expire) $expire_checked = ' checked="checked"';
 	
-	if ($day == null) $day = date("n");
-	if ($expire_day == null) $expire_day = date("n");
+	if ($day == null) $day = date("j");
+	if ($expire_day == null) $expire_day = date("j");
 	
-	if ($month == null) $month = date("j");
-	if ($expire_month == null) $expire_month = date("j");
+	if ($month == null) $month = date("n");
+	if ($expire_month == null) $expire_month = date("n");
 	
 	if ($year == null) $year = date("Y");
 	if ($expire_year == null) $expire_year = date("Y");
@@ -487,7 +487,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 			<td class="form_input"><input type="text" name="title" id="title" value="'.$title.'" maxlength="255" style="width: 100%;" />
 		</tr>
 		<tr>
-			<td class="form_label"><label for="i[]">'.APPLIES_TO.':</label></td>
+			<td class="form_label"><label for="i[]">'.APPLIES_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'i[]\');">'.SELECT_NONE.'</a></small></td>
 			<td class="form_input">
 				<select name="i[]" id="i[]" multiple="multiple" size="10" style="width: 100%;">';
 	
@@ -610,7 +610,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 	
 	$output .= '
 					</select>
-					<input type="checkbox" name="expire" id="expire" value="yes" onclick="toggle();"'.$expire_checked.' /> '.ALLOW_EXPIRATION.'
+					<input type="checkbox" name="expire" id="expire" value="yes" onclick="toggle();"'.$expire_checked.' /> <label for="expire">'.ALLOW_EXPIRATION.'</label>
 				</td>
 			</tr>';
 	
@@ -657,7 +657,7 @@ function display_field_form($c_options = null, $name = null, $input_type = null,
 			<td class="form_input"><label for="highlight">'.HIGHLIGHT_FIELD.'</label></td>
 		</tr>
 		<tr>
-			<td class="form_label">'.APPLIES_TO.':</td>
+			<td class="form_label"><label for="add_to[]">'.APPLIES_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'\add_to[]\');">'.SELECT_NONE.'</a></small></td>
 			<td class="form_input">
 				<select name="add_to[]" id="add_to[]" multiple="multiple" size="10" style="width: 100%;">
 					'.$c_options.'

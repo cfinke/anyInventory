@@ -138,16 +138,42 @@ class file_object{
 			switch($image_info[2]){
 				case 2:
 					// JPG
-					$thumb = imagecreate($new_image_width, $new_image_height);
+					if (function_exists('imagecreatetruecolor')){
+						$thumb = imagecreatetruecolor($new_image_width, $new_image_height);
+					}
+					else{
+						$thumb = imagecreate($new_image_width, $new_image_height);
+					}
+					
 					$image = imagecreatefromjpeg($this->server_path);
-					imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
+					
+					if (function_exists('imagecopyresampled')){
+						imagecopyresampled($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
+					}
+					else{
+						imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
+					}
+					
 					imagedestroy($image);
 					break;
 				case 3:
 					// PNG
-					$thumb = imagecreate($new_image_width, $new_image_height);
+					if (function_exists('imagecreatetruecolor')){
+						$thumb = imagecreatetruecolor($new_image_width, $new_image_height);
+					}
+					else{
+						$thumb = imagecreate($new_image_width, $new_image_height);
+					}
+					
 					$image = imagecreatefrompng($this->server_path);
-					imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
+					
+					if (function_exists('imagecopyresampled')){
+						imagecopyresampled($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
+					}
+					else{
+						imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
+					}
+					
 					imagedestroy($image);
 					break;
 			}

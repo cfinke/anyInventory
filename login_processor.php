@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($_REQUEST["action"] == "log_in"){
 	$query = "SELECT * FROM `anyInventory_users` WHERE `username` = ?";

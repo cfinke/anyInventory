@@ -1,6 +1,6 @@
 <?php
 
-require("globals.php");
+require_once("globals.php");
 
 $title = "Labels";
 $breadcrumbs = "Labels";
@@ -47,7 +47,7 @@ elseif (!isset($_POST["c"])){
 						<table>
 							<tr><td colspan="2" style="padding: 10px 0px 10px 0px;">'.LABEL_CAT_INSTRUCTIONS.'</td></tr>
 							<tr>
-								<td class="form_label">'.CATEGORIES.':</td>
+								<td class="form_label"><label for="c[]">'.CATEGORIES.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c[]\');">'.SELECT_NONE.'</a></small></td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="10" style="width: 100%;">
 										'.$view_user->get_view_categories_options(null).'
@@ -117,7 +117,8 @@ elseif (!isset($_POST["i"])){
 								</tr>
 								<tr>
 									<td class="form_label">
-										'.GENERATE_FOR.':
+										<label for="i[]">'.GENERATE_FOR.':</label>
+										<br /><small><a href="javascript:void(0);" onclick="selectNone(\'i[]\');">'.SELECT_NONE.'</a></small>
 									</td>
 									<td class="form_input">';
 		

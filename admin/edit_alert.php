@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!$admin_user->can_admin_alert($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
@@ -40,7 +40,7 @@ $output = '
 					<input type="hidden" name="id" value="'.$_GET["id"].'" />
 					<table>
 						<tr>
-							<td class="form_label">'.CATEGORIES.':</td>
+							<td class="form_label"><label for="c[]">'.CATEGORIES.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c[]\');">'.SELECT_NONE.'</a></small></td>
 							<td class="form_input">
 								<select name="c[]" id="c[]" multiple="multiple" size="10" style="width: 100%;">
 									'.$admin_user->get_admin_categories_options($alert->category_ids).'

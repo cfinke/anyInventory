@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($_GET["id"] == ADMIN_USER_ID){
 	header("Location: ../error_handler.php?eid=12");

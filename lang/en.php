@@ -2,6 +2,9 @@
 
 // English language file
 
+define('ID_MATCH','Unique ID Match');
+define('NAME_MATCH',NAME_FIELD_NAME.' Match');
+
 // Dates
 define('MONTH_1','January');
 define('MONTH_2','February');
@@ -39,6 +42,7 @@ define('NAME','Name');
 define('EDIT_LINK','edit');
 define('DELETE_LINK','delete');
 define('TYPE','Type');
+define('SELECT_NONE','Select none');
 
 // Search
 define('SEARCH','Search');

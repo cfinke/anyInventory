@@ -1,6 +1,18 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
+
+foreach($_POST as $key => $value){
+	if (!is_array($_POST[$key])){
+		$_POST[$key] = stripslashes($value);
+	}
+}
+
+foreach($_GET as $key => $value){
+	if (!is_array($_GET[$key])){
+		$_GET[$key] = stripslashes($value);
+	}
+}
 
 $replace = array("'",'"','&',"\\",':',';','`','[',']');
 
@@ -10,7 +22,7 @@ if ($_POST["action"] == "do_add"){
 		exit;
 	}
 	else{
-		$cat_ids = unserialize(stripslashes($_POST["c"]));
+		$cat_ids = unserialize($_POST["c"]);
 		
 		if (is_array($cat_ids)){
 			foreach($cat_ids as $cat_id){
@@ -21,10 +33,9 @@ if ($_POST["action"] == "do_add"){
 			}
 		}
 		else{
-			$_POST["c"] = addslashes(serialize(array()));
+			$_POST["c"] = serialize(array());
 		}
 		
-		$_POST["title"] = stripslashes($_POST["title"]);
 		$_POST["title"] = str_replace($replace,"",$_POST["title"]);
 		$_POST["title"] = trim($_POST["title"]);
 		
@@ -46,14 +57,14 @@ if ($_POST["action"] == "do_add"){
 		$query_data = array("id"=>get_unique_id('anyInventory_alerts'),
 							"title"=>$_POST["title"],
 							"item_ids"=>serialize($_POST["i"]),
-							"field_id"=>$_POST["field"],
-							"condition"=>$_POST["condition"],
-							"value"=>stripslashes($_POST["value"]),
+							"field_id"=>intval($_POST["field"]),
 							"time"=>$timestamp,
 							"expire_time"=>$expire_timestamp,
 							"timed"=>intval(($_POST["timed"] == "yes")),
-							"category_ids"=>stripslashes($_POST["c"]))
-		$result = $db->autoExecute('anyInventory_alerts',$query_data,DB_AUTOQUERY_INSERT);
+							"category_ids"=>$_POST["c"]);
+		if ($_POST["condition"] != '') $query_data["condition"] = $_POST["condition"];
+		if ($_POST["value"] != '') $query_data["value"] = $_POST["value"];
+		$result = $db->autoExecute('anyInventory_alerts', $query_data, DB_AUTOQUERY_INSERT);
 		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }
@@ -100,7 +111,7 @@ elseif($_POST["action"] == "do_edit"){
 		exit;
 	}
 	else{
-		$cat_ids = unserialize(stripslashes($_POST["c"]));
+		$cat_ids = unserialize($_POST["c"]);
 		
 		if (is_array($cat_ids)){
 			foreach($cat_ids as $cat_id){
@@ -126,17 +137,15 @@ elseif($_POST["action"] == "do_edit"){
 			$expire_timestamp = '00000000000000';
 		}
 		
-		$query = "UPDATE `anyInventory_alerts` SET 
-					`title`='".$_POST["title"]."',
-					`item_ids`='".serialize($_POST["i"])."',
-					`field_id`='".$_POST["field"]."',
-					`condition`='".$_POST["condition"]."',
-					`value`='".$_POST["value"]."',
-					`time`='".$timestamp."',
-					`expire_time`='".$expire_timestamp."',
-					`timed`='".(((bool) ($_POST["timed"] == "yes")) / 1)."'
-					 WHERE `id`='".$_POST["id"]."'";
-		$result = $db->query($query);
+		$query_data = array("title"=>$_POST["title"],
+							"item_ids"=>serialize($_POST["i"]),
+							"field_id"=>intval($_POST["field"]),
+							"time"=>$timestamp,
+							"expire_time"=>$expire_timestamp,
+							"timed"=>intval(($_POST["timed"] == "yes")));
+		if ($_POST["condition"] != '') $query_data["condition"] = $_POST["condition"];
+		if ($_POST["value"] != '') $query_data["value"] = $_POST["value"];
+		$result = $db->autoExecute('anyInventory_alerts', $query_data, DB_AUTOQUERY_UPDATE, "`id`='".$_POST["id"]."'");
 		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }

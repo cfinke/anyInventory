@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!$admin_user->can_admin($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
@@ -50,7 +50,7 @@ else{
 if (PP_VIEW){
 	$output .= '
 						<tr>
-							<td class="form_label"><label for="parent">'.GIVE_VIEW_TO.':</label></td>
+							<td class="form_label"><label for="view_users[]">'.GIVE_VIEW_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'view_users[]\');">'.SELECT_NONE.'</a></small></td>
 							<td class="form_input">
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
@@ -75,7 +75,7 @@ $output .= '
 if (PP_ADMIN){
 	$output .= '
 						<tr>
-							<td class="form_label"><label for="parent">'.GIVE_ADMIN_TO.':</label></td>
+							<td class="form_label"><label for="admin_users[]">'.GIVE_ADMIN_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'admin_users[]\');">'.SELECT_NONE.'</a></small></td>
 							<td class="form_input">
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 

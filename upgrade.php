@@ -24,7 +24,7 @@ $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
 $db_type = "'.$_POST["db_type"].'";
 
-include($DIR_PREFIX."environment.php");
+require_once($DIR_PREFIX."environment.php");
 
 ?>';
 
@@ -102,7 +102,7 @@ if ($_POST["action"] == "upgrade"){
 					`value` varchar( 255 ) NOT NULL default '',
 					`time` timestamp( 14 ) NOT NULL ,
 					UNIQUE KEY `id` ( `id` )
-					) TYPE = MYISAM ;";
+					)";
 				@$db->query($query);
 				
 				$query = "ALTER TABLE `anyInventory_files` ADD `offsite_link` VARCHAR(255) NOT NULL";
@@ -268,7 +268,7 @@ if ($_POST["action"] == "upgrade"){
 					`categories_admin` text NOT NULL ,
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `username` (`username`)
-					) TYPE=MyISAM";
+					)";
 				@$db->query($query);
 				
 				$blank = array();
@@ -291,7 +291,7 @@ if ($_POST["action"] == "upgrade"){
 					`value` text NOT NULL ,
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `key` ( `key` )
-					) TYPE = MYISAM";
+					)";
 				@$db->query($query);
 				
 				$query_data = array("id"=>get_unique_id('anyInventory_config'),
@@ -371,7 +371,7 @@ if ($_POST["action"] == "upgrade"){
 					`field_id` int( 11 ) NOT NULL default '0',
 					`value` text NOT NULL ,
 					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
-					) TYPE = MYISAM";
+					)";
 				@mysql_query($query);
 				
 				$query = "SELECT * FROM `anyInventory_categories`";

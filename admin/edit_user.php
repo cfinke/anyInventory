@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (($admin_user->usertype != 'Administrator') && ($_GET["id"] != $_SESSION["user"]["id"])){
 	header("Location: ../error_handler.php?eid=11");
@@ -70,7 +70,7 @@ $output .= '
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="c_view[]">'.GIVE_VIEW_TO.':</label></td>
+							<td class="form_label"><label for="c_view[]">'.GIVE_VIEW_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c_view[]\');">'.SELECT_NONE.'</a></small></td>
 							<td class="form_input">
 								<select name="c_view[]" id="c_view[]" multiple="multiple" size="10" style="width: 100%;">';
 		
@@ -86,7 +86,7 @@ $output .= '
 								</td>
 							</tr>
 							<tr>
-								<td class="form_label"><label for="c_admin[]">'.GIVE_ADMIN_TO.':</label></td>
+								<td class="form_label"><label for="c_admin[]">'.GIVE_ADMIN_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c_admin[]\');">'.SELECT_NONE.'</a></small></td>
 								<td class="form_input">
 									<select name="c_admin[]" id="c_admin[]" multiple="multiple" size="10" style="width: 100%;">';
 		

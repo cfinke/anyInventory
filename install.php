@@ -5,7 +5,7 @@
 error_reporting(E_ALL ^ E_NOTICE);
 
 require_once("DB.php");
-include("functions.php");
+require_once("functions.php");
 
 // Set the text of globals.php
 $writetoglobals = '<?php
@@ -22,7 +22,7 @@ $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
 $db_type = "'.$_POST["db_type"].'";
 
-include($DIR_PREFIX."environment.php");
+require_once($DIR_PREFIX."environment.php");
 
 ?>';
 
@@ -108,7 +108,7 @@ if ($_POST["action"] == "install"){
 			}
 		}
 		
-		include("lang/".$_POST["lang"].".php");
+		require_once("lang/".$_POST["lang"].".php");
 		
 		$blank = array();
 		
@@ -132,7 +132,7 @@ if ($_POST["action"] == "install"){
 			 	  `auto_inc_field` INT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`),
 				  KEY `parent` (`parent`)
-				) TYPE=MyISAM";
+				)";
 		$db->query($query);
 		$result = if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
@@ -147,7 +147,7 @@ if ($_POST["action"] == "install"){
 				  `importance` int(11) NOT NULL default '0',
 				  `highlight` INT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`)
-				) TYPE=MyISAM";
+				)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
@@ -156,7 +156,7 @@ if ($_POST["action"] == "install"){
 				  `item_category` int(11) NOT NULL default '0',
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
-				) TYPE=MyISAM";
+				)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
@@ -165,7 +165,7 @@ if ($_POST["action"] == "install"){
 					`field_id` int( 11 ) NOT NULL default '0',
 					`value` text NOT NULL ,
 					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
-					) TYPE = MYISAM";
+					)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
@@ -196,7 +196,7 @@ if ($_POST["action"] == "install"){
 				 	`timed` INT( 1 ) DEFAULT '0' NOT NULL,
 					`category_ids` TEXT NOT NULL,
 					UNIQUE KEY `id` ( `id` )
-					) TYPE = MYISAM ;";
+					)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
@@ -209,7 +209,7 @@ if ($_POST["action"] == "install"){
 					`categories_admin` text NOT NULL ,
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `username` (`username`)
-					) TYPE=MyISAM";
+					)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
@@ -219,7 +219,7 @@ if ($_POST["action"] == "install"){
 					`value` text NOT NULL ,
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `key_value` ( `key_value` )
-					) TYPE = MYISAM";
+					)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		

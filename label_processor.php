@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!function_exists('imagecreate') ||
     !function_exists('imagecolorallocate') ||

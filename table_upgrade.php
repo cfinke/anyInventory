@@ -13,7 +13,7 @@ $query = "CREATE TABLE `anyInventory_values` (
 			`field_id` int( 11 ) NOT NULL default '0',
 			`value` text NOT NULL ,
 			UNIQUE KEY `item_id` ( `item_id` , `field_id` )
-			) TYPE = MYISAM";
+			)";
 @mysql_query($query);
 
 $query = "SELECT * FROM `anyInventory_categories`";

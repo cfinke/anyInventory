@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 // The default category is the top level.
 if (!$_GET["c"]) $_GET["c"] = 0;
@@ -29,7 +29,7 @@ if ($_GET["id"]){
 	$output .= $item->export_description();
 	
 	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE ? AND `time` <= ? AND (`expire_time` >= ? OR `expire_time` = ?)";
-	$query_data = array('%"'.$item->id.'"%','NOW()','NOW()','00000000000000');
+	$query_data = array('%"'.$item->id.'"%',date("YmdHis"),date("YmdHis"),'00000000000000');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
 	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
@@ -159,7 +159,7 @@ else{
 		<td style="padding-left: 5px;">';
 	
 	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= ? AND (`expire_time` >= ? OR `expire_time` = ?)";
-	$query_data = array('NOW()','NOW()','00000000000000');
+	$query_data = array(date("YmdHis"),date("YmdHis"),'00000000000000');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
 	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);

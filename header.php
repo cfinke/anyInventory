@@ -3,6 +3,16 @@
 	<head>
 		<title><?php echo APP_TITLE.': '.$title; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo $DIR_PREFIX; ?>style.css">
+		<script type="text/javascript">
+			<!--
+				function selectNone(field_id) {
+					field = document.getElementById(field_id);
+					for(i = 0; i < field.length; i++) {
+						field.options[i].selected = false;
+					}
+				}
+			// -->
+		</script>
 		<?php echo $inHead; ?>
 	</head>
 	<body<?php echo $inBodyTag; ?>>

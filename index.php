@@ -53,14 +53,14 @@ else{
 		$output .= '
 			<table style="width: 100%; margin-top: 20px;">
 				<tr>
-					<td style="white-space: nowrap; width: 5%; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;"font-weight: bold;">ID #</td>
+					<td style="white-space: nowrap; width: 5%; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000; font-weight: bold;">ID #</td>
 					<td style="border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;">Name</td>
 				</tr>';
 		
 		while ($row = mysql_fetch_array($result)){
 			$item = new item($row["id"]);
 			
-			$output .= '<tr><td>'.$item->id.'</td><td>'.$item->export_teaser().'</td></tr>';
+			$output .= '<tr><td style="vertical-align: top;">'.$item->id.'</td><td style="vertical-align: top;">'.$item->export_teaser().'</td></tr>';
 		}
 		
 		$output .= '</table>';

@@ -11,13 +11,20 @@ $result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 if (mysql_num_rows($result) > 0){
 	$i = 0;
 	
+	$admin_id = get_config_value('ADMIN_USER_ID');
+	
 	while($row = mysql_fetch_assoc($result)){
 		$table_rows .= '
 			<tr>
 				<td align="center" style="width: 15ex; white-space: nowrap;">
 					<nobr>
-						[<a href="edit_user.php?id='.$row["id"].'">edit</a>]
-						[<a href="delete_user.php?id='.$row["id"].'">delete</a>]
+						[<a href="edit_user.php?id='.$row["id"].'">edit</a>]';
+		
+		if ($row["id"] != $admin_id){
+			$table_rows .= ' [<a href="delete_user.php?id='.$row["id"].'">delete</a>] ';
+		}
+		
+		$table_rows .= '
 					</nobr>
 				</td>
 				<td style="white-space: nowrap;">'.$row["username"].'</td>

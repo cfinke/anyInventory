@@ -37,7 +37,10 @@ $output .= '
 							<td class="form_label"><label for="password">Password:</label></td>
 							<td class="form_input"><input type="password" name="password" id="password" value="" />
 								<br /><small>If you do not enter a new password, it will remain unchanged.</small></td>
-						</tr>
+						</tr>';
+	
+	if ($user->id != get_config_value('ADMIN_USER_ID')){
+		$output .= '
 						<tr>
 							<td class="form_label"><label for="usertype">User Type:</label></td>
 							<td class="form_input">
@@ -51,34 +54,37 @@ $output .= '
 							<td class="form_label"><label for="c_view[]">Allow user to view:</label></td>
 							<td class="form_input">
 								<select name="c_view[]" id="c_view[]" multiple="multiple" size="10" style="width: 100%;">';
+			
+		if ($user->usertype == 'Administrator'){
+			$output .= get_category_options(null);
+		}
+		else{
+			$output .= get_category_options($user->categories_view);
+		}
 		
-	if ($user->usertype == 'Administrator'){
-		$output .= get_category_options(null);
-	}
-	else{
-		$output .= get_category_options($user->categories_view);
+		$output .= '
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_label"><label for="c_admin[]">Allow user to admin:</label></td>
+								<td class="form_input">
+									<select name="c_admin[]" id="c_admin[]" multiple="multiple" size="10" style="width: 100%;">';
+			
+		if ($user->usertype == 'Administrator'){
+			$output .= get_category_options(null);
+		}
+		else{
+			$output .= get_category_options($user->categories_view);
+		}
+		
+		$output .= '
+								</select>
+							</td>
+						</tr>';
 	}
 	
 	$output .= '
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td class="form_label"><label for="c_admin[]">Allow user to admin:</label></td>
-							<td class="form_input">
-								<select name="c_admin[]" id="c_admin[]" multiple="multiple" size="10" style="width: 100%;">';
-		
-	if ($user->usertype == 'Administrator'){
-		$output .= get_category_options(null);
-	}
-	else{
-		$output .= get_category_options($user->categories_view);
-	}
-	
-	$output .= '
-								</select>
-							</td>
-						</tr>
 						<tr>
 							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 						</tr>

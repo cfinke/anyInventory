@@ -238,6 +238,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 			$alert = new alert($row["id"]);
 			
 			$alert->remove_item($item->id);
+			
+			if (count($alert->item_ids) == 0){
+				$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
+				query($query);
+			}
 		}
 		
 		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$item->id."'";

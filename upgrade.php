@@ -70,8 +70,16 @@ if ($_REQUEST["action"] == "upgrade"){
 	if (strlen(trim($_REQUEST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
 	}
-	if(!is_writable(realpath("./item_files/"))){
+	if (!is_writable(realpath("./item_files/"))){
 		$errors[] = 'The path '.realpath("./item_files/").' is not writable by the Web server.';
+	}
+	
+	$files_to_read = array("./","./admin","./images","./docs","./item_files");
+	
+	foreach($files_to_read as $file){
+		if (!is_readable(realpath($file))){
+			$errors[] = "The path ".realpath($file)." is not readable.  Please change the permissions.";
+		}
 	}
 	
 	// Check for the correct database information.	

@@ -16,7 +16,6 @@ class alert {
 	var $unix_time;
 	
 	function alert($alert_id){
-		// Set the item id.
 		$this->id = $alert_id;
 		
 		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";

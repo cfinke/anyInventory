@@ -95,7 +95,7 @@ else{
 		$alert = new alert($row["id"]);
 		
 		if (is_array($alert->item_ids)){
-			foreach ($alert->item_is as $item_id){
+			foreach ($alert->item_ids as $item_id){
 				$item = new item($item_id);
 				$field = new field($alert->field_id);
 				

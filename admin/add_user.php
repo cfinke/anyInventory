@@ -2,6 +2,11 @@
 
 include("globals.php");
 
+if ($admin_user->usertype != 'Administrator'){
+	header("Location: ../error_handler.php?eid=11");
+	exit;
+}
+
 $title = "anyInventory: Add User";
 $breadcrumbs = 'Administration > <a href="users.php">Users</a> > Add User';
 

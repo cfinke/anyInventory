@@ -205,24 +205,25 @@ if ($_REQUEST["action"] == "install"){
 		
 		$blank = array();
 		
-		if ($_REQUEST["password_protect_admin"] || $_REQUEST["password_protect_view"]){
-			$query = "INSERT INTO `anyInventory_users`
-						(`username`,
-						 `password`,
-						 `usertype`,
-						 `categories_admin`,
-						 `categories_view`)
-						VALUES
-						('".$_REQUEST["username"]."',
-						 '".md5($_REQUEST["password"]."',
-						 'Administrator',
-						 '".addslashes(serialize($blank))."',
-						 '".addslashes(serialize($blank))."')";
-			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-			
-			$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
-			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		}
+		$_REQUEST["username"] = ($_REQUEST["username"] == '') ? 'username' : $_REQUEST["username"];
+		$_REQUEST["password"] = ($_REQUEST["password"] == '') ? 'password' : $_REQUEST["password"];
+		
+		$query = "INSERT INTO `anyInventory_users`
+					(`username`,
+					 `password`,
+					 `usertype`,
+					 `categories_admin`,
+					 `categories_view`)
+					VALUES
+					('".$_REQUEST["username"]."',
+					 '".md5($_REQUEST["password"]."',
+					 'Administrator',
+					 '".addslashes(serialize($blank))."',
+					 '".addslashes(serialize($blank))."')";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		if (count($config_errors) == 0){
 			// Delete the install file.

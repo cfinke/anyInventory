@@ -8,7 +8,6 @@ $query = "SELECT *,
 			'' as `nosortcol_`,
 			`name` as `sortcol_Name`,
 			`input_type` as `nosortcol_Type`,
-			`values` as `nosortcol_Values`,
 			`default_value` as `nosortcol_Default Value`,
 			`size` as `nosortcol_Size` 
 			FROM `anyInventory_fields`";
@@ -24,15 +23,14 @@ if (mysql_num_rows($result) > 0){
 	while($row = mysql_fetch_assoc($result)){
 		$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
 		$table_set .= '<tr class="'.$color_code.'">';
-		$table_set .= '<td align="center" style="width: 10%; white-space: nowrap;">
+		$table_set .= '<td align="center" style="width: 15ex; white-space: nowrap;">
 				<a href="edit_field.php?id='.$row["id"].'">[edit]</a>
-				<a href="delete_field.php?id='.$row["id"].'">[delete]</a><br />
-				[move <a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">up</a> |
-				<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">down</a>]
+				<a href="delete_field.php?id='.$row["id"].'">[delete]</a>
+				[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'"><img src="images/arrow_up.gif" /></a>]
+				[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'"><img src="images/arrow_down.gif" /></a>]
 			</td>';
 		$table_set .= '<td style="width: 10%; white-space: nowrap;">'.$row["name"].'</td>';
 		$table_set .= '<td>'.$row["input_type"].'</td>';
-		$table_set .= '<td>'.$row["values"].'</td>';
 		$table_set .= '<td>'.$row["default_value"].'</td>';
 		$table_set .= '<td>'.$row["size"].'</td>';
 		$table_set .= '</tr>';
@@ -40,7 +38,7 @@ if (mysql_num_rows($result) > 0){
 	}
 }
 else{
-	$table_set .= '<tr class="row_off"><td colspan="6">There are no fields to display.</td></tr>';
+	$table_set .= '<tr class="row_off"><td colspan="5">There are no fields to display.</td></tr>';
 }
 
 $table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();

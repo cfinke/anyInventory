@@ -17,7 +17,7 @@ if (mysql_num_rows($result) > 0){
 		$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
 		$table_set .= '<tr class="'.$color_code.'">';
 		$table_set .= '
-			<td align="center" style="width: 10%; white-space: nowrap;">
+			<td align="center" style="width: 12ex; white-space: nowrap;">
 				<a href="edit_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[edit]</a>
 				<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[delete]</a>
 			</td>';

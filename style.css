@@ -8,6 +8,10 @@ td {
 	font-size: 10pt;
 }
 
+img {
+	border: 0;
+}
+
 .form_input {
 	width: 100%;
 	vertical-align: top;

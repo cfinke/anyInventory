@@ -8,13 +8,13 @@
 			<tr>
 				<td colspan="2">
 					<div align="right" style="width: 100%;height: 100%;color: #cccccc; background: #000000;">
-						|
+						.
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td valign="top" class="row_head" style="background: rgb(213,175,112);" colspan="2">
-					<div style="padding:6px" class="site_header" style="padding:4px"><b>anyInventory</b></div>
+					<div style="padding:6px" class="site_header" style="padding:4px"><h1>anyInventory</h1></div>
 		
 				</td>
 			</tr>

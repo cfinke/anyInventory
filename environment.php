@@ -14,9 +14,9 @@ if (is_array($_POST)){
 	}
 }
 
-require_once("DB.php");
+include("DB.php");
 
-require_once($DIR_PREFIX."functions.php");
+include($DIR_PREFIX."functions.php");
 
 // Check for Oracle 8 - data source name syntax is different
 
@@ -30,19 +30,19 @@ $db = connect_to_database();
 
 $query = "SELECT * FROM `anyInventory_config`";
 $result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 
 while ($row = $result->fetchRow()){
 	define($row["key_value"],$row["value"]);
 }
 
-require_once($DIR_PREFIX."lang/".LANG.".php");
-require_once($DIR_PREFIX."category_class.php");
-require_once($DIR_PREFIX."field_class.php");
-require_once($DIR_PREFIX."item_class.php");
-require_once($DIR_PREFIX."file_class.php");
-require_once($DIR_PREFIX."alert_class.php");
-require_once($DIR_PREFIX."user_class.php");
+include($DIR_PREFIX."lang/".LANG.".php");
+include($DIR_PREFIX."category_class.php");
+include($DIR_PREFIX."field_class.php");
+include($DIR_PREFIX."item_class.php");
+include($DIR_PREFIX."file_class.php");
+include($DIR_PREFIX."alert_class.php");
+include($DIR_PREFIX."user_class.php");
 
 if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "/docs")){
 	if ((($DIR_PREFIX == './') && PP_VIEW && !isset($_SESSION["user"]["id"])) || 

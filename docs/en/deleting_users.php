@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $title = "anyInventory: Help > Users > Deleting Users";
 $breadcrumbs = '<a href="./">Help</a> > <a href="users.php">Users</a> > Deleting Users';

@@ -1,13 +1,13 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 if ($_REQUEST["action"] == "log_in"){
 	$query = "SELECT * FROM `anyInventory_users` WHERE `username` = ?";
 	$query_data = array($_POST["username"]);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() == 0){
 		header("Location: login.php?f=1&return_to=".$_POST["return_to"]);

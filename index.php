@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 // The default category is the top level.
 if (!$_GET["c"]) $_GET["c"] = 0;
@@ -32,7 +32,7 @@ if ($_GET["id"]){
 	$query_data = array('%"'.$item->id.'"%',date("YmdHis"),date("YmdHis"),'00000000000000');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() > 0){
 		$output .= '
@@ -112,7 +112,7 @@ else{
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if (($_GET["c"] != 0) || ($result->numRows() > 0)){
 		$output .= '
@@ -162,7 +162,7 @@ else{
 	$query_data = array(date("YmdHis"),date("YmdHis"),'00000000000000');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	while ($row = $result->fetchRow()){
 		$alert = new alert($row["id"]);

@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 foreach($_POST as $key => $value){
 	if (!is_array($_POST[$key])){
@@ -34,7 +34,7 @@ if ($_POST["action"] == "do_add"){
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() > 0){
 		header("Location: ../error_handler.php?eid=0");
@@ -90,23 +90,17 @@ if ($_POST["action"] == "do_add"){
 		// Get the field order for this field.
 		$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
 		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$row = $result->fetchRow();
 		$importance = $row['biggest'] + 1;
 		
 		// Add this field.
-		$query_data = array("id"=>get_unique_id('anyInventory_fields'),
-							"name"=>$_POST["name"],
-							"input_type"=>$_POST["input_type"],
-							"field_values"=>$field_values,
-							"default_value"=>$_POST["default_value"],
-							"size"=>intval($_POST["size"]),
-							"categories"=>$categories,
-							"importance"=>intval($importance),
-							"highlight"=>intval(($_POST["highlight"] == "yes")));
-		$result = $db->autoExecute('anyInventory_fields',$query_data,DB_AUTOQUERY_INSERT);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		$query = "INSERT INTO `anyInventory_fields` (`id`,`name`,`input_type`,`field_values`,`default_value`,`size`,`categories`,`importance`,`highlight`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$query_data = array(get_unique_id('anyInventory_fields'),$_POST["name"],$_POST["input_type"],$field_values,$_POST["default_value"],intval($_POST["size"]),$categories,intval($importance),intval(($_POST["highlight"] == "yes")));
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$field = new field(get_unique_id('anyInventory_fields') - 1);
 		
@@ -121,17 +115,16 @@ if ($_POST["action"] == "do_add"){
 elseif($_GET["action"] == "do_add_divider"){
 	$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	$row = $result->fetchRow();
 	$importance = $row['biggest'] + 1;
 	
-	$query_data = array("id"=>get_unique_id('anyInventory_fields'),
-						"name"=>'divider',
-						"input_type"=>'divider',
-						"importance"=>$importance);
-	$result = $db->autoExecute('anyInventory_fields',$query_data,DB_AUTOQUERY_INSERT);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	$query = "INSERT INTO `anyInventory_fields` (`id`,`name`,`input_type`,`importance`) VALUES (?, ?, ?, ?)";
+	$query_data = array(get_unique_id('anyInventory_fields'),'divider','divider',$importance);
+	$pquery = $db->prepare($query);
+	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 }
 elseif($_POST["action"] == "do_edit"){
 	if (is_array($_POST["add_to"])){
@@ -145,7 +138,7 @@ elseif($_POST["action"] == "do_edit"){
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	$numrows = $result->numRows();
 	$row = $result->fetchRow();
@@ -220,7 +213,7 @@ elseif($_POST["action"] == "do_edit"){
 				`highlight`='".((int) (($_POST["highlight"] == "yes") / 1))."'
 				WHERE `id`='".$_POST["id"]."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	// Make an object from the new field.
 	$new_field = new field($_POST["id"]);
@@ -252,14 +245,14 @@ elseif($_REQUEST["action"] == "do_delete"){
 		}
 		
 		if ($field->input_type == 'file'){
-			$query = "SELECT `value` FROM `anyInventory_fields` WHERE `field_id`='".$field->id."' GROUP BY `value`";
+			$query = "SELECT `value` FROM `anyInventory_values` WHERE `field_id`='".$field->id."' GROUP BY `value`";
 			$result = $db->query($query);
-		 	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			
 			while ($row = $result->fetchRow()){
 				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row["value"]."'";
 				$newresult = $db->query($newquery);
-				if (DB::isError($newresult)) die($newresult->getMessage().': line '.__LINE__.'<br /><br />'.$newresult->userinfo);
+				if (DB::isError($newresult)) die($newresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				
 				$newrow = $newresult->fetchRow();
 				
@@ -278,19 +271,19 @@ elseif($_REQUEST["action"] == "do_delete"){
 		// Change the importance of the fields below it.
 		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` - 1) WHERE `importance` >= '".$field->importance."'";
 		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		if ($field->input_type != 'divider'){
 			// Remove the field from the items table
 			$query = "DELETE FROM `anyInventory_values` WHERE `field_id`='".$field->id."'";
 			$result = $db->query($query);
-			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		}
 		
 		// Delete the field 
 		$query = "DELETE FROM `anyInventory_fields` WHERE `id`='".$field->id."'";
 		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
 }
 elseif($_GET["action"] == "moveup"){
@@ -302,11 +295,11 @@ elseif($_GET["action"] == "moveup"){
 	// Move a field up
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_GET["i"]." WHERE `importance`='".($_GET["i"] - 1)."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_GET["i"] - 1)." WHERE `id`='".$_GET["id"]."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 }
 elseif($_GET["action"] == "movedown"){
 	if (!$admin_user->can_admin_field($_GET["id"])){
@@ -317,11 +310,11 @@ elseif($_GET["action"] == "movedown"){
 	// Move a field down
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_GET["i"]." WHERE `importance`='".($_GET["i"] + 1)."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_GET["i"] + 1)." WHERE `id`='".$_GET["id"]."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 }
 
 header("Location: fields.php");

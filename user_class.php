@@ -19,7 +19,7 @@ class user {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$row = $result->fetchRow();
 		
@@ -114,7 +114,7 @@ class user {
 			$query_data = array(addslashes(serialize($this->categories_view)),$this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		}
 	}
 	
@@ -128,7 +128,7 @@ class user {
 			$query_data = array(addslashes(serialize($this->categories_admin)),$this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		}
 	}
 	
@@ -147,7 +147,7 @@ class user {
 				$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
 				$pquery = $db->prepare($query);
 				$result = $db->execute($pquery, $query_data);
-				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
 		}
 	}
@@ -167,7 +167,7 @@ class user {
 				$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
 				$pquery = $db->prepare($query);
 				$result = $db->execute($pquery, $query_data);
-				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
 		}
 	}
@@ -181,7 +181,7 @@ class user {
 		$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
 	
 	function update_categories_admin($category_ids){
@@ -193,7 +193,7 @@ class user {
 		$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
 	
 	function export_description(){

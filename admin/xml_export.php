@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $cr = "\n";
 
@@ -8,7 +8,7 @@ $output .= '<?xml version="1.0" ?>'.$cr.'<anyinventory>'.$cr;
 
 $query = "SELECT * FROM `anyInventory_fields` ORDER BY `importance` ASC";
 $result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 
 if ($result->numRows() > 0){
 	$output .= '	<fields>'.$cr;
@@ -63,7 +63,7 @@ if (is_array($cat_ids)){
 		
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
 		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		while ($row = $result->fetchRow()){
 			$item = new item($row["id"]);

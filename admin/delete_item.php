@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $title = DELETE_ITEM;
 $breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.Items.'</a> > '.DELETE_ITEM;

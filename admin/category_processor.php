@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 if ($_POST["action"] == "do_add"){
 	if (!$admin_user->can_admin($_POST["parent"])){
@@ -9,12 +9,11 @@ if ($_POST["action"] == "do_add"){
 	}
 	else{
 		// Add a category.
-		$query_data = array("id"=>get_unique_id('anyInventory_categories'),
-							"name"=>stripslashes($_POST["name"]),
-							"parent"=>$_POST["parent"],
-							"auto_inc_field"=>intval(($_POST["auto_inc"] == "yes")));
-		$result = $db->autoExecute('anyInventory_categories',$query_data,DB_AUTOQUERY_INSERT);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		$query = "INSERT INTO `anyInventory_categories (`id`,`name`,`parent`,`auto_inc_field`) VALUES (?, ?, ?, ?)";
+		$query_data = array(get_unique_id('anyInventory_categories'),stripslashes($_POST["name"]),$_POST["parent"],intval(($_POST["auto_inc"] == "yes")));
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$this_id = get_unique_id('anyInventory_categories') - 1;
 		
@@ -69,7 +68,7 @@ elseif($_POST["action"] == "do_edit"){
 				`auto_inc_field`='".((int) (($_POST["auto_inc"] == "yes") / 1))."'
 				WHERE `id`='".$_POST["id"]."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	// Remove the category from all of the fields
 	if (is_array($old_category->field_ids)){
@@ -121,7 +120,7 @@ elseif($_POST["action"] == "do_edit"){
 	
 	$query = "SELECT `id` FROM `anyInventory_users` WHERE `usertype` != 'Administrator'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if (PP_ADMIN || PP_VIEW){
 		while ($row = $result->fetchRow()){
@@ -163,17 +162,17 @@ elseif($_POST["action"] == "do_delete"){
 			// Delete the category
 			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_POST["id"]."'"; 
 			$result = $db->query($query);
-			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			
 			if ($_POST["item_action"] == "delete"){
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 				$result = $db->query($query);
-				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				
 				while ($row = $result->fetchRow()){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
 					$newresult = $db->query($newquery);
-					if (DB::isError($newresult)) die($newresult->getMessage().': line '.__LINE__.'<br /><br />'.$newresult->userinfo);
+					if (DB::isError($newresult)) die($newresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 					
 					while ($newrow = $newresult->fetchRow()){
 						$alert = new alert($newrow["id"]);
@@ -183,31 +182,31 @@ elseif($_POST["action"] == "do_delete"){
 						if (count($alert->item_ids) == 0){
 							$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
 							$newerresult = $db->query($newerquery);
-							if (DB::isError($newerresult)) die($newerresult->getMessage().': line '.__LINE__.'<br /><br />'.$newerresult->userinfo);
+							if (DB::isError($newerresult)) die($newerresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newerresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 						}
 					}
 					
-					$newquery = "DELETE FROM `anyInventory_fields` WHERE `item_id`='".$row["id"]."'";
+					$newquery = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$row["id"]."'";
 					$newresult = $db->query($newquery);
-					if (DB::isError($newresult)) die($newresult->getMessage().': line '.__LINE__.'<br /><br />'.$newresult->userinfo);
+					if (DB::isError($newresult)) die($newresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				}
 				
 				// Delete all of the items in the category
 				$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 				$result = $db->query($query);
-				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
 			elseif($_POST["item_action"] == "move"){
 				$newcategory = new category($_POST["move_items_to"]);
 				
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 				$result = $db->query($query);
-				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				
 				while($row = $result->fetchRow()){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
 					$newresult = $db->query($newquery);
-					if (DB::isError($newresult)) die($newresult->getMessage().': line '.__LINE__.'<br /><br />'.$newresult->userinfo);
+					if (DB::isError($newresult)) die($newresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 					
 					while ($newrow = $newresult->fetchRow()){
 						$alert = new alert($newrow["id"]);
@@ -218,7 +217,7 @@ elseif($_POST["action"] == "do_delete"){
 							if (count($alert->item_ids) == 0){
 								$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
 								$newerresult = $db->query($newerquery);
-								if (DB::isError($newerresult)) die($newerresult->getMessage().': line '.__LINE__.'<br /><br />'.$newerresult->userinfo);
+								if (DB::isError($newerresult)) die($newerresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newerresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 							}
 						}
 					}
@@ -228,7 +227,7 @@ elseif($_POST["action"] == "do_delete"){
 				
 				$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
 				$result = $db->query($query);
-				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
 			
 			if ($_POST["subcat_action"] == "delete"){
@@ -239,7 +238,7 @@ elseif($_POST["action"] == "do_delete"){
 				// Move the subcategories
 				$query = "UPDATE `anyInventory_categories` SET `parent`='".$_POST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
 				$result = $db->query($query);
-				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
 			
 			// Remove all of the fields from this category.

@@ -16,6 +16,6 @@ $db_user = '';
 $db_pass = '';
 $db_type = '';
 
-require_once($DIR_PREFIX."environment.php");
+include($DIR_PREFIX."environment.php");
 
 ?>

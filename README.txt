@@ -18,7 +18,7 @@ subdirectory is writable, readable, and executable by the Web server.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.8, simply overwrite the files from 
+To upgrade to anyInventory 1.9, simply overwrite the files from 
 your current version, and then run the included upgrade.php script from 
 the Web browser of your choice.
 

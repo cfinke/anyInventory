@@ -1,5 +1,7 @@
 <?php
 
+define('SUBMIT_REPORT','You can assist in the development of anyInventory by <a href="https://sourceforge.net/tracker/?func=add&group_id=110239&atid=655777">submitting this error as a bug report</a>.');
+
 // Dates (Fechas)
 define('MONTH_1','Enero');
 define('MONTH_2','Febrero');
@@ -35,7 +37,8 @@ define('DELETE_LINK','eliminar');
 define('TYPE','Tipo');
 define('DOWNLOAD_LINK','descagar');
 define('DOWNLOAD_AS_XML','Descargar el inventario en un archivo XML');
-define('SELECT_NONE','');
+define('SELECT_NONE','Ninguna selección');
+define('SUBMIT_REPORT','Tu puedes colaborar con el desarrollo de anyInventory al <a href="https://sourceforge.net/tracker/?func­d&amp;group_id.0239&amp;atide5777">enviar este error como un reporte de fallo</a>.');
 
 // Buscar(Search)
 define('SEARCH','Buscar');
@@ -119,6 +122,7 @@ define('PARENT_CATEGORY','Categor&iacute;a superior');
 define('DELETE_CATEGORY','Eliminar categor&iacute;a');
 define('DELETE_CATEGORY_CONFIRM','¿Realmente deseas eliminar esta categor&iacute;a?');
 define('NUM_ITEMS','N&uacute;mero de elementos');
+define('NUM_ITEMS_R','N&uacute;mero de elementos total');
 define('DELETE_ALL_ITEMS','Eliminar todos los elementos de esta categor&iacute;a');
 define('MOVE_ITEMS_TO','Mover todos los elementos de esta categor&iacute;a a ');
 define('NUM_SUBCATS','N&uacute;mero de categor&iacute;as');

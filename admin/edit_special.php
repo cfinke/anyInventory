@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 if ($admin_user->usertype != 'Administrator'){
 	header("Location: ../error_handler.php?eid=15");
@@ -14,7 +14,7 @@ switch($_GET["id"]){
 		
 		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `auto_inc_field`='1'";
 		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$categories = array();
 		

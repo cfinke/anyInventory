@@ -43,6 +43,7 @@ define('EDIT_LINK','edit');
 define('DELETE_LINK','delete');
 define('TYPE','Type');
 define('SELECT_NONE','Select none');
+define('SUBMIT_REPORT','You can assist in the development of anyInventory by <a href="https://sourceforge.net/tracker/?func=add&amp;group_id=110239&amp;atid=655777">submitting this error as a bug report</a>.');
 
 // Search
 define('SEARCH','Search');
@@ -126,6 +127,7 @@ define('PARENT_CATEGORY','Parent Category');
 define('DELETE_CATEGORY','Delete Category');
 define('DELETE_CATEGORY_CONFIRM','Are you sure you want to delete this category?');
 define('NUM_ITEMS','Number of items');
+define('NUM_ITEMS_R','Number of items in this and all subcategories');
 define('DELETE_ALL_ITEMS','Delete all items in this category');
 define('MOVE_ITEMS_TO','Move all items in this category to ');
 define('NUM_SUBCATS','Number of subcategories');

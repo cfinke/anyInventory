@@ -30,7 +30,7 @@ class alert {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$row = $result->fetchRow();
 		
@@ -78,14 +78,14 @@ class alert {
 			$query_data = array($this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		}
 		else{
 			$query = "UPDATE `anyInventory_alerts` SET `item_ids`= ? WHERE `id`= ?";
 			$query_data = array(serialize($this->item_ids), $this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		}
 	}
 	

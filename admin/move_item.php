@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $title = MOVE_ITEM;
 $breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.MOVE_ITEM;

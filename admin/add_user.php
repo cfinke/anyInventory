@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 if ($admin_user->usertype != 'Administrator'){
 	header("Location: ../error_handler.php?eid=11");

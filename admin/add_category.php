@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $title = ADD_CATEGORY;
 $breadcrumbs = ADMINISTRATION.' > <a href="categories.php">'.CATEGORIES.'</a> > '.ADD_CATEGORY;
@@ -23,7 +23,7 @@ $output = '
 						<tr>
 							<td class="form_label"><label for="parent">'.PARENT_CATEGORY.':</label></td>
 							<td class="form_input">
-								<select name="parent" id="parent">
+								<select name="parent" id="parent" style="width: 100%;">
 									<option value="0">'.TOP_LEVEL_CATEGORY.'</option>
 									'.$admin_user->get_admin_categories_options($_GET["c"], false).'
 								</select>
@@ -39,7 +39,7 @@ if (PP_VIEW){
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
 $result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 
 while($row = $result->fetchRow()){
 	$output .= '<option value="'.$row["id"].'" selected="selected">'.$row["username"].'</option>';
@@ -60,7 +60,7 @@ if (PP_ADMIN){
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
 $result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 
 while($row = $result->fetchRow()){
 	$output .= '<option value="'.$row["id"].'">'.$row["username"].'</option>';

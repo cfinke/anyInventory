@@ -22,7 +22,7 @@ class item {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$row = $result->fetchRow();
 		
@@ -36,7 +36,7 @@ class item {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		while($row = $result->fetchRow()){
 			$field = new field($row["field_id"]);
@@ -70,7 +70,7 @@ class item {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		while ($row = $result->fetchRow()){
 			$this->files[] = new file_object($row["id"]);
@@ -236,7 +236,7 @@ class item {
 					
 					$output .= '>
 							<td style="width: 5%;">
-								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;">'.LABEL.'</a>
+								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$field->id.'" style="color: #000000;">'.LABEL.'</a>
 							</td>
 							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$field->name.'</b>:</nobr></td>
 							<td style="width: 85%;">'.$this->fields[$field->name].'</td>
@@ -250,21 +250,23 @@ class item {
 			$query_data = array('item');
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			
 			while ($row = $result->fetchRow()){
-				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE ?";
+				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE ? GROUP BY `item_id`";
 				$query2_data = array('%"'.$this->id.'"%');
 				$pquery2 = $db->prepare($query2);
 				$result2 = $db->execute($pquery2, $query2_data);
-				if (DB::isError($result2)) die($result2->getMessage().': line '.__LINE__.'<br /><br />'.$result2->userinfo);
+				if (DB::isError($result2)) die($result2->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result2->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				
 				while ($row2 = $result2->fetchRow()){
-					$backlinks[] = $row2["id"];
+					$backlinks[] = $row2["item_id"];
 				}
 			}
 			
 			if (is_array($backlinks)){
+				$backlinks = array_unique($backlinks);
+				
 				if (!$last_divider){
 					$output .= '<tr><td colspan="3"><hr /></td></tr>';
 					$last_divider = true;

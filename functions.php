@@ -20,11 +20,16 @@ function get_unique_id($table){
 	
 	$query = "SELECT MAX(`id`) AS `seq_id` FROM `".$table."`";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
-	$row = $result->fetchRow();
+	if ($result->numRows() == 0){
+		$row["seq_id"] = 0;
+	}
+	else{
+		$row = $result->fetchRow();
+	}
 	
-	return ($row["seq_id"] + 1);
+	return intval($row["seq_id"]) + 1;
 }
 
 function display($output){
@@ -41,9 +46,9 @@ function display($output){
 	global $DIR_PREFIX;
 	
 	header("Content-Type: text/html; charset=ISO-8859-1");
-	require_once($DIR_PREFIX."header.php");
+	include($DIR_PREFIX."header.php");
 	echo $output;
-	require_once($DIR_PREFIX."footer.php");
+	include($DIR_PREFIX."footer.php");
 	exit;
 }
 
@@ -71,18 +76,17 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 		$query_data = array($id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$names = $result->fetchRow();
-		$category_name = $names["name"];
-		$pre .= $category_name . ' > ';
+		$row = $result->fetchRow();
+		$pre .= $row["name"] . ' > ';
 	}
 	
 	$query = "SELECT `id`,`name` FROM `anyInventory_categories` WHERE `parent`= ? ORDER BY `name` ASC";
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	$list = '';
 	
@@ -122,7 +126,7 @@ function category_array_to_options($array, $selected = null, $exclude = null){
 	return $output;
 }
 
-function get_item_options($cat_ids = 0, $selected = null){
+function get_item_options($cat_ids = 0, $selected = null, $multiple = false){
 	global $db;
 	
 	// This function creates select box options for the items in the category $cat.
@@ -133,11 +137,11 @@ function get_item_options($cat_ids = 0, $selected = null){
 	$query_data = array(implode(", ",$cat_ids));
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	while ($row = $result->fetchRow()){
 		$options .= '<option value="'.$row["id"].'"';
-		if (($selected[0] === null) || (in_array($row["id"],$selected))) $options .= ' selected="selected"';
+		if ((($selected[0] === null) && (!$multiple)) || (in_array($row["id"],$selected))) $options .= ' selected="selected"';
 		$options .= '>'.$row["name"].'</option>';
 	}
 	
@@ -152,7 +156,7 @@ function get_fields_checkbox_area($checked = array()){
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	while($row = $result->fetchRow()){
 		$field = new field($row["id"]);
@@ -171,7 +175,7 @@ function get_fields_checkbox_area($checked = array()){
 						$output .= '; '.$field->size.' characters';
 					}
 					elseif (($field->input_type != 'file') && ($field->input_type != 'item')){
-						$output .= '; values: ';
+						$output .= '; '.strtolower(VALUES).': ';
 						
 						if (is_array($field->field_values)){
 							foreach($field->field_values as $val){
@@ -201,7 +205,7 @@ function get_category_array($top = 0){
 		$query_data = array($top);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		if ($result->numRows() > 0){
 			$row = $result->fetchRow();
@@ -227,7 +231,7 @@ function get_array_children($id, &$array, $pre = ""){
 		$query_data = array($id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$row = $result->fetchRow();
 		$pre .= $row["name"] . ' > ';
@@ -237,7 +241,7 @@ function get_array_children($id, &$array, $pre = ""){
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() > 0){
 		while ($row = $result->fetchRow()){
@@ -277,7 +281,7 @@ function get_array_id_children($id, &$array){
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() > 0){
 		while ($row = $result->fetchRow()){
@@ -317,14 +321,14 @@ function delete_subcategory($category){
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	while ($row = $result->fetchRow()){
 		$query2 = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE ?";
 		$query2_data = array('%"'.$row["id"].'"%');
 		$pquery2 = $db->prepare($query2);
 		$result2 = $db->execute($pquery2, $query2_data);
-		if (DB::isError($result2)) die($result2->getMessage().': line '.__LINE__.'<br /><br />'.$result2->userinfo);
+		if (DB::isError($result2)) die($result2->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result2->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		while ($row2 = $result2->fetchRow()){
 			$alert = new alert($row2["id"]);
@@ -336,7 +340,7 @@ function delete_subcategory($category){
 				$query3_data = array($alert->id);
 				$pquery3 = $db->prepare($query3);
 				$db->execute($pquery3, $query3_data);
-				if (DB::isError($result3)) die($result3->getMessage().': line '.__LINE__.'<br /><br />'.$result3->userinfo);
+				if (DB::isError($result3)) die($result3->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result3->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
 		}
 		
@@ -344,22 +348,22 @@ function delete_subcategory($category){
 		$query4_data = array($row["id"]);
 		$pquery4 = $db->prepare($query4);
 		$result4 = $db->execute($pquery4, $query4_data);
-		if (DB::isError($result4)) die($result4->getMessage().': line '.__LINE__.'<br /><br />'.$result4->userinfo);
+		if (DB::isError($result4)) die($result4->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result4->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
 	
 	// Delete all of the items in the category
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category` = ?";
-	$query_data = arrau($category->id);
+	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	// Delete this category.
 	$query = "DELETE FROM `anyInventory_categories` WHERE `id` = ?";
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	remove_from_fields($category->id);
 	
@@ -374,7 +378,7 @@ function remove_from_fields($cat_id){
 	$query_data = array('%"'.$cat_id.'"%');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	while($row = $result->fetchRow()){
 		$field = new field($row["id"]);
@@ -449,7 +453,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 			}
 			
 			$result = $db->query($query);
-			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			
 			if ($result->numRows() == 0){
 				header("Location: ../error_handler.php?eid=3");
@@ -462,7 +466,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 				
 				$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (".implode(", ",$c).")";
 				$result = $db->query($query);
-				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				
 				if ($result->numRows() == 0){
 					header("Location: ../error_handler.php?eid=2");

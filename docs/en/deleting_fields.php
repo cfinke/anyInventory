@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $title = "anyInventory: Help > Fields > Deleting Fields";
 $breadcrumbs = '<a href="./">Help</a> > <a href="fields.php">Fields</a> > Deleting Fields';

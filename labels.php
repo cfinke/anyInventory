@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $title = "Labels";
 $breadcrumbs = "Labels";
@@ -28,10 +28,12 @@ if (!function_exists('imagecreate') ||
 elseif ($_POST["action"] == "generate"){
 	if (!is_array($_POST["i"])) $_POST["i"] = array($_POST["i"]);
 	
+	$field = new field($_POST["f"]);
+	
 	foreach($_POST["i"] as $item_id){
 		$item = new item($item_id);
 		
-		if ($item->fields[$_POST["f"]] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_POST["f"].'" style="height: 61px;" /><br />';
+		if ($item->fields[$field->name] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_POST["f"].'" /><br />';
 	}
 }
 elseif (!isset($_POST["c"])){
@@ -81,7 +83,7 @@ elseif (!isset($_POST["i"])){
 	
 	$query = substr($query, 0, strlen($query) - 4);
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() == 0){
 		header("Location: error_handler.php?eid=3");
@@ -109,7 +111,7 @@ elseif (!isset($_POST["i"])){
 		while ($row = $result->fetchRow()){
 			$field = new field($row["id"]);
 			
-			$output .= '<input type="radio" name="f" value="'.$field->name.'" />'.$field->name.'<br />';
+			$output .= '<input type="radio" name="f" value="'.$field->id.'" />'.$field->name.'<br />';
 		}
 		
 		$output .= '

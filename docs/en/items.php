@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $title = "anyInventory: Help > Items and Adding Items";
 $breadcrumbs = '<a href="./">Help</a> > Items and Adding Items';

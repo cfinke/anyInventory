@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 if ($_POST["action"] == "do_add"){
 	if ($admin_user->usertype != 'Administrator'){
@@ -11,21 +11,18 @@ if ($_POST["action"] == "do_add"){
 	// Check for duplicate username
 	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() > 0){
 		header("Location: ../error_handler.php?eid=11");
 		exit;
 	}
 	else{
-		$query_data = array("id"=>get_unique_id('anyInventory_users'),
-							"username"=>stripslashes($_POST["username"]),
-							"password"=>md5($_POST["password"]),
-							"usertype"=>$_POST["usertype"],
-							"categories_view"=>serialize($_POST["c_view"]),
-							"categories_admin"=>serialize($_POST["c_admin"]));
-		$result = $db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		$query = "INSERT INTO `anyInventory_users` (`id`,`username`,`password`,`usertype`,`categories_admin`,`categories_view`) VALUES (?, ?, ?, ?, ?, ?)";
+		$query_data = array(get_unique_id('anyInventory_users'),stripslashes($_POST["username"]),md5($_POST["password"]),$_POST["usertype"],serialize($_POST["c_view"]),serialize($_POST["c_admin"]));
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
 }
 elseif($_POST["action"] == "do_edit"){
@@ -37,7 +34,7 @@ elseif($_POST["action"] == "do_edit"){
 	// Check for duplicate username
 	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."' AND `id` != '".$_POST["id"]."'";
 	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() > 0){
 		header("Location: ../error_handler.php?eid=16");
@@ -63,7 +60,7 @@ elseif($_POST["action"] == "do_edit"){
 		
 		$query .= " WHERE `id`='".$_POST["id"]."'";
 		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
 }
 elseif($_POST["action"] == "do_edit_own"){
@@ -75,7 +72,7 @@ elseif($_POST["action"] == "do_edit_own"){
 	if ($_POST["password"] != ''){
 		$query = "UPDATE `anyInventory_users` SET `password`='".md5($_POST["password"])."' WHERE `id`='".$_POST["id"]."'";
 		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
 }
 elseif($_POST["action"] == "do_delete"){
@@ -87,7 +84,7 @@ elseif($_POST["action"] == "do_delete"){
 	if ($_POST["delete"] == "Delete"){
 		$query = "DELETE FROM `anyInventory_users` WHERE `id`='".$_POST["id"]."'";
 		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
 }
 

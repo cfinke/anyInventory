@@ -1,13 +1,13 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 $title = FIELDS;
 $breadcrumbs = ADMINISTRATION.' > '.FIELDS;
 
 $query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
 $result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 
 if ($admin_user->usertype == 'Administrator'){
 	$table_rows .= '
@@ -86,7 +86,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
-				<p style="padding: 5px;"><a href="add_field.php">'.ADD_FIELD.'</a> | <a href="field_processor.php?action=do_add_divider">'.ADD_DIVIDER.'</a>.</p>
+				<p style="padding: 5px;"><a href="add_field.php">'.ADD_FIELD.'</a> | <a href="field_processor.php?action=do_add_divider">'.ADD_DIVIDER.'</a></p>
 				'.$table_rows.'
 			</td>
 		</tr>

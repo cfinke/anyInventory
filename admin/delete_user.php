@@ -1,6 +1,6 @@
 <?php
 
-require_once("globals.php");
+include("globals.php");
 
 if ($_GET["id"] == ADMIN_USER_ID){
 	header("Location: ../error_handler.php?eid=12");
@@ -18,7 +18,7 @@ else{
 	$title = DELETE_USER;
 	$breadcrumbs = ADMINISTRATION.' > <a href="users.php">'.USERS.'</a> > '.DELETE_USER;
 	
-	$user = new user($_GET["id"]);
+	$deluser = new user($_GET["id"]);
 	
 	$output .= '
 		<form action="user_processor.php" method="post">
@@ -32,7 +32,7 @@ else{
 				<tr>
 					<td class="tableData" colspan="2">
 						<p>'.DELETE_USER_CONFIRM.'</p>
-						'.$user->export_description().'
+						'.$deluser->export_description().'
 						<p class="submitButtonRow">
 							<input type="submit" name="delete" value="'._DELETE.'" />
 							<input type="submit" name="cancel" value="'.CANCEL.'" />

@@ -176,7 +176,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 			$field = new field($field_id);
 			
 			if ($field->input_type == 'file'){
-				$file = new file_object($item->fields[$field->name]);
+				$file = new file_object($item->fields[$field->name]["file_id"]);
 				
 				// Check if the delete file box was checked	
 				if (is_array($_REQUEST["delete_files"]) && (in_array($file->id, $_REQUEST["delete_files"]))){

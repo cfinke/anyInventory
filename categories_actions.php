@@ -14,10 +14,6 @@ if ($_REQUEST["action"] == "do_add"){
 			$temp_field->add_category($this_id);
 		}
 	}
-	
-	$cat = new category($this_id);
-	print_r($cat);
-	exit;
 }
 elseif($_REQUEST["action"] == "do_edit"){
 	$old_category = new category($_REQUEST["id"]);
@@ -33,15 +29,11 @@ elseif($_REQUEST["action"] == "do_edit"){
 	}
 	
 	if (is_array($_REQUEST["fields"])){
-		print_r($_REQUEST["fields"]);
 		foreach($_REQUEST["fields"] as $key => $value){
-			echo 'Adding field '.$key.' to category '.$_REQUEST["id"].' <br />';
 			$temp_field2 = new field($key);
 			$temp_field2->add_category($_REQUEST["id"]);
 		}
 	}
-	
-	exit;
 }
 elseif($_REQUEST["action"] == "do_delete"){
 	if ($_REQUEST["delete"] == "Delete"){

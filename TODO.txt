@@ -2,11 +2,9 @@ TODO
 
 Fields
 ======
-Nicer display on delete
 
 Categories
 ==========
-Editing
 Add "Inherit fields from parent" option for addition
 
 Items

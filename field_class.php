@@ -26,12 +26,21 @@ class field {
 		$this->default_value = $row["default_value"];
 		$this->size = ($row["size"] > 0) ? $row["size"] : '';
 		$this->categories = explode(",",$row["categories"]);
+		$this->clean_categories();
 	}
 	
 	function clean_values(){
 		if (is_array($this->values)){
 			foreach($this->values as $key => $value){
 				$this->values[$key] = trim($value);
+			}
+		}
+	}
+	
+	function clean_categories(){
+		if (is_array($this->categories)){
+			foreach($this->categories as $key => $value){
+				$this->categories[$key] = trim($value);
 			}
 		}
 	}

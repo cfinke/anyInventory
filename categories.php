@@ -2,58 +2,13 @@
 
 include("globals.php");
 
-if ($_REQUEST["action"] == "do_add"){
-	$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["parent"]."')";
-	$result = query($query);
-	
-	$this_id = insert_id();
-	
-	if (is_array($_REQUEST["fields"])){
-		foreach($_REQUEST["fields"] as $key => $value){
-			$temp_field = new field($key);
-			$temp_field->add_category($this_id);
-		}
-	}
-	
-	header("Location: ".$_SERVER["PHP_SELF"]);
-}
-elseif($_REQUEST["action"] == "do_delete"){
-	if ($_REQUEST["delete"] == "Delete"){
-		$category = new category($_REQUEST["id"]);
-		
-		$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_REQUEST["id"]."'"; 
-		$result = query($query);
-		
-		if ($_REQUEST["item_action"] == "delete"){
-			$query = "DELETE FROM `anyInventory_items` WEHRE `category`='".$category->id."'";
-			$result = query($query);
-		}
-		elseif($_REQUEST["item_action"] == "move"){
-			$query = "UPDATE `anyInventory_items` SET `category`='".$_REQUEST["move_items_to"]."'";
-			$result = query($query);
-		}
-		
-		if ($_REQUEST["subcat_action"] == "delete"){
-			delete_subcategories($category);
-		}
-		elseif($_REQUEST["subcat_action"] == "move"){
-			$query = "UPDATE `anyInventory_categories` SET `parent`='".$_REQUEST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
-			$result = query($query);
-		}
-		
-		remove_from_fields($category->id);
-	}
-	
-	header("Location: ".$_SERVER["PHP_SELF"]);
-}
-
 $title = 'anyInventory Categories';
 $page_key = "categories";
 $links = array(array("url"=>$_SERVER["PHP_SELF"]."?action=add","name"=>"Add a Category"));
 
 if ($_REQUEST["action"] == "add"){
 	$output = '
-		<form method="post" action="'.$_SERVER["PHP_SELF"].'" enctype="multipart/form-data">
+		<form method="post" action="categories_actions.php" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="do_add" />
 			<table>
 				<tr>
@@ -85,7 +40,7 @@ elseif($_REQUEST["action"] == "delete"){
 	$category = new category($_REQUEST["id"]);
 	
 	$output .= '
-		<form method="post" action="'.$_SERVER["PHP_SELF"].'">
+		<form method="post" action="categories_actions.php">
 			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 			<input type="hidden" name="action" value="do_delete" />
 			<p>Are you sure you want to delete this category?</p>';
@@ -180,135 +135,5 @@ echo $output;
 include("footer.php");
 
 exit;
-
-function get_category_dropdown($selected = 0){
-	$output = '<option value="0">Top Level</option>';
-	$output .= get_dropdown_children(0, '', $selected);
-	
-	return $output;
-}
-
-function get_dropdown_children($id, $pre = "", $selected = 0){
-	$query = "SELECT * FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = query($query);
-	
-	if ($id != 0){
-		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = query($newquery);
-		$category_name = result($newresult, 0, 'name');
-		$pre .= $category_name . ' > ';
-	}
-	
-	$list = '';
-	
-	if (num_rows($result) > 0){
-		while ($row = fetch_array($result)){
-			$category = $row["name"];
-			
-			$list .= '<option value="'.$row["id"].'"';
-			if ($row["id"] == $selected) $list .= ' selected="selected"';
-			$list .= '>'.$pre . $category.'</option>';
-			
-			$list .= get_dropdown_children($row["id"], $pre, $selected);
-		}
-	}
-	
-	return $list;
-}
-
-function get_fields_checkbox_area($checked = null){
-	$query = "SELECT * FROM `anyInventory_fields` WHERE 1 ORDER BY `name` ASC";
-	$result = query($query);
-	
-	$num_fields = num_rows($result);
-	
-	$output .= '<div id="field_checkboxes">
-		<div style="float: left;">';
-	
-	for ($i = 0; $i < ceil($num_fields / 2); $i++){
-		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.result($result, $i, "id").']" value="yes" /> '.result($result, $i, "name").'</div>';
-	}
-	
-	$output .= '</div>
-		<div>';
-	
-	for (; $i < $num_fields; $i++){
-		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.result($result, $i, "id").']" value="yes" /> '.result($result, $i, "name").'</div>';	
-	}
-	
-	$output .= '</div>';
-	
-	return $output;
-}
-
-function get_category_array(){
-	$array = array();
-	
-	get_array_children(0, $array);
-	
-	return $array;
-}
-
-function get_array_children($id, &$array, $pre = ""){
-	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = query($query);
-	
-	if ($id != 0){
-		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = query($newquery);
-		$pre .= result($newresult, 0, 'name') . ' > ';
-	}
-	
-	if (num_rows($result) > 0){
-		while ($row = fetch_array($result)){
-			$array[] = array("name"=>$pre.$row["name"],"id"=>$row["id"]);
-						
-			get_array_children($row["id"], $array, $pre);
-		}
-	}
-}
-
-function delete_subcategories($category){
-	if (is_array($category->children)){
-		foreach($category->children as $child){
-			delete_subcategory($child);
-		}
-	}
-	
-	return;
-}
-
-function delete_subcategory($category){
-	if (is_array($category->children)){
-		foreach($category->children as $child){
-			delete_subcategories($child);
-		}
-	}
-	
-	$query = "DELETE FROM `anyInventory_items` WHERE `category`='".$category->id."'";
-	$result = query($query);
-	
-	$query = "UPDATE `anyInventory_categories` SET `parent`='".$category->parent_id."' WHERE `parent`='".$category->id."'";
-	$result = query($query);
-	
-	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
-	$result = query($query);
-	
-	remove_from_fields($category->id);
-	
-	return;
-}
-
-function remove_from_fields($cat_id){
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%".$cat_id.",%'";
-	$result = query($query);
-	
-	while($row = fetch_array($result)){
-		$field = new field($row["id"]);
-		$field->remove_category($cat_id);
-	}
-	
-	return;
-}
 
 ?>

@@ -60,10 +60,6 @@ if ($_POST["action"] == "do_add"){
 			$_POST["size"] = 255;
 		}
 		
-		// Add the field to the items table
-		$query = "ALTER TABLE `anyInventory_items` ADD `".$_POST["name"]."` ".get_mysql_column_type($_POST["input_type"],$_POST["size"],$_POST["values"],$_POST["default_value"]);
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		
 		$values = explode(",",$_POST["values"]);
 		
 		if (is_array($values)){
@@ -195,11 +191,6 @@ elseif($_POST["action"] == "do_edit"){
 				WHERE `id`='".$_POST["id"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	// Change the items table name.
-	$query = "ALTER TABLE `anyInventory_items` CHANGE `".$old_field->name."` `".$_POST["name"]."` ";
- 	$query .= get_mysql_column_type($_POST["input_type"], $_POST["size"], $_POST["values"], $_POST["default_value"]);
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-	
 	// Make an object from the new field.
 	$new_field = new field($_POST["id"]);
 	
@@ -230,11 +221,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 		}
 		
 		if ($field->input_type == 'file'){
-			$query = "SELECT `".$field->name."` FROM `anyInventory_items` GROUP BY `".$field->name."`";
+			$query = "SELECT `value` FROM `anyInventory_fields` WHERE `field_id`='".$field->id."' GROUP BY `value`";
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			while ($row = mysql_fetch_array($result)){
-				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row[$field->name]."'";
+				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row["value"]."'";
 				$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 				$newrow = mysql_fetch_array($newresult);
 				
@@ -255,7 +246,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 		
 		if ($field->input_type != 'divider'){
 			// Remove the field from the items table
-			$query = "ALTER TABLE `anyInventory_items` DROP `".$field->name."`";
+			$query = "DELETE FROM `anyInventory_values` WHERE `field_id`='".$field->id."'";
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		}
 		

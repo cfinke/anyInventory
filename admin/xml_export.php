@@ -19,19 +19,19 @@ if (mysql_num_rows($result) > 0){
 		if ($field->input_type != 'divider'){
 			$output .= '			<'.xmlize(NAME).'>'.$field->name.'</'.xmlize(NAME).'>'.$cr;
 			$output .= '			<'.xmlize(TYPE).'>'.$field->input_type.'</'.xmlize(TYPE).'>'.$cr;
-		
+			
 			if (($field->input_type == 'select') || ($field->input_type == 'multiple') || ($field->input_type == 'checkbox') || ($field->input_type == 'radio')){
 				if (is_array($field->values)){
 					$output .= '			<'.xmlize(VALUES).'>'.$cr;
-				
+					
 					foreach($field->values as $value){
 						$output .= '				<'.xmlize(VALUE).'>'.$value.'</'.xmlize(VALUE).'>'.$cr;
 					}
-				
+					
 					$output .= '			</'.xmlize(VALUES).'>'.$cr;
 				}
 			}
-		
+			
 			if (($field->input_type == 'select') || ($field->input_type == 'multiple') || ($field->input_type == 'text') || ($field->input_type == 'radio')){
 				$output .= '			<'.xmlize(DEFAULT_VALUE).'>'.$field->default_value.'</'.xmlize(DEFAULT_VALUE).'>'.$cr;
 			}
@@ -39,7 +39,7 @@ if (mysql_num_rows($result) > 0){
 			if ($field->input_type == 'text'){
 				$output .= '			<'.xmlize(_SIZE).'>'.$field->size.'</'.xmlize(_SIZE).'>'.$cr;
 			}
-		
+			
 			$output .= '				<'.XMLIZE(HIGHLIGHT).'>'.$field->highlight.'</'.xmlize(HIGHLIGHT).'>'.$cr;
 		}
 		else{
@@ -57,10 +57,10 @@ if (is_array($cat_ids)){
 	$output .= '		<'.xmlize(CATEGORIES).'>'.$cr;
 	foreach($cat_ids as $cat){
 		$category = new category($cat["id"]);
-	
+		
 		$output .= '		<'.xmlize(CATEGORY).' id="'.$category->id.'" '.xmlize(NAME).'="'.$category->breadcrumb_names.'">'.$cr;
 		
-		$query = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
+		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 		
 		while ($row = mysql_fetch_array($result)){
@@ -87,7 +87,7 @@ if (is_array($cat_ids)){
 								
 								$output .= '				';
 							}
-						}						
+						}
 						else{
 							$output .= $row[$field->name];
 						}
@@ -99,7 +99,7 @@ if (is_array($cat_ids)){
 			
 			$output .= '			</'.xmlize(ITEM).'>'.$cr;
 		}
-	
+		
 		$output .= '		</'.xmlize(CATEGORY).'>'.$cr;
 	}
 	

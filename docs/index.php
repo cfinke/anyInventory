@@ -7,8 +7,7 @@ $title = "anyInventory: Help";
 $output .= '
 	<h2>Table of Contents</h2>
 	<p>Welcome to the help section for anyInventory.  You can read through the pages in order, or use the table of contents below to help you find what you\'re looking for.</p>
-	<p style="text-align: right;"><a href="introduction.php">First: Introduction &gt;&gt;</a></p>
-	<ol>
+	<ol style="margin-left: 5%;">
 		<li><a href="introduction.php">Introduction</a></li>
 		<li><a href="fields.php">Fields</a></li>
 		<ol>
@@ -33,7 +32,8 @@ $output .= '
 		</ol>
 		<li><a href="searching.php">Searching</a></li>
 		<li><a href="whats_next.php">What\'s Next?</a></li>
-	</ol>';
+	</ol>
+	<p style="text-align: right;"><a href="introduction.php">First: Introduction &gt;&gt;</a></p>';
 
 display($output);
 

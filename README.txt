@@ -11,18 +11,16 @@ Installation
 To install anyInventory, upload the included files to your Web server 
 and then run the included install.php script from the Web browser of 
 your choice.  (We heartily recommend Mozilla: http://www.mozilla.org/.)
-You should also make the item_files/ subdirectory writable by the Web
-server.  (The install script will alert you if it is not.)
-
-If you do not wish to allow anyone who can view your inventory to add or
-edit it, you can password protect the admin directory to disallow access
-to these functions.
+You should also make sure that all files and directories are readable
+and executable by the Web server, as well as making sure that the item_files/ 
+subdirectory is writable, readable, and executable by the Web server.  
+(The install script will alert you if it is not writable.)
 
 Upgrading
 =========
 To upgrade to anyInventory 1.7, simply overwrite the files from 
-your current version. You should then run 
-the included upgrade.php script from the Web browser of your choice.
+your current version, and then run the included upgrade.php script from 
+the Web browser of your choice.
 
 Using anyInventory
 ==================

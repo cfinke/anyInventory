@@ -22,7 +22,7 @@ if ($admin_pass != ''){
 	if ($_SESSION["anyInventory"]["signed_in"] != true){
 		$return_location = $DIR_PREFIX."error_handler.php?eid=4&return_to=".$_SERVER["PHP_SELF"];
 		
-		foreach($HTTP_GET as $key => $val){
+		foreach($_REQUEST as $key => $val){
 			$return_location .= '&'.$key.'='.$val;
 		}
 		

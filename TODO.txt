@@ -26,7 +26,7 @@ DONE - Add input type of "File" to replace generic file uploads and remote files
 
 BEFORE 1.7
 ===================
-DREW - Thumbnails of remote images
+DONE - Thumbnails of remote images
 DONE - Internal password protection
 DONE - Alerts across multiple categories
 DONE - New layout

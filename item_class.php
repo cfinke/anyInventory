@@ -77,7 +77,7 @@ class item {
 		$output .= '
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
-					<td>'.$this->name.' ( <a href="admin/move_item.php?id='.$this->id.'">Move</a> | <a href="admin/edit_item.php?id='.$this->id.'">Edit</a> | <a href="admin/delete_item.php?id='.$this->id.'">Delete</a> )</td>
+					<td>'.$this->name.' ( <a href="'.$DIR_PREFIX.'admin/move_item.php?id='.$this->id.'">Move</a> | <a href="'.$DIR_PREFIX.'admin/edit_item.php?id='.$this->id.'">Edit</a> | <a href="'.$DIR_PREFIX.'admin/delete_item.php?id='.$this->id.'">Delete</a> )</td>
 				</tr>
 				<tr>
 					<td class="tableData">

@@ -11,8 +11,6 @@ class file_object{
 	var $web_path;
 	var $server_path;
 	
-	var $is_image;
-	
 	function file_object($id){
 		global $files_dir;
 		
@@ -30,8 +28,6 @@ class file_object{
 		
 		$this->web_path = "item_files/".$this->file_name;
 		$this->server_path = $files_dir.$this->file_name;
-		
-		$this->is_image = (bool) stristr($this->file_type,"image/");
 	}
 	
 	function get_download_link(){
@@ -110,7 +106,7 @@ class file_object{
 	}
 	
 	function has_thumbnail(){
-		$supported_types = array("image/jpg","image/jpeg","image/png","image/pjpg","image/pjpeg","image/gif");
+		$supported_types = array("image/jpg","image/jpeg","image/png","image/pjpg","image/pjpeg","image/gif","image/bmp");
 		
 		if (in_array($this->file_type, $supported_types)) return true;
 		else return false;

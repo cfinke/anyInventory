@@ -24,4 +24,7 @@ include($DIR_PREFIX."dataset_library.php");
 
 connect_to_database();
 
+// Remove the whitespace from the ends of each $_REQUEST value
+foreach($_REQUEST as $key => $value) $_REQUEST[$key] = trim($value);
+
 ?>

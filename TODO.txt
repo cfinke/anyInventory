@@ -26,8 +26,7 @@ BEFORE 1.6
 ===================
 CHRIS - Timed Alerts
 Thumbnails of remote images (I'm not sure if this can actually be done.)
-
-DREW - Better advanced search, like phpMyAdmin's Search page
+Better advanced search, like phpMyAdmin's Search page
 
 BEFORE 1.7
 ===================

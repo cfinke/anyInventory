@@ -68,7 +68,7 @@ if ($_POST["action"] == "do_add"){
 			$field = new field($field_id);
 			
 			if ($field->input_type == 'file'){
-				if (trim(str_replace("http://","",$_POST[str_replace(" ","_",$field->name)."remote"]) != ''){
+				if (trim(str_replace("http://","",$_POST[str_replace(" ","_",$field->name)."remote"])) != ''){
 					// Determine what to do - is the remote file an image?
 					// $_POST[str_replace(" ","_",$field->name)."remote"]  = remote filename
 					$remote_url = $_POST[str_replace(" ","_",$field->name)."remote"];

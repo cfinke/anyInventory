@@ -77,6 +77,35 @@ switch($_GET["id"]){
 				</table>
 			</form>';
 		break;
+	case 'name_field_name':
+		$title = "anyInventory: Edit Name Field";
+		$breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Edit Name Field';
+		
+		$output = '
+				<form method="post" action="special_processor.php">
+					<input type="hidden" name="action" value="do_edit_name_field_name" />
+					<table class="standardTable" cellspacing="0">
+						<tr class="tableHeader">
+							<td>Edit Name Field</td>
+							<td style="text-align: right;">[<a href="../docs/editing_fields.php">Help</a>]</td>
+						</tr>
+						<tr>
+							<td class="tableData" colspan="2">
+								<table>
+									<tr>
+										<td class="form_label"><label for="name">Name:</label></td>
+										<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',NAME_FIELD_NAME).'" maxlength="64" /></td>
+									</tr>
+									<tr>
+										<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</form>';
+		break;
+
 }
 
 display($output);

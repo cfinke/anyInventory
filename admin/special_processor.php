@@ -66,5 +66,16 @@ elseif($_GET["action"] == 'pp_view_off'){
 	header("Location: index.php");
 	exit;
 }
+elseif ($_POST["action"] == "do_edit_name_field_name"){
+	$_POST["name"] = stripslashes($_POST["name"]);
+	$_POST["name"] = str_replace($replace,"",$_POST["name"]);
+	$_POST["name"] = trim(addslashes($_POST["name"]));
+	
+	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["name"]."' WHERE `key`='NAME_FIELD_NAME'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+
+	header("Location: index.php");
+	exit;
+}
 
 ?>

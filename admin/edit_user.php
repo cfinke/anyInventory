@@ -58,7 +58,7 @@ $output .= '
 								<br /><small>If you do not enter a new password, it will remain unchanged.</small></td>
 						</tr>';
 	
-	if (($local_user->id != get_config_value('ADMIN_USER_ID')) && ($_GET["id"] != $_SESSION["user"]["id"])){
+	if (($local_user->id != ADMIN_USER_ID) && ($_GET["id"] != $_SESSION["user"]["id"])){
 		$output .= '
 						<tr>
 							<td class="form_label"><label for="usertype">User Type:</label></td>

@@ -19,7 +19,7 @@ if ($admin_user->usertype == 'Administrator'){
 					[down]
 				</nobr>
 			</td>
-			<td style="white-space: nowrap;">'.get_config_value("AUTO_INC_FIELD_NAME").'</td>
+			<td style="white-space: nowrap;">'.AUTO_INC_FIELD_NAME.'</td>
 			<td>auto-increment</td>
 		</tr>';
 }

@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if ($_GET["id"] == get_config_value('ADMIN_USER_ID')){
+if ($_GET["id"] == ADMIN_USER_ID){
 	header("Location: ../error_handler.php?eid=12");
 	exit;
 }

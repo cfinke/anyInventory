@@ -30,7 +30,7 @@ $output = '
 							</td>
 						</tr>';
 
-if (get_config_value('PP_VIEW')){
+if (PP_VIEW){
 	$output .= '
 						<tr>
 							<td class="form_label"><label for="parent">Give viewing priveleges to:</label></td>
@@ -50,7 +50,7 @@ $output .= '
 						</tr>';
 }
 
-if (get_config_value('PP_ADMIN')){
+if (PP_ADMIN){
 	$output .= '
 						<tr>
 							<td class="form_label"><label for="parent">Give admin priveleges to:</label></td>

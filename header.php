@@ -34,7 +34,7 @@
 						<tr>
 							<?php
 							
-							if (isset($_SESSION["user"]["id"]) || !get_config_value('PP_VIEW')){
+							if (isset($_SESSION["user"]["id"]) || !PP_VIEW){
 								echo '
 									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'index.php">Home</a></td>
 									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'labels.php">Labels</a></td>';
@@ -47,8 +47,8 @@
 							<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="<?php echo $DIR_PREFIX; ?>docs/">Help</a></td>
 							<?php
 							
-							if (isset($_SESSION["user"]["id"]) || !get_config_value('PP_ADMIN')){
-								if (get_config_value('PP_ADMIN') || get_config_value('PP_VIEW')){
+							if (isset($_SESSION["user"]["id"]) || !PP_ADMIN){
+								if (PP_ADMIN || PP_VIEW){
 									echo '
 										<td style="width: 15%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">Administration</a>:</td>
 										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">Fields</a></td>
@@ -77,7 +77,7 @@
 									<input type="hidden" name="action" value="quick_search" />
 									<?php
 									
-									if (isset($_SESSION["user"]["id"]) || !get_config_value('PP_VIEW')){
+									if (isset($_SESSION["user"]["id"]) || !PP_VIEW){
 										echo '
 											<input type="text" name="q" id="q" />
 											<input type="submit" value="Search" />';

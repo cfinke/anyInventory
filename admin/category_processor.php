@@ -118,17 +118,14 @@ elseif($_POST["action"] == "do_edit"){
 	$query = "SELECT `id` FROM `anyInventory_users` WHERE `usertype` != 'Administrator'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	$pp_admin = get_config_value('PP_ADMIN');
-	$pp_view = get_config_value('PP_VIEW');
-	
-	if ($pp_admin || $pp_view){
+	if (PP_ADMIN || PP_VIEW){
 		while ($row = mysql_fetch_array($result)){
 			$temp_user = new user($row["id"]);
-			if ($pp_admin) $temp_user->remove_category_admin($_POST["id"]);
-			if ($pp_view) $temp_user->remove_category_view($_POST["id"]);
+			if (PP_ADMIN) $temp_user->remove_category_admin($_POST["id"]);
+			if (PP_VIEW) $temp_user->remove_category_view($_POST["id"]);
 		}
 		
-		if ($pp_view){
+		if (PP_VIEW){
 			if (is_array($_POST["view_users"])){
 				foreach($_POST["view_users"] as $user_id){
 					$temp_user = new user($user_id);
@@ -137,7 +134,7 @@ elseif($_POST["action"] == "do_edit"){
 			}
 		}
 		
-		if ($pp_admin){
+		if (PP_ADMIN){
 			if (is_array($_POST["admin_users"])){
 				foreach($_POST["admin_users"] as $user_id){
 					$temp_user = new user($user_id);

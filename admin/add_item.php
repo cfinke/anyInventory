@@ -54,7 +54,7 @@ else{
 						<td class="tableData" colspan="2">
 							<table cellspacing="0" cellpadding="2">
 								<tr>
-									<td class="form_label"><label for="name">Name:</label></td>
+									<td class="form_label"><label for="name">'.NAME_FIELD_NAME.':</label></td>
 									<td class="form_input"><input type="text" name="name" id="name" value="" maxlength="64" style="width: 100%;" />
 								</tr>';
 	

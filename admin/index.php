@@ -29,38 +29,21 @@ else{
 }
 
 $output .= '			</td>
-						<td><b>Front page text:</b> '.get_config_value('FRONT_PAGE_TEXT').'</td>
-			<!--	</tr>
-					<tr>
-						<td style="width: 10%; text-align: center; white-space: nowrap;">
-							<nobr>';
-
-if ($admin_user->usertype == 'Administrator'){
-	$output .= get_config_value('PP_VIEW') ? '[<b>on</b>] [<a href="special_processor.php?action=pp_view_off">off</a>]' : '[<a href="special_processor.php?action=pp_view_on">on</a>] [<b>off</b>]';
-}
-else{
-	$output .= get_config_value('PP_VIEW') ? '[<b>on</b>] [off]' : '[on] [<b>off</b>]';
-}
-
-$output .= '				</nobr>
-						</td>
-						<td>Inventory Password Protection</td>
+						<td><b>Front page text:</b> '.FRONT_PAGE_TEXT.'</td>
 					</tr>
 					<tr>
-						<td style="width: 10%; text-align: center; white-space: nowrap;">
-							<nobr>';
+						<td style="width: 10%; text-align: center;">';
 
 if ($admin_user->usertype == 'Administrator'){
-	$output .= get_config_value('PP_ADMIN') ? '[<b>on</b>] [<a href="special_processor.php?action=pp_admin_off">off</a>]' : '[<a href="special_processor.php?action=pp_admin_on">on</a>] [<b>off</b>]';
+	$output .= '[<a href="edit_special.php?id=name_field_name">edit</a>]';
 }
 else{
-	$output .= get_config_value('PP_ADMIN') ? '[<b>on</b>] [off]' : '[on] [<b>off</b>]';
+	$output .= '[edit]';
 }
 
-$output .= '				</nobr>
-						</td>
-						<td>Administration Password Protection</td>
-					</tr>-->
+$output .= '			</td>
+						<td><b>"Name" field name:</b> '.NAME_FIELD_NAME.'</td>
+					</tr>
 				</table>
 			</td>
 		</tr>

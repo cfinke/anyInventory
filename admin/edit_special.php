@@ -34,7 +34,7 @@ switch($_GET["id"]){
 								<table>
 									<tr>
 										<td class="form_label"><label for="name">Name:</label></td>
-										<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',get_config_value("AUTO_INC_FIELD_NAME")).'" maxlength="64" /></td>
+										<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',AUTO_INC_FIELD_NAME).'" maxlength="64" /></td>
 									</tr>
 									<tr>
 										<td class="form_label">Apply field to:</td>
@@ -66,7 +66,7 @@ switch($_GET["id"]){
 							<table>
 								<tr>
 									<td class="form_label"><label for="name">Text:</label></td>
-									<td class="form_input"><textarea name="front_page_text" id="front_page_text" rows="8" cols="40" style="width: 100%;">'.get_config_value('FRONT_PAGE_TEXT').'</textarea></td>
+									<td class="form_input"><textarea name="front_page_text" id="front_page_text" rows="8" cols="40" style="width: 100%;">'.FRONT_PAGE_TEXT.'</textarea></td>
 								</tr>
 								<tr>
 									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>

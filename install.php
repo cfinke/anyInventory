@@ -219,6 +219,9 @@ if ($_POST["action"] == "install"){
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('NAME_FIELD_NAME','Name')";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
 		if (count($config_errors) == 0){
 			// Delete the install file.
 			if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);

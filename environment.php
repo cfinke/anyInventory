@@ -26,9 +26,16 @@ include($DIR_PREFIX."user_class.php");
 
 connect_to_database();
 
+$query = "SELECT * FROM `anyInventory_config`";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+
+while ($row = mysql_fetch_array($result)){
+	define($row["key"],$row["value"]);
+}
+
 if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "/docs")){
-	if ((($DIR_PREFIX == './') && get_config_value('PP_VIEW') && !isset($_SESSION["user"]["id"])) || 
-		(($DIR_PREFIX == '.././') && get_config_value('PP_ADMIN') && !isset($_SESSION["user"]["id"]))){
+	if ((($DIR_PREFIX == './') && PP_VIEW && !isset($_SESSION["user"]["id"])) || 
+		(($DIR_PREFIX == '.././') && PP_ADMIN && !isset($_SESSION["user"]["id"]))){
 		$return_to = $_SERVER["PHP_SELF"]."?";
 		
 		foreach($_POST as $key => $value){
@@ -43,14 +50,14 @@ if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "
 		exit;
 	}
 	
-	if (get_config_value('PP_VIEW')){
+	if (PP_VIEW){
 		$view_user = new user($_SESSION["user"]["id"]);
 	}
 	else{
-		$view_user = new user(get_config_value('ADMIN_USER_ID'));
+		$view_user = new user(ADMIN_USER_ID);
 	}
 	
-	if (get_config_value('PP_ADMIN')){
+	if (PP_ADMIN){
 		$admin_user = new user($_SESSION["user"]["id"]);
 		
 		if (!isset($_SESSION["user"]["id"])){
@@ -59,7 +66,7 @@ if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "
 		}
 	}
 	else{
-		$admin_user = new user(get_config_value('ADMIN_USER_ID'));
+		$admin_user = new user(ADMIN_USER_ID);
 	}
 }
 

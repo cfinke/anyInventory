@@ -57,7 +57,7 @@ elseif($_POST["action"] == "do_edit"){
 			$query .= ", `password`='".md5($_POST["password"])."'";
 		}
 		
-		if ($_POST["id"] != get_config_value('ADMIN_USER_ID')){
+		if ($_POST["id"] != ADMIN_USER_ID){
 		
 			$query .= ", `usertype`='".$_POST["usertype"]."',
 						`categories_view`='".addslashes(serialize($_POST["c_view"]))."',

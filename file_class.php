@@ -62,16 +62,16 @@ class file_object{
 			switch($image_info[2]){
 				case 2:
 					// JPG
-					$thumb = imagecreatetruecolor($new_image_width, $new_image_height);
+					$thumb = imagecreate($new_image_width, $new_image_height);
 					$image = imagecreatefromjpeg($this->server_path);
-					imagecopyresampled($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
+					imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
 					imagedestroy($image);
 					break;
 				case 3:
 					// PNG
-					$thumb = imagecreatetruecolor($new_image_width, $new_image_height);
+					$thumb = imagecreate($new_image_width, $new_image_height);
 					$image = imagecreatefrompng($this->server_path);
-					imagecopyresampled($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
+					imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
 					imagedestroy($image);
 					break;
 				default:
@@ -108,7 +108,19 @@ class file_object{
 	
 	function has_thumbnail(){
 		if (stristr($this->file_type, "image/") !== false){
-			return true;
+			if (function_exists('getimagesize') && 
+			    function_exists('imagecreate') && 
+				function_exists('imagecreatefromjpeg') && 
+				function_exists('imagecopyresized') && 
+				function_exists('imagedestroy') && 
+				function_exists('imagecreatefrompng') && 
+				function_exists('imagejpeg') && 
+				function_exists('imagecreatefromgif')){
+				return true;
+			}
+			else{
+				return false;
+			}
 		}
 		else{
 			return false;

@@ -153,18 +153,13 @@ class dataset_library {
 		//Append Ordering Info
 		if ($this->sort_col) 
 			$result_query .= ' ORDER BY `' . $this->sort_col . '` ' . $this->sort_order;
-			
+		
+		$total_item_result = mysql_query($result_query) or user_error('ERROR: ' . $result_query . '<br />' . mysql_error(), E_USER_ERROR);
+		$this->total_items = mysql_num_rows($total_item_result);
+		
 		//Append Limit information to base query
 		if (strtolower($this->result_length) != 'all')
 			$result_query .= ' LIMIT ' . $this->start_offset . ',' . $this->result_length;
-		
-		//Attach SQL_CALC_FOUND_ROWS to SELECT for FOUND_ROWS in order to easily calculate the total items
-		//   Scope out mysql documentation for more info... 
-		//	 http://dev.mysql.com/doc/mysql/en/Information_functions.html
-		
-		$pattern = "/^(.*)(SELECT)(.*)(FROM)/is";
-		$replacement = "\\1\\2 SQL_CALC_FOUND_ROWS \\3\\4";
-		$result_query =  preg_replace($pattern, $replacement, $result_query);
 		
 		//////////////////////////////////////
 		//Query for actual data	 			//
@@ -176,12 +171,6 @@ class dataset_library {
 		//////////////////////////////////////////////////////
 		//prepare info for sorting and paging interface 	//
 		//////////////////////////////////////////////////////
-		
-		//query for total items using FOUND_ROWS(). See above comment for documentation info on this mysql fun.
-		$total_query = 'SELECT FOUND_ROWS()';
-		$total_result = mysql_query($total_query) or user_error(mysql_error(), E_USER_ERROR);
-		$total_items = mysql_fetch_row($total_result);
-		$this->total_items = $total_items[0];
 		
 		//loop through columns to see which ones we want to display, and additionally, which ones are sortable
 		$pattern = array("/^(.*)(SELECT)(.*)(FROM)(.*)$/is", "/( AS )(`|)(sortcol_|nosortcol_)([^`]*)(`|)(,|)/is");

@@ -10,6 +10,8 @@ Items
 =====
 Alerts
 Add support for adding remote files (ie. for a move, the user could add the picture from an amazon.com listing without downloading and uploading)
+Labels
+
 
 Search
 ======
@@ -17,3 +19,5 @@ Allow searching within category
 
 BEFORE NEXT RELEASE
 ===================
+Add a check for item_files being writable
+If thumbnailing is not supported, export gif file

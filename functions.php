@@ -22,9 +22,9 @@ function display($output){
 	global $title;
 	global $DIR_PREFIX;
 	
-	include("header.php");
+	include($DIR_PREFIX."header.php");
 	echo $output;
-	include("footer.php");
+	include($DIR_PREFIX."footer.php");
 	exit;
 }
 

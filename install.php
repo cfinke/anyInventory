@@ -145,7 +145,7 @@ if ($_REQUEST["action"] == "install"){
 		$result = mysql_query($query) or die(mysql_error() . '<br />'.$query);
 		
 		if (count($config_errors) == 0){
-			if (is_file($_SERVER["DOCUMENT_ROOT"].$_SERVER["PHP_SELF"])) @unlink($_SERVER["DOCUMENT_ROOT"].$_SERVER["PHP_SELF"]);
+			if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);
 			
 			header("Location: index.php");
 		}
@@ -196,7 +196,7 @@ if($_REQUEST["action"] == "try_again"){
 	}
 	
 	if (count($config_errors) == 0){
-		if (is_file($_SERVER["DOCUMENT_ROOT"].$_SERVER["PHP_SELF"])) @unlink($_SERVER["DOCUMENT_ROOT"].$_SERVER["PHP_SELF"]);
+		if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);
 		
 		header("Location: index.php");
 	}
@@ -224,7 +224,7 @@ if($_REQUEST["action"] == "try_again"){
 }
 elseif(!$set_config_error){
 	$db_host = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["db_host"]) : 'localhost';
-	$files_dir = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["files_dir"]) : $_SERVER["DOCUMENT_ROOT"].str_replace("install.php","",$_SERVER["PHP_SELF"]);
+	$files_dir = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["files_dir"]) : str_replace("install.php","item_files/",$_SERVER["PATH_TRANSLATED"]);
 	$checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
 	
 	if (count($errors) > 0){
@@ -256,7 +256,7 @@ elseif(!$set_config_error){
 							<td><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="directory"><i>Full Path</i> to Toby Installation Directory:</label></td>
+							<td class="formlabel"><label for="directory"><i>Full Path</i> to directory where uploaded files will be stored:</label></td>
 							<td><input type="text" name="files_dir" id="files_dir" value="'.$files_dir.'" /></td>
 						</tr>
 						<tr>
@@ -272,6 +272,50 @@ elseif(!$set_config_error){
 
 $output .= '</form>';
 
-display($output);
+echo '
+<html>
+	<head>
+		<title>anyInventory: Install</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		<table align="center" id="maintable" cellspacing="1" cellpadding="0" border="0" width="80%">
+			<tr>
+				<td colspan="2">
+					<div align="right" style="width: 100%;height: 100%;color: #cccccc; background: #000000;">
+						.
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top" class="row_head" style="background: rgb(213,175,112);" colspan="2">
+					<h1 style="padding: 6px; font-size: 36pt;">anyInventory</h1>
+				</td>
+			</tr>
+			<tr>
+				<td align="top" colspan="2">
+					<div id="mainmenu"style="">
+						&nbsp;
+					</div>
+				</td>
+			</tr>
+			<tr height="100%">
+				<td class="row_head" width="20%" align="left" valign="top" style="padding:5px">
+					&nbsp;
+				</td>
+				<td bgcolor="#ffffff" width="80%" align="left" valign="top" style="padding:5px">
+					'.$output.'
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div align="center" style="width: 100%; height: 100%; color: #cccccc; FONT-SIZE: 10px; padding:4px">
+						anyInventory web-based inventory system: <a href="http://sourceforge.net/projects/anyinventory/">http://sourceforge.net/projects/anyinventory/</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>';
 
 ?>

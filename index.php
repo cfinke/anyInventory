@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include("globals.php");
 
 // The default category is the top level.
@@ -59,13 +61,20 @@ else{
 				<td style="width: 100%;">
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
-							<td>Sub-categories in '.$category->get_breadcrumb_links().' ( ';
+							<td>Sub-categories in '.$category->get_breadcrumb_links();
 	
-	if ($category->id != 0){
-		$output .= '<a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_REQUEST["c"].'">Delete</a> | ';
+	if(($admin_pass == '') || $_SESSION["anyInventory"]["signed_in"]){
+		if ($category->id != 0){
+			$output .= ' ( <a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_REQUEST["c"].'">Delete</a> | ';
+		}
+		else{
+			$output .= ' (';
+		}
+	
+		$output .= ' <a href="admin/add_category.php?c='.$_REQUEST["c"].'">Add a category here</a> )';
 	}
 	
-	$output .= ' <a href="admin/add_category.php?c='.$_REQUEST["c"].'">Add a category here</a> )</td>
+	$output .= '			</td>
 							<td style="text-align: right;">[<a href="../docs/categories.php">Help</a>]</td>
 						</tr>
 						<tr>
@@ -95,8 +104,10 @@ else{
 		$output .= '
 			<tr class="tableHeader">
 				<td>Items in this Category';
-		
-		if ($_REQUEST["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )';
+
+		if(($admin_pass == '') || $_SESSION["anyInventory"]["signed_in"]){				
+			if ($_REQUEST["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )';
+		}
 		
 		$output .= '</td>
 					<td style="text-align: right;">[<a href="../docs/items.php">Help</a>]</td>

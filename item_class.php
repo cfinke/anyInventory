@@ -3,13 +3,13 @@
 error_reporting(E_ALL ^ E_NOTICE);
 
 class item {
-	var $id;				// The id of the item, matches up with id field in anyInventory_items
+	var $id;					// The id of the item, matches up with id field in anyInventory_items
 	
-	var $category;			// A category object of the category to which this item belongs.
+	var $category;				// A category object of the category to which this item belongs.
 	
-	var $name;				// The name of this item.
-	var $fields = array();	// An associative array, keyed by the field name, consisting of the field values.
-	var $files = array();	// An array of file objects that belong to this item.
+	var $name;					// The name of this item.
+	var $fields = array();		// An associative array, keyed by the field name, consisting of the field values.
+	var $files = array();		// An array of file objects that belong to this item.
 	
 	function item($item_id){
 		// Set the item id.
@@ -72,20 +72,28 @@ class item {
 	
 	function export_description(){
 		global $DIR_PREFIX;
+		global $admin_pass;
 		
 		// Create the header with the name.
 		$output .= '
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
-					<td>'.$this->name.' ( <a href="'.$DIR_PREFIX.'admin/move_item.php?id='.$this->id.'">Move</a> | <a href="'.$DIR_PREFIX.'admin/edit_item.php?id='.$this->id.'">Edit</a> | <a href="'.$DIR_PREFIX.'admin/delete_item.php?id='.$this->id.'">Delete</a> )</td>
+					<td>'.$this->name;
+					
+		if(($admin_pass == '') || $_SESSION["anyInventory"]["signed_in"]){
+			$output .= ' ( <a href="'.$DIR_PREFIX.'admin/move_item.php?id='.$this->id.'">Move</a> | <a href="'.$DIR_PREFIX.'admin/edit_item.php?id='.$this->id.'">Edit</a> | <a href="'.$DIR_PREFIX.'admin/delete_item.php?id='.$this->id.'">Delete</a> )';
+		}
+		
+		$output .= '		
+					</td>
 				</tr>
 				<tr>
 					<td class="tableData">
-						<table>';
+						<table cellspacing="0" cellpadding="3">';
 		
 		if ($this->category->auto_inc_field){
 			$output .= '
-				<tr>
+				<tr class="highlighted_field">
 					<td style="width: 5%;">
 						&nbsp;
 					</td>
@@ -95,55 +103,73 @@ class item {
 		}
 		
 		// Output each field with its value.
-		if (is_array($this->fields)){
-			foreach($this->fields as $key => $value){
-				if (is_array($value)){
-					if ($value["is_file"] == true){
-						if ($value["file_id"] > 0){
-							$output .= '
-								<tr>
-									<td>&nbsp;</td>
-									<td style="white-space: nowrap; text-align: right;"><b>'.$key.':</b></td>
-									<td>';
-							
-							$file = new file_object($value["file_id"]);
-							
-							if ($file->is_image()){
-								$output .= '<a href="'.$file->web_path.'"><img src="';
-								if ($file->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$file->id;
-								else $output .= "item_files/no_thumb.gif";
+		if (is_array($this->category->field_ids)){
+			foreach($this->category->field_ids as $field_id){
+				$field = new field($field_id);
+				
+				if ($field->input_type == "file"){
+					if ($this->fields[$field->name]["file_id"] > 0){
+						$output .= '
+							<tr';
 								
-								$output .= '" class="thumbnail" /></a>';
-							}
-							else{
-								$output .= $file->get_download_link();
-							}
+						if ($field->highlight){
+							$output .= ' class="highlighted_field"';
+						}
 							
-							$output .= '
-									</td>
-								</tr>';
+						$output .= '>
+								<td>&nbsp;</td>
+								<td style="white-space: nowrap; text-align: right;"><b>'.$field->name.':</b></td>
+								<td>';
+							
+						$file = new file_object($this->fields[$field->name]["file_id"]);
+							
+						if ($file->is_image()){
+							$output .= '<a href="'.$file->web_path.'"><img src="';
+							if ($file->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$file->id;
+							else $output .= "item_files/no_thumb.gif";
+								
+							$output .= '" class="thumbnail" /></a>';
 						}
-					}
-					elseif (count($value) > 0){
-						$output .= '<tr><td>&nbsp;</td><td><b>'.$key.':</b></td><td> ';
-						
-						foreach($value as $val){
-							$output .= $val.", ";
+						else{
+							$output .= $file->get_download_link();
 						}
-						
-						$output = substr($output, 0, strlen($output) - 2);
-						
-						$output .= '</td></tr>';
+							
+						$output .= '
+								</td>
+							</tr>';
 					}
 				}
-				elseif (trim($value) != ""){
+				elseif(is_array($this->fields[$field->name]) && (count($this->fields[$field->name]) > 0)){
+					$output .= '<tr';
+					
+					if ($field->highlight){
+						$output .= ' class="highlighted_field"';
+					}
+					
+					$output .= '><td>&nbsp;</td><td><b>'.$field->name.':</b></td><td> ';
+						
+					foreach($this->fields[$field->name] as $val){
+						$output .= $val.", ";
+					}
+						
+					$output = substr($output, 0, strlen($output) - 2);
+						
+					$output .= '</td></tr>';
+				}
+				elseif (trim($this->fields[$field->name]) != ""){
 					$output .= '
-						<tr>
+						<tr';
+					
+					if ($field->highlight){
+						$output .= ' class="highlighted_field"';
+					}
+					
+					$output .= '>
 							<td style="width: 5%;">
 								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;" title="Create a barcode label for the '.$key.' field">Label</a>
 							</td>
-							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$key.'</b>:</nobr></td>
-							<td style="width: 85%;"></b> '.$value.'</td>
+							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$field->name.'</b>:</nobr></td>
+							<td style="width: 85%;"></b> '.$this->fields[$field->name].'</td>
 						</tr>';
 				}
 			}

@@ -50,7 +50,7 @@ elseif (!isset($_REQUEST["c"])){
 								<td class="form_label">Categories:</td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="10" style="width: 100%;">
-										'.get_category_options().'
+										'.$view_user->get_view_categories_options(null).'
 								</select>
 								</td>
 							</tr>
@@ -71,6 +71,11 @@ elseif (!isset($_REQUEST["i"])){
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `id` > 0 AND ";
 	
 	foreach($_REQUEST["c"] as $cat_id){
+		if (!$view_user->can_view($cat_id)){
+			header("Location: error_handler.php?eid=12");
+			exit;
+		}
+		
 		$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
 	}
 	

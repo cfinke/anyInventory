@@ -14,6 +14,7 @@ $output .= '<form method="post" action="login_processor.php">
 					</tr>
 					<tr>
 						<td class="tableData">
+							<center>
 							';
 
 if ($_REQUEST["f"]){
@@ -21,7 +22,7 @@ if ($_REQUEST["f"]){
 }
 
 $output .= '
-							<table>
+							<table style="width: 30%;" margin-left: 29%; margin-right: 29%;">
 								<tr>
 									<td class="form_label">Username:</td>
 									<td class="form_input"><input type="text" name="username" /></td>
@@ -34,6 +35,7 @@ $output .= '
 									<td class="submitButtonRow" colspan="2"><input type="submit" value="Login" /</td>
 								</tr>
 							</table>
+							</center>
 						</td>
 					</tr>
 				</table>

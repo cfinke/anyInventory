@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if (!$admin_user->usertype != 'Administrator'){
+if ($admin_user->usertype != 'Administrator'){
 	header("Location: ../error_handler.php?eid=15");
 	exit;
 }
@@ -52,7 +52,31 @@ switch($_REQUEST["id"]){
 						</tr>
 					</table>
 				</form>';
-	break;
+		break;
+	case 'front_page_text':
+		$output .= '
+			<form method="post" action="special_processor.php">
+				<input type="hidden" name="action" value="do_edit_front_page_text" />
+				<table class="standardTable" cellspacing="0">
+					<tr class="tableHeader">
+						<td>Edit Front Page Text</td>
+					</tr>
+					<tr>
+						<td class="tableData">
+							<table>
+								<tr>
+									<td class="form_label"><label for="name">Text:</label></td>
+									<td class="form_input"><textarea name="front_page_text" id="front_page_text" rows="8" cols="40" style="width: 100%;">'.get_config_value('FRONT_PAGE_TEXT').'</textarea></td>
+								</tr>
+								<tr>
+									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</form>';
+		break;
 }
 
 display($output);

@@ -18,40 +18,43 @@ if (!function_exists('imagecreate') ||
 // Create the item object
 $item = new item($_REQUEST["i"]);
 
-// Create the image.
-$im = imagecreate(600, 70);
-
-// Color the background white
-$white = imagecolorallocate($im, 255, 255, 255);
-
-// Set the color for the text.
-$black = imagecolorallocate($im, 0, 0, 0);
-
-// Write the barcode.
-$boundaries = imagettftext($im, 12, 0, 0, 50, $black, realpath("fonts/IDAutomationHC39M.ttf"),"!".$item->fields[$_REQUEST["f"]]."!");
-
-// This is the width of one character in pixels.
-$char_width = 5;
-
-// Figure the offset for centering the text
-$offset = ($boundaries[2] - (strlen($item->name) * $char_width)) / 2;
-
-// Write the item name to the label.
-imagestring($im, 1, $offset, 0, $item->name, $black);
-
-// Crop the image
-$new_image = imagecreate($boundaries[2], $boundaries[1] + 10);
-imagecopyresized($new_image, $im, 0, 0, 0, 0, $boundaries[2], $boundaries[1] + 10, $boundaries[2], $boundaries[1] + 10);
-
-// Delete the old image.
-imagedestroy($im);
-
-// Send the new image to the browser
-header("Content-type: image/png");
-imagepng($new_image);
-
-// Delete the new image.
-imagedestroy($new_image);
+if ($view_user->can_view($item->category->id)){
+	
+	// Create the image.
+	$im = imagecreate(600, 70);
+	
+	// Color the background white
+	$white = imagecolorallocate($im, 255, 255, 255);
+	
+	// Set the color for the text.
+	$black = imagecolorallocate($im, 0, 0, 0);
+	
+	// Write the barcode.
+	$boundaries = imagettftext($im, 12, 0, 0, 50, $black, realpath("fonts/IDAutomationHC39M.ttf"),"!".$item->fields[$_REQUEST["f"]]."!");
+	
+	// This is the width of one character in pixels.
+	$char_width = 5;
+	
+	// Figure the offset for centering the text
+	$offset = ($boundaries[2] - (strlen($item->name) * $char_width)) / 2;
+	
+	// Write the item name to the label.
+	imagestring($im, 1, $offset, 0, $item->name, $black);
+	
+	// Crop the image
+	$new_image = imagecreate($boundaries[2], $boundaries[1] + 10);
+	imagecopyresized($new_image, $im, 0, 0, 0, 0, $boundaries[2], $boundaries[1] + 10, $boundaries[2], $boundaries[1] + 10);
+	
+	// Delete the old image.
+	imagedestroy($im);
+	
+	// Send the new image to the browser
+	header("Content-type: image/png");
+	imagepng($new_image);
+	
+	// Delete the new image.
+	imagedestroy($new_image);
+}
 
 exit;
 

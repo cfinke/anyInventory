@@ -43,24 +43,26 @@ if ($_REQUEST["action"] == "quick_search"){
 			while($row = mysql_fetch_array($search_result)){
 				$item = new item($row["id"]);
 				
-				if ($cat_id != $row["item_category"]){
-					$cat_id = $row["item_category"];
-					$output .= '
-						<tr class="tableHeader">
-							<td colspan="2">In '.$item->category->get_breadcrumb_links().'</td>
-						</tr>';
+				if ($view_user->can_view($item->category->id)){
+					if ($cat_id != $row["item_category"]){
+						$cat_id = $row["item_category"];
+						$output .= '
+							<tr class="tableHeader">
+								<td colspan="2">In '.$item->category->get_breadcrumb_links().'</td>
+							</tr>';
+					}
+					
+					$output .= '<tr>';
+					
+					if ($item->category->auto_inc_field){
+						$output .= '<td>'.$item->id.'</td>';
+					}
+					else{
+						$output .= '<td>&nbsp;</td>';
+					}
+					
+					$output .= '<td>'.$item->export_teaser().'</td></tr>';
 				}
-				
-				$output .= '<tr>';
-				
-				if ($item->category->auto_inc_field){
-					$output .= '<td>'.$item->id.'</td>';
-				}
-				else{
-					$output .= '<td>&nbsp;</td>';
-				}
-				
-				$output .= '<td>'.$item->export_teaser().'</td></tr>';
 			}
 		}
 		else{

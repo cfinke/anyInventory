@@ -22,8 +22,8 @@ $output = '
 					<td style="text-align: right;">[<a href="../docs/editing_items.php">Help</a>]</td>
 				</tr>
 				<tr>
-					<td class="tableData">
-						<table>
+					<td class="tableData" colspan="2">
+						<table cellspacing="0" cellpadding="2">
 							<tr>
 								<td class="form_label"><label for="name">Name:</label></td>
 								<td class="form_input"><input type="text" name="name" id="name" value="'.$item->name.'" maxlength="64" />
@@ -34,8 +34,11 @@ if (is_array($item->category->field_ids)){
 		
 		$field = new field($field_id);
 		
+		if ($field->highlight) $extra = ' class="highlighted_field"';
+		else $extra = '';
+		
 		$output .= '
-			<tr>
+			<tr'.$extra.'>
 				<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
 				<td class="form_input">';
 		

@@ -3,7 +3,7 @@
 include("globals.php");
 
 if ($_REQUEST["action"] == "do_add"){
-	if (!$admin_user->usertype != 'Administrator'){
+	if ($admin_user->usertype != 'Administrator'){
 		header("Location: ../error_handler.php?eid=11");
 		exit;
 	}
@@ -33,7 +33,7 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
-	if (!$admin_user->usertype != 'Administrator'){
+	if ($admin_user->usertype != 'Administrator'){
 		header("Location: ../error_handler.php?eid=11");
 		exit;
 	}
@@ -43,21 +43,28 @@ elseif($_REQUEST["action"] == "do_edit"){
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
-		header("Location: ../error_handler.php?eid=11");
+		header("Location: ../error_handler.php?eid=16");
 		exit;
 	}
 	else{
+		if (!is_array($_REQUEST["c_view"])) $_REQUEST["c_view"] = array();
+		if (!is_array($_REQUEST["c_admin"])) $_REQUEST["c_admin"] = array();
+		
 		$query = "UPDATE `anyInventory_users` SET 
-					`username`='".$_REQUEST["username"]."', ";
+					`username`='".$_REQUEST["username"]."'";
 		
 		if ($_REQUEST["password"] != ''){
-			$query .= "	`password`='".md5($_REQUEST["password"])."', ";
+			$query .= ", `password`='".md5($_REQUEST["password"])."'";
 		}
 		
-		$query .= " `usertype`='".$_REQUEST["usertype"]."',
-					`categories_view`='".addslashes(serialize($_REQUEST["c_view"]))."',
-					`categories_admin`='".addslashes(serialize($_REQUEST["c_admin"]))."'
-					 WHERE `id`='".$_REQUEST["id"]."'";
+		if ($_REQUEST["id"] != get_config_value('ADMIN_USER_ID')){
+		
+			$query .= ", `usertype`='".$_REQUEST["usertype"]."',
+						`categories_view`='".addslashes(serialize($_REQUEST["c_view"]))."',
+						`categories_admin`='".addslashes(serialize($_REQUEST["c_admin"]))."'";
+		}
+		
+		$query .= " WHERE `id`='".$_REQUEST["id"]."'";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
@@ -73,7 +80,7 @@ elseif($_REQUEST["action"] == "do_edit_own"){
 	}
 }
 elseif($_REQUEST["action"] == "do_delete"){
-	if (!$admin_user->usertype != 'Administrator'){
+	if ($admin_user->usertype != 'Administrator'){
 		header("Location: ../error_handler.php?eid=11");
 		exit;
 	}

@@ -10,7 +10,7 @@ include($DIR_PREFIX."user_class.php");
 
 connect_to_database();
 
-if (!stristr($_SERVER["PHP_SELF"], "login")){
+if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "/docs")){
 	if ((($DIR_PREFIX == './') && get_config_value('PP_VIEW') && !isset($_SESSION["user"]["id"])) || 
 		(($DIR_PREFIX == '.././') && get_config_value('PP_ADMIN') && !isset($_SESSION["user"]["id"]))){
 		$return_to = $_SERVER["PHP_SELF"]."?";

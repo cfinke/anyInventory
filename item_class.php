@@ -72,7 +72,7 @@ class item {
 	
 	function export_description(){
 		global $DIR_PREFIX;
-		global $admin_pass;
+		global $admin_user;
 		
 		// Create the header with the name.
 		$output .= '
@@ -80,7 +80,7 @@ class item {
 				<tr class="tableHeader">
 					<td>'.$this->name;
 					
-		if(($admin_pass == '') || $_SESSION["anyInventory"]["signed_in"]){
+		if($admin_user->can_admin($this->category->id)){
 			$output .= ' ( <a href="'.$DIR_PREFIX.'admin/move_item.php?id='.$this->id.'">Move</a> | <a href="'.$DIR_PREFIX.'admin/edit_item.php?id='.$this->id.'">Edit</a> | <a href="'.$DIR_PREFIX.'admin/delete_item.php?id='.$this->id.'">Delete</a> )';
 		}
 		

@@ -8,6 +8,18 @@ if (($admin_user->usertype != 'Administrator') && ($_REQUEST["id"] != $_SESSION[
 }
 
 $title = "anyInventory: Edit User";
+$inHead = '
+	<script type="text/javascript">
+		<!--
+		
+		function toggle(){
+			document.getElementById(\'c_view[]\').disabled = (document.getElementById(\'usertype\').options[document.getElementById(\'usertype\').selectedIndex].value == "Administrator")
+			document.getElementById(\'c_admin[]\').disabled = (document.getElementById(\'usertype\').options[document.getElementById(\'usertype\').selectedIndex].value == "Administrator")
+		}
+		
+		// -->
+	</script>';
+$inBodyTag = ' onload="toggle();"';
 $breadcrumbs = 'Administration > <a href="users.php">Users</a> > Edit User';
 
 $local_user = new user($_REQUEST["id"]);
@@ -32,7 +44,7 @@ $output .= '
 				<input type="hidden" name="action" value="do_edit" />
 				<tr>
 						<td class="form_label"><label for="username">Username:</label></td>
-						<td class="form_input"><input type="text" name="username" id="username" value="'.$user->username.'" /></td>
+						<td class="form_input"><input type="text" name="username" id="username" value="'.$local_user->username.'" /></td>
 					</tr>';
 	}
 	else{
@@ -51,9 +63,9 @@ $output .= '
 						<tr>
 							<td class="form_label"><label for="usertype">User Type:</label></td>
 							<td class="form_input">
-								<select name="usertype" id="usertype">
-									<option value="User"';if($user->usertype == 'User') $output .= ' selected="selected"'; $output .= '>User</option>
-									<option value="Administrator"';if($user->usertype == 'Administrator') $output .= ' selected="selected"'; $output .= '>Administrator</option>
+								<select name="usertype" id="usertype" onchange="toggle();">
+									<option value="User"';if($local_user->usertype == 'User') $output .= ' selected="selected"'; $output .= '>User</option>
+									<option value="Administrator"';if($local_user->usertype == 'Administrator') $output .= ' selected="selected"'; $output .= '>Administrator</option>
 								</select>
 							</td>
 						</tr>
@@ -66,7 +78,7 @@ $output .= '
 			$output .= get_category_options(null);
 		}
 		else{
-			$output .= get_category_options($user->categories_view);
+			$output .= get_category_options($local_user->categories_view);
 		}
 		
 		$output .= '
@@ -77,12 +89,12 @@ $output .= '
 								<td class="form_label"><label for="c_admin[]">Allow user to admin:</label></td>
 								<td class="form_input">
 									<select name="c_admin[]" id="c_admin[]" multiple="multiple" size="10" style="width: 100%;">';
-			
+		
 		if ($local_user->usertype == 'Administrator'){
 			$output .= get_category_options(null);
 		}
 		else{
-			$output .= get_category_options($user->categories_view);
+			$output .= get_category_options($local_user->categories_admin);
 		}
 		
 		$output .= '

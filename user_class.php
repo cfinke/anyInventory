@@ -132,38 +132,50 @@ class user {
 								<td class="form_input">'.$this->usertype.'</td>
 							</tr>';
 			
-			if (is_array($this->categories_view)){
-				$output .= '
-							<tr>
+			if ($this->usertype == 'Administrator'){
+				$output .= '<tr>
 								<td class="form_label">Can view:</td>
-								<td class="form_input">';
-				
-				foreach($this->categories_view as $cat_id){
-					$category = new category($cat_id);
-					
-					$output .= $category->breadcrumb_names . '<br />';
-				}
-				
-				$output .= '
-								</td>
-							</tr>';
-			}
-			
-			if (is_array($this->categories_view)){
-				$output .= '
+								<td class="form_input">All</td>
+							</tr>
 							<tr>
 								<td class="form_label">Can admin:</td>
-								<td class="form_input">';
-				
-				foreach($this->categories_admin as $cat_id){
-					$category = new category($cat_id);
+								<td class="form_input">All</td>
+							</tr>';
+			}
+			else{
+				if (is_array($this->categories_view)){
+					$output .= '
+								<tr>
+									<td class="form_label">Can view:</td>
+									<td class="form_input">';
 					
-					$output .= $category->breadcrumb_names . '<br />';
+					foreach($this->categories_view as $cat_id){
+						$category = new category($cat_id);
+						
+						$output .= $category->breadcrumb_names . '<br />';
+					}
+					
+					$output .= '
+									</td>
+								</tr>';
 				}
 				
-				$output .= '
-								</td>
-							</tr>';
+				if (is_array($this->categories_view)){
+					$output .= '
+								<tr>
+									<td class="form_label">Can admin:</td>
+									<td class="form_input">';
+					
+					foreach($this->categories_admin as $cat_id){
+						$category = new category($cat_id);
+						
+						$output .= $category->breadcrumb_names . '<br />';
+					}
+					
+					$output .= '
+									</td>
+								</tr>';
+				}
 			}
 			
 			$output .= '

@@ -37,14 +37,15 @@ DONE - Bring back quick search
 DONE - Ability to have auto-increment field
 DONE - Administration Hiding
 DONE - Customization of auto-inc field
-CHRIS - Customization of front-page text
+DONE - Customization of front-page text
 More information for each item in listing
-Item associations ("Item" Field type)
 Field Dividers
+User system
 
 
 BEFORE 1.9
 ===================
+Item associations ("Item" Field type)
 Remote image thumbnailing - backup in case of missing libcurl
 ? Better advanced search, like phpMyAdmin's Search page
 Multiple-condition alerts
@@ -59,5 +60,5 @@ Upload inventory as XML file
 BUGS
 ========================================
 Remove multiple checkbox values
-Make "Highlight this field" a label
+DONE - Make "Highlight this field" a label
 Highlight fields on edit page as well

@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if (!$admin_user->usertype != 'Administrator'){
+if ($admin_user->usertype != 'Administrator'){
 	header("Location: ../error_handler.php?eid=15");
 	exit;
 }
@@ -29,6 +29,41 @@ if ($_REQUEST["action"] == "do_edit_auto_inc_field"){
 	}
 	
 	header("Location: fields.php");
+	exit;
+}
+elseif($_REQUEST["action"] == 'do_edit_front_page_text'){
+	$query = "UPDATE `anyInventory_config` SET `value`='".$_REQUEST["front_page_text"]."' WHERE `key`='FRONT_PAGE_TEXT'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	
+	header("Location: index.php");
+	exit;
+}
+elseif($_REQUEST["action"] == 'pp_admin_on'){
+	$query = "UPDATE `anyInventory_config` SET `value`='1' WHERE `key`='PP_ADMIN'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	
+	header("Location: index.php");
+	exit;
+}
+elseif($_REQUEST["action"] == 'pp_admin_off'){
+	$query = "UPDATE `anyInventory_config` SET `value`='0' WHERE `key`='PP_ADMIN'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	
+	header("Location: index.php");
+	exit;
+}
+elseif($_REQUEST["action"] == 'pp_view_on'){
+	$query = "UPDATE `anyInventory_config` SET `value`='1' WHERE `key`='PP_VIEW'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	
+	header("Location: index.php");
+	exit;
+}
+elseif($_REQUEST["action"] == 'pp_view_off'){
+	$query = "UPDATE `anyInventory_config` SET `value`='0' WHERE `key`='PP_VIEW'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	
+	header("Location: index.php");
 	exit;
 }
 

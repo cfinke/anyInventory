@@ -8,6 +8,17 @@ if ($admin_user->usertype != 'Administrator'){
 }
 
 $title = "anyInventory: Add User";
+$inHead = '
+	<script type="text/javascript">
+		<!--
+		
+		function toggle(){
+			document.getElementById(\'c_view[]\').disabled = (document.getElementById(\'usertype\').options[document.getElementById(\'usertype\').selectedIndex].value == "Administrator")
+			document.getElementById(\'c_admin[]\').disabled = (document.getElementById(\'usertype\').options[document.getElementById(\'usertype\').selectedIndex].value == "Administrator")
+		}
+		
+		// -->
+	</script>';
 $breadcrumbs = 'Administration > <a href="users.php">Users</a> > Add User';
 
 $output .= '
@@ -35,7 +46,7 @@ $output .= '
 						<tr>
 							<td class="form_label"><label for="usertype">User Type:</label></td>
 							<td class="form_input">
-								<select name="usertype" id="usertype">
+								<select name="usertype" id="usertype" onchange="toggle();">
 									<option value="User">User</option>
 									<option value="Administrator">Administrator</option>
 								</select>

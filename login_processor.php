@@ -20,7 +20,7 @@ if ($_REQUEST["action"] == "log_in"){
 			$_SESSION["user"]["usertype"] = mysql_result($result, 0, 'usertype');
 			
 			if ($_REQUEST["return_to"] == ''){
-				$_REQUEST["return_to"] = './admin/items.php';
+				$_REQUEST["return_to"] = './admin/index.php';
 			}
 			
 			header("Location: ".$_REQUEST["return_to"]);
@@ -36,7 +36,7 @@ elseif($_REQUEST["action"] == "log_out"){
 	unset($_SESSION["user"]);
 	session_destroy();
 	
-	header("Location: login.php");
+	header("Location: index.php");
 	exit;
 }
 

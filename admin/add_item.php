@@ -52,7 +52,7 @@ else{
 					</tr>
 					<tr>
 						<td class="tableData" colspan="2">
-							<table>
+							<table cellspacing="0" cellpadding="2">
 								<tr>
 									<td class="form_label"><label for="name">Name:</label></td>
 									<td class="form_input"><input type="text" name="name" id="name" value="" maxlength="64" style="width: 100%;" />
@@ -63,8 +63,11 @@ else{
 			
 			$field = new field($field_id);
 			
+			if ($field->highlight) $extra = ' class="highlighted_field"';
+			else $extra = '';
+			
 			$output .= '
-				<tr>
+				<tr'.$extra.'>
 					<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
 					<td class="form_input">';
 			

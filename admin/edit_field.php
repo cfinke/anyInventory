@@ -82,7 +82,7 @@ $output = '
 								<td class="form_input"><input type="text" name="size" id="size" value="'.$field->size.'" /><br /><small>Only for \'text\' data type.</small></td>
 							</tr>
 							<tr>
-								<td class="form_label"><input type="checkbox" name="highlight" value="yes" '.$checked.' /></td>
+								<td class="form_label"><input type="checkbox" name="highlight" id="highlight" value="yes" '.$checked.' /></td>
 								<td class="form_input"><label for="highlight">Highlight this field</label></td>
 							</tr>
 							<tr>

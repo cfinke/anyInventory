@@ -178,6 +178,55 @@ if ($_REQUEST["action"] == "upgrade"){
 				// Added timed alerts
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `timed` TINYINT( 1 ) DEFAULT '0' NOT NULL";
 				query($query);
+			case '1.5':
+				# Changes introduced in 1.6
+				
+				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file' ) DEFAULT 'text' NOT NULL ";
+				query($query);
+				
+				$query = "SELECT COUNT(`key`) AS `num_files` FROM `anyInventory_files` GROUP BY `key` ORDER BY `key` DESC LIMIT 1";
+				$result = query($query);
+				
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+					$max_files = $row["num_files"];
+					
+					if ($max_files > 0){
+						$catquery = "SELECT `id` FROM `anyInventory_categories`";
+						$catresult = query($catquery);
+						
+						$cat_ids = array();
+						$values = array();
+						
+						while ($catrow = mysql_fetch_array($catresult)){
+							$cat_ids[] = $catrow["id"];
+						}
+						
+						for($i = 1; $i <= $max_files; $i++){
+							$query = "ALTER TABLE `anyInventory_items` ADD `Generic File ".$i."` INT NOT NULL";
+							query($query);
+							
+							$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`categories`,`values`) VALUES ('Generic File ".$i."','file','".serialize($cat_ids)."','".serialize($values)."')";
+							query($query);
+						}
+						
+						$query = "SELECT `id`,`key` FROM `anyInventory_files` ORDER BY `key`,`id`";
+						$file_result = query($query);
+						
+						$currrent_key = 0;
+						
+						while($file_row = mysql_fetch_array($file_result, MYSQL_ASSOC)){
+							if ($current_key != $file_row["key"]){
+								$i = 1;
+								$current_key = $file_row["key"];
+							}
+							
+							$query = "UPDATE `anyInventory_items` SET `Generic File ".$i."`='".$file_row["id"]."' WHERE `id`='".$file_row["key"]."'";
+							query($query);
+							
+							$i++;
+						}
+					}
+				}
 				
 				break;
 		}

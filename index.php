@@ -22,7 +22,7 @@ $breadcrumbs = $category->get_breadcrumb_links();
 if ($_REQUEST["id"]){
 	// A specific item has been requested.
 	$item = new item($_REQUEST["id"]);
-	
+	$breadcrumbs = $item->category->get_breadcrumb_links();
 	$output .= '
 		<table cellspacing="0" cellpadding="0">
 			<tr>
@@ -73,7 +73,7 @@ else{
 						<tr class="tableHeader">
 							<td>Sub-categories in '.$category->get_breadcrumb_links();
 	
-	if(isset($_SESSION["user"]["id"]) || $admin_user->can_admin($category->id)){
+	if($admin_user->can_admin($category->id)){
 		if ($category->id != 0){
 			$output .= ' ( <a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_REQUEST["c"].'">Delete</a> | ';
 		}
@@ -118,7 +118,7 @@ else{
 			<tr class="tableHeader">
 				<td>Items in this Category';
 		
-		if(isset($_SESSION["user"]["id"]) || $view_user->can_admin($_REQUEST["c"])){
+		if($admin_user->can_admin($_REQUEST["c"])){
 			if ($_REQUEST["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )';
 		}
 		

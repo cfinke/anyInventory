@@ -48,13 +48,23 @@
 							<?php
 							
 							if (isset($_SESSION["user"]["id"]) || !get_config_value('PP_ADMIN')){
-								echo '
-									<td style="width: 15%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">Administration</a>:</td>
-									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">Fields</a></td>
-									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">Categories</a></td>
-									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">Items</a></td>
-									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/alerts.php">Alerts</a></td>		
-									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/users.php">Users</a></td>';
+								if (get_config_value('PP_ADMIN') || get_config_value('PP_VIEW')){
+									echo '
+										<td style="width: 15%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">Administration</a>:</td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">Fields</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">Categories</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">Items</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/alerts.php">Alerts</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/users.php">Users</a></td>';
+								}
+								else{
+									echo '
+										<td style="width: 20%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">Administration</a>:</td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">Fields</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">Categories</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">Items</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/alerts.php">Alerts</a></td>';
+								}
 							}
 							else{
 								echo '

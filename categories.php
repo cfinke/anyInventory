@@ -2,9 +2,9 @@
 
 include("globals.php");
 
-$title = 'anyInventory Categories';
+$title = 'anyInventory: Categories';
 
-$output .= '<p><a href="add_category.php">Add a Category.</a></p>';
+$output .= '<p><a href="add_category.php">Add a category.</a></p>';
 
 $rows = get_category_array();
 
@@ -35,7 +35,7 @@ $output .= '
 	<table style="width: 100%; background-color: #000000;" cellspacing="1" cellpadding="2">
 		<tr class="row_head">
 			<td style="width: 12ex;">&nbsp;</td>
-			<td>Category Name</td>
+			<td>Category</td>
 			<td># of Items</td>
 		</tr>
 		'.$table_set.'</table>';

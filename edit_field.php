@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+$title = "anyInventory: Edit Field";
+
 $field = new field($_REQUEST["id"]);
 
 $output = '

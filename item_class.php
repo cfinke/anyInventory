@@ -7,7 +7,7 @@ class item {
 	
 	var $name;
 	var $fields = array();
-	var $images = array();
+	var $files = array();
 	
 	function item($item_id){
 		$this->id = $item_id;
@@ -36,11 +36,11 @@ class item {
 			}
 		}
 		
-		$query = "SELECT * FROM `anyInventory_images` WHERE `key`='".$this->id."'";
+		$query = "SELECT * FROM `anyInventory_files` WHERE `key`='".$this->id."'";
 		$result = query($query);
 		
 		while ($row = mysql_fetch_array($result)){
-			$this->images[] = $row;
+			$this->files[] = $row;
 		}
 	}
 	

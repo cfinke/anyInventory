@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-$title = 'anyInventory Items';
+$title = 'anyInventory: Items';
 
 $output .= '<p><a href="add_item.php">Add an item.</a></p>';
 $query = "SELECT *,'' as `nosortcol_`,`name` as `sortcol_Name` FROM `anyInventory_items`";

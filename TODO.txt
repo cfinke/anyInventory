@@ -13,6 +13,8 @@ Items
 Alerts
 
 
-Misc
-====
+BEFORE NEXT RELEASE
+===================
 Change image uploading to a more generic file upload - ie. allow uploads of PDFs, word docs related to item
+Instructions for use
+Install script

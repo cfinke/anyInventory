@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+$title = "anyInventory: Delete Item";
+
 $item = new item($_REQUEST["id"]);
 $output .= '
 	<form action="item_processor.php" method="post">

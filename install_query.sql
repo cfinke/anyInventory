@@ -25,7 +25,7 @@ CREATE TABLE `anyInventory_items` (
   UNIQUE KEY `id` (`id`)
 ) TYPE=MyISAM;
 
-CREATE TABLE `anyInventory_images` (
+CREATE TABLE `anyInventory_files` (
 	`id` INT NOT NULL AUTO_INCREMENT ,
 	`key` INT NOT NULL ,
 	`file_name` VARCHAR( 64 ) NOT NULL ,

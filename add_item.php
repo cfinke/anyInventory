@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+$title = "anyInventory: Add Item";
+
 if (!isset($_REQUEST["c"])){
 	$output = '
 		<form method="get" action="add_item.php">
@@ -91,8 +93,8 @@ else{
 	
 	$output .= '
 					<tr>
-						<td class="form_label">Picture:</td>
-						<td class="form_input"><input type="file" name="picture" id="picture" /></td>
+						<td class="form_label">File:</td>
+						<td class="form_input"><input type="file" name="file" id="file" /></td>
 					</tr>
 					<tr>
 						<td class="form_label">&nbsp;</td>

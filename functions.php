@@ -19,6 +19,8 @@ function query($query){
 }
 
 function display($output){
+	global $title;
+	
 	include("header.php");
 	echo $output;
 	include("footer.php");
@@ -198,112 +200,5 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 	
 	return $type;
 }
-
-function add_photo($id, $picture){
-	// This function associates an uploaded photo with a profile.
-	// It has no return value.
-
-	global $photo_dir;
-	global $mime_to_ext;
-	
-	// Check that the file was uploaded and of an appropriate mime type.
-	if (is_uploaded_file($picture["tmp_name"]) && (isset($mime_to_ext[$picture["type"]]))){
-		$query = "SELECT `photo_name` FROM `umsec_people` WHERE `id`='".$id."'";
-		$result = run_query($query);
-		
-		if (mysql_num_rows($result)){
-			$photo_name = mysql_result($result, 0, 'photo_name');
-		
-			if (is_file($photo_dir.$photo_name)){
-				@unlink($photo_dir.$photo_name);
-				@unlink($photo_dir."thumb_".$photo_name);
-			}
-		}
-		
-		$name = 'profile_' . $id;
-		
-		if ($mime_to_ext[$picture["type"]] == "gif"){
-			$image = imagecreatefromgif($picture["tmp_name"]);
-			$name .= '.png';
-			imagepng($image, $photo_dir.$name);
-			imagedestroy($image);
-		}
-		else{
-			$name .= '.' .$mime_to_ext[$picture["type"]];
-			
-			// Copy the uploaded picture.
-			if (!copy($picture["tmp_name"], $photo_dir.$name)){
-				echo 'Could not upload photo.';
-				exit;
-			}
-		}
-		
-		// resize_image($name, 400, 600);
-		
-		// Make a thumbnail image of this picture.
-		make_thumbnail($name);
-		
-		// Update the database information to have the name of the new picture.		
-		$query = "UPDATE `umsec_people` SET `photo_name`='".$name."' WHERE `id`='".$id."'";
-		$result = run_query($query);
-	}
-}
-
-function make_thumbnail($photo_name){
-	global $images_dir;
-	
-	if (is_file($images_dir."thumb_".$photo_name)) @unlink($images_dir."thumb_".$photo_name);
-	
-	$thumb_width = 120;
-	$thumb_height = 120;
-	
-	$image_info = getimagesize($images_dir.$photo_name);
-	
-	$image_width = $image_info[0];
-	$image_height = $image_info[1];
-	
-	if (($image_width > $thumb_width) || ($image_height > $thumb_height)){
-		if (($image_width / $thumb_width) > ($image_height > $thumb_width)){
-			$ratio = $thumb_height / $image_height;
-		}
-		else{
-			$ratio = $thumb_width / $image_width;
-		}
-		
-		$new_image_width = round($ratio * $image_width);
-		$new_image_height = round($ratio * $image_height);
-		
-		$new_thumb = imagecreatetruecolor($new_image_width, $new_image_height);
-		
-		$x_start_point = round(($thumb_width - $new_image_width) / 2);
-		$y_start_point = round(($thumb_height - $new_image_height) / 2);
-		
-		switch($image_info[2]){
-			case 2:
-				// JPG
-				$image = imagecreatefromjpeg($images_dir.$photo_name);
-				
-				imagecopyresampled($new_thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
-				imagejpeg($new_thumb, $images_dir."thumb_".$photo_name, 75);
-				
-				break;
-			case 3:
-				// PNG
-				$image = imagecreatefrompng($images_dir.$photo_name);
-				imagecopyresampled($new_thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
-				imagepng($new_thumb, $images_dir."thumb_".$photo_name);
-				break;
-		}
-		
-		imagedestroy($image);
-		imagedestroy($new_thumb);
-	}
-	else{
-		copy($images_dir.$photo_name, $photo_dir."thumb_".$photo_name);
-	}
-	
-	return;
-}
-
 
 ?>

@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+$title = "anyInventory: Edit Item";
+
 $item = new item($_REQUEST["id"]);
 
 $output = '
@@ -68,18 +70,17 @@ foreach($item->category->field_ids as $field_id){
 		</tr>';
 }
 
-$query = "SELECT * FROM `anyInventory_images` WHERE `key`='".$_REQUEST["id"]."'";
+$query = "SELECT * FROM `anyInventory_files` WHERE `key`='".$_REQUEST["id"]."'";
 $result = query($query);
 
 if (mysql_num_rows($result) > 0){
 	$output .= '
 				<tr>
-					<td class="form_label">Current Images:</td>
+					<td class="form_label">Files:</td>
 					<td class="form_input">';
 	
 	while($row = mysql_fetch_array($result)){
-		$output .= '<p><input type="checkbox" name="delete_images[]" value="'.$row["id"].'" /> Delete this image<br />
-		<img src="images/items/thumb_'.$row["file_name"].'" /></p>';
+		$output .= '<p><input type="checkbox" name="delete_files[]" value="'.$row["id"].'" /> Delete this file: <a href="item_files/'.$row["file_name"].'">'.$row["file_name"].'</a><br /></p>';
 	}
 	
 	$output .= '</td></tr>';
@@ -87,8 +88,8 @@ if (mysql_num_rows($result) > 0){
 
 $output .= '
 				<tr>
-					<td class="form_label">Upload Additional Picture:</td>
-					<td class="form_input"><input type="file" name="picture" id="picture" /></td>
+					<td class="form_label">Upload Additional File:</td>
+					<td class="form_input"><input type="file" name="file" id="file" /></td>
 				</tr>
 				<tr>
 					<td class="form_label">&nbsp;</td>

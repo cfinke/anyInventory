@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+$title = 'anyInventory: Move Items';
+
 $item = new item($_REQUEST["id"]);
 
 $output = '

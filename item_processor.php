@@ -47,22 +47,21 @@ if ($_REQUEST["action"] == "do_add"){
 	$query .= " '".$_REQUEST["c"]."','".$_REQUEST["name"]."')";
 	$result = query($query);
 	
-	if (is_uploaded_file($_FILES["picture"]["tmp_name"])){
+	if (is_uploaded_file($_FILES["file"]["tmp_name"])){
 		$key = mysql_insert_id();
 		
-		do {
-			$filename = rand().".".$mime_to_ext[$_FILES["picture"]["type"]];
-		} while (is_file($images_dir.$filename));
+		$i = 1;
 		
-		if(copy($_FILES["picture"]["tmp_name"], $images_dir.$filename)){
-			make_thumbnail($filename);
-		}
-		else{
+		do {
+			$filename = $key.".".$i.".".$_FILES["file"]["name"];
+		} while (is_file($files_dir.$filename));
+		
+		if(!copy($_FILES["file"]["tmp_name"], $files_dir.$filename)){
 			echo 'Could not copy uploaded file.';
 			exit;
 		}
 		
-		$query = "INSERT INTO `anyInventory_images` 
+		$query = "INSERT INTO `anyInventory_files` 
 				(`key`,
 				 `file_name`,
 				 `file_size`,
@@ -70,8 +69,8 @@ if ($_REQUEST["action"] == "do_add"){
 				VALUES
 				('".$key."',
 				 '".$filename."',
-				 '".$_FILES["picture"]["size"]."',
-				 '".$_FILES["picture"]["type"]."')";
+				 '".$_FILES["file"]["size"]."',
+				 '".$_FILES["file"]["type"]."')";
 		$result = query($query);
 	}
 	
@@ -116,46 +115,37 @@ elseif($_REQUEST["action"] == "do_edit"){
 	$query .= " `name`='".$_REQUEST["name"]."' WHERE `id`='".$_REQUEST["id"]."'";
 	$result = query($query);
 	
-	if (is_array($_REQUEST["delete_images"])){
-		foreach($_REQUEST["delete_images"] as $image_id){
-			$query = "SELECT * FROM `anyInventory_images` WHERE `id`='".$image_id."'";
+	if (is_array($_REQUEST["delete_files"])){
+		foreach($_REQUEST["delete_files"] as $file_id){
+			$query = "SELECT * FROM `anyInventory_files` WHERE `id`='".$file_id."'";
 			$result = query($query);
-			$row = mysql_fetch_Array($result);
+			$row = mysql_fetch_array($result);
 			
-			if (unlink($images_dir.$row["file_name"])){
-				if (unlink($images_dir."thumb_".$row["file_name"])){
-				}
-				else{
-					echo "Could not delete thumbnail of ".$row["file_name"].'<br />';
-					exit;
-				}
-			}
-			else{
+			if (!unlink($files_dir.$row["file_name"])){
 				echo "Could not delete ".$row["file_name"].'<br />';
 				exit;
 			}
 			
-			$query = "DELETE FROM `anyInventory_images` WHERE `id`='".$image_id."'";
+			$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file_id."'";
 			$result = query($query);
 		}
 	}
 	
-	if (is_uploaded_file($_FILES["picture"]["tmp_name"])){
-		$key = mysql_insert_id();
+	if (is_uploaded_file($_FILES["file"]["tmp_name"])){
+		$key = $_REQUEST["id"];
+		
+		$i = 1;
 		
 		do {
-			$filename = rand().".".$mime_to_ext[$_FILES["picture"]["type"]];
-		} while (is_file($images_dir.$filename));
+			$filename = $key.".".$i.".".$_FILES["file"]["name"];
+		} while (is_file($files_dir.$filename));
 		
-		if(copy($_FILES["picture"]["tmp_name"], $images_dir.$filename)){
-			make_thumbnail($filename);
-		}
-		else{
+		if(!copy($_FILES["file"]["tmp_name"], $files_dir.$filename)){
 			echo 'Could not copy uploaded file.';
 			exit;
 		}
 		
-		$query = "INSERT INTO `anyInventory_images` 
+		$query = "INSERT INTO `anyInventory_files` 
 				(`key`,
 				 `file_name`,
 				 `file_size`,
@@ -163,8 +153,8 @@ elseif($_REQUEST["action"] == "do_edit"){
 				VALUES
 				('".$_REQUEST["id"]."',
 				 '".$filename."',
-				 '".$_FILES["picture"]["size"]."',
-				 '".$_FILES["picture"]["type"]."')";
+				 '".$_FILES["file"]["size"]."',
+				 '".$_FILES["file"]["type"]."')";
 		$result = query($query);
 	}
 	
@@ -180,20 +170,14 @@ elseif($_REQUEST["action"] == "do_delete"){
 	if ($_REQUEST["delete"] == "Delete"){
 		$item = new item($_REQUEST["id"]);
 		
-		if (is_array($item->images)){
-			foreach($item->images as $image){
-				if (unlink($images_dir.$image["file_name"])){
-					if (unlink($images_dir."thumb_".$image["file_name"])){
-						echo "Could not delete thumb_".$image["file_name"].'<br />';
-						exit;
-					}
-					else{
-						$query = "DELETE FROM `anyInventory_images` WHERE `id`='".$image["id"]."'";
-						$result = query($query);
-					}
+		if (is_array($item->files)){
+			foreach($item->files as $file){
+				if (unlink($files_dir.$file["file_name"])){
+					$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file["id"]."'";
+					$result = query($query);
 				}
 				else{
-					echo "Could not delete ".$image["file_name"].'<br />';
+					echo "Could not delete ".$file["file_name"].'<br />';
 					exit;
 				}
 			}

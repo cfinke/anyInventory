@@ -14,7 +14,7 @@
 			</tr>
 			<tr>
 				<td valign="top" class="row_head" style="background: rgb(213,175,112);" colspan="2">
-					<div style="padding:6px" class="site_header" style="padding:4px"><h1>anyInventory</h1></div>
+					<h1 style="padding: 6px; font-size: 36pt;">anyInventory</h1>
 		
 				</td>
 			</tr>
@@ -31,5 +31,12 @@
 			</tr>
 			<tr height="100%">
 				<td class="row_head" width="150" align="left" valign="top" style="padding:5px">
+					<p><b><a href="index.php">Inventory</a></b></p>
+					<p><b><a href="fields.php">Fields</a></b><br />
+					<a href="add_field.php">Add a field</a></p>
+					<p><b><a href="categories.php">Categories</a></b><br />
+					<a href="add_category.php">Add a category</a></p>
+					<p><b><a href="items.php">Items</a></b><br />
+					<a href="add_item.php">Add an item</a></p>
 				</td>
 				<td bgcolor="#ffffff" width="650" align="left" valign="top" style="padding:5px">

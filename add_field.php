@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+$title = "anyInventory: Add Field";
+
 $output = '
 		<form method="post" action="field_processor.php">
 			<h2>Add a Field</h2>

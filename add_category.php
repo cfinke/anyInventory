@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+$title = "anyInventory: Add Category";
+
 $output = '
 	<form method="post" action="category_processor.php">
 		<input type="hidden" name="action" value="do_add" />

@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-$title = 'anyInventory Fields';
+$title = 'anyInventory: Fields';
 
 $query = "SELECT *,
 			'' as `nosortcol_`,

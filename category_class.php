@@ -70,7 +70,7 @@ class category {
 			$result = query($query);
 			
 			$this->breadcrumbs[] = 0;
-			$this->breadcrumb_names[] = "Top";
+			$this->breadcrumb_names = "Top";
 			
 			while ($row = mysql_fetch_array($result)){
 				$this->field_ids[] = $row["id"];

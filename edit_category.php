@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+$title = "anyInventory: Edit Category";
+
 $category = new category($_REQUEST["id"]);
 
 $output = '

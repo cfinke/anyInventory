@@ -47,6 +47,8 @@ BEFORE 1.9
 ===================
 DONE - Item associations ("Item" Field type)
 DONE - In-line editor for long text fields
+Alert Expirations
+Alert E-mails
 Stronger CSS support
 Multi-language support
 Download inventory as XML file

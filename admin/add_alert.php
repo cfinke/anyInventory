@@ -31,7 +31,7 @@ elseif(!isset($_REQUEST["i"])){
 				<tr>
 					<td class="form_label"><label for="c">Add alert to:</label></td>
 					<td class="form_input">
-						<select name="i" id="i">
+						<select name="i[]" id="i[]" multiple="multiple">
 							'.get_item_options($_REQUEST["c"]).'
 						</select>
 					</td>
@@ -44,73 +44,86 @@ elseif(!isset($_REQUEST["i"])){
 		</form>';
 }
 else{
-	$item = new item($_REQUEST["i"]);
+	$item = new item($_REQUEST["i"][0]);
 	
 	$output = '
 			<form method="post" action="alert_processor.php" enctype="multipart/form-data">
-				<h2>Add an Alert to '.$item->name.'</h2>
+				<h2>Add an Alert</h2>
 				<input type="hidden" name="action" value="do_add" />
-				<input type="hidden" name="i" value="'.$_REQUEST["id"].'" />
+				<input type="hidden" name="i" value="'.htmlentities(serialize($_REQUEST["i"])).'" />
 				<table>
 					<tr>
 						<td class="form_label"><label for="name">Alert Title:</label></td>
 						<td class="form_input"><input type="text" name="title" id="title" value="" maxlength="255" />
-					</tr>';
-	/*
+					</tr>
+					<tr>
+						<td class="form_label"><label for="field">Field:</label></td>
+						<td class="form_input">
+							<select name="field" id="field">';
+	
 	foreach($item->category->field_ids as $field_id){
-		
 		$field = new field($field_id);
 		
-		$output .= '
-			<tr>
-				<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
-				<td class="form_input">';
-		
-		switch($field->input_type){
-			case 'multiple':
-				$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="" />';
-				$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select">';
-				foreach($field->values as $value){
-					$output .= '<option value="'.$value.'"';
-					if ($value == $field->default_value) $output .= ' selected="selected"';
-					$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
-				}
-				$output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$field->default_value.'" />';
-				break;
-			case 'select':
-				$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">';
-				foreach($field->values as $value){
-					$output .= '<option value="'.$value.'"';
-					if ($value == $field->default_value) $output .= ' selected="selected"';
-					$output .= '>'.$value.'</option>';
-				}
-				break;
-			case 'text':
-				if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$field->default_value.'" />';
-				else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">'.$field->default_value.'</textarea>';
-				break;
-			case 'radio':
-				foreach($field->values as $value){
-					$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
-					if ($value == $field->default_value) $output .= ' checked="checked"';
-					$output .= ' /> '.$value.'<br />';
-				}
-				break;
-			case 'checkbox':
-				foreach($field->values as $value){
-					$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
-					if ($value == $field->default_value) $output .= ' checked="checked"';
-					$output .= ' /> '.$value.'<br />';
-				}
-				break;
-		}
-		
-		$output .= '</td>
-			</tr>';
+		$output .= '<option value="'.$field_id.'"> '.$field->name.'</option>';
 	}
-	*/
 	
-	$output .= '
+	$output .= '			</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_label"><label for="condition">Condition:</label></td>
+						<td class="form_input">
+							<select name="condition" id="condition">
+								<option value="==">Equal to</option>
+								<option value="!=">Not equal to</option>
+								<option value="<">Less than</option>
+								<option value=">">Greater than</option>
+								<option value="<=">Less than or equal to</option>
+								<option value=">=">Greater than or equal to</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form_label"><label for="value">Value:</label></td>
+						<td class="form_input"><input type="text" name="value" id="value" value="" /></td>
+					</tr>
+					<tr>
+						<td class="form_label"><label for="month">Effective as of:</label></td>
+						<td class="form_input">
+							<select name="month" id="month">
+								<option value="1">January</option>
+								<option value="2">February</option>
+								<option value="3">March</option>
+								<option value="4">April</option>
+								<option value="5">May</option>
+								<option value="6">June</option>
+								<option value="7">July</option>
+								<option value="8">August</option>
+								<option value="9">September</option>
+								<option value="10">October</option>
+								<option value="11">November</option>
+								<option value="12">December</option>
+							</select>
+							<select name="day" id="day">';
+	
+	for ($i = 1; $i <= 31; $i++){
+		$output .= '<option value="'.$i.'">'.$i.'</option>';
+	}
+	
+	
+	$output .= '			</select>,
+							<select name="year" id="year">';
+	
+	$year = date("Y");
+	
+	for ($i = 0; $i < 20; $i++){
+		$output .= '<option value="'.($i + $year).'">'.($i + $year).'</option>';
+	}
+	
+	
+	$output .= '			</select>
+							</td>
+					</tr>
 					<tr>
 						<td class="form_label">&nbsp;</td>
 						<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>

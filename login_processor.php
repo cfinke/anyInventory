@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if ($_POST["action"] == "log_in"){
+if ($_REQUEST["action"] == "log_in"){
 	$query = "SELECT * FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 	
@@ -32,8 +32,8 @@ if ($_POST["action"] == "log_in"){
 		}
 	}
 }
-elseif($_POST["action"] == "log_out"){
-	unset($_SESSION["user"]);
+elseif($_REQUEST["action"] == "log_out"){
+	session_unset();
 	session_destroy();
 	
 	header("Location: index.php");

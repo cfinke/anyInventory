@@ -27,11 +27,11 @@ class user {
 	}
 	
 	function can_view($cat_id){
-		return (in_array($cat_id, $this->categories_view));
+		return (($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_view));
 	}
 	
 	function can_admin($cat_id){
-		return (in_array($cat_id, $this->categories_admin));
+		return (($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_admin));
 	}
 	
 	function add_category_view($category_id){

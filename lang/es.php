@@ -49,10 +49,10 @@ define('NO_MATCHING_ITEMS','No hubo art&iacute;culos que coincidieran con la b&u
 // Mensajes de error (Error messages)
 define('ERROR','Error');
 define('ACCESS_DENIED','Acceso denegado');
-define('ERROR_DUPLICATE_FIELD',"Ya existe un campo con el nombre especificado.  Si deseas agregar un campo a varias categor&iacute;s, lo puedes realizar editando el campo y seleccionando varias categor&iacute;s (manteniendo presionada la tecla 'Ctrl').");
+define('ERROR_DUPLICATE_FIELD',"Ya existe un campo con el nombre especificado.  Si deseas agregar un campo a varias categor&iacute;as, lo puedes realizar editando el campo y seleccionando varias categor&iacute;as (manteniendo presionada la tecla 'Ctrl').");
 define('ERROR_BAD_DEFAULT_VALUE',"El valor por defecto para un campo de selecci&oacute;n o radio debe estar incluido en la lista de valores.");
-define('ERROR_EMPTY_CATEGORY',"No hay art&iacute;culos en las categor&iacute;s especificadas; las categor&iacute;as debe contener art&iacute;culos para poder agregar una alerta.");
-define('ERROR_NO_COMMON_FIELDS',"No hay campos comunes para las categor&iacute;s seleccionadas.");
+define('ERROR_EMPTY_CATEGORY',"No hay art&iacute;culos en las categor&iacute;as especificadas; las categor&iacute;as debe contener art&iacute;culos para poder agregar una alerta.");
+define('ERROR_NO_COMMON_FIELDS',"No hay campos comunes para las categor&iacute;as seleccionadas.");
 define('ERROR_ALERT_NO_CATEGORIES','Una alerta debe ser aplicada al menos a una categor&iacute;a.');
 define('ERROR_ALERT_NO_ITEMS','Una alerta debe ser aplicada al menos a un art&iacute;culo.');
 define('ERROR_NO_TOP_LEVEL_EDIT','La categor&iacute;a '.TOP_LEVEL_CATEGORY.' no puede ser editada o eliminada.');
@@ -65,7 +65,7 @@ define('ERROR_DUPLICATE_USER','Ya existe una cuenta con el mismo nombre de usuar
 define('LABEL','Etiqueta');
 define('LABELS','Etiquetas');
 define('LABEL_ERROR','No tienes instaladas las funciones necesarias para crear etiquetas.  Estas funciones son: <a href="http://us3.php.net/manual/en/function.imagecreate.php">imagecreate</a>, <a href="http://us3.php.net/manual/en/function.imagecolorallocate.php">imagecolorallocate</a>, <a href="http://us3.php.net/manual/en/function.imagettftext.php">imagettftext</a>, <a href="http://us3.php.net/manual/en/function.imagestring.php">imagestring</a>, <a href="http://us3.php.net/manual/en/function.imagecopyresized.php">imagecopyresized</a>, <a href="http://us3.php.net/manual/en/function.imagedestroy.php">imagedestroy</a>, y <a href="http://us3.php.net/manual/en/function.imagepng.php">imagepng</a>.  Unas o mas de estas no fueron encontradas.');
-define('LABEL_CAT_INSTRUCTIONS','Selecciona las categor&iacute;s a las que pertenecen los art&iacute;culos para los cuales quieres generar las etiquetas.  Todas las categor&iacute;s que selecciones deben tener al menos un campo en com&uacute;n.');
+define('LABEL_CAT_INSTRUCTIONS','Selecciona las categor&iacute;as a las que pertenecen los art&iacute;culos para los cuales quieres generar las etiquetas.  Todas las categor&iacute;as que selecciones deben tener al menos un campo en com&uacute;n.');
 define('LABEL_ITEM_INSTRUCTIONS','Selecciona el campo del cual quieres generar el c&oacute;digo de barras y los art&iacute;culos para los cuales quieres generar una etiqueta.');
 define('GENERATE_LABELS','Generar etiquetas');
 define('GENERATE_FROM','Generar desde');
@@ -106,7 +106,7 @@ define('UP_LINK','arriba');
 define('EDIT_AUTOINC_FIELD','Editar campo auto-incrementar');
 define('EDIT_FRONT_PAGE_TEXT','Editar texto de primera p&aacute;gina');
 define('EDIT_NAME_FIELD','Editar campo "Nombre"');
-define('APPLY_FIELDS',"Aplicar los campos de esta categor&iacute;a a todas las sub-categor&iacute;s.");
+define('APPLY_FIELDS',"Aplicar los campos de esta categor&iacute;a a todas las sub-categor&iacute;as.");
 define('EDIT_FIELD','Editar campo');
 
 // Categorias (Categories)

@@ -5,7 +5,7 @@ include("globals.php");
 $title = 'anyInventory: Users';
 $breadcrumbs = 'Administration > Users';
 
-$query = "SELECT * FROM `anyInventory_users` ORDER BY `usertype` DESC,`username` ASC";
+$query = "SELECT * FROM `anyInventory_users` ORDER BY `username` ASC";
 $result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
 if (mysql_num_rows($result) > 0){

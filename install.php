@@ -331,7 +331,8 @@ elseif(!$set_config_error){
 	$pp_view_checked = ($_POST["password_protect_view"]) ? ' checked="true"' : '';
 	$pp_admin_checked = ($_POST["password_protect_admin"]) ? ' checked="true"' : '';
 	$inBodyTag = ' onload="toggle();"';
-	
+	if (!isset($_REQUEST["lang"])) $_REQUEST["lang"] = "en";
+		
 	if (count($errors) > 0){
 		$output .= '<p>The following errors occurred:</p><ul class="error">';
 		

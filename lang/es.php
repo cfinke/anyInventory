@@ -137,7 +137,7 @@ define('UPDATE_CATEGORIES','Actualizar categor&iacute;as');
 define('EDIT_CATEGORY','Editar categor&iacute;a');
 
 // Articulos (Items)
-define('ITEMS','Art&iacute;culo');
+define('ITEMS','Art&iacute;culos');
 define('ADD_ITEM','Agregar art&iacute;culo');
 define('ADD_ITEM_HERE','Agregar un art&iacute;culo aqu&iacute;');
 define('ADD_ITEM_TO','Agregar art&iacute;culos a');

@@ -12,7 +12,7 @@ $output .= '
 				Administration
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/administration.php">Help</a>]
+				[<a href="../docs/">Help</a>]
 			</td>
 		</tr>
 		<tr>

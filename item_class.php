@@ -147,7 +147,7 @@ class item {
 						if ($file->is_image()){
 							$output .= '<a href="'.$file->web_path.'"><img src="';
 							if ($file->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$file->id;
-							else $output .= "item_files/no_thumb.gif";
+							else $output .= $DIR_PREFIX."item_files/no_thumb.gif";
 								
 							$output .= '" class="thumbnail" /></a>';
 						}

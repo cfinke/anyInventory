@@ -3,7 +3,7 @@
 include("globals.php");
 
 $title = "anyInventory: Help > Fields > Deleting Fields";
-$breadcrumbs = '<a href="./">Help</a> > <a href="Fields.php">Fields</a> > Deleting Fields';
+$breadcrumbs = '<a href="./">Help</a> > <a href="fields.php">Fields</a> > Deleting Fields';
 
 $output .= '
 	<table class="standardTable" cellspacing="0">

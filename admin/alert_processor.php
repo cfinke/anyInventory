@@ -38,8 +38,9 @@ elseif($_REQUEST["action"] == "do_edit"){
 				`field_id`='".$_REQUEST["field"]."',
 				`condition`='".$_REQUEST["condition"]."',
 				`value`='".$_REQUEST["value"]."',
-				`time`='".$timestamp."' WHERE `id`='".$_REQUEST["id"]."',
-				`timed`='".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."'";
+				`time`='".$timestamp."',
+				`timed`='".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."'
+				 WHERE `id`='".$_REQUEST["id"]."'";
 	query($query);
 }
 elseif($_REQUEST["action"] == "do_delete"){

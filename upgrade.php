@@ -371,7 +371,19 @@ if ($_POST["action"] == "upgrade"){
 				# Changes introduced in 1.9.1
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ITEM_VIEW','list')";
 				@mysql_query($query);
+			case 1.9.1:
+				# Changes introduced in 2.0
 				
+				// Fix field order
+				$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
+				$result = mysql_query($query);
+				
+				$i = 0;
+				
+				while ($row = mysql_fetch_array($result)){
+					$newquery = "UPDATE `anyInventory_fields` SET `importance`='".$i++."' WHERE `id`='".$row["id"]."'";
+					$newresult = mysql_query($newquery);
+				}
 		}
 		
 		// Attempt to write the globals file.

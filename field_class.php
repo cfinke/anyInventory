@@ -12,6 +12,8 @@ class field {
 	
 	var $highlight = false;		// Whether or not the field is highlighted
 	
+	var $importance = 0;
+	
 	function field($field_id){
 		// Set the id of this field.
 		$this->id = $field_id;
@@ -24,6 +26,7 @@ class field {
 		// Set the name and input type
 		$this->name = $row["name"];
 		$this->input_type = $row["input_type"];
+		$this->importance = $row["importance"];
 		
 		if ($this->input_type != 'divider'){
 			// Set the values; the values are stored separated by commas

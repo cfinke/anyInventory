@@ -2,13 +2,15 @@
 
 include("globals.php");
 
+$title = "anyInventory: Delete Category";
+
 $category = new category($_REQUEST["id"]);
 
 $output .= '
 	<form method="post" action="category_processor.php">
 		<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 		<input type="hidden" name="action" value="do_delete" />
-		<p>Are you sure you want to delete this category?</p>
+		<table style="width: 100%;"><tr><td>Are you sure you want to delete this category?</td><td style="text-align: right;"><a href="../docs/deleting_categories.php">Help with deleting categories</a></td></tr></table>
 		<div>
 			<p class="category_name"><b>Name:</b> '.$category->breadcrumb_names.'</p>
 			<p class="category_fields"><b>Fields:</b> ';

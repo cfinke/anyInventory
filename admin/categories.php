@@ -4,7 +4,7 @@ include("globals.php");
 
 $title = 'anyInventory: Categories';
 
-$output .= '<p><a href="add_category.php">Add a category.</a></p>';
+$output .= '<table style="width: 100%;"><tr><td><a href="add_category.php">Add a category.</a></td><td style="text-align: right;"><a href="../docs/categories.php">Help with categories</a></td></tr></table>';
 
 $rows = get_category_array();
 

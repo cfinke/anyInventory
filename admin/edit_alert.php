@@ -10,7 +10,7 @@ $item = new item($alert->item_ids[0]);
 
 $output = '
 		<form method="post" action="alert_processor.php" enctype="multipart/form-data">
-			<h2>Edit an Alert</h2>
+		<table style="width: 100%;"><tr><td><h2>Edit an Alert</h2></td><td style="text-align: right;"><a href="../docs/editing_alerts.php">Help with editing alerts</a></td></tr></table>
 			<input type="hidden" name="action" value="do_edit" />
 			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 			<table>

@@ -10,6 +10,7 @@ $output = '
 	<form method="post" action="category_processor.php">
 		<input type="hidden" name="action" value="do_edit" />
 		<input type="hidden" name="id" value="'.$category->id.'" />
+		<table style="width: 100%;"><tr><td><h2>Edit a Category</h2></td><td style="text-align: right;"><a href="../docs/editing_categories.php">Help with editing categories</a></td></tr></table>
 		<table>
 			<tr>
 				<td class="form_label"><label for="name">Name:</label></td>

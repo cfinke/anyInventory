@@ -6,7 +6,7 @@ $title = "anyInventory: Add Field";
 
 $output = '
 		<form method="post" action="field_processor.php">
-			<h2>Add a Field</h2>
+			<table style="width: 100%;"><tr><td><h2>Add a Field</h2></td><td style="text-align: right;"><a href="../docs/adding_fields.php">Help with adding fields</a></td></tr></table>
 			<input type="hidden" name="action" value="do_add" />
 			<table>
 				<tr style="display: auto;">

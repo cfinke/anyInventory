@@ -11,6 +11,9 @@ if (!$_REQUEST["action"]){
 	$output .= '
 			<table>
 				<tr>
+					<td colspan="2" style="text-align: right;"><a href="docs/searching.php">Help with searching</a></td>
+				</tr>
+				<tr>
 					<td valign="top" width="50%">
 						<form action="'.$_SERVER["PHP_SELF"].'" method="get">
 							<h2>Limit search to:</h2>

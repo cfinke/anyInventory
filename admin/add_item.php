@@ -4,8 +4,10 @@ include("globals.php");
 
 $title = "anyInventory: Add Item";
 
+$output .= '<table style="width: 100%;"><tr><td><h2>Add an Item</h2></td><td style="text-align: right;"><a href="../docs/items.php#adding">Help with adding items</a></td></tr></table>';
+
 if (!isset($_REQUEST["c"])){
-	$output = '
+	$output .= '
 		<form method="get" action="add_item.php">
 			<table>
 				<tr>
@@ -26,9 +28,8 @@ if (!isset($_REQUEST["c"])){
 else{
 	$category = new category($_REQUEST["c"]);
 	
-	$output = '
+	$output .= '
 			<form method="post" action="item_processor.php" enctype="multipart/form-data">
-				<h2>Add an Item to '.$category->get_breadcrumb_links().'</h2>
 				<input type="hidden" name="action" value="do_add" />
 				<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 				<input type="hidden" name="c" value="'.$_REQUEST["c"].'" />

@@ -7,7 +7,7 @@ $title = 'anyInventory: Fields';
 $query = "SELECT * FROM `anyInventory_fields` ORDER BY `importance`";
 $result = query($query);
 
-$output .= '<p><a href="add_field.php">Add a field.</a></p>';
+$output .= '<table style="width: 100%;"><tr><td><a href="add_field.php">Add a field.</a></td><td style="text-align: right;"><a href="../docs/fields.php">Help with fields</a></td></tr></table>';
 
 $table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td><td>Type</td><td>Default Value</td><td>Size</td></tr>';
 

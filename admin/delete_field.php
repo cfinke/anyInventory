@@ -10,7 +10,7 @@ $output .= '
 	<form method="post" action="field_processor.php">
 		<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 		<input type="hidden" name="action" value="do_delete" />
-		<p>Are you sure you want to delete this field?</p>
+		<table style="width: 100%;"><tr><td>Are you sure you want to delete this field?</td><td style="text-align: right;"><a href="../docs/deleting_fields.php">Help with deleting fields</a></td></tr></table>
 		<div>
 			<p><b>Field:</b> '.$field->name.'</p>
 			<p><b>Input type:</b> '.$field->input_type.'</p>';

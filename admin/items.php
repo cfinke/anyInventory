@@ -4,11 +4,12 @@ include("globals.php");
 
 $title = 'anyInventory: Items';
 
-$output .= '<p><a href="add_item.php">Add an item.</a></p>';
-$query = "SELECT * FROM `anyInventory_items` ORDER BY `name` ASC";
-$result = query($query);
+$output .= '<table style="width: 100%;"><tr><td><a href="add_item.php">Add an item.</a></td><td style="text-align: right;"><a href="../docs/items.php">Help with items</a></td></tr></table>';
 
 $table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td></tr>';
+
+$query = "SELECT * FROM `anyInventory_items` ORDER BY `name` ASC";
+$result = query($query);
 
 if (mysql_num_rows($result) > 0){
 	$i = 0;

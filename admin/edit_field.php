@@ -8,7 +8,7 @@ $field = new field($_REQUEST["id"]);
 
 $output = '
 		<form method="post" action="field_processor.php">
-			<h2>Edit a Field</h2>
+			<table style="width: 100%;"><tr><td><h2>Edit a Field</h2></td><td style="text-align: right;"><a href="../docs/editing_fields.php">Help with editing fields</a></td></tr></table>
 			<input type="hidden" name="action" value="do_edit" />
 			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 			<table>

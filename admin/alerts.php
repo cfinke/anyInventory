@@ -4,7 +4,8 @@ include("globals.php");
 
 $title = 'anyInventory: Alerts';
 
-$output .= '<p><a href="add_alert.php">Add an alert.</a></p>';
+$output .= '<table style="width: 100%;"><tr><td><a href="add_alert.php">Add an alert.</a></td><td style="text-align: right;"><a href="../docs/alerts.php">Help with alerts</a></td></tr></table>';
+
 $query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` ORDER BY `title` ASC";
 $result = query($query);
 

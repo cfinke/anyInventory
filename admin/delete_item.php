@@ -9,7 +9,7 @@ $output .= '
 	<form action="item_processor.php" method="post">
 		<input type="hidden" name="action" value="do_delete" />
 		<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
-		<p>Are you sure you want to delete this item?</p>
+		<table style="width: 100%;"><tr><td>Are you sure you want to delete this item?</td><td style="text-align: right;"><a href="../docs/deleting_items.php">Help with deleting items</a></td></tr></table>
 		'.$item->export_description().'
 		<p style="text-align: center; clear: both;">
 			<input type="submit" name="delete" value="Delete" />

@@ -3,8 +3,9 @@
 	<head>
 		<title><?php echo $title; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo $DIR_PREFIX; ?>style.css">
+		<?php echo $inHead; ?>
 	</head>
-	<body>
+	<body<?php echo $inBodyTag; ?>>
 		<table id="maintable" cellspacing="1" cellpadding="0" border="0">
 			<tr>
 				<td id="header_cell" style="background-image: url(<?php echo $DIR_PREFIX; ?>images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">

@@ -138,7 +138,7 @@ if ($_POST["action"] == "do_add"){
 							 '".$filetype."',
 							 '".$offsite_link."')";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);					
-
+				
 				$new_key = mysql_insert_id();
 				
 				$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$key."','".$field->id."','".$new_key."')";
@@ -393,6 +393,9 @@ elseif($_POST["action"] == "do_delete"){
 		}
 		
 		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$item->id."'";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
+		$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$item->id."'";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }

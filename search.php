@@ -4,6 +4,7 @@ include("globals.php");
 
 $title = "anyInventory: Search";
 
+// The default category is the Top Level.
 if (!isset($_REQUEST["c"])) $_REQUEST["c"] = 0;
 
 if (!$_REQUEST["action"]){
@@ -31,6 +32,7 @@ if (!$_REQUEST["action"]){
 						<td class="form_input"><input type="text" name="name" id="name" value="'.$item->name.'" maxlength="64" />
 					</tr>';
 	
+	// Get each field and output a search field for it.
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `name`";
 	$result = query($query);
 	

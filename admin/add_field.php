@@ -31,7 +31,7 @@ $output .= '
 			<td>Add Field</td>
 			</td>
 			<td style="text-align: right;">
-				[ <a href="../docs/adding_fields.php">Help</a> ]
+				[<a href="../docs/adding_fields.php">Help</a>]
 			</td>
 		</tr>
 		<tr>

@@ -3,24 +3,33 @@
 include("globals.php");
 
 $title = "anyInventory: Add Item";
-
-$output .= '<table style="width: 100%;"><tr><td><h2>Add an Item</h2></td><td style="text-align: right;"><a href="../docs/items.php#adding">Help with adding items</a></td></tr></table>';
+$breadcrumbs = 'Administration > <a href="items.php">Items</a> > Add Item';
 
 if (!isset($_REQUEST["c"])){
 	$output .= '
 		<form method="get" action="add_item.php">
-			<table>
-				<tr>
-					<td class="form_label"><label for="c">Add Item to:</label></td>
-					<td class="form_input">
-						<select name="c" id="c">
-							'.get_category_options(null, false).'
-						</select>
-					</td>
+			<table class="standardTable" cellspacing="0">
+				<tr class="tableHeader">
+					<td>Add an Item</td>
+					<td style="text-align: right;">[<a href="../docs/items.php#adding">Help</a>]</td>
 				</tr>
 				<tr>
-					<td class="form_label">&nbsp;</td>
-					<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+					<td class="tableData" colspan="2">
+						<table>
+							<tr>
+								<td class="form_label"><label for="c">Add Item to:</label></td>
+								<td class="form_input">
+									<select name="c" id="c">
+										'.get_category_options(null, false).'
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_label">&nbsp;</td>
+								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" class="submitButton" /></td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 			</table>
 		</form>';
@@ -33,11 +42,18 @@ else{
 				<input type="hidden" name="action" value="do_add" />
 				<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 				<input type="hidden" name="c" value="'.$_REQUEST["c"].'" />
-				<table>
+				<table class="standardTable" cellspacing="0">
+					<tr class="tableHeader">
+						<td>Add an Item</td>
+						<td style="text-align: right;">[<a href="../docs/items.php#adding">Help</a>]</td>
+					</tr>
 					<tr>
-						<td class="form_label"><label for="name">Name:</label></td>
-						<td class="form_input"><input type="text" name="name" id="name" value="" maxlength="64" />
-					</tr>';
+						<td class="tableData" colspan="2">
+							<table>
+								<tr>
+									<td class="form_label"><label for="name">Name:</label></td>
+									<td class="form_input"><input type="text" name="name" id="name" value="" maxlength="64" style="width: 100%;" />
+								</tr>';
 	
 	if ($category->field_ids){
 		foreach($category->field_ids as $field_id){
@@ -51,8 +67,8 @@ else{
 			
 			switch($field->input_type){
 				case 'multiple':
-					$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="" />';
-					$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select">';
+					$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="" style="width: 49%;" /> ';
+					$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select" style="width: 49%;">';
 					
 					if (is_array($field->values)){
 						foreach($field->values as $value){
@@ -66,7 +82,7 @@ else{
 					
 					break;
 				case 'select':
-					$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">';
+					$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">';
 					
 					if (is_array($field->values)){
 						foreach($field->values as $value){
@@ -78,8 +94,8 @@ else{
 					
 					break;
 				case 'text':
-					if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$field->default_value.'" />';
-					else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">'.$field->default_value.'</textarea>';
+					if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$field->default_value.'" style="width: 100%;" />';
+					else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">'.$field->default_value.'</textarea>';
 					break;
 				case 'radio':
 					if (is_array($field->values)){
@@ -112,9 +128,12 @@ else{
 	}
 	
 	$output .= '
-					<tr>
-						<td class="form_label">&nbsp;</td>
-						<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+								<tr>
+									<td class="form_label">&nbsp;</td>
+									<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" class="submitButton" /></td>
+								</tr>
+							</table>
+						</td>
 					</tr>
 				</table>
 			</form>';

@@ -75,7 +75,7 @@ class item {
 		
 		// Create the header with the name.
 		$output .= '
-			<table class="standardTable">
+			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.$this->name.' ( <a href="admin/move_item.php?id='.$this->id.'">Move</a> | <a href="admin/edit_item.php?id='.$this->id.'">Edit</a> | <a href="admin/delete_item.php?id='.$this->id.'">Delete</a> )</td>
 				</tr>

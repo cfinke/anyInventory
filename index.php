@@ -38,8 +38,7 @@ if ($_REQUEST["id"]){
 }
 else{
 	if ($_REQUEST["c"] == 0){
-		// Display introductory text, check for alerts
-		$output .= '<p style="padding: 15px;">This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.</p>';
+		$output .= '<p style="padding: 15px 0px 15px 0px;">This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.</p>';
 	}
 	
 	$output .= '

@@ -36,7 +36,7 @@ $output .= '
 				Categories (<a href="add_category.php">Add a category</a>)
 			</td>
 			<td style="text-align: right;">
-				[ <a href="../docs/categories.php">Help</a> ]
+				[<a href="../docs/categories.php">Help</a>]
 			</td>
 		</tr>
 		<tr>

@@ -3,6 +3,7 @@
 include("globals.php");
 
 $title = "anyInventory: Delete Field";
+$breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Delete Field';
 
 $field = new field($_REQUEST["id"]);
 
@@ -10,13 +11,27 @@ $output .= '
 	<form method="post" action="field_processor.php">
 		<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 		<input type="hidden" name="action" value="do_delete" />
-		<table style="width: 100%;"><tr><td>Are you sure you want to delete this field?</td><td style="text-align: right;"><a href="../docs/deleting_fields.php">Help with deleting fields</a></td></tr></table>
-		<div>
-			<p><b>Field:</b> '.$field->name.'</p>
-			<p><b>Input type:</b> '.$field->input_type.'</p>';
+		<table class="standardTable" cellspacing="0">
+			<tr class="tableHeader">
+				<td>Delete a Field</td>
+				<td style="text-align: right;">[<a href="../docs/deleting_fields.php">Help</a>]</td>
+			</tr>
+			<tr>
+				<td class="tableData" colspan="2">
+					<table>
+						<tr>
+							<td class="form_label">Field:</td>
+							<td>'.$field->name.'</td>
+						</tr>
+						<tr>
+							<td class="form_label">Input type:</td>
+							<td>'.$field->input_type.'</td>
+						</tr>';
 
 if (($field->input_type != "text") && ($field->input_type != 'file')){
-	$output .= '<p><b>Values:</b> ';
+	$output .= '<tr>
+					<td class="form_label">Values:</td>
+					<td>';
 	
 	if(is_array($field->values)){
 		foreach($field->values as $value){
@@ -27,19 +42,31 @@ if (($field->input_type != "text") && ($field->input_type != 'file')){
 	else{
 		$output .= 'None';
 	}
+	
+	$output .= '</td></tr>';
 }
 
 if (($field->input_type == "text") || ($field->input_type == "multiple")){
-	$output .= '<p><b>Size:</b> '.$field->size.'</p>';
+	$output .= '<tr><td class="form_label">Size:</td><td>'.$field->size.'</td></tr>';
 }
 
 if ($field->input_type != 'file'){
-	$output .= '<p><b>Default value:</b> '.$field->default_value.'</p>';
+	$output .= '<tr><td class="form_label">Default value:</td><td>'.$field->default_value.'</td></tr>';
 }
 
 $output .= '
-		<p><b>This field is used in '.count($field->categories).' categories.</b></p>
-		<p style="text-align: center;"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></p>
+						<tr>
+							<td class="form_label">&nbsp;</td>
+							<td><b>This field is used in '.count($field->categories).' categories.</b></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td style="text-align: center;"><input type="submit" name="delete" value="Delete" class="submitButton" /> <input type="submit" name="cancel" value="Cancel" class="submitButton" /></td>
+						</tr>	
+					</table>
+				</td>
+			</tr>
+		</table>
 	</form>';
 
 display($output);

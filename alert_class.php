@@ -69,17 +69,30 @@ class alert {
 		global $DIR_PREFIX;
 		
 		// Create the header with the name.
-		$output .= '<h2>'.$this->title.'</h2>';
-		$output .= '<p><b>Applies to:</b>';
+		$output .= '
+			<table class="standardHeader" cellspacing="0" cellpadding="0">
+				<tr class="tableHeader">
+					<td>'.$this->title.'</td>
+				</tr>
+				<tr>
+					<td class="tableData">
+						<table>
+							<tr>
+								<td class="form_label">Applies to:</td>
+								<td>';
 		
 		if (is_array($this->item_ids)){
 			foreach($this->item_ids as $item_id){
 				$item = new item($item_id);
-				$output .= '<br />'.$item->export_teaser();
+				$output .= $item->export_teaser().'<br />';
 			}
 		}
 		
-		$output .= '</p><p><b>Active when: </b>';
+		$output .= '</td>
+						</tr>
+						<tr>
+							<td class="form_label">Active when:</td>
+							<td>';
 		
 		$field = new field($this->field_id);
 		
@@ -87,7 +100,16 @@ class alert {
 		$output .= $this->condition;
 		$output .= (trim($this->value) == '') ? " ''" : ' '.$this->value;
 		
-		$output .= '</p><p><b>Effective as of:</b> '.date("Y m d",$this->unix_time).'</p>';
+		$output .= '</td>
+							</tr>
+							<tr>
+								<td class="form_label">Effective as of:</td>
+								<td>'.date("Y m d",$this->unix_time).'</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>';
 		
 		return $output;
 	}

@@ -10,10 +10,21 @@ $output .= '
 	<form method="post" action="category_processor.php">
 		<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 		<input type="hidden" name="action" value="do_delete" />
-		<table style="width: 100%;"><tr><td>Are you sure you want to delete this category?</td><td style="text-align: right;"><a href="../docs/deleting_categories.php">Help with deleting categories</a></td></tr></table>
-		<div>
-			<p class="category_name"><b>Name:</b> '.$category->breadcrumb_names.'</p>
-			<p class="category_fields"><b>Fields:</b> ';
+		<table class="standardTable" cellspacing="0">
+			<tr class="tableHeader">
+				<td>Delete a Category</td>
+				<td style="text-align: right;">[<a href="../docs/deleting_categories.php">Help</a>]</td>
+			</tr>
+			<tr>
+				<td class="tableData" colspan="2">
+					<table>
+						<tr>
+							<td class="form_label">Name:</td>
+							<td>'.$category->breadcrumb_names.'</td>
+						</tr>
+						<tr>
+							<td class="form_label">Fields:</td>
+							<td>';
 
 if(is_array($category->field_names)){
 	foreach($category->field_names as $field){
@@ -25,28 +36,54 @@ else{
 	$output .= 'None';
 }
 
-$output .= '</p><p><b>Number of items inventoried in this category:</b> '.$category->num_items().'</p>';
+$output .= '</td>
+						</tr>
+						<tr>
+							<td class="form_label">Number of items:</td>
+							<td>'.$category->num_items().'</td>
+						</tr>';
 
 if ($category->num_items() > 0){
-	$output .= '
-		<p>
-			<input type="radio" name="item_action" value="delete" /> Delete all items in this category<br />
-		   	<input type="radio" name="item_action" value="move" /> Move all items in this category to <select name="move_items_to" id="move_items_to">'.get_category_options($category->parent_id, false).'</select>.
-		</p>';
+	$output .= '		<tr>
+							<td class="form_label"><input type="radio" name="item_action" value="delete" /></td>
+							<td>Delete all items in this category</td>
+						</tr>
+						<tr>
+							<td class="form_label"><input type="radio" name="item_action" value="move" /></td>
+							<td>Move all items in this category to <select name="move_items_to" id="move_items_to">'.get_category_options($category->parent_id, false).'</select></td>
+						</tr>';
 }
 
-$output .= '<p><b>Number of subcategories:</b> '.$category->num_children.'</p>';
+$output .= '
+						<tr>
+							<td class="form_label">Number of subcategories:</td>
+							<td>'.$category->num_children.'</td>
+						</tr>';
 
 if ($category->num_children > 0){
 	$output .= '
-		<p>
-			<input type="radio" name="subcat_action" value="delete" /> Delete all sub-categories<br />
-		   	<input type="radio" name="subcat_action" value="move" /> Move all sub-categories to <select name="move_subcats_to" id="move_subcats_to">'.get_category_options($category->parent_id, false).'</select>.
-		</p>
-		<p><b>Number of items inventoried in this category and its subcategories:</b> '.$category->num_items_r().'</p>';
+		<tr>
+			<td class="form_label"><input type="radio" name="subcat_action" value="delete" /></td>
+			<td>Delete all sub-categories</td>
+		</tr>
+		<tr>
+			<td class="form_label"><input type="radio" name="subcat_action" value="move" /></td>
+			<td>Move all sub-categories to <select name="move_subcats_to" id="move_subcats_to">'.get_category_options($category->parent_id, false).'</select></td>
+		</tr>
+		<tr>
+			<td class="form_label">Number of items in this category and its subcategories:</td>
+			<td>'.$category->num_items_r().'</td>
+		</tr>';
 }
 
-$output .= '<p style="text-align: center;"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></p>
+$output .= '<tr>
+							<td class="form_label">&nbsp;</td>
+							<td style="text-align: center;"><input type="submit" name="delete" value="Delete" class="submitButton" /> <input type="submit" name="cancel" value="Cancel" class="submitButton" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 	</form>';
 
 display($output);

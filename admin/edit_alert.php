@@ -14,16 +14,18 @@ $inHead = '
 		// -->
 	</script>';
 $inBodyTag = ' onload="toggle();"';
+$breadcrumbs = 'Administration > <a href="alerts.php">Alerts</a> > Edit Alert';
 
 $alert = new alert($_REQUEST["id"]);
 
-$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
+$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE 1 ";
 
-foreach($alert->category_ids as $cat_id){
-	$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
+if (is_array($alert->category_ids)){
+	foreach($alert->category_ids as $cat_id){
+		$query .= " AND `categories` LIKE '%\"".$cat_id."\"%'";
+	}
 }
 
-$query = substr($query, 0, strlen($query) - 4);
 $result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
 if (mysql_num_rows($result) == 0){

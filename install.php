@@ -170,6 +170,7 @@ if ($_REQUEST["action"] == "install"){
 					`condition` enum( '==', '!=', '<', '>', '<=', '>=' ) NOT NULL default '==',
 					`value` varchar( 255 ) NOT NULL default '',
 					`time` timestamp( 14 ) NOT NULL ,
+				 	`timed` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
 		mysql_query($query) or die(mysql_error() . '<br />'.$query);

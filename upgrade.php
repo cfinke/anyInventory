@@ -172,6 +172,13 @@ if ($_REQUEST["action"] == "upgrade"){
 				
 				break;
 			case '1.4.':
+			case '1.4.1':
+				# Changes introduced in 1.5
+				
+				// Added timed alerts
+				$query = "ALTER TABLE `anyInventory_alerts` ADD `timed` TINYINT( 1 ) DEFAULT '0' NOT NULL";
+				query($query);
+				
 				break;
 		}
 		

@@ -5,6 +5,11 @@
 error_reporting(E_ALL ^ E_NOTICE);
 
 include("functions.php");
+include("category_class.php");
+include("field_class.php");
+include("item_class.php");
+include("file_class.php");
+include("alert_class.php");
 
 $errors = array();
 
@@ -55,11 +60,11 @@ if ($_REQUEST["action"] == "upgrade"){
 		$errors[] = 'Please enter the MySQL password.';
 	}
 	
-	$files_to_read = array("./","./admin","./images","./docs","./docs/images","./fonts","./item_files");
+	$files_to_read = array("./","./admin","./docs","./docs/images","./fonts","./item_files");
 	
 	foreach($files_to_read as $file){
 		if (!is_readable(realpath($file))){
-			$errors[] = "The path ".realpath($file)." is not readable.";
+			$errors[] = "The path ".realpath($file)." (".$file.") is not readable.";
 		}
 	}
 	

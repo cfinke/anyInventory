@@ -23,7 +23,7 @@ class file_object{
 		
 		// Get the information about this file.
 		$query = "SELECT * FROM `anyInventory_files` WHERE `id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		$row = mysql_fetch_array($result);
 		
 		// Set the id of the item that owns this file.

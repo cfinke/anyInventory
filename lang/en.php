@@ -2,6 +2,8 @@
 
 // English language file
 
+define('LANGUAGE','Language');
+
 define('ID_MATCH','Unique ID Match');
 define('NAME_MATCH',NAME_FIELD_NAME.' Match');
 

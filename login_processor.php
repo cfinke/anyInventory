@@ -4,7 +4,7 @@ include("globals.php");
 
 if ($_REQUEST["action"] == "log_in"){
 	$query = "SELECT * FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 	
 	if (mysql_num_rows($result) == 0){
 		header("Location: login.php?f=1&return_to=".$_POST["return_to"]);

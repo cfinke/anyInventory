@@ -31,7 +31,7 @@ elseif ($_POST["action"] == "generate"){
 	foreach($_POST["i"] as $item_id){
 		$item = new item($item_id);
 		
-		if ($item->fields[$_POST["f"]] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_POST["f"].'" style="height: 61px;" /><br />';
+		if ($item->fields[$_POST["f"]] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_POST["f"].'" /><br />';
 	}
 }
 elseif (!isset($_POST["c"])){
@@ -80,7 +80,7 @@ elseif (!isset($_POST["i"])){
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) == 0){
 		header("Location: error_handler.php?eid=3");

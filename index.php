@@ -31,7 +31,7 @@ if ($_GET["id"]){
 	$output .= $item->export_description();
 	
 	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%' AND `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
 		$output .= '
@@ -58,7 +58,7 @@ if ($_GET["id"]){
 else{
 	if ($_GET["c"] == 0){
 		$query = "SELECT * FROM `anyInventory_config` WHERE `key`='FRONT_PAGE_TEXT'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		if (mysql_num_rows($result) > 0){
 			$output .= '<p style="padding: 0px 0px 15px 0px;">'.mysql_result($result, 0, 'value').'</p>';
@@ -75,7 +75,7 @@ else{
 	
 	if($admin_user->can_admin($category->id)){
 		if ($category->id != 0){
-			$output .= ' ( <a href="admin/edit_category.php?id='.$_GET["c"].'">'.EDIT.'t</a> | <a href="admin/delete_category.php?id='.$_GET["c"].'">'._DELETE.'</a> | ';
+			$output .= ' ( <a href="admin/edit_category.php?id='.$_GET["c"].'">'.EDIT.'</a> | <a href="admin/delete_category.php?id='.$_GET["c"].'">'._DELETE.'</a> | ';
 		}
 		else{
 			$output .= ' (';
@@ -111,7 +111,7 @@ else{
 	
 	// Display any items in this category.
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if (($_GET["c"] != 0) || (mysql_num_rows($result) > 0)){
 		$output .= '
@@ -158,7 +158,7 @@ else{
 		<td style="padding-left: 5px;">';
 	
 	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	while ($row = mysql_fetch_array($result)){
 		$alert = new alert($row["id"]);

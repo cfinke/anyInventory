@@ -14,7 +14,7 @@ $output .= '<table>';
 if (is_array($search_terms)){
 	if ((count($search_terms) == 1) && (is_numeric($search_terms[0]))){
 		$search_query = "SELECT `id` FROM `anyInventory_items` WHERE `id`='".$search_terms[0]."'";
-		$search_result = mysql_query($search_query) or die(mysql_error() . '<br /><br />' . $search_query);
+		$search_result = mysql_query($search_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $search_query);
 		
 		if (mysql_num_rows($search_query) > 0){
 			$row = mysql_fetch_array($search_query);
@@ -41,7 +41,7 @@ if (is_array($search_terms)){
 		$search_query .= " `name` LIKE '%".$search_term."%' AND ";
 	}
 	$search_query = substr($search_query,0,strlen($search_query) - 5);
-	$search_result = mysql_query($search_query) or die(mysql_error() . '<br /><br />'  .$search_query);
+	$search_result = mysql_query($search_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'  .$search_query);
 	
 	if (mysql_num_rows($search_result) > 0){
 		$output .= '
@@ -71,7 +71,7 @@ if (is_array($search_terms)){
 	}
 	
 	$search_query = substr($search_query,0,strlen($search_query) - 4).") GROUP BY `item_id` ORDER BY `num_matches` DESC";
-	$search_result = mysql_query($search_query) or die(mysql_error() . '<br /><br />'  .$search_query);
+	$search_result = mysql_query($search_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'  .$search_query);
 	
 	if (mysql_num_rows($search_result) > 0){
 		$output .= '

@@ -7,7 +7,7 @@ $cr = "\n";
 $output .= '<?xml version="1.0" ?>'.$cr.'<anyinventory>'.$cr;
 
 $query = "SELECT * FROM `anyInventory_fields` ORDER BY `importance` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 
 if (mysql_num_rows($result) > 0){
 	$output .= '	<fields>'.$cr;
@@ -61,7 +61,7 @@ if (is_array($cat_ids)){
 		$output .= '		<category id="'.$category->id.'" name="'.$category->breadcrumb_names.'">'.$cr;
 		
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 		
 		while ($row = mysql_fetch_array($result)){
 			$item = new item($row["id"]);

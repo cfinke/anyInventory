@@ -25,7 +25,7 @@ class alert {
 		$this->id = $alert_id;
 		
 		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time`, UNIX_TIMESTAMP(`expire_time`) AS `unix_expire_time` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		$row = mysql_fetch_array($result);
 		
 		$this->title = $row["title"];
@@ -72,7 +72,7 @@ class alert {
 			$query = "UPDATE `anyInventory_alerts` SET `item_ids`='".serialize($this->item_ids)."' WHERE `id`='".$this->id."'";
 		}
 		
-		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 	
 	// This function returns a full description of the item.

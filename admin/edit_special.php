@@ -13,7 +13,7 @@ switch($_GET["id"]){
 		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_AUTOINC_FIELD;
 		
 		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `auto_inc_field`='1'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 		
 		$categories = array();
 		

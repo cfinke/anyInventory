@@ -38,7 +38,7 @@ if (PP_VIEW){
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 
 while($row = mysql_fetch_array($result)){
 	$output .= '<option value="'.$row["id"].'" selected="selected">'.$row["username"].'</option>';
@@ -58,7 +58,7 @@ if (PP_ADMIN){
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 
 while($row = mysql_fetch_array($result)){
 	$output .= '<option value="'.$row["id"].'">'.$row["username"].'</option>';
@@ -74,7 +74,7 @@ $output .= '
 						<tr>
 							<td class="form_label">'.FIELDS.':</td>
 							<td class="form_input">
-								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" checked="checked" /> '.SHOW_AUTOINC_FIELD.'<br /><br />
+								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" /> '.SHOW_AUTOINC_FIELD.'<br /><br />
 								<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" checked="checked" /> '.INHERIT_FIELDS.'<br /><br />
 								'.get_fields_checkbox_area().'
 							</td>

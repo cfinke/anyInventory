@@ -19,7 +19,7 @@ class item {
 		
 		// Get the information about this item.
 		$query = "SELECT * FROM `anyInventory_items` WHERE `id` = '".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 		$row = mysql_fetch_array($result);
 		
 		// Set the item name.
@@ -29,7 +29,7 @@ class item {
 		$this->category = new category($row["item_category"]);
 		
 		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 				
 		while($row = mysql_fetch_array($result)){
 			$field = new field($row["field_id"]);
@@ -60,7 +60,7 @@ class item {
 		
 		// Get each of this item's files and add it to the array.
 		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key` = '".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 		
 		while ($row = mysql_fetch_array($result)){
 			$this->files[] = new file_object($row["id"]);
@@ -236,11 +236,11 @@ class item {
 			}
 			
 			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type` = 'item'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 			
 			while ($row = mysql_fetch_array($result)){
 				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%' GROUP BY `item_id`";
-				$result2 = mysql_query($query2) or die(mysql_error() . '<br /><br />' . $query2);				
+				$result2 = mysql_query($query2) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query2);				
 
 				while ($row2 = mysql_fetch_array($result2)){
 					$backlinks[] = $row2["item_id"];

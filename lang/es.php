@@ -2,6 +2,8 @@
 
 define('SUBMIT_REPORT','You can assist in the development of anyInventory by <a href="https://sourceforge.net/tracker/?func=add&group_id=110239&atid=655777">submitting this error as a bug report</a>.');
 
+define('LANGUAGE','Lengua');
+
 // Dates (Fechas)
 define('MONTH_1','Enero');
 define('MONTH_2','Febrero');

@@ -17,14 +17,14 @@ $query = "CREATE TABLE `anyInventory_values` (
 @mysql_query($query);
 
 $query = "SELECT * FROM `anyInventory_categories`";
-$result = mysql_query($query) or die(mysql_error() . '<br />' . $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $query);
 
 while ($row = mysql_fetch_array($result)){
 	$newquery = "SELECT * FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$row["id"]."\"%'";
-	$newresult = mysql_query($newquery) or die(mysql_error() . '<br />' . $newquery);
+	$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newquery);
 	
 	$newestquery = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."' ORDER BY `id`";
-	$newestresult = mysql_query($newestquery) or die(mysql_error() . '<br />' . $newestquery);
+	$newestresult = mysql_query($newestquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newestquery);
 	
 	while ($newestrow = mysql_fetch_array($newestresult)){
 		while ($newrow = mysql_fetch_array($newresult)){
@@ -42,12 +42,12 @@ while ($row = mysql_fetch_array($result)){
 }
 
 $query = "SHOW COLUMNS FROM `anyInventory_items`";
-$result = mysql_query($query) or die(mysql_error() . '<br />' . $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $query);
 
 while ($row = mysql_fetch_array($result)){
 	if (($row["Field"] != 'id') && ($row["Field"] != 'name') && ($row["Field"] != 'item_category')){
 		$newquery = "ALTER TABLE `anyInventory_items` DROP `".$row["Field"]."`";
-		mysql_query($newquery) or die(mysql_error() . '<br />' . $newquery);
+		mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newquery);
 	}
 }
 

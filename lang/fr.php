@@ -5,6 +5,8 @@
 define('ID_MATCH','Identifiant Unique Correspondant');
 define('NAME_MATCH',NAME_FIELD_NAME.' correspondant');
 
+define('LANGUAGE','Langue');
+
 // Dates
 define('MONTH_1','Janvier');
 define('MONTH_2','F&#233;vrier');
@@ -35,7 +37,7 @@ define('FOOTER_TEXT_POST','articles avec '.ANYINVENTORY_LINK);
 define('HELP','Aide');
 define('EDIT','Editer');
 define('_DELETE','Supprimer');
-define('CANCEl','Abandonner');
+define('CANCEL','Abandonner');
 define('SUBMIT','Soumettre');
 define('VALUE','Valeur');
 define('NAME','Nom');
@@ -162,8 +164,8 @@ define('CONDITION','Condition');
 define('ADD_ALERT','Ajouter une Alerte');
 define('ADD_ALERT_IN','Ajouter une alerte dans');
 define('ALERT_TITLE','Titre de l&#146;alerte');
-define('TIMED_ONLY_LABEL','Faire que cette alerte soit <a href="../docs/en/alerts.php#time_based">bas=E9 sur le temps seulement</a>.');
-define('TIMED_ONLY_EXPLANATION','Pour les alertes temporelles, vous n&#146;avez pas besoin de compl=E9ter le champ, la condition, ou la valeur.');
+define('TIMED_ONLY_LABEL','Faire que cette alerte soit <a href="../docs/fr/alerts.php#time_based">basé sur le temps seulement</a>.');
+define('TIMED_ONLY_EXPLANATION','Pour les alertes temporelles, vous n&#146;avez pas besoin de compléter le champ, la condition, ou la valeur.');
 define('DELETE_ALERT','Supprimer l&#146;Alerte');
 define('DELETE_ALERT_CONFIRM','Etes vous s&#251;r de vouloir supprimer cette alerte?');
 define('EDIT_ALERT','Editer l&#146;Alerte');

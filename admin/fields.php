@@ -6,7 +6,7 @@ $title = FIELDS;
 $breadcrumbs = ADMINISTRATION.' > '.FIELDS;
 
 $query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
 if ($admin_user->usertype == 'Administrator'){
 	$table_rows .= '

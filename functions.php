@@ -50,11 +50,11 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 	// with the id $id.
 	
 	$query = "SELECT `id`,`name` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 		$category_name = mysql_result($newresult, 0, 'name');
 		$pre .= $category_name . ' > ';
 	}
@@ -111,7 +111,7 @@ function get_item_options($cat_ids = 0, $selected = null){
 	$query = substr($query, 0, strlen($query) - 2);
 	
 	$query .= ")";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	while ($row = mysql_fetch_array($result)){
 		$options .= '<option value="'.$row["id"].'"';
@@ -127,7 +127,7 @@ function get_fields_checkbox_area($checked = array()){
 	// Any field ids in the array $checked will be checked.
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
@@ -171,7 +171,7 @@ function get_category_array($top = 0){
 	
 	if ($top != 0){
 		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$top."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		if (mysql_num_rows($result) > 0){
 			$array[] = array("name"=>mysql_result($result, 0, 'name'),"id"=>$top);
@@ -190,11 +190,11 @@ function get_array_children($id, &$array, $pre = ""){
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 		$pre .= mysql_result($newresult, 0, 'name') . ' > ';
 	}
 	
@@ -231,7 +231,7 @@ function get_array_id_children($id, &$array){
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
 		while ($row = mysql_fetch_array($result)){
@@ -266,11 +266,11 @@ function delete_subcategory($category){
 	}
 	
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 	while ($row = mysql_fetch_array($result)){
 		$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 		
 		while ($newrow = mysql_fetch_array($newresult)){
 			$alert = new alert($newrow["id"]);
@@ -279,21 +279,21 @@ function delete_subcategory($category){
 			
 			if (count($alert->item_ids) == 0){
 				$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-				mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+				mysql_query($newerquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newerquery);
 			}
 			
 			$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$newrow["id"]."'";
-			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 	}
 	
 	// Delete all of the items in the category
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	// Delete this category.
 	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	remove_from_fields($category->id);
 	
@@ -303,7 +303,7 @@ function delete_subcategory($category){
 function remove_from_fields($cat_id){
 	// This function removes all fields from a category.
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$cat_id."\"%'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
@@ -366,7 +366,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 				}
 			}
 			
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);			
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);			
 			
 			if (mysql_num_rows($result) == 0){
 				header("Location: ../error_handler.php?eid=3");
@@ -378,7 +378,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 				}
 				
 				$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (".implode(", ",$c).")";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);				
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);				
 				
 				if (mysql_num_rows($result) == 0){
 					header("Location: ../error_handler.php?eid=2");
@@ -419,7 +419,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 		</tr>
 		<tr>
 			<td class="form_label"><input onclick="toggle();" type="checkbox" id="timed" name="timed" value="yes"'.$timed_checked.' /></td>
-			<td class="form_input"><label for="timed">'.TIMED_ONLY_LABEL.'</label>.
+			<td class="form_input"><label for="timed">'.TIMED_ONLY_LABEL.'</label>
 			<br /><small>'.TIMED_ONLY_EXPLANATION.'</small></td>
 		</tr>
 		<tr>

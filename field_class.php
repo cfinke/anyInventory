@@ -18,7 +18,7 @@ class field {
 		
 		// Get the information about this field.
 		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		$row = mysql_fetch_array($result);
 		
 		// Set the name and input type
@@ -83,7 +83,7 @@ class field {
 		if ($this->input_type != 'divider'){
 			if (is_array($cat_ids)){
 				$query = "UPDATE `anyInventory_fields` SET `categories`='".serialize($cat_ids)."' WHERE `id`='".$this->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			}
 			
 			return;

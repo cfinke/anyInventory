@@ -50,7 +50,7 @@
 							if (isset($_SESSION["user"]["id"]) || !PP_ADMIN){
 								if (PP_ADMIN || PP_VIEW){
 									echo '
-										<td style="width: 15%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a>:</td>
+										<td style="width: 10%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a>:</td>
 										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">'.FIELDS.'</a></td>
 										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">'.CATEGORIES.'</a></td>
 										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">'.ITEMS.'</a></td>
@@ -59,7 +59,7 @@
 								}
 								else{
 									echo '
-										<td style="width: 20%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a>:</td>
+										<td style="width: 15%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a>:</td>
 										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">'.FIELDS.'</a></td>
 										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">'.CATEGORIES.'</a></td>
 										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">'.ITEMS.'</a></td>
@@ -68,11 +68,11 @@
 							}
 							else{
 								echo '
-									<td style="width: 55%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a></td>';
+									<td style="width: 50%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a></td>';
 							}
 							
 							?>
-							<td style="width: 20%; text-align: right; vertical-align: middle;" class="submitButtonRow">
+							<td style="width: 25%; text-align: right; vertical-align: middle;" class="submitButtonRow">
 								<form action="<?php echo $DIR_PREFIX; ?>search.php" method="get">
 									<input type="hidden" name="action" value="quick_search" />
 									<?php

@@ -47,7 +47,7 @@ else{
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) == 0){
 		header("Location: ../error_handler.php?eid=3");
@@ -83,7 +83,7 @@ else{
 		$query = substr($query, 0, strlen($query) - 2);
 		
 		$query .= ")";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		if (mysql_num_rows($result) == 0){
 			header("Location: ../error_handler.php?eid=2");

@@ -19,6 +19,32 @@ $output .= '
 			<td class="tableData" colspan="2">
 				<table>
 					<tr>
+						<td style="width: 10%; text-align: center;">&nbsp;</td>
+						<td>
+							<b>'.LANGUAGE.':</b>';
+
+if ($admin_user->usertype == 'Administrator'){
+	$output .= '
+							<form action="special_processor.php" method="post" style="margin: 0; padding: 0; display: inline;">
+								<input type="hidden" name="action" value="change_lang" />
+								<select name="lang" id="lang">
+									<option value="en"';if(LANG == "en") $output .= ' selected="selected"'; $output .= '>English</option>
+									<option value="es"';if(LANG == "es") $output .= ' selected="selected"'; $output .= '>Espa&ntilde;ol</option>
+									<option value="fr"';if(LANG == "fr") $output .= ' selected="selected"'; $output .= '>Francais</option>
+								</select>
+								<input type="submit" name="submit" value="'.SUBMIT.'" />
+							</form>';
+}
+else{
+	if(LANG == "en") $output .= 'English';
+	elseif(LANG == "es") $output .= 'Espa&ntilde;ol';
+	elseif(LANG == "fr") $output .= 'Francais';
+}
+
+$output .= '
+						</td>
+					</tr>
+					<tr>
 						<td style="width: 10%; text-align: center;">';
 
 if ($admin_user->usertype == 'Administrator'){

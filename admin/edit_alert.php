@@ -36,7 +36,7 @@ if (is_array($alert->category_ids)){
 	}
 }
 
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
 if (mysql_num_rows($result) == 0){
 	header("Location: ../error_handler.php?eid=3");

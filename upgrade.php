@@ -106,7 +106,7 @@ if ($_POST["action"] == "upgrade"){
 				// Fix field values data type
 				
 				$query = "SELECT `id`,`values` FROM `anyInventory_fields`";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result)){
 					$values = unserialize($row["values"]);
@@ -124,14 +124,14 @@ if ($_POST["action"] == "upgrade"){
 						$sql_values = serialize($values);
 						
 						$new_query = "UPDATE `anyInventory_fields` SET `values`='".$sql_values."' WHERE `id`='".$row["id"]."'";
-						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 					}
 				}
 				
 				// Fix field categories data type
 				
 				$query = "SELECT `id`,`categories` FROM `anyInventory_fields`";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result)){
 					$categories = unserialize($row["categories"]);
@@ -151,7 +151,7 @@ if ($_POST["action"] == "upgrade"){
 						$sql_categories = serialize($categories);
 						
 						$new_query = "UPDATE `anyInventory_fields` SET `categories`='".$sql_categories."' WHERE `id`='".$row["id"]."'";
-						mysql_query($new_query) or die(mysql_error() . '<br /><br />'. $new_query);
+						mysql_query($new_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $new_query);
 					}
 				}
 				
@@ -169,14 +169,14 @@ if ($_POST["action"] == "upgrade"){
 				@mysql_query($query);
 				
 				$query = "SELECT COUNT(`key`) AS `num_files` FROM `anyInventory_files` GROUP BY `key` ORDER BY `key` DESC LIMIT 1";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 					$max_files = $row["num_files"];
 					
 					if ($max_files > 0){
 						$catquery = "SELECT `id` FROM `anyInventory_categories`";
-						$catresult = mysql_query($catquery) or die(mysql_error() . '<br /><br />'. $catquery);
+						$catresult = mysql_query($catquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $catquery);
 						
 						$cat_ids = array();
 						$values = array();
@@ -194,7 +194,7 @@ if ($_POST["action"] == "upgrade"){
 						}
 						
 						$query = "SELECT `id`,`key` FROM `anyInventory_files` ORDER BY `key`,`id`";
-						$file_result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						$file_result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 						
 						$currrent_key = 0;
 						
@@ -205,7 +205,7 @@ if ($_POST["action"] == "upgrade"){
 							}
 							
 							$query = "UPDATE `anyInventory_items` SET `Generic File ".$i."`='".$file_row["id"]."' WHERE `id`='".$file_row["key"]."'";
-							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+							mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 							
 							$i++;
 						}
@@ -220,7 +220,7 @@ if ($_POST["action"] == "upgrade"){
 				// Run script to add a category array for each alert
 				
 				$query = "SELECT * FROM `anyInventory_alerts`";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 					if (!is_array(unserialize($row["category_ids"]))){
@@ -231,7 +231,7 @@ if ($_POST["action"] == "upgrade"){
 						$category_ids = array($item->category->id);
 						
 						$newquery = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($category_ids)."' WHERE `id`='".$row["id"]."'";
-						$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+						$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 					}
 				}
 			
@@ -302,10 +302,10 @@ if ($_POST["action"] == "upgrade"){
 				@mysql_query($query);
 				
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
-				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
-				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider' ) DEFAULT 'text' NOT NULL ";
 				@mysql_query($query);
@@ -338,10 +338,10 @@ if ($_POST["action"] == "upgrade"){
 				
 				while ($row = mysql_fetch_array($result)){
 					$newquery = "SELECT * FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$row["id"]."\"%'";
-					$newresult = mysql_query($newquery) or die(mysql_error() . '<br />' . $newquery);
+					$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newquery);
 					
 					$newestquery = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."' ORDER BY `id`";
-					$newestresult = mysql_query($newestquery) or die(mysql_error() . '<br />' . $newestquery);
+					$newestresult = mysql_query($newestquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newestquery);
 					
 					while ($newestrow = mysql_fetch_array($newestresult)){
 						while ($newrow = mysql_fetch_array($newresult)){
@@ -364,7 +364,7 @@ if ($_POST["action"] == "upgrade"){
 				while ($row = mysql_fetch_array($result)){
 					if (($row["Field"] != 'id') && ($row["Field"] != 'name') && ($row["Field"] != 'item_category')){
 						$newquery = "ALTER TABLE `anyInventory_items` DROP `".$row["Field"]."`";
-						mysql_query($newquery) or die(mysql_error() . '<br />' . $newquery);
+						mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newquery);
 					}
 				}
 		}
@@ -482,16 +482,6 @@ elseif(!$globals_error){
 	$output .= '	<input type="hidden" name="action" value="upgrade" />
 					<table>
 						<tr>
-							<td class="form_label"><label for="db_host">Language:</label></td>
-							<td class="form_input">
-								<select name="lang" id="lang">
-									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
-									<option value="es"';if($_REQUEST["lang"] == "es") $output .= ' selected="selected"'; $output .= '>Espa&ntilde;ol</option>
-									<option value="fr"';if($_REQUEST["lang"] == "fr") $output .= ' selected="selected"'; $output .= '>Français</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
 							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
 							<td class="form_input">
 								<select name="old_version">
@@ -507,6 +497,26 @@ elseif(!$globals_error){
 									<option value="1.1"';if($_REQUEST["old_version"] == '1.1')$output .= ' selected="selected"'; $output .= '>1.1</option>
 									<option value="1.0"';if($_REQUEST["old_version"] == '1.0')$output .= ' selected="selected"'; $output .= '>1.0</option>
 								</select>
+							</td>
+						</tr>
+						<tr class="tableHeader">
+							<td colspan="2">
+								Language
+							</td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="db_host">Language:</label></td>
+							<td class="form_input">
+								<select name="lang" id="lang">
+									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
+									<option value="es"';if($_REQUEST["lang"] == "es") $output .= ' selected="selected"'; $output .= '>Espa&ntilde;ol</option>
+									<option value="fr"';if($_REQUEST["lang"] == "fr") $output .= ' selected="selected"'; $output .= '>Francais</option>
+								</select>
+							</td>
+						</tr>
+						<tr class="tableHeader">
+							<td colspan="2">
+								Database
 							</td>
 						</tr>
 						<tr>
@@ -525,6 +535,12 @@ elseif(!$globals_error){
 							<td class="form_label"><label for="db_name">MySQL Database:</label></td>
 							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_POST["db_name"]).'" /></td>
 						</tr>
+						<tr class="tableHeader">
+							<td colspan="2">
+								Password Protection
+							</td>
+						</tr>
+						<tr>
 							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_view" id="password_protect_view" value="yes"'.$pp_view_checked.' /></td>
 							<td class="form_input"><label for="password_protect">Password protect entire inventory</label></td>
 						</tr>

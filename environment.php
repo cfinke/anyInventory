@@ -11,7 +11,7 @@ include($DIR_PREFIX."functions.php");
 connect_to_database();
 
 $query = "SELECT * FROM `anyInventory_config`";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 
 while ($row = mysql_fetch_array($result)){
 	define($row["key"],$row["value"]);

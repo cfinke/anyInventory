@@ -55,7 +55,7 @@ if (PP_VIEW){
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 
 while($row = mysql_fetch_array($result)){
 	$temp_user = new user($row["id"]);
@@ -79,7 +79,7 @@ if (PP_ADMIN){
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 
 while($row = mysql_fetch_array($result)){
 	$temp_user = new user($row["id"]);

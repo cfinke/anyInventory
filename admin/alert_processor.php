@@ -65,7 +65,7 @@ if ($_POST["action"] == "do_add"){
 					 '".(((bool) ($_POST["timed"] == "yes")) / 1)."',
 					 '".$_POST["c"]."'
 					 )";
-		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 }
 elseif($_POST["action"] == "do_edit_cat_ids"){
@@ -88,7 +88,7 @@ elseif($_POST["action"] == "do_edit_cat_ids"){
 		}
 		
 		$query = substr($query, 0, strlen($query) - 4);
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		if (mysql_num_rows($result) == 0){
 			header("Location: ../error_handler.php?eid=3");
@@ -96,7 +96,7 @@ elseif($_POST["action"] == "do_edit_cat_ids"){
 		}
 		else{
 			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($_POST["c"])."'";
-			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			header("Location: edit_alert.php?id=".$_POST["id"]);
 			exit;
@@ -145,11 +145,11 @@ elseif($_POST["action"] == "do_edit"){
 					`expire_time`='".$expire_timestamp."',
 					`timed`='".(((bool) ($_POST["timed"] == "yes")) / 1)."'
 					 WHERE `id`='".$_POST["id"]."'";
-		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 }
 elseif($_POST["action"] == "do_delete"){
-	if ($_POST["delete"] == "Delete"){
+	if ($_POST["delete"] == _DELETE){
 		$alert = new alert($_POST["id"]);
 		
 		if (is_array($alert->category_ids)){
@@ -162,7 +162,7 @@ elseif($_POST["action"] == "do_delete"){
 		}
 		
 		$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_POST["id"]."'";
-		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 }
 

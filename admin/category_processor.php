@@ -10,7 +10,7 @@ if ($_POST["action"] == "do_add"){
 	else{
 		// Add a category.
 		$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_POST["name"]."','".$_POST["parent"]."','".((int) (($_POST["auto_inc"] == "yes") / 1))."')";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		// Get the id of the category
 		$this_id = mysql_insert_id();
@@ -65,7 +65,7 @@ elseif($_POST["action"] == "do_edit"){
 				`parent`='".$_POST["parent"]."',
 				`auto_inc_field`='".((int) (($_POST["auto_inc"] == "yes") / 1))."'
 				WHERE `id`='".$_POST["id"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	// Remove the category from all of the fields
 	if (is_array($old_category->field_ids)){
@@ -116,7 +116,7 @@ elseif($_POST["action"] == "do_edit"){
 	}
 	
 	$query = "SELECT `id` FROM `anyInventory_users` WHERE `usertype` != 'Administrator'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if (PP_ADMIN || PP_VIEW){
 		while ($row = mysql_fetch_array($result)){
@@ -146,7 +146,7 @@ elseif($_POST["action"] == "do_edit"){
 }
 elseif($_POST["action"] == "do_delete"){
 	// Make sure the user clicked "Delete" and not "Cancel"
-	if ($_POST["delete"] == "Delete"){
+	if ($_POST["delete"] == _DELETE){
 		if (!$admin_user->can_admin($_POST["id"])){
 			header("Location: ../error_handler.php?eid=13");
 			exit;
@@ -157,15 +157,15 @@ elseif($_POST["action"] == "do_delete"){
 			
 			// Delete the category
 			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_POST["id"]."'"; 
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			if ($_POST["item_action"] == "delete"){
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result)){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+					$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 		
 					while ($newrow = mysql_fetch_array($newresult)){
 						$alert = new alert($newrow["id"]);
@@ -174,24 +174,24 @@ elseif($_POST["action"] == "do_delete"){
 			
 						if (count($alert->item_ids) == 0){
 							$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-							mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+							mysql_query($newerquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newerquery);
 						}
 					}
 				}
 				
 				// Delete all of the items in the category
 				$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			}
 			elseif($_POST["item_action"] == "move"){
 				$newcategory = new category($_POST["move_items_to"]);
 				
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
 				while($row = mysql_fetch_array($result)){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+					$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 		
 					while ($newrow = mysql_fetch_array($newresult)){
 						$alert = new alert($newrow["id"]);
@@ -201,15 +201,16 @@ elseif($_POST["action"] == "do_delete"){
 			
 							if (count($alert->item_ids) == 0){
 								$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-								mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+								mysql_query($newerquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newerquery);
 							}
 						}
 					}
 				}
 				
 				// Move the items to a different category
-								$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				
+				$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			}
 			
 			if ($_POST["subcat_action"] == "delete"){
@@ -219,7 +220,7 @@ elseif($_POST["action"] == "do_delete"){
 			elseif($_POST["subcat_action"] == "move"){
 				// Move the subcategories
 				$query = "UPDATE `anyInventory_categories` SET `parent`='".$_POST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			}
 			
 			// Remove all of the fields from this category.

@@ -126,7 +126,7 @@ if (is_array($item->category->field_ids)){
 						foreach($view_user->categories_view as $cat_id){
 							$category = new category($cat_id);
 							
-							$options = get_item_options($cat_id, $item->fields[$field->name]);
+							$options = get_item_options($cat_id, $item->fields[$field->name], $item->id, false);
 							
 							if ($options != ''){
 								$output .= '<optgroup label="'.$category->breadcrumb_names.'">';

@@ -151,7 +151,7 @@ else{
 							foreach($view_user->categories_view as $cat_id){
 								$category = new category($cat_id);
 								
-								$options = get_item_options($cat_id, 0);
+								$options = get_item_options($cat_id, null, null, false);
 								
 								if ($options != ''){
 									$output .= '<optgroup label="'.$category->breadcrumb_names.'">';

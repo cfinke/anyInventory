@@ -15,7 +15,8 @@ $output .= '
 				<p>You cannot delete the administrator user added during the install, and you cannot delete your own user.</p>
 			</td>
 		</tr>
-	</table><div style="float: left;"><a href="editing_users.php">&lt;&lt; Previous: Editing Users</a></div>
+	</table>
+	<div style="float: left;"><a href="editing_users.php">&lt;&lt; Previous: Editing Users</a></div>
 	<div style="text-align: right;"><a href="fields.php">Next: Fields &gt;&gt;</a></div>';
 
 display($output);

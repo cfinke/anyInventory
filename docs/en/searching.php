@@ -19,9 +19,10 @@ $output .= '
 					<li>If you enter more than one term, anyInventory will seach for an item that has each of the search terms contained somewhere within one or more of its fields.</li>
 				</ol>
 				<p>anyInventory will then return the results ordered by category.  Boolean searches are not currently supported (ie. using "AND" or "OR" will not affect the search).</p>
-		</td>
-	</tr>
-	</table><div style="float: left;"><a href="labels.php">&lt;&lt; Previous: Labels</a></div>
+			</td>
+		</tr>
+	</table>
+	<div style="float: left;"><a href="labels.php">&lt;&lt; Previous: Labels</a></div>
 	<div style="text-align: right;"><a href="whats_next.php">Next: What\'s Next? &gt;&gt;</a></div>';
 
 display($output);

@@ -13,6 +13,7 @@ $output .= '
 		<tr>
 			<td class="tableData">
 				<p>This page details some of the features that will be added to anyInventory in future releases.</p>
+				<p><b>Stronger CSS support:</b> The layout of anyInventory is currently being re-written using strict HTML for markup and CSS for layout.  This will make it easier for users of anyInventory to apply their own themes more easily.</p>
 				<p><b>Multiple-condition alerts:</b> This will allow you to specify an alert for more than one condition on an item.</p>
 				<p><b>XML File Support:</b> This feature will allow you to download and upload your inventory as an XML file, for easy backups and easy restores.</p>
 				<p><b>Improved advanced search:</b> The search page will be improved to allow for specify whether the entered search terms should be equal to, not equal to, less than, etc. the intended resulting items.</p>

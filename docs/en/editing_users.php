@@ -19,7 +19,8 @@ $output .= '
 				</ul>
 			</td>
 		</tr>
-	</table><div style="float: left;"><a href="adding_users.php">&lt;&lt; Previous: Adding Users</a></div>
+	</table>
+	<div style="float: left;"><a href="adding_users.php">&lt;&lt; Previous: Adding Users</a></div>
 	<div style="text-align: right;"><a href="deleting_users.php">Next: Deleting Users &gt;&gt;</a></div>';
 
 display($output);

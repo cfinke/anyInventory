@@ -12,10 +12,11 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData">
-	<p>When you delete an item, all related files will be deleted as well.  The rest is pretty self-explanatory.</p>
-		</td>
-	</tr>
-	</table><div style="float: left;"><a href="moving_items.php">&lt;&lt; Previous: Moving Items</a></div>
+				<p>When you delete an item, all related files will be deleted as well.  The rest is pretty self-explanatory.</p>
+			</td>
+		</tr>
+	</table>
+	<div style="float: left;"><a href="moving_items.php">&lt;&lt; Previous: Moving Items</a></div>
 	<div style="text-align: right;"><a href="alerts.php">Next: Alerts &gt;&gt;</a></div>';
 
 display($output);

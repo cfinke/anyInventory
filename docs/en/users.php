@@ -24,7 +24,8 @@ $output .= '
 				<p>The administrator account that is created at install cannot be deleted.  This is to ensure that one cannot get accidentally locked out of the inventory system by deleting all users.</p>
 			</td>
 		</tr>
-	</table><div style="float: left;"><a href="introduction.php">&lt;&lt; Previous: Introduction</a></div>
+	</table>
+	<div style="float: left;"><a href="introduction.php">&lt;&lt; Previous: Introduction</a></div>
 	<div style="text-align: right;"><a href="adding_users.php">Next: Adding Users &gt;&gt;</a></div>';
 
 display($output);

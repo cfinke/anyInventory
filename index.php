@@ -85,7 +85,7 @@ else{
 	}
 	
 	$output .= '			</td>
-							<td style="text-align: right;">[<a href="../docs/categories.php">Help</a>]</td>
+							<td style="text-align: right;">[<a href="docs/categories.php">Help</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -123,7 +123,7 @@ else{
 		}
 		
 		$output .= '</td>
-					<td style="text-align: right;">[<a href="../docs/items.php">Help</a>]</td>
+					<td style="text-align: right;">[<a href="docs/items.php">Help</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

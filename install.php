@@ -143,6 +143,7 @@ if ($_REQUEST["action"] == "install"){
 				  `size` int(11) NOT NULL default '0',
 				  `categories` text NOT NULL,
 				  `importance` int(11) NOT NULL default '0',
+				  `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`),
 				  UNIQUE KEY `name` (`name`)
 				) TYPE=MyISAM";

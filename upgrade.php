@@ -247,6 +247,9 @@ if ($_REQUEST["action"] == "upgrade"){
 				
 				$query = "ALTER TABLE `anyInventory_categories` ADD `auto_inc_field` TINYINT( 1 ) DEFAULT '0' NOT NULL";
 				@mysql_query($query);
+				
+				$query = "ALTER TABLE `anyInventory_fields` ADD `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL";
+				@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.

@@ -5,13 +5,13 @@ include("globals.php");
 $title = 'anyInventory: Items';
 
 $output .= '<p><a href="add_item.php">Add an item.</a></p>';
-$query = "SELECT *,'' as `nosortcol_`,`name` as `sortcol_Name` FROM `anyInventory_items`";
-$data_obj = new dataset_library("Items", $query, $_REQUEST, "mysql","name");
-$result = $data_obj->get_result_resource();
-$rows = $data_obj->get_result_set();
+$query = "SELECT * FROM `anyInventory_items`";
+$result = query($query);
 
 if (mysql_num_rows($result) > 0){
 	$i = 0;
+	
+	$table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td></tr>';
 	
 	while($row = mysql_fetch_assoc($result)){
 		$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
@@ -30,8 +30,6 @@ if (mysql_num_rows($result) > 0){
 else{
 	$table_set .= '<tr class="row_off"><td colspan="2">There are no items to display.</td></tr>';
 }
-
-$table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();
 
 $output .= '<table style="width: 100%; background-color: #000000;" cellspacing="1" cellpadding="2">'.$table_set.'</table>';
 

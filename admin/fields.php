@@ -4,21 +4,15 @@ include("globals.php");
 
 $title = 'anyInventory: Fields';
 
-$query = "SELECT *,
-			'' as `nosortcol_`,
-			`name` as `sortcol_Name`,
-			`input_type` as `nosortcol_Type`,
-			`default_value` as `nosortcol_Default Value`,
-			`size` as `nosortcol_Size` 
-			FROM `anyInventory_fields`";
-$data_obj = new dataset_library("Fields", $query, $_REQUEST, "mysql","importance");
-$result = $data_obj->get_result_resource();
-$rows = $data_obj->get_result_set();
+$query = "SELECT * FROM `anyInventory_fields`";
+$result = query($query);
 
 $output .= '<p><a href="add_field.php">Add a field.</a></p>';
 
 if (mysql_num_rows($result) > 0){
 	$i = 0;
+	
+	$table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td><td>Type</td><td>Default Value</td><td>Size</td></tr>';
 	
 	while($row = mysql_fetch_assoc($result)){
 		$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
@@ -40,8 +34,6 @@ if (mysql_num_rows($result) > 0){
 else{
 	$table_set .= '<tr class="row_off"><td colspan="5">There are no fields to display.</td></tr>';
 }
-
-$table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();
 
 $output .= '<table style="width: 100%; background-color: #000000;" cellspacing="1" cellpadding="3">'.$table_set.'</table>';
 

@@ -15,7 +15,7 @@ if ($_POST["action"] == "do_add"){
 	$category = new category($_POST["c"]);
 	
 	// Put the query together
-	$query = "INSERT INTO `anyInventory_items` (`name`,`item_cateory) VALUES ('".$_POST["name"]."','".$_POST["c"]."')";
+	$query = "INSERT INTO `anyInventory_items` (`name`,`item_category`) VALUES ('".$_POST["name"]."','".$_POST["c"]."')";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 	
 	$key = mysql_insert_id();

@@ -73,14 +73,16 @@ foreach($item->category->field_ids as $field_id){
 $query = "SELECT * FROM `anyInventory_files` WHERE `key`='".$_REQUEST["id"]."'";
 $result = query($query);
 
-if (mysql_num_rows($result) > 0){
+if (is_array($item->files) && (count($item->files) > 0)){
 	$output .= '
 				<tr>
 					<td class="form_label">Files:</td>
 					<td class="form_input">';
 	
-	while($row = mysql_fetch_array($result)){
-		$output .= '<p><input type="checkbox" name="delete_files[]" value="'.$row["id"].'" /> Delete this file: <a href="item_files/'.$row["file_name"].'">'.$row["file_name"].'</a><br /></p>';
+	foreach($item->files as $file){
+		$output .= '<p><input type="checkbox" name="delete_files[]" value="'.$file->id.'" /> Delete this file: '.$file->get_download_link().'';
+		if ($file->has_thumbnail()) $output .= '<br /><img src="thumbnail.php?id='.$file->id.'" />';
+		$output .= '</p>';
 	}
 	
 	$output .= '</td></tr>';

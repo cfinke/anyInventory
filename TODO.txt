@@ -15,6 +15,7 @@ Alerts
 
 BEFORE NEXT RELEASE
 ===================
-Change image uploading to a more generic file upload - ie. allow uploads of PDFs, word docs related to item
+Files: If a file has a previewable format (ie. thumbnails for images) then show that on the item description page and item edit page)
+
 Instructions for use
 Install script

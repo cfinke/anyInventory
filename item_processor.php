@@ -53,7 +53,7 @@ if ($_REQUEST["action"] == "do_add"){
 		$i = 1;
 		
 		do {
-			$filename = $key.".".$i.".".$_FILES["file"]["name"];
+			$filename = $key.".".$i++.".".$_FILES["file"]["name"];
 		} while (is_file($files_dir.$filename));
 		
 		if(!copy($_FILES["file"]["tmp_name"], $files_dir.$filename)){
@@ -137,7 +137,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 		$i = 1;
 		
 		do {
-			$filename = $key.".".$i.".".$_FILES["file"]["name"];
+			$filename = $key.".".$i++.".".$_FILES["file"]["name"];
 		} while (is_file($files_dir.$filename));
 		
 		if(!copy($_FILES["file"]["tmp_name"], $files_dir.$filename)){

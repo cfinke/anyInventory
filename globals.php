@@ -13,6 +13,7 @@ include("functions.php");
 include("category_class.php");
 include("field_class.php");
 include("item_class.php");
+include("file_class.php");
 include("dataset_library.php");
 
 connect_to_database();

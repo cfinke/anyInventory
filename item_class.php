@@ -40,7 +40,7 @@ class item {
 		$result = query($query);
 		
 		while ($row = mysql_fetch_array($result)){
-			$this->files[] = $row;
+			$this->files[] = new file_object($row["id"]);
 		}
 	}
 	

@@ -1,25 +1,32 @@
 <?php
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 class item {
-	var $id;
+	var $id;				// The id of the item, matches up with id field in anyInventory_items
 	
-	var $category;
+	var $category;			// A category object of the category to which this item belongs.
 	
-	var $name;
-	var $fields = array();
-	var $files = array();
+	var $name;				// The name of this item.
+	var $fields = array();	// An associative array, keyed by the field name, consisting of the field values.
+	var $files = array();	// An array of file objects that belong to this item.
 	
 	function item($item_id){
+		// Set the item id.
 		$this->id = $item_id;
 		
+		// Get the information about this item.
 		$query = "SELECT * FROM `anyInventory_items` WHERE `id`='".$this->id."'";
 		$result = query($query);
 		$row = mysql_fetch_array($result);
 		
+		// Set the item name.
 		$this->name = $row["name"];
 		
+		// Create the category object.
 		$this->category = new category($row["item_category"]);
 		
+		// Add each field and its value to the array.
 		if (is_array($this->category->field_ids)){
 			foreach($this->category->field_ids as $field_id){
 				$field = new field($field_id);
@@ -38,6 +45,7 @@ class item {
 			}
 		}
 		
+		// Get each of this item's files and add it to the array.
 		$query = "SELECT * FROM `anyInventory_files` WHERE `key`='".$this->id."'";
 		$result = query($query);
 		
@@ -46,6 +54,8 @@ class item {
 		}
 	}
 	
+	// This function returns a "teaser" or short description and link for the item.
+	
 	function export_teaser(){
 		global $DIR_PREFIX;
 		
@@ -53,13 +63,18 @@ class item {
 		return $output;
 	}
 	
+	// This function returns a full description of the item.
+	
 	function export_description(){
 		global $DIR_PREFIX;
 		
+		// Create the header with the name.
 		$output .= '<h2>'.$this->name.'</h2>';
 		
+		// Get the number of fields that have no value.
 		$num_empty_fields = $this->count_empty_fields();
 		
+		// Output each field with its value.
 		if (is_array($this->fields) && ((count($this->fields) - $num_empty_fields) > 0)){
 			$output .= '<table style="width: 100%;"><tr><td style="width: 50%; vertical-align: top;">';
 			$i = 0;
@@ -84,6 +99,7 @@ class item {
 			$output .= '</td></tr></table>';
 		}
 		
+		// Output a preview of each file.
 		if (is_array($this->files) && (count($this->files) > 0)){
 			foreach($this->files as $file){
 				if ($file->is_image()){
@@ -122,6 +138,8 @@ class item {
 		return $output;
 	}
 	
+	// This function returns the number of fields that have empty values.
+	
 	function count_empty_fields(){
 		foreach($this->fields as $key => $value){
 			if (trim($value) == ''){
@@ -131,6 +149,9 @@ class item {
 		
 		return $count;
 	}
+	
+	// This function returns true if the item is in a subcategory that is, or
+	// is a child of, $cat_id.
 	
 	function in_or_below($cat_id){
 		if (in_array($cat_id, $this->category->breadcrumbs)){

@@ -16,7 +16,7 @@ $inHead = '
 			else{
 				document.getElementById(\'values\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
 				document.getElementById(\'size\').disabled = !(document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
-				document.getElementById(\'default_value\').disabled = false;	
+				document.getElementById(\'default_value\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "checkbox");
 			}
 		}
 		
@@ -26,6 +26,7 @@ $inBodyTag = ' onload="toggle();"';
 $breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Edit Field';
 
 $field = new field($_REQUEST["id"]);
+$checked = ($field->highlight) ? ' checked="checked"' : '';
 
 $output = '
 		<script type="text/javascript">
@@ -59,7 +60,7 @@ $output = '
 						<table>
 							<tr>
 								<td class="form_label"><label for="name">Name:</label></td>
-								<td class="form_input"><input type="text" name="name" id="name" value="'.$field->name.'" /></td>
+								<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',$field->name).'" maxlength="64" /></td>
 							</tr>
 							<tr>
 								<td class="form_label"><label for="name">Data type:</label></td>
@@ -87,11 +88,15 @@ $output = '
 							</tr>
 							<tr>
 								<td class="form_label"><label for="default_value">Default value:</label></td>
-								<td class="form_input"><input type="text" name="default_value" id="default_value" value="'.$field->default_value.'" /></td>
+								<td class="form_input"><input type="text" name="default_value" id="default_value" value="'.$field->default_value.'" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Text\', and \'Radio Buttons\'.</small></td>
 							</tr>
 							<tr>
 								<td class="form_label"><label for="size">Size, in characters:</label></td>
 								<td class="form_input"><input type="text" name="size" id="size" value="'.$field->size.'" /><br /><small>Only for \'text\' data type.</small></td>
+							</tr>
+							<tr>
+								<td class="form_label"><input type="checkbox" name="highlight" value="yes" '.$checked.' /></td>
+								<td class="form_input"><label for="highlight">Highlight this field</label></td>
 							</tr>
 							<tr>
 								<td class="form_label">Apply field to:</td>

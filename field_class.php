@@ -12,6 +12,8 @@ class field {
 	var $size;					// The size (number of characters allowed) of this field, only entered by the user for input type text
 	var $categories = array();	// The ids of the categories that use this field
 	
+	var $highlight;
+	
 	function field($field_id){
 		// Set the id of this field.
 		$this->id = $field_id;
@@ -36,6 +38,8 @@ class field {
 		
 		// Set the categories, which are also stores separated by commas
 		$this->categories = unserialize($row["categories"]);
+		
+		$this->highlight = $row["highlight"];
 	}
 	
 	// This function removes a field from a category.

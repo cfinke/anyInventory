@@ -16,7 +16,7 @@ $inHead = '
 			else{
 				document.getElementById(\'values\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
 				document.getElementById(\'size\').disabled = !(document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
-				document.getElementById(\'default_value\').disabled = false;	
+				document.getElementById(\'default_value\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "checkbox");
 			}
 		}
 		
@@ -41,7 +41,7 @@ $output .= '
 					<table>
 						<tr>
 							<td class="form_label"><label for="name">Name:</label></td>
-							<td class="form_input"><input type="text" name="name" id="name" value="" /></td>
+							<td class="form_input"><input type="text" name="name" id="name" value="" maxlength="64" /></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="name">Data type:</label></td>
@@ -58,15 +58,19 @@ $output .= '
 						</tr>
 						<tr>
 							<td class="form_label"><label for="values">Values:</label></td>
-							<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
+							<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkbox\', and \'Radio Buttons\'.  Separate with commas.</small></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="default_value">Default value:</label></td>
-							<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
+							<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Text\', and \'Radio Buttons\'.</small></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="size">Size, in characters:</label></td>
 							<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label"><input type="checkbox" name="highlight" value="yes" /></td>
+							<td class="form_input"><label for="highlight">Highlight this field</label></td>
 						</tr>
 						<tr>
 							<td class="form_label">Apply field to:</td>

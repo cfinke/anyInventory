@@ -35,7 +35,7 @@ class alert {
 	// This function returns a "teaser" or short description for the alert.
 	
 	function export_teaser(){
-		return $output;
+		return $this->title;
 	}
 	
 	// This function returns a full description of the item.
@@ -45,6 +45,21 @@ class alert {
 		
 		// Create the header with the name.
 		$output .= '<h2>'.$this->title.'</h2>';
+		$output .= '<p><b>Applies to:</b>';
+		foreach($this->item_ids as $item_id){
+			$item = new item($item_id);
+			$output .= '<br />'.$item->export_teaser();
+		}
+		
+		$output .= '</p><p><b>Active when: </b>';
+		
+		$field = new field($this->field_id);
+		
+		$output .= $field->name." ";
+		$output .= $this->condition;
+		$output .= (trim($this->value) == '') ? " ''" : ' '.$this->value;
+		
+		$output .= '</p><p><b>Effective as of:</b> '.date("Y m d",$this->unix_time).'</p>';
 		
 		return $output;
 	}

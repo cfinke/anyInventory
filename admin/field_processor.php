@@ -13,8 +13,15 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 	else{
 		if (($_REQUEST["input_type"] == "select") || ($_REQUEST["input_type"] == "radio")){
-			if (stristr($_REQUEST["values"],$_REQUEST["default_value"]) === false){
+			$_REQUEST["values"] = str_replace("'","",str_replace('"','',stripslashes($_REQUEST["values"])));
+			$_REQUEST["default_value"] = str_replace("'","",str_replace('"','',stripslashes($_REQUEST["default_value"])));
+			
+			if (($_REQUEST["default_value"] == '') || (stristr($_REQUEST["values"],$_REQUEST["default_value"]) === false)){
 				header("Location: ../error_handler.php?eid=1");
+				exit;
+			}
+			elseif(trim($_REQUEST["values"]) == ''){
+				header("Location: ../error_handler.php?eid=7");
 				exit;
 			}
 		}
@@ -22,6 +29,9 @@ if ($_REQUEST["action"] == "do_add"){
 		// Add a field
 		if (($_REQUEST["size"] == '') && ($_REQUEST["input_type"] == "text")){
 			// Set the default text size to 255
+			$_REQUEST["size"] = 255;
+		}
+		elseif(($_REQUEST["size"] != '') && (!is_numeric($_REQUEST["size"]))){
 			$_REQUEST["size"] = 255;
 		}
 		

@@ -3,6 +3,16 @@
 include("globals.php");
 
 $title = "anyInventory: Help > Alerts and Adding Alerts";
+$inHead = '
+	<script type="text/javascript">
+		<!-- 
+			function toggle(num){
+				document.getElementById(\'field\' + num).disabled = document.getElementById(\'timed\' + num).checked;
+				document.getElementById(\'condition\' + num).disabled = document.getElementById(\'timed\' + num).checked;
+				document.getElementById(\'value\' + num).disabled = document.getElementById(\'timed\' + num).checked;
+			}
+		// -->
+	</script>';
 
 $output .= '
 	<h2>Alerts</h2>
@@ -28,9 +38,14 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="field">Field:</label></td>
+				<td class="form_label"><input onclick="toggle(1);" type="checkbox" id="timed1" name="timed" value="yes" /></td>
+				<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+				<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
+			</tr>
+			<tr>
+				<td class="form_label"><label for="field1">Field:</label></td>
 				<td class="form_input">
-					<select name="field" id="field">
+					<select name="field" id="field1">
 						<option value=""> Brand</option>
 						<option value=""> Quantity</option>
 						<option value=""> UPC</option>
@@ -38,9 +53,9 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="condition">Condition:</label></td>
+				<td class="form_label"><label for="condition1">Condition:</label></td>
 				<td class="form_input">
-					<select name="condition" id="condition">
+					<select name="condition" id="condition1">
 						<option value="==">Equal to</option>
 						<option value="!=">Not equal to</option>
 						<option value="<">Less than</option>
@@ -51,8 +66,8 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="value">Value:</label></td>
-				<td class="form_input"><input type="text" name="value" id="value" value="" /></td>
+				<td class="form_label"><label for="value1">Value:</label></td>
+				<td class="form_input"><input type="text" name="value" id="value1" value="" /></td>
 			</tr>
 			<tr>
 				<td class="form_label"><label for="month">Effective as of:</label></td>
@@ -96,9 +111,14 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="field">Field:</label></td>
+				<td class="form_label"><input onclick="toggle(2);" type="checkbox" id="timed2" name="timed" value="yes" /></td>
+				<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+				<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
+			</tr>
+			<tr>
+				<td class="form_label"><label for="field2">Field:</label></td>
 				<td class="form_input">
-					<select name="field" id="field">
+					<select name="field" id="field2">
 						<option value=""> Brand</option>
 						<option value=""> Quantity</option>
 						<option value=""> UPC</option>
@@ -106,9 +126,9 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="condition">Condition:</label></td>
+				<td class="form_label"><label for="condition2">Condition:</label></td>
 				<td class="form_input">
-					<select name="condition" id="condition">
+					<select name="condition" id="condition2">
 						<option value="==">Equal to</option>
 						<option value="!=">Not equal to</option>
 						<option value="<">Less than</option>
@@ -119,8 +139,8 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="value">Value:</label></td>
-				<td class="form_input"><input type="text" name="value" id="value" value="" /></td>
+				<td class="form_label"><label for="value2">Value:</label></td>
+				<td class="form_input"><input type="text" name="value" id="value2" value="" /></td>
 			</tr>
 			<tr>
 				<td class="form_label"><label for="month">Effective as of:</label></td>
@@ -163,9 +183,14 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="field">Field:</label></td>
+				<td class="form_label"><input onclick="toggle(3);" type="checkbox" id="timed3" name="timed" value="yes" /></td>
+				<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+				<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
+			</tr>
+			<tr>
+				<td class="form_label"><label for="field3">Field:</label></td>
 				<td class="form_input">
-					<select name="field" id="field">
+					<select name="field" id="field3">
 						<option value=""> Brand</option>
 						<option value="" selected="selected"> Quantity</option>
 						<option value=""> UPC</option>
@@ -173,9 +198,9 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="condition">Condition:</label></td>
+				<td class="form_label"><label for="condition3">Condition:</label></td>
 				<td class="form_input">
-					<select name="condition" id="condition">
+					<select name="condition" id="condition3">
 						<option value="==">Equal to</option>
 						<option value="!=">Not equal to</option>
 						<option value="<">Less than</option>
@@ -186,8 +211,8 @@ $output .= '
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label"><label for="value">Value:</label></td>
-				<td class="form_input"><input type="text" name="value" id="value" value="1" /></td>
+				<td class="form_label"><label for="value3">Value:</label></td>
+				<td class="form_input"><input type="text" name="value" id="value3" value="1" /></td>
 			</tr>
 			<tr>
 				<td class="form_label"><label for="month">Effective as of:</label></td>

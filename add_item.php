@@ -25,7 +25,7 @@ else{
 	$category = new category($_REQUEST["c"]);
 	
 	$output = '
-			<form method="post" action="item_processor.php">
+			<form method="post" action="item_processor.php" enctype="multipart/form-data">
 				<h2>Add an Item to '.$category->get_breadcrumb_links().'</h2>
 				<input type="hidden" name="action" value="do_add" />
 				<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
@@ -90,6 +90,10 @@ else{
 	
 	
 	$output .= '
+					<tr>
+						<td class="form_label">Picture:</td>
+						<td class="form_input"><input type="file" name="picture" id="picture" /></td>
+					</tr>
 					<tr>
 						<td class="form_label">&nbsp;</td>
 						<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>

@@ -2,6 +2,101 @@
 
 include("globals.php");
 
+$item = new item($_REQUEST["id"]);
+
+$output = '
+		<form method="post" action="item_processor.php" enctype="multipart/form-data">
+			<h2>Edit Item</h2>
+			<input type="hidden" name="action" value="do_edit" />
+			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+			<table>
+				<tr>
+					<td class="form_label"><label for="name">Name:</label></td>
+					<td class="form_input"><input type="text" name="name" id="name" value="'.$item->name.'" maxlength="64" />
+				</tr>';
+
+foreach($item->category->field_ids as $field_id){
+	
+	$field = new field($field_id);
+	
+	$output .= '
+		<tr>
+			<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
+			<td class="form_input">';
+	
+	switch($field->input_type){
+		case 'multiple':
+			$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
+			$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select">';
+			$output .= '<option value="">Select One</option>';
+			foreach($field->values as $value){
+				$output .= '<option value="'.$value.'"';
+				if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
+				$output .= '>'.$value.'</option>';
+			}
+			$output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
+			break;
+		case 'select':
+			$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">';
+			foreach($field->values as $value){
+				$output .= '<option value="'.$value.'"';
+				if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
+				$output .= '>'.$value.'</option>';
+			}
+			break;
+		case 'text':
+			if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
+			else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">'.$item->fields[$field->name].'</textarea>';
+			break;
+		case 'radio':
+			foreach($field->values as $value){
+				$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
+				if ($value == $item->fields[$field->name]) $output .= ' checked="checked"';
+				$output .= ' /> '.$value.'<br />';
+			}
+			break;
+		case 'checkbox':
+			foreach($field->values as $value){
+				$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
+				if ((is_array($item->fields[$field->name])) && in_array($value,$item->fields[$field->name])) $output .= ' checked="checked"';
+				$output .= ' /> '.$value.'<br />';
+			}
+			break;
+	}
+	
+	$output .= '</td>
+		</tr>';
+}
+
+$query = "SELECT * FROM `anyInventory_images` WHERE `key`='".$_REQUEST["id"]."'";
+$result = query($query);
+
+if (mysql_num_rows($result) > 0){
+	$output .= '
+				<tr>
+					<td class="form_label">Current Images:</td>
+					<td class="form_input">';
+	
+	while($row = mysql_fetch_array($result)){
+		$output .= '<p><input type="checkbox" name="delete_images[]" value="'.$row["id"].'" /> Delete this image<br />
+		<img src="images/items/thumb_'.$row["file_name"].'" /></p>';
+	}
+	
+	$output .= '</td></tr>';
+}
+
+$output .= '
+				<tr>
+					<td class="form_label">Upload Additional Picture:</td>
+					<td class="form_input"><input type="file" name="picture" id="picture" /></td>
+				</tr>
+				<tr>
+					<td class="form_label">&nbsp;</td>
+					<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+				</tr>
+			</table>
+		</form>';
+
 display($output);
 
 ?>

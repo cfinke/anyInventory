@@ -7,6 +7,7 @@ class item {
 	
 	var $name;
 	var $fields = array();
+	var $images = array();
 	
 	function item($item_id){
 		$this->id = $item_id;
@@ -19,10 +20,27 @@ class item {
 		
 		$this->category = new category($row["item_category"]);
 		
-		if (is_array($this->category->field_names)){
-			foreach($this->category->field_names as $field_name){
-				$this->fields[$field_name] = $row[$field_name];
+		if (is_array($this->category->field_ids)){
+			foreach($this->category->field_ids as $field_id){
+				$field = new field($field_id);
+				
+				if ($field->input_type != "checkbox"){
+					$this->fields[$field->name] = $row[$field->name];
+				}
+				else{
+					$this->fields[$field->name] = explode(",",$row[$field->name]);
+					foreach($this->fields[$field->name] as $key => $value){
+						$this->fields[$field->name][$key] = trim($value);
+					}
+				}
 			}
+		}
+		
+		$query = "SELECT * FROM `anyInventory_images` WHERE `key`='".$this->id."'";
+		$result = query($query);
+		
+		while ($row = mysql_fetch_array($result)){
+			$this->images[] = $row;
 		}
 	}
 	
@@ -35,7 +53,18 @@ class item {
 		$output .= '<h2>'.$this->name.'</h2>';
 		
 		foreach($this->fields as $key => $value){
-			if (trim($value) != ""){
+			if (is_array($value)){
+				if (count($value) > 0){
+					$output .= '<p><b>'.$key.':</b> ';
+					
+					foreach($value as $val){
+						$output .= $val.", ";
+					}
+					
+					$output = substr($output, 0, strlen($output) - 2);
+				}
+			}
+			elseif (trim($value) != ""){
 				$output .= '<p><b>'.$key.':</b> '.$value.'</p>';
 			}
 		}

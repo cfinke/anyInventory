@@ -7,6 +7,10 @@ $db_name = '';
 $db_user = '';
 $db_pass = '';
 
+$images_dir = "";
+
+$mime_to_ext = array("image/png"=>"png","image/jpg"=>"jpg","image/jpeg"=>"jpg","image/pjpg"=>"jpg","image/pjpeg"=>"jpg");
+
 include("functions.php");
 include("category_class.php");
 include("field_class.php");

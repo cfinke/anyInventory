@@ -10,8 +10,4 @@ When option is chosen in 'multiple' field, text box should take that value
 
 Items
 =====
-Image Uploads
-Editing
-Deleting
 Alerts
-Move

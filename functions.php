@@ -90,14 +90,14 @@ function get_options_children($id, $pre = null, $selected = null, $nonempty = nu
 		while ($row = mysql_fetch_array($result)){
 			$category = $row["name"];
 			
-			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."'";
-			$item_result = query($query);
+//			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."'";
+//			$item_result = query($query);
 			
-			if ((mysql_num_rows($item_result) > 0) || ($nonempty === false)){
+//			if ((mysql_num_rows($item_result) > 0) || ($nonempty)){
 				$list .= '<option value="'.$row["id"].'"';
 				if (in_array($row["id"],$selected)) $list .= ' selected="selected"';
 				$list .= '>'.$pre . $category.'</option>';
-			}
+//			}
 			
 			$list .= get_options_children($row["id"], $pre, $selected);
 		}
@@ -169,6 +169,21 @@ function get_category_array($top = 0){
 	// the category id'd by $top and working down.
 	
 	$array = array();
+	
+	if ($top != 0){
+		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$top."'";
+		$result = query($query);
+		
+		if (mysql_num_rows($result) > 0){
+			$array[] = array("name"=>mysql_result($result, 0, 'name'),"id"=>$top);
+		}
+		else{
+			return $array;
+		}
+	}
+	else{
+		$array[] = array("name"=>"Top Level","id"=>0);
+	}
 	
 	get_array_children($top, $array);
 	

@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-$title = "anyInventory: Add Item";
+$title = "anyInventory: Add Alert";
 
 if (!isset($_REQUEST["c"])){
 	$output = '
@@ -13,26 +13,6 @@ if (!isset($_REQUEST["c"])){
 					<td class="form_input">
 						<select name="c" id="c">
 							'.get_category_options().'
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td class="form_label">&nbsp;</td>
-					<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>
-				</tr>
-			</table>
-		</form>';
-}
-elseif(!isset($_REQUEST["i"])){
-	$output = '
-		<form method="get" action="add_alert.php">
-			<input type="hidden" name="c" value="'.$_REQUEST["c"].'" />
-			<table>
-				<tr>
-					<td class="form_label"><label for="c">Add alert to:</label></td>
-					<td class="form_input">
-						<select name="i[]" id="i[]" multiple="multiple">
-							'.get_item_options($_REQUEST["c"]).'
 						</select>
 					</td>
 				</tr>
@@ -55,6 +35,14 @@ else{
 					<tr>
 						<td class="form_label"><label for="name">Alert Title:</label></td>
 						<td class="form_input"><input type="text" name="title" id="title" value="" maxlength="255" />
+					</tr>
+					<tr>
+						<td class="form_label"><label for="c">Applies to:</label></td>
+						<td class="form_input">
+							<select name="i[]" id="i[]" multiple="multiple">
+								'.get_item_options($_REQUEST["c"]).'
+							</select>
+						</td>
 					</tr>
 					<tr>
 						<td class="form_label"><label for="field">Field:</label></td>

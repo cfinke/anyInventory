@@ -17,7 +17,7 @@ if ($_REQUEST["action"] == "do_add"){
 				 `time`)
 				VALUES
 				('".$_REQUEST["title"]."',
-				 '".$_REQUEST["i"]."',
+				 '".serialize($_REQUEST["i"])."',
 				 '".$_REQUEST["field"]."',
 				 '".$_REQUEST["condition"]."',
 				 '".$_REQUEST["value"]."',

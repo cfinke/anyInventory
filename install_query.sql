@@ -24,3 +24,14 @@ CREATE TABLE `anyInventory_items` (
   `item_category` int(11) NOT NULL default '0',
   UNIQUE KEY `id` (`id`)
 ) TYPE=MyISAM;
+
+CREATE TABLE `anyInventory_pictures` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`key` INT NOT NULL ,
+	`file_name` VARCHAR( 64 ) NOT NULL ,
+	`file_size` INT NOT NULL ,
+	`file_type` VARCHAR( 32 ) NOT NULL ,
+	UNIQUE (
+		`id`
+	)
+);

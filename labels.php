@@ -1,6 +1,7 @@
 <?php
 
 require("globals.php");
+include("label_templates.php");
 
 $title = LABELS;
 $breadcrumbs = LABELS;
@@ -24,15 +25,6 @@ if (!function_exists('imagecreate') ||
 				</td>
 			</tr>
 		</table>';
-}
-elseif ($_POST["action"] == "generate"){
-	if (!is_array($_POST["i"])) $_POST["i"] = array($_POST["i"]);
-	
-	foreach($_POST["i"] as $item_id){
-		$item = new item($item_id);
-		
-		if ($item->fields[$_POST["f"]] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_POST["f"].'" /><br />';
-	}
 }
 elseif (!isset($_POST["c"])){
 	$output .= '
@@ -68,7 +60,7 @@ elseif (!isset($_POST["i"])){
 		$_POST["c"] = array($_POST["c"]);
 	}
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `id` > 0 AND ";
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `id` > 0 AND `input_type` NOT IN ('item','divider','file') AND ";
 	
 	foreach($_POST["c"] as $cat_id){
 		if (!$view_user->can_view($cat_id)){
@@ -95,23 +87,25 @@ elseif (!isset($_POST["i"])){
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
-						<form action="labels.php" method="post">
-							<input type="hidden" name="action" value="generate" />
+						<form action="pdf.php" method="post">
 							<table>
 								<tr><td colspan="2" style="padding: 10px 0px 10px 0px;"><p>'.LABEL_ITEM_INSTRUCTIONS.'</p></td></tr>
 								<tr>
 									<td class="form_label">
 										'.GENERATE_FROM.':
 									</td>
-									<td class="form_input">';
+									<td class="form_input">
+										<select name="f" id="f">
+										';
 		
 		while ($row = mysql_fetch_array($result)){
 			$field = new field($row["id"]);
 			
-			$output .= '<input type="radio" name="f" value="'.$field->name.'" />'.$field->name.'<br />';
+			$output .= '<option value="'.$field->id.'" />'.$field->name.'</option>';
 		}
 		
 		$output .= '
+										</select>
 									</td>
 								</tr>
 								<tr>
@@ -128,6 +122,34 @@ elseif (!isset($_POST["i"])){
 									<select name="i[]" id="i[]" multiple="multiple" size="10" style="width: 100%;">
 										'.$options.'
 									</select>
+								</td>
+							</tr>
+							<tr>
+								<td class="form_label">
+									'.LABEL_TEMPLATE.'
+								</td>
+								<td class="form_input">
+									<table>
+									';
+		
+		if (is_array($templates)){
+			foreach($templates as $key => $template){
+				$output .= '
+					<tr>
+						<td style="vertical-align: middle;">
+							<input type="radio" name="template" value="'.$key.'" />
+						</td>
+						<td>
+							<img src="images/labels/'.$key.'.gif" style="float: left; padding-right: 8px;" />
+							'.PAGE_DIMENSIONS.': '.$template["page_width"].'" x '.$template["page_height"].'" ('.($template["page_width"] * 2.54).' cm x '.($template["page_height"] * 2.54).' cm)<br />
+							'.LABEL_DIMENSIONS.': '.$template["label_width"].'" x '. $template["label_height"].'" ('.($template["label_width"] * 2.54) .' cm x '. ($template["label_height"] * 2.54).' cm)<br />
+							'.$template["num_cols"].' '.COLUMNS.', '.$template["num_rows"].' '.ROWS.' ('.($template["num_cols"] * $template["num_rows"]).' '.LABELS.')
+						</td>
+					</tr>';
+			}
+		}
+		
+		$output .= '				</table>
 								</td>
 							</tr>
 							<tr>

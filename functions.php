@@ -591,4 +591,70 @@ function display_field_form($c_options = null, $name = null, $input_type = null,
 	return $output;
 }
 
+function create_label($item_id, $field_id, $as_file = null, $max_width = null){
+	$item = new item($item_id);
+	$field = new field($field_id);
+	
+	// This is the width of one character in pixels.
+	$char_width = 5;
+	
+	if ($max_width != null){
+		$chars = ($max_width / $char_width) - 5;
+		
+		if (strlen($item->name) > $chars){
+			$item->name = substr($item->name, 0, $chars).'...';
+		}
+	}
+	
+	// Create the image.
+	$im = imagecreate(600, 70);
+	
+	// Color the background white
+	$white = imagecolorallocate($im, 255, 255, 255);
+	
+	// Set the color for the text.
+	$black = imagecolorallocate($im, 0, 0, 0);
+	
+	// Write the barcode.
+	$boundaries = imagettftext($im, 12, 0, 0, 50, $white, realpath("fonts/IDAutomationHC39M.ttf"),"!".$item->fields[$field->name]."!");
+	
+	$width = $boundaries[2] - $boundaries[0];
+	
+	$offset = round((600 - $width) / 2);
+	
+	$boundaries = imagettftext($im, 12, 0, $offset, 50, $black, realpath("fonts/IDAutomationHC39M.ttf"),"!".$item->fields[$field->name]."!");
+	
+
+	
+	// Figure the offset for centering the text
+	$offset = (600 - (strlen($item->name) * $char_width)) / 2;
+	
+	$widest = ($width > ($char_width * strlen($item->name))) ? $width : ($char_width * strlen($item->name));
+	
+	// Write the item name to the label.
+	imagestring($im, 1, $offset, 0, $item->name, $black);
+	
+	$width = $widest;
+	$left_x = (600 - $width) / 2;
+	
+	// Crop the image
+	$new_image = imagecreate($widest, $boundaries[1] + 10);
+	imagecopyresized($new_image, $im, 0, 0, $left_x, 0, $width, $boundaries[1], $width, $boundaries[1]);
+	
+	// Delete the old image.
+	imagedestroy($im);
+	
+	if ($as_file != null){
+		imagepng($new_image,$as_file);
+	}
+	else{
+		// Send the new image to the browser
+		header("Content-type: image/png");
+		imagepng($new_image);
+	}
+	
+	// Delete the new image.
+	imagedestroy($new_image);
+}
+
 ?>

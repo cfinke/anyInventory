@@ -15,7 +15,7 @@ $output .= '
 				<p>anyInventory, a partir de la versi&oacute;n 1.5, te permite crear c&oacute;digos de barras para cualquier campo de cualquier art&iacute;culo.  Por ejemplo, digamos que compraste el DVD de la pel&iacute;cula "Shrek," y lo agregaste a tu inventario, guardando el UPC, ISBN, y el nombre.  Puedes producir una etiqueta del UPC de dos maneras:</p>
 				<ol>
 					<li>En la p&aacute;gina del art&iacute;culo "Shrek," a un lado del nombre de cada campo se encuentra un enlace a la etiqueta de ese campo.  Para generar la etiqueta del campo UPC, solo necesitar&iacute;as seleccionar el enlace "Etiqueta" junto al campo UPC.</li>
-					<li>Tambi&eacute;n puedes ir a la <a href="'.$DIR_PREFIX.'labels.php">p&aacute;gina de etiquetas</a> y seguir las instrucciones para generar la etiqueta del campo UPC del art&iacute;culo "Shrek."  Este m&eacute;todo tambi&eacute;n de permite generar m&uacute;ltiples etiquetas.</li>
+					<li>Puedes ir a la <a href="'.$DIR_PREFIX.'labels.php">página de etiquetas</a> y seguir las instrucciones para generar una etiqueta para el UPC de "Shrek." Mediante este método se crea un archivo PDF que puede ser impreso en hojas para etiquetas estandar de diferentes tamaños, como se indica en las opciones de las plantillas.</li>
 				</ol>
 				<p>Despu&eacute;s de esto, se te mostrar&aacute; una imagen, similar a esta:</p>
 				<p style="text-align: center;"><img src="'.$DIR_PREFIX.'images/sample_label.png" alt="Shrek, etiqueta del UPC" /></p>

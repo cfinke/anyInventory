@@ -1,11 +1,10 @@
 <?php
 
-define('PAGE_DIMENSIONS','Page dimensions');
-define('LABEL_DIMENSIONS','Label dimensions');
-define('ROWS','rows');
-define('COLUMNS','columns');
-define('LABEL_TEMPLATE','Template');
-
+define('PAGE_DIMENSIONS','Medidas de página');
+define('LABEL_DIMENSIONS','Medidas de etiqueta');
+define('ROWS','filas');
+define('COLUMNS','columnas');
+define('LABEL_TEMPLATE','Plantilla');
 define('LANGUAGE','Idioma');
 define('ID_MATCH',AUTO_INC_FIELD_NAME.' Match');
 define('NAME_MATCH',NAME_FIELD_NAME.' Match');

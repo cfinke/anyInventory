@@ -36,6 +36,7 @@ $output .= '
 			<li><a href="editing_alerts.php">Editing</a></li>
 			<li><a href="deleting_alerts.php">Deleting</a></li>
 		</ol>
+		<li><a href="labels.php">Labels</a></li>
 		<li><a href="searching.php">Searching</a></li>
 		<li><a href="whats_next.php">What\'s Next?</a></li>
 	</ol>

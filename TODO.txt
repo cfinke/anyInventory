@@ -17,10 +17,11 @@ DONE - Alerts
 
 BEFORE 1.5
 ===================
-Labels
+DONE - Labels
 
 BEFORE 1.6
 ===================
+Timed Alerts
 Thumbnails of remote images
 Better advanced search, like phpMyAdmin
 
@@ -28,3 +29,7 @@ BEFORE 1.7
 ===================
 Get more information out of remote files
 Internal password protection
+
+BEFORE 1.8
+===================
+Label Sheets

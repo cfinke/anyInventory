@@ -2,8 +2,8 @@
 
 // French language file
 
-define('ID_MATCH','Unique ID Match');
-define('NAME_MATCH',NAME_FIELD_NAME.' Match');
+define('ID_MATCH','Identifiant Unique Correspondant');
+define('NAME_MATCH',NAME_FIELD_NAME.' correspondant');
 
 // Dates
 define('MONTH_1','Janvier');
@@ -30,7 +30,7 @@ define('ADMINISTRATION','Administration');
 define('APPLIES_TO','Appliquer &#224; ');
 define('ACTIVE_WHEN','Actif quand');
 define('FOOTER_TEXT_PRE','vous avez inventori&#233;');
-define('ANYINVENTORY_LINK','<a href="http://anyinventory.sourceforge.net/">anyInventory, le plus fexible et puissant syst&#232;me d&#146;inventaire par le web</a>');
+define('ANYINVENTORY_LINK','<a href="http://anyinventory.sourceforge.net/">anyInventory, le plus fexible et puissant syst&#232;me d&#146;inventaire</a>');
 define('FOOTER_TEXT_POST','articles avec '.ANYINVENTORY_LINK);
 define('HELP','Aide');
 define('EDIT','Editer');
@@ -166,7 +166,7 @@ define('TIMED_ONLY_LABEL','Faire que cette alerte soit <a href="../docs/en/alert
 define('TIMED_ONLY_EXPLANATION','Pour les alertes temporelles, vous n&#146;avez pas besoin de compl=E9ter le champ, la condition, ou la valeur.');
 define('DELETE_ALERT','Supprimer l&#146;Alerte');
 define('DELETE_ALERT_CONFIRM','Etes vous s&#251;r de vouloir supprimer cette alerte?');
-define('EDIT_ALERT','Editer l&#146;Alerter');
+define('EDIT_ALERT','Editer l&#146;Alerte');
 define('EXPIRATION_DATE','Date d&#146;Expiration');
 define('ALLOW_EXPIRATION','Permettre &#224; cette alerte d&#146;expirer');
 define('EMAIL_ALERT_TO','Alerte par E-mail &#224;');

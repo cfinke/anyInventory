@@ -18,8 +18,6 @@ $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
 $db_pass = "'.$_REQUEST["db_pass"].'";
 
-$files_dir = "'.$_REQUEST["files_dir"].'";
-
 include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");
@@ -47,11 +45,8 @@ if ($_REQUEST["action"] == "install"){
 	if (strlen(trim($_REQUEST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
 	}
-	if (strlen(trim($_REQUEST["files_dir"])) == 0){
-		$errors[] = 'Please enter the full path of the directory where uploaded files will be stored.';
-	}
-	elseif(!is_writable($_REQUEST["files_dir"])){
-		$errors[] = 'The path '.$_REQUEST["files_dir"].' is not writable by the Web server.';
+	if(!is_writable(realpath("./item_files/"))){
+		$errors[] = 'The path '.realpath("./item_files/").' is not writable by the Web server.';
 	}
 	
 	// Check for the correct database information.	
@@ -173,7 +168,6 @@ if ($_REQUEST["action"] == "install"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
-				<input type="hidden" name="files_dir" value="'.stripslashes($_REQUEST["files_dir"]).'" />
 				<p>The following errors occurred:</p><ul class="error">';
 			
 			foreach($config_errors as $error){
@@ -223,7 +217,6 @@ if($_REQUEST["action"] == "try_again"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
-				<input type="hidden" name="files_dir" value="'.stripslashes($_REQUEST["files_dir"]).'" />
 				<p>The following errors occurred:</p><ul class="error">';
 		
 		foreach($config_errors as $error){
@@ -240,7 +233,6 @@ if($_REQUEST["action"] == "try_again"){
 }
 elseif(!$set_config_error){
 	$db_host = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["db_host"]) : 'localhost';
-	$files_dir = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["files_dir"]) : str_replace("install.php","item_files/",$_SERVER["PATH_TRANSLATED"]);
 	$checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
 	
 	if (count($errors) > 0){
@@ -270,10 +262,6 @@ elseif(!$set_config_error){
 						<tr>
 							<td class="formlabel"><label for="database_name">MySQL Database:</label></td>
 							<td><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
-						</tr>
-						<tr>
-							<td class="formlabel"><label for="directory"><i>Full Path</i> to directory where uploaded files will be stored:</label></td>
-							<td><input type="text" name="files_dir" id="files_dir" value="'.$files_dir.'" /></td>
 						</tr>
 						<tr>
 							<td class="formlabel"><label for="overwrite_tables">Overwrite tables of the same name:</label></td>

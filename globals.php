@@ -13,8 +13,6 @@ $db_name = '';
 $db_user = '';
 $db_pass = '';
 
-$files_dir = "";
-
 include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");

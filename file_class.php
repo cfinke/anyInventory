@@ -16,7 +16,6 @@ class file_object{
 	var $is_remote = false; // Whether or not this is a remote file
 	
 	function file_object($id){
-		global $files_dir;		// The absolute path to the directory where files are stored
 		global $DIR_PREFIX;		// The depth of the current directory we are in.
 		
 		// Set the id of this file.
@@ -43,7 +42,7 @@ class file_object{
 			$this->file_size = $row["file_size"];
 			$this->file_type = $row["file_type"];
 			$this->web_path = $DIR_PREFIX."item_files/".$this->file_name;
-			$this->server_path = $files_dir.$this->file_name;
+			$this->server_path = realpath($DIR_PREFIX.$this->file_name);
 		}
 	}
 	
@@ -101,8 +100,6 @@ class file_object{
 	// This function outputs a thumbnail of the file (if it is an image) directly to the browser.
 	
 	function output_thumbnail(){
-		global $files_dir;
-		
 		// The maximum width and height for the thumnbail.
 		$thumb_width = 120;
 		$thumb_height = 120;

@@ -131,7 +131,7 @@ class alert {
 						'.ALERT.'
 					</td>
 					<td style="text-align: right;">
-						<a href="'.$DIR_PREFIX.'docs/alerts.php">?</a>
+						<a href="'.$DIR_PREFIX.'docs/'.LANG.'/alerts.php">?</a>
 					</td>
 				</tr>
 				<tr class="alertContent">

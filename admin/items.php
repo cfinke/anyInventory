@@ -2,8 +2,8 @@
 
 include("globals.php");
 
-$title = 'anyInventory: Items';
-$breadcrumbs = 'Administration > Items';
+$title = ITEMS;
+$breadcrumbs = ITEMS;
 
 $category = new category(0);
 
@@ -25,9 +25,9 @@ if (mysql_num_rows($result) > 0){
 			<tr>
 				<td align="center" style="width: 18ex; white-space: nowrap;">
 					<nobr>
-						[<a href="edit_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">edit</a>]
-						[<a href="move_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">move</a>]
-						[<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">delete</a>]
+						[<a href="edit_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.EDIT_LINK.'</a>]
+						[<a href="move_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.MOVE_LINK.'</a>]
+						[<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.DELETE_LINK.'</a>]
 					</nobr>
 				</td>
 				<td><a href="../index.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.$row["name"].'</a></td>
@@ -53,7 +53,7 @@ if (is_array($cat_ids)){
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
 							<td>'.$category->get_breadcrumb_admin_links().'</td>
-							<td style="text-align: right;">[<a href="add_item.php?c='.$category->id.'">Add an item here</a>]</td>
+							<td style="text-align: right;">[<a href="add_item.php?c='.$category->id.'">'.ADD_ITEM_HERE.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -64,9 +64,9 @@ if (is_array($cat_ids)){
 						<tr>
 							<td style="width: 18ex; text-align: center; white-space: nowrap;">
 								<nobr>
-									<a href="edit_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[edit]</a>
-									<a href="move_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[move]</a>
-									<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[delete]</a>
+									<a href="edit_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">['.EDIT_LINK.']</a>
+									<a href="move_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">['.MOVE_LINK.']</a>
+									<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">['.DELETE_LINK.']</a>
 								</nobr>
 							</td>
 							<td><a href="../index.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.$row["name"].'</a></td>
@@ -87,15 +87,15 @@ $output .= '
 	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
 			<td>
-				Items
+				'.ITEMS.'
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/items.php">Help</a>]
+				[<a href="../docs/'.LANG.'/items.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
-				<p style="padding-left: 5px;"><a href="add_item.php">Add an item</a></p>
+				<p style="padding-left: 5px;"><a href="add_item.php">'.ADD_ITEM.'</a></p>
 				'.$table_rows.'
 			</td>
 		</tr>

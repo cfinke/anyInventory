@@ -12,8 +12,8 @@ if ($_GET["id"] == 0){
 	exit;
 }
 else{
-	$title = "anyInventory: Delete Category";
-	$breadcrumbs = 'Administration > <a href="categories.php">Categories</a> > Delete Category';
+	$title = DELETE_CATEGORY;
+	$breadcrumbs = ADMINISTRATION.' > <a href="categories.php">'.CATEGORIES.'</a> > '.DELETE_CATEGORY;
 	
 	$category = new category($_GET["id"]);
 	
@@ -23,12 +23,12 @@ else{
 			<input type="hidden" name="action" value="do_delete" />
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
-					<td>Delete a Category</td>
-					<td style="text-align: right;">[<a href="../docs/deleting_categories.php">Help</a>]</td>
+					<td>'.DELETE_CATEGORY.'</td>
+					<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_categories.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
-						<p>Are you sure you want to delete this category?</p>
+						<p>'.DELETE_CATEGORY_CONFIRM.'</p>
 					</td>
 				</tr>
 				<tr class="tableHeader"
@@ -38,7 +38,7 @@ else{
 					<td class="tableData" colspan="2">
 						<table>
 						<tr>
-							<td class="form_label">Fields:</td>
+							<td class="form_label">'.FIELDS.':</td>
 							<td>';
 	
 	if(is_array($category->field_names)){
@@ -54,18 +54,18 @@ else{
 	$output .= '</td>
 							</tr>
 							<tr>
-								<td class="form_label">Number of items:</td>
+								<td class="form_label">'.NUM_ITEMS.':</td>
 								<td>'.$category->num_items().'</td>
 							</tr>';
 	
 	if ($category->num_items() > 0){
 		$output .= '		<tr>
 								<td class="form_label"><input type="radio" name="item_action" value="delete" /></td>
-								<td>Delete all items in this category</td>
+								<td>'.DELETE_ALL_ITEMS.'</td>
 							</tr>
 							<tr>
 								<td class="form_label"><input type="radio" name="item_action" value="move" /></td>
-								<td>Move all items in this category to 
+								<td>'.MOVE_ITEMS_TO.'
 									<select name="move_items_to" id="move_items_to">
 										'.get_category_options($category->parent_id, false, $category->id).'
 									</select>
@@ -75,7 +75,7 @@ else{
 	
 	$output .= '
 							<tr>
-								<td class="form_label">Number of subcategories:</td>
+								<td class="form_label">'.NUM_SUBCATS.':</td>
 								<td>'.$category->num_children.'</td>
 							</tr>';
 	
@@ -86,25 +86,25 @@ else{
 		$output .= '
 			<tr>
 				<td class="form_label"><input type="radio" name="subcat_action" value="delete" /></td>
-				<td>Delete all sub-categories</td>
+				<td>'.DELETE_ALL_SUBCATS.'</td>
 			</tr>
 			<tr>
 				<td class="form_label"><input type="radio" name="subcat_action" value="move" /></td>
-				<td>Move all sub-categories to 
+				<td>'.MOVE_SUBCATS_TO.' 
 					<select name="move_subcats_to" id="move_subcats_to">
-						<option value="0">Top Level</option>
+						<option value="0">'.TOP_LEVEL_CATEGORY.'</option>
 						'.get_category_options($category->parent_id, false, $exclude).'
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<td class="form_label">Number of items in this<br /> category and its subcategories:</td>
+				<td class="form_label">'.NUM_ITEMS_R.':</td>
 				<td>'.$category->num_items_r().'</td>
 			</tr>';
 	}
 	
 	$output .= '<tr>
-								<td class="submitButtonRow" colspan="2"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="delete" value="'._DELETE.'" /> <input type="submit" name="cancel" value="'.CANCEL.'" /></td>
 							</tr>
 						</table>
 					</td>

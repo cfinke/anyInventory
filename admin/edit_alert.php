@@ -7,7 +7,7 @@ if (!$admin_user->can_admin_alert($_GET["id"])){
 	exit;
 }
 
-$title = "anyInventory: Edit Alert";
+$title = EDIT_ALERT;
 $inHead = '
 	<script type="text/javascript">
 		<!-- 
@@ -19,7 +19,7 @@ $inHead = '
 		// -->
 	</script>';
 $inBodyTag = ' onload="toggle();"';
-$breadcrumbs = 'Administration > <a href="alerts.php">Alerts</a> > Edit Alert';
+$breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.EDIT_ALERT;
 
 $alert = new alert($_GET["id"]);
 $query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `input_type` != 'divider' ";
@@ -44,8 +44,8 @@ else{
 	$output = '	
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
-				<td>Edit an Alert: '.$alert->title.'</td>
-				<td style="text-align: right;">[<a href="../docs/editing_alerts.php">Help</a>]</td>
+				<td>'.EDIT_ALERT.': '.$alert->title.'</td>
+				<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_alerts.php">'.HELPS.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
@@ -54,7 +54,7 @@ else{
 						<input type="hidden" name="id" value="'.$_GET["id"].'" />
 						<table>
 							<tr>
-								<td class="form_label">Categories:</td>
+								<td class="form_label">'.CATEGORIES.':</td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="10" style="width: 100%;">
 										'.$admin_user->get_admin_categories_options($alert->category_ids).'
@@ -62,7 +62,7 @@ else{
 								</td>
 							</tr>
 							<tr>
-								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Update Categories" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="'.UPDATE_CATEGORIES.'" /></td>
 							</tr>
 						</table>
 					</form>
@@ -71,11 +71,11 @@ else{
 						<input type="hidden" name="id" value="'.$_GET["id"].'" />
 						<table>
 						<tr>
-							<td class="form_label"><label for="name">Alert Title:</label></td>
+							<td class="form_label"><label for="name">'.ALERT_TITLE.':</label></td>
 							<td class="form_input"><input type="text" name="title" id="title" value="'.$alert->title.'" maxlength="255" />
 						</tr>
 						<tr>
-							<td class="form_label"><label for="c">Applies to:</label></td>
+							<td class="form_label"><label for="c">'.APPLIES_TO.':</label></td>
 							<td class="form_input">
 								<select name="i[]" id="i[]" multiple="multiple" size="10" style="width: 100%;">
 									'.get_item_options($alert->category_ids, $alert->item_ids).'
@@ -89,11 +89,11 @@ else{
 	
 	$output .= ' />
 						</td>
-						<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
-						<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
+						<td class="form_input">'.TIMED_ONLY_LABEL.'
+						<br /><small>'.TIMED_ONLY_EXPLANATION.'</small></td>
 					</tr>
 					<tr>
-						<td class="form_label"><label for="field">Field:</label></td>
+						<td class="form_label"><label for="field">'.FIELD.':</label></td>
 						<td class="form_input">
 							<select name="field" id="field">';
 	
@@ -107,38 +107,38 @@ else{
 								</td>
 							</tr>
 							<tr>
-								<td class="form_label"><label for="condition">Condition:</label></td>
+								<td class="form_label"><label for="condition">'.CONDITION.':</label></td>
 								<td class="form_input">
 									<select name="condition" id="condition">
-										<option value="=="';if ($alert->condition == '==') $output .= ' selected="selected"'; $output .= '>Equal to</option>
-										<option value="!="';if ($alert->condition == '!=') $output .= ' selected="selected"'; $output .= '>Not equal to</option>
-										<option value="<"';if ($alert->condition == '<') $output .= ' selected="selected"'; $output .= '>Less than</option>
-										<option value=">"';if ($alert->condition == '>') $output .= ' selected="selected"'; $output .= '>Greater than</option>
-										<option value="<="';if ($alert->condition == '<=') $output .= ' selected="selected"'; $output .= '>Less than or equal to</option>
-										<option value=">="';if ($alert->condition == '>=') $output .= ' selected="selected"'; $output .= '>Greater than or equal to</option>
+										<option value="=="';if ($alert->condition == '==') $output .= ' selected="selected"'; $output .= '>=</option>
+										<option value="!="';if ($alert->condition == '!=') $output .= ' selected="selected"'; $output .= '>!=</option>
+										<option value="<"';if ($alert->condition == '<') $output .= ' selected="selected"'; $output .= '>&lt;</option>
+										<option value=">"';if ($alert->condition == '>') $output .= ' selected="selected"'; $output .= '>&gt;</option>
+										<option value="<="';if ($alert->condition == '<=') $output .= ' selected="selected"'; $output .= '>&lt;=</option>
+										<option value=">="';if ($alert->condition == '>=') $output .= ' selected="selected"'; $output .= '>&gt;=</option>
 									</select>
 								</td>
 							</tr>
 							<tr>
-								<td class="form_label"><label for="value">Value:</label></td>
+								<td class="form_label"><label for="value">'.VALUE.':</label></td>
 								<td class="form_input"><input type="text" name="value" id="value" value="'.$alert->value.'" /></td>
 							</tr>
 							<tr>
-								<td class="form_label"><label for="month">Effective as of:</label></td>
+								<td class="form_label"><label for="month">'.EFFECTIVE_DATE.':</label></td>
 								<td class="form_input">
 									<select name="month" id="month">
-										<option value="1"';if(substr($alert->time,4,2) == '01') $output .= ' selected="selected"'; $output .= '>January</option>
-										<option value="2"';if(substr($alert->time,4,2) == '02') $output .= ' selected="selected"'; $output .= '>February</option>
-										<option value="3"';if(substr($alert->time,4,2) == '03') $output .= ' selected="selected"'; $output .= '>March</option>
-										<option value="4"';if(substr($alert->time,4,2) == '04') $output .= ' selected="selected"'; $output .= '>April</option>
-										<option value="5"';if(substr($alert->time,4,2) == '05') $output .= ' selected="selected"'; $output .= '>May</option>
-										<option value="6"';if(substr($alert->time,4,2) == '06') $output .= ' selected="selected"'; $output .= '>June</option>
-										<option value="7"';if(substr($alert->time,4,2) == '07') $output .= ' selected="selected"'; $output .= '>July</option>
-										<option value="8"';if(substr($alert->time,4,2) == '08') $output .= ' selected="selected"'; $output .= '>August</option>
-										<option value="9"';if(substr($alert->time,4,2) == '09') $output .= ' selected="selected"'; $output .= '>September</option>
-										<option value="10"';if(substr($alert->time,4,2) == '10') $output .= ' selected="selected"'; $output .= '>October</option>
-										<option value="11"';if(substr($alert->time,4,2) == '11') $output .= ' selected="selected"'; $output .= '>November</option>
-										<option value="12"';if(substr($alert->time,4,2) == '12') $output .= ' selected="selected"'; $output .= '>December</option>
+										<option value="1"';if(substr($alert->time,4,2) == '01') $output .= ' selected="selected"'; $output .= '>'.MONTH_1.'</option>
+										<option value="2"';if(substr($alert->time,4,2) == '02') $output .= ' selected="selected"'; $output .= '>'.MONTH_2.'</option>
+										<option value="3"';if(substr($alert->time,4,2) == '03') $output .= ' selected="selected"'; $output .= '>'.MONTH_3.'</option>
+										<option value="4"';if(substr($alert->time,4,2) == '04') $output .= ' selected="selected"'; $output .= '>'.MONTH_4.'</option>
+										<option value="5"';if(substr($alert->time,4,2) == '05') $output .= ' selected="selected"'; $output .= '>'.MONTH_5.'</option>
+										<option value="6"';if(substr($alert->time,4,2) == '06') $output .= ' selected="selected"'; $output .= '>'.MONTH_6.'</option>
+										<option value="7"';if(substr($alert->time,4,2) == '07') $output .= ' selected="selected"'; $output .= '>'.MONTH_7.'</option>
+										<option value="8"';if(substr($alert->time,4,2) == '08') $output .= ' selected="selected"'; $output .= '>'.MONTH_8.'</option>
+										<option value="9"';if(substr($alert->time,4,2) == '09') $output .= ' selected="selected"'; $output .= '>'.MONTH_9.'</option>
+										<option value="10"';if(substr($alert->time,4,2) == '10') $output .= ' selected="selected"'; $output .= '>'.MONTH_10.'</option>
+										<option value="11"';if(substr($alert->time,4,2) == '11') $output .= ' selected="selected"'; $output .= '>'.MONTH_11.'</option>
+										<option value="12"';if(substr($alert->time,4,2) == '12') $output .= ' selected="selected"'; $output .= '>'.MONTH_12.'</option>
 									</select>
 									<select name="day" id="day">';
 	

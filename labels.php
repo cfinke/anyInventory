@@ -2,7 +2,7 @@
 
 require("globals.php");
 
-$title = "anyInventory: Labels";
+$title = "Labels";
 $breadcrumbs = "Labels";
 
 if (!function_exists('imagecreate') ||
@@ -39,7 +39,7 @@ elseif (!isset($_POST["c"])){
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
 				<td>'.GENERATE_LABELS.'</td>
-				<td style="text-align: right;">[<a href="docs/labels.php">'.HELP.'</a>]</td>
+				<td style="text-align: right;">[<a href="docs/'.LANG.'/labels.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
@@ -91,7 +91,7 @@ elseif (!isset($_POST["i"])){
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.GENERATE_LABELS.'</td>
-					<td style="text-align: right;">[<a href="docs/labels.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="docs/'.LANG.'/labels.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

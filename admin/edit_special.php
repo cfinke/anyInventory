@@ -9,8 +9,8 @@ if ($admin_user->usertype != 'Administrator'){
 
 switch($_GET["id"]){
 	case 'auto_inc_field':
-		$title = "anyInventory: Edit Auto-Increment Field";
-		$breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Edit Auto-Increment Field';
+		$title = EDIT_AUTOINC_FIELD;
+		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_AUTOINC_FIELD;
 		
 		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `auto_inc_field`='1'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
@@ -26,18 +26,18 @@ switch($_GET["id"]){
 					<input type="hidden" name="action" value="do_edit_auto_inc_field" />
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
-							<td>Edit Auto-Increment Field</td>
-							<td style="text-align: right;">[<a href="../docs/editing_fields.php">Help</a>]</td>
+							<td>'.EDIT_AUTOINC_FIELD.'</td>
+							<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
 								<table>
 									<tr>
-										<td class="form_label"><label for="name">Name:</label></td>
+										<td class="form_label"><label for="name">'.NAME.':</label></td>
 										<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',AUTO_INC_FIELD_NAME).'" maxlength="64" /></td>
 									</tr>
 									<tr>
-										<td class="form_label">Apply field to:</td>
+										<td class="form_label">'.APPLIES_TO.':</td>
 										<td class="form_input">
 											<select name="add_to[]" id="add_to[]" multiple="multiple" size="10" style="width: 100%;">
 												'.get_category_options($categories).'
@@ -59,13 +59,13 @@ switch($_GET["id"]){
 				<input type="hidden" name="action" value="do_edit_front_page_text" />
 				<table class="standardTable" cellspacing="0">
 					<tr class="tableHeader">
-						<td>Edit Front Page Text</td>
+						<td>'.EDIT_FRONT_PAGE_TEXT.'</td>
 					</tr>
 					<tr>
 						<td class="tableData">
 							<table>
 								<tr>
-									<td class="form_label"><label for="name">Text:</label></td>
+									<td class="form_label"><label for="name">'.TEXT.':</label></td>
 									<td class="form_input"><textarea name="front_page_text" id="front_page_text" rows="8" cols="40" style="width: 100%;">'.FRONT_PAGE_TEXT.'</textarea></td>
 								</tr>
 								<tr>
@@ -78,22 +78,22 @@ switch($_GET["id"]){
 			</form>';
 		break;
 	case 'name_field_name':
-		$title = "anyInventory: Edit Name Field";
-		$breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Edit Name Field';
+		$title = EDIT_NAME_FIELD;
+		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_NAME_FIELD;
 		
 		$output = '
 				<form method="post" action="special_processor.php">
 					<input type="hidden" name="action" value="do_edit_name_field_name" />
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
-							<td>Edit Name Field</td>
-							<td style="text-align: right;">[<a href="../docs/editing_fields.php">Help</a>]</td>
+							<td>'.EDIT_NAME_FIELD.'</td>
+							<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
 								<table>
 									<tr>
-										<td class="form_label"><label for="name">Name:</label></td>
+										<td class="form_label"><label for="name">'.NAME.':</label></td>
 										<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',NAME_FIELD_NAME).'" maxlength="64" /></td>
 									</tr>
 									<tr>

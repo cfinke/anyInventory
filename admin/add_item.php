@@ -2,29 +2,29 @@
 
 include("globals.php");
 
-$title = "anyInventory: Add Item";
+$title = ADD_ITEM;
 $inHead = '
 	<script type="text/javascript">
 	   _editor_url = "../htmlarea/";
-	   _editor_lang = "en";
+	   _editor_lang = "'.LANG.'";
 	</script>
 	<script type="text/javascript" src="../htmlarea/htmlarea.js"></script>';
 $inBodyTag = ' onload="HTMLArea.replaceAll();"';
-$breadcrumbs = 'Administration > <a href="items.php">Items</a> > Add Item';
+$breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.ADD_ITEM;
 
 if (!isset($_GET["c"])){
 	$output .= '
 		<form method="get" action="add_item.php">
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
-					<td>Add an Item</td>
-					<td style="text-align: right;">[<a href="../docs/items.php#adding">Help</a>]</td>
+					<td>'.ADD_ITEM.'</td>
+					<td style="text-align: right;">[<a href="../docs/'.LANG.'/items.php#adding">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
 						<table>
 							<tr>
-								<td class="form_label"><label for="c">Add Item to:</label></td>
+								<td class="form_label"><label for="c">'.ADD_ITEM_TO.':</label></td>
 								<td class="form_input">
 									<select name="c" id="c" style="width: 100%;">
 										'.$admin_user->get_admin_categories_options(null, false).'
@@ -54,8 +54,8 @@ else{
 				<input type="hidden" name="c" value="'.$_GET["c"].'" />
 				<table class="standardTable" cellspacing="0">
 					<tr class="tableHeader">
-						<td>Add an Item: '.$category->get_breadcrumb_admin_links().'</td>
-						<td style="text-align: right;">[<a href="../docs/items.php#adding">Help</a>]</td>
+						<td>'.ADD_ITEM.': '.$category->get_breadcrumb_admin_links().'</td>
+						<td style="text-align: right;">[<a href="../docs/'.LANG.'/items.php#adding">'.HELP.'</a>]</td>
 					</tr>
 					<tr>
 						<td class="tableData" colspan="2">

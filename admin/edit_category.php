@@ -11,8 +11,8 @@ elseif ($_GET["id"] == '0'){
 	exit;
 }
 else{
-	$title = "anyInventory: Edit Category";
-	$breadcrumbs = 'Administration > <a href="categories.php">Categories</a> > Edit Category';
+	$title = EDIT_CATEGORY;
+	$breadcrumbs = ADMINISTRATION.' > <a href="categories.php">'.CATEGORIES.'</a> > '.EDIT_CATEGORY;
 	
 	$category = new category($_GET["id"]);
 	
@@ -27,21 +27,21 @@ else{
 			<input type="hidden" name="id" value="'.$category->id.'" />
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
-					<td>Edit a Category: '.$category->get_breadcrumb_admin_links().'</td>
-					<td style="text-align: right;">[<a href="../docs/editing_categories.php">Help</a>]</td>
+					<td>'.EDIT_CATEGORY.': '.$category->get_breadcrumb_admin_links().'</td>
+					<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_categories.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
 					<table>
 						<tr>
-							<td class="form_label"><label for="name">Name:</label></td>
+							<td class="form_label"><label for="name">'.NAME.':</label></td>
 							<td class="form_input"><input type="text" name="name" id="name" value="'.$category->name.'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="parent">Parent Category:</label></td>
+							<td class="form_label"><label for="parent">'.PARENT_CATEGORY.':</label></td>
 							<td class="form_input">
 								<select name="parent" id="parent">
-									<option value="0">Top Level</option>
+									<option value="0">'.TOP_LEVEL_CATEGORY.'</option>
 									'.$admin_user->get_admin_categories_options($category->parent_id, false, $exclude).'
 								</select>
 							</td>
@@ -50,7 +50,7 @@ else{
 if (PP_VIEW){
 	$output .= '
 						<tr>
-							<td class="form_label"><label for="parent">Give viewing priveleges to:</label></td>
+							<td class="form_label"><label for="parent">'.GIVE_VIEW_TO.':</label></td>
 							<td class="form_input">
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
@@ -74,7 +74,7 @@ $output .= '
 if (PP_ADMIN){
 	$output .= '
 						<tr>
-							<td class="form_label"><label for="parent">Give admin priveleges to:</label></td>
+							<td class="form_label"><label for="parent">'.GIVE_ADMIN_TO.':</label></td>
 							<td class="form_input">
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
@@ -97,16 +97,16 @@ $output .= '
 
 $output .= '
 						<tr>
-							<td class="form_label">Fields:</td>
+							<td class="form_label">'.FIELDS.':</td>
 							<td class="form_input">
-								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" '.$checked.' /> Show auto-increment field<br /><br />';
+								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" '.$checked.' /> '.SHOW_AUTOINC_FIELD.'<br /><br />';
 	
 	if($category->id != 0){
-		$output .= '<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" /> Inherit fields from this category\'s parent.<br />';
+		$output .= '<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" /> '.INHERIT_FIELDS.'<br />';
 	}
 	
 	if($category->num_children > 0){
-		$output .= '<input type="checkbox" name="apply_fields" id="apply_fields" value="yes" /> Apply this category\'s fields to all subcategories.<br />';
+		$output .= '<input type="checkbox" name="apply_fields" id="apply_fields" value="yes" /> '.APPLY_FIELDS.'<br />';
 	}
 	
 	$output .= '<br />'.get_fields_checkbox_area($category->field_ids).'

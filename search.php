@@ -2,10 +2,10 @@
 
 include("globals.php");
 
-$title = "anyInventory: Search Results";
+$title = SEARCH_RESULTS;
 
 if ($_GET["action"] == "quick_search"){
-	$breadcrumbs = "Search Results: ".stripslashes($_GET["q"]);
+	$breadcrumbs = SEARCH_RESULTS.": ".stripslashes($_GET["q"]);
 	
 	$search_terms = explode(" ",$_GET["q"]);
 	$search_fields = array("name");
@@ -48,7 +48,7 @@ if ($_GET["action"] == "quick_search"){
 						$cat_id = $row["item_category"];
 						$output .= '
 							<tr class="tableHeader">
-								<td colspan="2">In '.$item->category->get_breadcrumb_links().'</td>
+								<td colspan="2">'.IN.' '.$item->category->get_breadcrumb_links().'</td>
 							</tr>';
 					}
 					
@@ -66,11 +66,11 @@ if ($_GET["action"] == "quick_search"){
 			}
 		}
 		else{
-			$output .= '<tr class="tableHeader"><td>No matching results</td></tr><tr><td class="tableData">There were no items that matched your search conditions.</td></tr>';
+			$output .= '<tr class="tableHeader"><td>'.NO_RESULTS.'</td></tr><tr><td class="tableData">'.NO_MATCHING_ITEMS.'</td></tr>';
 		}
 	}
 	else{
-		$output .= '<tr class="tableHeader"><td>No matching results</td></tr><tr><td class="tableData">There were no items that matched your search conditions.</td></tr>';
+		$output .= '<tr class="tableHeader"><td>'.NO_RESULTS.'</td></tr><tr><td class="tableData">'.NO_MATCHING_ITEMS.'</td></tr>';
 	}
 	
 	$output .= '</table>';

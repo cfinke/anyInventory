@@ -170,25 +170,25 @@ class user {
 					<td class="tableData">
 						<table>
 							<tr>
-								<td class="form_label">User type:</td>
+								<td class="form_label">'.USER_TYPE.':</td>
 								<td class="form_input">'.$this->usertype.'</td>
 							</tr>';
 			
 			if ($this->usertype == 'Administrator'){
 				$output .= '<tr>
-								<td class="form_label">Can view:</td>
-								<td class="form_input">All</td>
+								<td class="form_label">'.CAN_VIEW.':</td>
+								<td class="form_input">'.ALL.'</td>
 							</tr>
 							<tr>
-								<td class="form_label">Can admin:</td>
-								<td class="form_input">All</td>
+								<td class="form_label">'.CAN_ADMIN.':</td>
+								<td class="form_input">'.ALL.'</td>
 							</tr>';
 			}
 			else{
 				if (is_array($this->categories_view)){
 					$output .= '
 								<tr>
-									<td class="form_label">Can view:</td>
+									<td class="form_label">'.CAN_VIEW.':</td>
 									<td class="form_input">';
 					
 					foreach($this->categories_view as $cat_id){
@@ -205,7 +205,7 @@ class user {
 				if (is_array($this->categories_view)){
 					$output .= '
 								<tr>
-									<td class="form_label">Can admin:</td>
+									<td class="form_label">'.CAN_ADMIN.':</td>
 									<td class="form_input">';
 					
 					foreach($this->categories_admin as $cat_id){

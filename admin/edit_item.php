@@ -2,15 +2,15 @@
 
 include("globals.php");
 
-$title = "anyInventory: Edit Item";
+$title = EDIT_ITEM;
 $inHead = '
 	<script type="text/javascript">
 	   _editor_url = "../htmlarea/";
-	   _editor_lang = "en";
+	   _editor_lang = "'.LANG.'";
 	</script>
 	<script type="text/javascript" src="../htmlarea/htmlarea.js"></script>';
 $inBodyTag = ' onload="HTMLArea.replaceAll();"';
-$breadcrumbs = 'Administration > <a href="items.php">Items</a> > Edit Item';
+$breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.EDIT_ITEM;
 
 $item = new item($_GET["id"]);
 
@@ -25,8 +25,8 @@ $output = '
 			<input type="hidden" name="id" value="'.$_GET["id"].'" />
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
-					<td>Edit an Item
-					<td style="text-align: right;">[<a href="../docs/editing_items.php">Help</a>]</td>
+					<td>'.EDIT_ITEM.'</td>
+					<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_items.php">Help</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

@@ -15,7 +15,7 @@ if (!$view_user->can_view($category->id)){
 	exit;
 }
 
-$title = "anyInventory: ".$category->breadcrumb_names;
+$title = $category->breadcrumb_names;
 $breadcrumbs = $category->get_breadcrumb_links();
 
 // Display the breadcrumb links to this category.
@@ -85,7 +85,7 @@ else{
 	}
 	
 	$output .= '			</td>
-							<td style="text-align: right;">[<a href="docs/categories.php">'.HELP.'</a>]</td>
+							<td style="text-align: right;">[<a href="docs/'.LANG.'/categories.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -123,7 +123,7 @@ else{
 		}
 		
 		$output .= '</td>
-					<td style="text-align: right;">[<a href="docs/items.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="docs/'.LANG.'/items.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

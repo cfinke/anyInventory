@@ -15,8 +15,8 @@ elseif($admin_user->usertype != 'Administrator'){
 	exit;
 }
 else{
-	$title = "anyInventory: Delete User";
-	$breadcrumbs = 'Administration > <a href="users.php">Users</a> > Delete User';
+	$title = DELETE_USER;
+	$breadcrumbs = ADMINISTRATION.' > <a href="users.php">'.USERS.'</a> > '.DELETE_USER;
 	
 	$user = new user($_GET["id"]);
 	
@@ -26,16 +26,16 @@ else{
 			<input type="hidden" name="id" value="'.$_GET["id"].'" />
 			<table class="standardTable" cellspacing="0" cellpadding="0">
 				<tr class="tableHeader">
-					<td>Delete User</td>
-					<td style="text-align: right;">[<a href="../docs/deleting_users.php">Help</a>]</td>
+					<td>'.DELETE_USER.'</td>
+					<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_users.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
-						<p>Are you sure you want to delete this user?</p>
+						<p>'.DELETE_USER_CONFIRM.'</p>
 						'.$user->export_description().'
 						<p class="submitButtonRow">
-							<input type="submit" name="delete" value="Delete" />
-							<input type="submit" name="cancel" value="Cancel" />
+							<input type="submit" name="delete" value="'._DELETE.'" />
+							<input type="submit" name="cancel" value="'.CANCEL.'" />
 						</p>
 					</td>
 				</tr>

@@ -2,22 +2,22 @@
 
 include("globals.php");
 
-$title = "anyInventory: Add Alert";
-$breadcrumbs = 'Administration > <a href="alerts.php">Alerts</a> > Add Alert';
+$title = ADD_ALERT;
+$breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.ADD_ALERT;
 
 if (!is_array($_GET["c"])){
 	$output = '
 		<form method="get" action="add_alert.php">
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
-					<td>Add Alert</td>
-					<td style="text-align: right;">[<a href="../docs/alerts.php#adding">Help</a>]</td>
+					<td>'.ADD_ALERT.'</td>
+					<td style="text-align: right;">[<a href="../docs/'.LANG.'/alerts.php#adding">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData">
 						<table style="width: 100%;">
 							<tr>
-								<td class="form_label"><label for="c">Add alert in:</label></td>
+								<td class="form_label"><label for="c">'.ADD_ALERT_IN.':</label></td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="20" style="width: 100%;">
 										'.$admin_user->get_admin_categories_options(null).'
@@ -91,18 +91,18 @@ else{
 						<input type="hidden" name="c" value="'.htmlentities(serialize($_GET["c"])).'" />
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Add Alert</td>
-								<td style="text-align: right;">[<a href="../docs/alerts.php#adding">Help</a>]</td>
+								<td>'.ADD_ALERT.'</td>
+								<td style="text-align: right;">[<a href="../docs/'.LANG.'/alerts.php#adding">'.HELP.'</a>]</td>
 							</tr>
 							<tr>
 								<td class="tableData">
 									<table>
 										<tr>
-											<td class="form_label"><label for="name">Alert Title:</label></td>
+											<td class="form_label"><label for="name">'.ALERT_TITLE.':</label></td>
 											<td class="form_input"><input type="text" name="title" id="title" value="" maxlength="255" />
 										</tr>
 										<tr>
-											<td class="form_label"><label for="c">Applies to:</label></td>
+											<td class="form_label"><label for="c">'.APPLIES_TO.':</label></td>
 											<td class="form_input">
 												<select name="i[]" id="i[]" multiple="multiple" size="10" style="width: 100%;">';
 			
@@ -116,11 +116,11 @@ else{
 									</tr>
 									<tr>
 										<td class="form_label"><input onclick="toggle();" type="checkbox" id="timed" name="timed" value="yes" /></td>
-										<td class="form_input"><label for="timed">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a></label>.
-										<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
+										<td class="form_input"><label for="timed">'.TIMED_ONLY_LABEL.'</label>.
+										<br /><small>'.TIMED_ONLY_EXPLANATION.'</small></td>
 									</tr>
 									<tr>
-										<td class="form_label"><label for="field">Field:</label></td>
+										<td class="form_label"><label for="field">'.FIELD.':</label></td>
 										<td class="form_input">
 											<select name="field" id="field">';
 			
@@ -132,38 +132,38 @@ else{
 										</td>
 									</tr>
 									<tr>
-										<td class="form_label"><label for="condition">Condition:</label></td>
+										<td class="form_label"><label for="condition">'.CONDITION.':</label></td>
 										<td class="form_input">
 											<select name="condition" id="condition">
-												<option value="==">Equal to</option>
-												<option value="!=">Not equal to</option>
-												<option value="<">Less than</option>
-												<option value=">">Greater than</option>
-												<option value="<=">Less than or equal to</option>
-												<option value=">=">Greater than or equal to</option>
+												<option value="==">=</option>
+												<option value="!=">!=</option>
+												<option value="<">&lt;</option>
+												<option value=">">&gt;</option>
+												<option value="<=">&lt;=</option>
+												<option value=">=">&gt;=</option>
 											</select>
 										</td>
 									</tr>
 									<tr>
-										<td class="form_label"><label for="value">Value:</label></td>
+										<td class="form_label"><label for="value">'.VALUE.':</label></td>
 										<td class="form_input"><input type="text" name="value" id="value" value="" /></td>
 									</tr>
 									<tr>
-										<td class="form_label"><label for="month">Effective as of:</label></td>
+										<td class="form_label"><label for="month">'.EFFECTIVE_DATE.':</label></td>
 										<td class="form_input">
 											<select name="month" id="month">
-												<option value="1"';if(date("n") == 1) $output .= ' selected="selected"'; $output .= '>January</option>
-												<option value="2"';if(date("n") == 2) $output .= ' selected="selected"'; $output .= '>February</option>
-												<option value="3"';if(date("n") == 3) $output .= ' selected="selected"'; $output .= '>March</option>
-												<option value="4"';if(date("n") == 4) $output .= ' selected="selected"'; $output .= '>April</option>
-												<option value="5"';if(date("n") == 5) $output .= ' selected="selected"'; $output .= '>May</option>
-												<option value="6"';if(date("n") == 6) $output .= ' selected="selected"'; $output .= '>June</option>
-												<option value="7"';if(date("n") == 7) $output .= ' selected="selected"'; $output .= '>July</option>
-												<option value="8"';if(date("n") == 8) $output .= ' selected="selected"'; $output .= '>August</option>
-												<option value="9"';if(date("n") == 9) $output .= ' selected="selected"'; $output .= '>September</option>
-												<option value="10"';if(date("n") == 10) $output .= ' selected="selected"'; $output .= '>October</option>
-												<option value="11"';if(date("n") == 11) $output .= ' selected="selected"'; $output .= '>November</option>
-												<option value="12"';if(date("n") == 12) $output .= ' selected="selected"'; $output .= '>December</option>
+												<option value="1"';if(date("n") == 1) $output .= ' selected="selected"'; $output .= '>'.MONTH_1.'</option>
+												<option value="2"';if(date("n") == 2) $output .= ' selected="selected"'; $output .= '>'.MONTH_2.'</option>
+												<option value="3"';if(date("n") == 3) $output .= ' selected="selected"'; $output .= '>'.MONTH_3.'</option>
+												<option value="4"';if(date("n") == 4) $output .= ' selected="selected"'; $output .= '>'.MONTH_4.'</option>
+												<option value="5"';if(date("n") == 5) $output .= ' selected="selected"'; $output .= '>'.MONTH_5.'</option>
+												<option value="6"';if(date("n") == 6) $output .= ' selected="selected"'; $output .= '>'.MONTH_6.'</option>
+												<option value="7"';if(date("n") == 7) $output .= ' selected="selected"'; $output .= '>'.MONTH_7.'</option>
+												<option value="8"';if(date("n") == 8) $output .= ' selected="selected"'; $output .= '>'.MONTH_8.'</option>
+												<option value="9"';if(date("n") == 9) $output .= ' selected="selected"'; $output .= '>'.MONTH_9.'</option>
+												<option value="10"';if(date("n") == 10) $output .= ' selected="selected"'; $output .= '>'.MONTH_10.'</option>
+												<option value="11"';if(date("n") == 11) $output .= ' selected="selected"'; $output .= '>'.MONTH_11.'</option>
+												<option value="12"';if(date("n") == 12) $output .= ' selected="selected"'; $output .= '>'.MONTH_12.'</option>
 											</select>
 											<select name="day" id="day">';
 					

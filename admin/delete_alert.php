@@ -7,8 +7,8 @@ if (!$admin_user->can_admin_alert($_GET["id"])){
 	exit;
 }
 
-$title = "anyInventory: Delete Alert";
-$breadcrumbs = 'Administration > <a href="alerts.php">Alerts</a> > Delete Alert';
+$title = DELETE_ALERT;
+$breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.DELETE_ALERT;
 
 $alert = new alert($_GET["id"]);
 
@@ -18,16 +18,16 @@ $output .= '
 		<input type="hidden" name="id" value="'.$_GET["id"].'" />
 		<table class="standardHeader" cellspacing="0" cellpadding="0">
 			<tr class="tableHeader">
-				<td>Delete Alert</td>
-				<td style="text-align: right;">[<a href="../docs/deleting_alerts.php">Help</a>]</td>
+				<td>'.DELETE_ALERT.'</td>
+				<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_alerts.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
-					<p>Are you sure you want to delete this alert?</p>
+					<p>'.DELETE_ALERT_CONFIRM.'</p>
 					'.$alert->export_description().'
 					<p class="submitButtonRow">
-						<input type="submit" name="delete" value="Delete" />
-						<input type="submit" name="cancel" value="Cancel" />
+						<input type="submit" name="delete" value="'._DELETE.'" />
+						<input type="submit" name="cancel" value="'.CANCEL.'" />
 					</p>
 				</td>
 			</tr>

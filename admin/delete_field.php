@@ -7,8 +7,8 @@ if (!$admin_user->can_admin_field($_GET["id"])){
 	exit;
 }
 
-$title = "anyInventory: Delete Field";
-$breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Delete Field';
+$title = DELETE_FIELD;
+$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.DELETE_FIELD;
 
 $field = new field($_GET["id"]);
 
@@ -18,12 +18,12 @@ $output .= '
 		<input type="hidden" name="action" value="do_delete" />
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
-				<td>Delete a Field</td>
-				<td style="text-align: right;">[<a href="../docs/deleting_fields.php">Help</a>]</td>
+				<td>'.DELETE_FIELD.'</td>
+				<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_fields.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
-					<p>Are you sure you want to delete this field?</p>
+					<p>'.DELETE_FIELD_CONFIRM.'</p>
 				</td>
 			</tr>
 			<tr class="tableHeader">
@@ -33,13 +33,13 @@ $output .= '
 				<td class="tableData" colspan="2">
 					<table>
 						<tr>
-							<td class="form_label">Input type:</td>
+							<td class="form_label">'.DATA_TYPE.':</td>
 							<td>'.$field->input_type.'</td>
 						</tr>';
 
 if (($field->input_type != "text") && ($field->input_type != 'file') && ($field->input_type != 'item')){
 	$output .= '<tr>
-					<td class="form_label">Values:</td>
+					<td class="form_label">'.VALUES.':</td>
 					<td>';
 	
 	if(is_array($field->values)){
@@ -49,27 +49,27 @@ if (($field->input_type != "text") && ($field->input_type != 'file') && ($field-
 		$output = substr($output, 0, strlen($output) - 2);
 	}
 	else{
-		$output .= 'None';
+		$output .= NONE;
 	}
 	
 	$output .= '</td></tr>';
 }
 
 if (($field->input_type == "text") || ($field->input_type == "multiple")){
-	$output .= '<tr><td class="form_label">Size:</td><td>'.$field->size.'</td></tr>';
+	$output .= '<tr><td class="form_label">'.SIZE.':</td><td>'.$field->size.'</td></tr>';
 }
 
 if (($field->input_type != 'file') && ($field->input_type != 'item')){
-	$output .= '<tr><td class="form_label">Default value:</td><td>'.$field->default_value.'</td></tr>';
+	$output .= '<tr><td class="form_label">'.DEFAULT_VALUE.':</td><td>'.$field->default_value.'</td></tr>';
 }
 
 $output .= '
 						<tr>
 							<td class="form_label">&nbsp;</td>
-							<td><b>This field is used in '.count($field->categories).' categories.</b></td>
+							<td><b>'.FIELD_CATS_PRE.' '.count($field->categories).' '.CATEGORIES.'.</b></td>
 						</tr>
 						<tr>
-							<td class="submitButtonRow" colspan="2"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></td>
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="delete" value="'._DELETE.'" /> <input type="submit" name="cancel" value="'.CANCEL.'" /></td>
 						</tr>
 					</table>
 				</td>

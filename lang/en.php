@@ -38,11 +38,16 @@ define('CATEGORIES','Categories');
 define('ITEMS','Items');
 define('ALERTS','Alerts');
 define('USERS','Users');
+define('GIVE_VIEW_TO','Give viewing priveleges to');
+define('GIVE_ADMIN_TO','Give admin priveleges to');
+define('SHOW_AUTOINC_FIELD','Show auto-increment field');
+define('INHERIT_FIELDS','Inherit fields from parent (in addition to fields checked below)');
 
 define('SEARCH','Search');
 
 define('EDIT','Edit');
 define('_DELETE','Delete');
+define('CANCEL','Cancel');
 
 define('ADD_CAT_HERE','Add a category here');
 define('NO_SUBCATS','There are no sub-categories in this category.');
@@ -73,4 +78,119 @@ define('LOGIN','Login');
 define('USERNAME','Username');
 define('PASSWORD','Password');
 
+define('SEARCH_RESULTS','Search results');
+define('IN','In');
+define('NO_RESULTS','No matching results');
+define('NO_MATCHING_ITEMS','There were no items that matched your search conditions.');
+define('CAN_VIEW','Can view');
+define('CAN_ADMIN','Can admin');
+define('ALL','All');
+define('USER_TYPE','User type');
+
+define('ADD_ALERT','Add Alert');
+define('ADD_ALERT_IN','Add alert in');
+define('ALERT_TITLE','Alert Title');
+
+define('TIMED_ONLY_LABEL.','Make this alert <a href="../docs/en/alerts.php#time_based">time-based only</a>.');
+
+define('TIMED_ONLY_EXPLANATION','For time-based alerts, you do not need to fill in the field, condition, or value.');
+define('FIELD','Field');
+
+define('CONDITION','Condition');
+
+define('VALUE','Value');
+
+define('ADD_CATEGORY','Add Category');
+
+define('NAME','Name');
+
+define('PARENT_CATEGORY','Parent Category');
+define('ADD_FIELD','Add Field');
+define('DATA_TYPE','Data type');
+define('TEXT','Text');
+define('RADIO','Radio Buttons');
+define('CHECKBOX','Checkboxes');
+define('ITEMS','Item(s)');
+define('SELECT_BOX','Select Box');
+define('MULTIPLE','Multiple ('.TEXT.' + '.SELECT_BOX.')');
+define('FILE','File');
+define('VALUES','Values');
+define('DEFAULT_VALUE','Default value');
+
+define('VALUES_INFO',"Only for data types 'Multiple', 'Select Box', 'Checkbox', and 'Radio Buttons.'  Separate with commas.");
+define('DEFAULT_VALUE_INFO',"Only for data types 'Multiple', 'Select Box', 'Text', and 'Radio Buttons.'");
+
+define('SIZE','Size, in characters');
+define('SIZE_INFO',"Only for 'text' data type.");
+
+define('HIGHLIGHT_FIELD','Highlight this field');
+
+define('ADD_ITEM','Add Item');
+define('ADD_ITEM_TO','Add Item to');
+define('ADD_USER','Add User');
+
+define('EDIT_LINK','edit');
+define('DELETE_LINK','delete');
+
+define('MORE_ITEMS',' et. al.');
+
+define('DELETE_ALERT','Delete Alert');
+define('DELETE_ALERT_CONFIRM','Are you sure you want to delete this alert?');
+
+define('DELETE_CATEGORY','Delete Category');
+define('DELETE_CATEGORY_CONFIRM','Are you sure you want to delete this category?');
+
+define('NUM_ITEMS','Number of items');
+define('DELETE_ALL_ITEMS','Delete all items in this category');
+define('MOVE_ITEMS_TO','Move all items in this category to ');
+define('NUM_SUBCATS','Number of subcategories');
+define('DELETE_ALL_SUBCATS','Delete all sub-categories');
+define('MOVE_SUBCATS_TO','Move all sub-categories to');
+
+define('NUM_ITEMS_TO','Number of items in this<br /> category and its subcategories');
+
+define('DELETE_FIELD','Delete Field');
+define('DELETE_FIELD_CONFIRM','Are you sure you want to delete this field?');
+
+define('NONE','None');
+
+define('FIELD_CATS_PRE','This field is used in');
+
+define('DELETE_ITEM','Delete Item');
+define('DELETE_ITEM_CONFIRM','Are you sure you want to delete this item?');
+
+define('DELETE_USER','Delete User');
+define('DELETE_USER_CONFIRM','Are you sure you want to delete this user?');
+
+define('EDIT_ALERT','Edit Alert');
+define('EDIT_CATEGORY','Edit Category');
+define('EDIT_ITEM','Edit Item');
+define('EDIT_FIELD','Edit Field');
+define('EDIT_USER','Edit User');
+
+define('UPDATE_CATEGORIES','Update Categories');
+define('APPLY_FIELDS',"Apply this category's fields to all subcategories.");
+
+define('EDIT_AUTOINC_FIELD','Edit Auto-Increment Field');
+define('EDIT_FRONT_PAGE_TEXT','Edit Front Page Text');
+define('EDIT_NAME_FIELD','Edit Name Field');
+
+define('EDIT_PASSWORD_INFO','If you do not enter a new password, it will remain unchanged.');
+
+define('USER','User');
+define('ADMINISTRATOR','Administrator');
+
+define('DOWN_LINK','down');
+define('UP_LINK','up');
+
+define('MOVE_ITEM','Move Item');
+define('MOVE_TO','Move to');
+
+define('AUTO_INCREMENT','auto-increment');
+define('ADD_DIVIDER','Add Divider');
+
+define('_FRONT_PAGE_TEXT','Front-page text');
+define('_NAME_FIELD_NAME','"Name" field name');
+
+define('MOVE_LINK','move');
 ?>

@@ -2,8 +2,8 @@
 
 include("globals.php");
 
-$title = 'anyInventory: Categories';
-$breadcrumbs = 'Administration > Categories';
+$title = CATEGORIES;
+$breadcrumbs = ADMINISTRATION.' > '.CATEGORIES;
 
 $rows = get_category_array();
 
@@ -19,8 +19,8 @@ if (count($rows) > 0){
 			
 			if ($admin_user->can_admin($row["id"])){
 				$table_rows .= '
-							[<a href="edit_category.php?id='.$row["id"].'">edit</a>]
-							[<a href="delete_category.php?id='.$row["id"].'">delete</a>]';
+							[<a href="edit_category.php?id='.$row["id"].'">'.EDIT_LINK.'</a>]
+							[<a href="delete_category.php?id='.$row["id"].'">'.DELETE_LINK.'</a>]';
 			}
 			
 			$table_rows .= '
@@ -47,15 +47,15 @@ $output .= '
 	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
 			<td>
-				Categories
+				'.CATEGORIES.'
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/categories.php">Help</a>]
+				[<a href="../docs/'.LANG.'/categories.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
-				<p style="padding-left: 5px;"><a href="add_category.php">Add a category</a></p>
+				<p style="padding-left: 5px;"><a href="add_category.php">'.ADD_CATEGORY.'</a></p>
 				'.$table_rows.'
 			</td>
 		</tr>

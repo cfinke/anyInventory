@@ -2,8 +2,8 @@
 
 include("globals.php");
 
-$title = 'anyInventory: Fields';
-$breadcrumbs = 'Administration > Fields';
+$title = FIELDS;
+$breadcrumbs = ADMINISTRATION.' > '.FIELDS;
 
 $query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
 $result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -13,14 +13,14 @@ if ($admin_user->usertype == 'Administrator'){
 		<tr>
 			<td align="center" style="width: 15ex; white-space: nowrap;">
 				<nobr>
-					[<a href="edit_special.php?id=auto_inc_field">edit</a>]
-					[delete]
-					[up]
-					[down]
+					[<a href="edit_special.php?id=auto_inc_field">'.EDIT_LINK.'</a>]
+					['.DELETE_LINK.']
+					['.UP_LINK.']
+					['.DOWN_LINK.']
 				</nobr>
 			</td>
 			<td style="white-space: nowrap;">'.AUTO_INC_FIELD_NAME.'</td>
-			<td>auto-increment</td>
+			<td>'.AUTO_INCREMENT.'</td>
 		</tr>';
 }
 
@@ -34,17 +34,17 @@ if (mysql_num_rows($result) > 0){
 			
 			if ($admin_user->can_admin_field($row["id"])){
 				$table_rows .= '
-					[<a href="edit_field.php?id='.$row["id"].'">edit</a>]
-					[<a href="delete_field.php?id='.$row["id"].'">delete</a>]
-					[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">up</a>]
-					[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">down</a>]';
+					[<a href="edit_field.php?id='.$row["id"].'">'.EDIT_LINK.'</a>]
+					[<a href="delete_field.php?id='.$row["id"].'">'.DELETE_LINK.'</a>]
+					[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">'.UP_LINK.'</a>]
+					[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">'.DOWN_LINK.'</a>]';
 			}
 			else{
 				$table_rows .= '
-					[edit]
-					[delete]
-					[up]
-					[down]';
+					['.EDIT_LINK.']
+					['.DELETE_LINK.']
+					['.UP_LINK.']
+					['.DOWN_LINK.']';
 			}
 			
 			$table_rows .= '
@@ -59,10 +59,10 @@ if (mysql_num_rows($result) > 0){
 				<tr>
 					<td align="center" style="width: 15ex; white-space: nowrap;">
 						<nobr>
-							[edit]
-							[<a href="field_processor.php?action=do_delete&amp;id='.$row["id"].'">delete</a>]
-							[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">up</a>]
-							[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">down</a>]
+							['.EDIT_LINK.']
+							[<a href="field_processor.php?action=do_delete&amp;id='.$row["id"].'">'.DELETE_LINK.'</a>]
+							[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">'.UP_LINK.'</a>]
+							[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">'.DOWN_LINK.'</a>]
 						</nobr>
 					</td>
 					<td style="white-space: nowrap;" colspan="2"><hr /></td>
@@ -77,15 +77,15 @@ $output .= '
 	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
 			<td>
-				Fields
+				'.FIELDS.'
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/fields.php">Help</a>]
+				[<a href="../docs/'.LANG.'/fields.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
-				<p style="padding: 5px;"><a href="add_field.php">Add a field</a> or <a href="field_processor.php?action=do_add_divider">add a divider</a>.</p>
+				<p style="padding: 5px;"><a href="add_field.php">'.ADD_FIELD.'</a> | <a href="field_processor.php?action=do_add_divider">'.ADD_DIVIDER.'</a>.</p>
 				'.$table_rows.'
 			</td>
 		</tr>

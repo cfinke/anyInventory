@@ -7,7 +7,7 @@ if ($admin_user->usertype != 'Administrator'){
 	exit;
 }
 
-$title = "anyInventory: Add User";
+$title = ADD_USER;
 $inHead = '
 	<script type="text/javascript">
 		<!--
@@ -19,15 +19,15 @@ $inHead = '
 		
 		// -->
 	</script>';
-$breadcrumbs = 'Administration > <a href="users.php">Users</a> > Add User';
+$breadcrumbs = ADMINISTRATION.' > <a href="users.php">'.USERS.'</a> > '.ADD_USER;
 
 $output .= '
 	<table class="standardTable" cellspacing="0" cellpadding="3">
 		<tr class="tableHeader">
-			<td>Add User</td>
+			<td>'.ADD_USER.'</td>
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/adding_users.php">Help</a>]
+				[<a href="../docs/'.LANG.'/adding_users.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>
@@ -36,15 +36,15 @@ $output .= '
 					<input type="hidden" name="action" value="do_add" />
 					<table>
 						<tr>
-							<td class="form_label"><label for="username">Username:</label></td>
+							<td class="form_label"><label for="username">'.USERNAME.':</label></td>
 							<td class="form_input"><input type="text" name="username" id="username" value="" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="password">Password:</label></td>
+							<td class="form_label"><label for="password">'.PASSWORD.':</label></td>
 							<td class="form_input"><input type="password" name="password" id="password" value="" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="usertype">User Type:</label></td>
+							<td class="form_label"><label for="usertype">'.USER_TYPE.':</label></td>
 							<td class="form_input">
 								<select name="usertype" id="usertype" onchange="toggle();">
 									<option value="User">User</option>
@@ -53,7 +53,7 @@ $output .= '
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="c_view[]">Allow user to view:</label></td>
+							<td class="form_label"><label for="c_view[]">'.GIVE_VIEW_TO.':</label></td>
 							<td class="form_input">
 								<select name="c_view[]" id="c_view[]" multiple="multiple" size="10" style="width: 100%;">
 									'.get_category_options(null).'
@@ -61,7 +61,7 @@ $output .= '
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="c_admin[]">Allow user to admin:</label></td>
+							<td class="form_label"><label for="c_admin[]">'.GIVE_ADMIN_TO.':</label></td>
 							<td class="form_input">
 								<select name="c_admin[]" id="c_admin[]" multiple="multiple" size="10" style="width: 100%;">
 									'.get_category_options(null).'

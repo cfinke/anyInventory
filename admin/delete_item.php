@@ -2,8 +2,8 @@
 
 include("globals.php");
 
-$title = "anyInventory: Delete Item";
-$breadcrumbs = 'Administration > <a href="items.php">Items</a> > Delete Item';
+$title = DELETE_ITEM;
+$breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.Items.'</a> > '.DELETE_ITEM;
 
 $item = new item($_GET["id"]);
 
@@ -18,16 +18,16 @@ $output .= '
 		<input type="hidden" name="id" value="'.$_GET["id"].'" />
 		<table class="standardTable" cellspacing="0" cellpadding="0">
 			<tr class="tableHeader">
-				<td>Delete Item</td>
-				<td style="text-align: right;">[<a href="../docs/deleting_items.php">Help</a>]</td>
+				<td>'.DELETE_ITEM.'</td>
+				<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_items.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
-					<p>Are you sure you want to delete this item?</p>
+					<p>'.DELETE_ITEM_CONFIRM.'</p>
 					'.$item->export_description().'
 					<p class="submitButtonRow">
-						<input type="submit" name="delete" value="Delete" />
-						<input type="submit" name="cancel" value="Cancel" />
+						<input type="submit" name="delete" value="'.DELETE.'" />
+						<input type="submit" name="cancel" value="'.CANCEL.'" />
 					</p>
 				</td>
 			</tr>

@@ -2,8 +2,8 @@
 
 include("globals.php");
 
-$title = 'anyInventory: Alerts';
-$breadcrumbs = 'Administration > Alerts';
+$title = ALERTS;
+$breadcrumbs = ADMINISTRATION.' > '.ALERTS;
 
 $query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` ORDER BY `title` ASC";
 $result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -23,15 +23,15 @@ if (mysql_num_rows($result) > 0){
 					<tr>
 						<td align="center" style="width: 18ex; white-space: nowrap;">
 							<nobr>
-								[<a href="edit_alert.php?id='.$row["id"].'">edit</a>]
-								[<a href="delete_alert.php?id='.$row["id"].'">delete</a>]
+								[<a href="edit_alert.php?id='.$row["id"].'">'.EDIT_LINK.'</a>]
+								[<a href="delete_alert.php?id='.$row["id"].'">'.DELETE_LINK.'</a>]
 							</nobr>
 						</td>
 						<td>'.$row["title"].'</td>
 						<td>'.$item->name;
 				
 				if (count($alert->item_ids) > 1){
-					$table_rows .= ' et. al.';
+					$table_rows .= MORE_ITEMS;
 				}
 				
 				$table_rows .= '
@@ -50,15 +50,15 @@ $output .= '
 	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
 			<td>
-				Alerts
+				'.ALERTS.'
 			</td>
 			<td style="text-align: right;">
-				[ <a href="../docs/alerts.php">Help</a> ]
+				[ <a href="../docs/'.LANG.'/alerts.php">'.HELP.'</a> ]
 			</td>
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
-				<p style="padding-left: 5px;"><a href="add_alert.php">Add an Alert</a></p>
+				<p style="padding-left: 5px;"><a href="add_alert.php">'.ADD_ALERT.'</a></p>
 				'.$table_rows.'
 			</td>
 		</tr>

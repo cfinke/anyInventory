@@ -70,7 +70,7 @@ if (is_array($cat_ids)){
 		
 		while ($row = mysql_fetch_array($result)){
 			$item = new item($row["id"]);
-			$output .= '			<item id="'.$row["id"].'" category="'.htmlentities($item->name).'">'.$cr;
+			$output .= '			<item id="'.$row["id"].'" name="'.htmlentities($item->name).'">'.$cr;
 			
 			if (is_array($category->field_ids)){
 				foreach($category->field_ids as $field_id){

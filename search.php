@@ -88,7 +88,17 @@ else{
 	
 	foreach($_REQUEST as $key => $value){
 		if ((trim($value) != '') && in_array(str_replace("_"," ",$key), $fields)){
-			$query .= " AND `".str_replace("_"," ",$key)."` LIKE '%".$value."%' ";
+			if (is_array($value)){
+				foreach($value as $key1 => $val){
+					$query .= " AND `".str_replace("_"," ",$key)."` LIKE '%".$key1."%' ";
+				}
+			}
+			else{
+				$query .= " AND `".str_replace("_"," ",$key)."` LIKE '%".$value."%' ";
+			}
+		}
+		elseif((trim($value) != '') && (in_array(str_replace("_"," ",str_replace("_text","",$key)), $fields))){
+			$query .= " AND `".str_replace("_"," ",str_replace("_text","",$key))."` LIKE '%".$value."%' ";
 		}
 	}
 	

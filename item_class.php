@@ -28,9 +28,11 @@ class item {
 					$this->fields[$field->name] = $row[$field->name];
 				}
 				else{
-					$this->fields[$field->name] = explode(",",$row[$field->name]);
-					foreach($this->fields[$field->name] as $key => $value){
-						$this->fields[$field->name][$key] = trim($value);
+					if (strstr($row[$field->name],",") !== false){
+						$this->fields[$field->name] = explode(",",$row[$field->name]);
+						foreach($this->fields[$field->name] as $key => $value){
+							$this->fields[$field->name][$key] = trim($value);
+						}
 					}
 				}
 			}
@@ -52,14 +54,17 @@ class item {
 	}
 	
 	function export_description(){
+		global $DIR_PREFIX;
+		
 		$output .= '<h2>'.$this->name.'</h2>';
 		
-		if (is_array($this->fields) && (count($this->fields) > 0)){
+		$num_empty_fields = $this->count_empty_fields();
+		
+		if (is_array($this->fields) && ((count($this->fields) - $num_empty_fields) > 0)){
 			$output .= '<table style="width: 100%;"><tr><td style="width: 50%; vertical-align: top;">';
 			$i = 0;
 			foreach($this->fields as $key => $value){
-				if ($i++ == ceil(count($this->fields) / 2)) $output .= '</td><td style="width: 50%;">';
-				if (is_array($value)){
+			if (is_array($value)){
 					if (count($value) > 0){
 						$output .= '<p><b>'.$key.':</b> ';
 						
@@ -68,14 +73,15 @@ class item {
 						}
 						
 						$output = substr($output, 0, strlen($output) - 2);
+						if ($i++ == floor((count($this->fields) - $num_empty_fields)/ 2)) $output .= '</td><td style="width: 50%;">';
 					}
 				}
 				elseif (trim($value) != ""){
 					$output .= '<p><b>'.$key.':</b> '.$value.'</p>';
+					if ($i++ == floor((count($this->fields) - $num_empty_fields)/ 2)) $output .= '</td><td style="width: 50%;">';
 				}
 			}
 			$output .= '</td></tr></table>';
-			
 		}
 		
 		if (is_array($this->files) && (count($this->files) > 0)){
@@ -110,6 +116,16 @@ class item {
 		}
 		
 		return $output;
+	}
+	
+	function count_empty_fields(){
+		foreach($this->fields as $key => $value){
+			if (trim($value) == ''){
+				$count++;
+			}
+		}
+		
+		return $count;
 	}
 }
 

@@ -11,7 +11,7 @@ $output .= '
 		<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 		<p>Are you sure you want to delete this item?</p>
 		'.$item->export_description().'
-		<p style="text-align: center;">
+		<p style="text-align: center; clear: both;">
 			<input type="submit" name="delete" value="Delete" />
 			<input type="submit" name="cancel" value="Cancel" />
 		</p>

@@ -12,14 +12,14 @@ if ($_REQUEST["action"] == "do_add"){
 	switch($_REQUEST["input_type"]){
 		case 'text':
 			if ($_REQUEST["size"] < 256){
-				$query .= " VARCHAR(".$_REQUEST["size"].") DEFAULT '".$_REQUEST["default_value"]."' ";
+				$query .= " VARCHAR(".$_REQUEST["size"].") DEFAULT '' ";
 			}
 			else{
 				$query .= " TEXT ";
 			}
 			break;
 		case 'multiple':
-			$query .= " VARCHAR(64) DEFAULT '".$_REQUEST["default_value"]."' ";
+			$query .= " VARCHAR(64) DEFAULT '' ";
 			break;
 		case 'radio':
 		case 'checkbox':
@@ -35,7 +35,7 @@ if ($_REQUEST["action"] == "do_add"){
 			
 			$query = substr($query, 0, strlen($query) - 1);
 			
-			$query .= ") DEFAULT '".$_REQUEST["default_value"]."' ";
+			$query .= ") DEFAULT '' ";
 			break;
 	}
 	

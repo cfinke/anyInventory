@@ -12,9 +12,7 @@ To install anyInventory, upload the included files to your Web server
 and then run the included install.php script from the Web browser of 
 your choice.  (We heartily recommend Firefox: http://www.mozilla.org/.)
 You should also make sure that all files and directories are readable
-and executable by the Web server, as well as making sure that the item_files/ 
-subdirectory is writable, readable, and executable by the Web server.  
-(The install script will alert you if it is not writable.)
+and executable by the Web server.
 
 In order for the label system to work, PHP needs write access to the folder
 in which you install anyInventory.  Also, make sure that all file are readbale/

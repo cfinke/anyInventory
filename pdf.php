@@ -58,7 +58,7 @@ $pdf->SetY($ypos);
 if(isset($_GET["i"])){
 	$item_id = $_GET["i"]; 
 	do {
-		$filename = "item_files/" . rand() .'.png';
+		$filename = "/tmp/" . rand() .'.png';
 	} while (is_file($filename));
 	
 	$files[] = $filename;
@@ -68,7 +68,7 @@ if(isset($_GET["i"])){
 else {
 	foreach ($_REQUEST["i"] as $item_id){
 		do {
-			$filename = "item_files/" . rand() .'.png';
+			$filename = "/tmp/" . rand() .'.png';
 		} while (is_file($filename));
 		
 		$files[] = $filename;

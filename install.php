@@ -172,7 +172,7 @@ if ($_POST["action"] == "install"){
 		elseif($_POST["db_type"] == 'mysql'){
 			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
 				" . $db->quoteIdentifier('data_id') . " INT,
-				" . $db->quoteIdentifier('`part_id') . " INT,
+				" . $db->quoteIdentifier('part_id') . " INT,
 				" . $db->quoteIdentifier('data') . " LONGTEXT,
 				CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . ")";
 		}

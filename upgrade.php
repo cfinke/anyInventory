@@ -66,10 +66,6 @@ if ($_POST["action"] == "upgrade"){
 		}
 	}
 	
-	if (!is_writable(realpath("./item_files/"))){
-		$errors[] = 'The path '.realpath("./item_files/").' is not writable by the Web server.';
-	}
-	
 	// Check for the correct database information.
 	if (count($errors) == 0){
 		// check for Oracle 8 - data source name syntax is different
@@ -402,26 +398,6 @@ if ($_POST["action"] == "upgrade"){
 				$query = "ALTER TABLE `anyInventory_config` DROP `id`";
 				$result = $db->query($query);
 				
-				// Set up the sequence tables.
-				
-				$sequences = array("alerts","categories","fields","items","files","users");
-				
-				foreach($sequences as $seq){
-					$query = "SELECT MAX(`id`) AS `old_id` FROM `anyInventory_" . $seq . "`";
-					$result = $db->query($query);
-					$row = $result->fetchRow();
-					$seqId = $row["old_id"];
-					
-					$query = "CREATE TABLE `".$seq."_seq` (
-					  `id` int(10) unsigned NOT NULL auto_increment,
-					  PRIMARY KEY  (`id`)
-						)";
-					$result = $db->query($query);
-					
-					$query = "INSERT INTO `".$seq."_seq` VALUES (".($seqId + 1).")";
-					$result = $db->query($query);
-				}
-				
 				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('BAR_TEMPLATE', '6')";
 				$result = $db->query($query);
 				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
@@ -439,7 +415,33 @@ if ($_POST["action"] == "upgrade"){
 				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				// Create the file_data table.
+				if($_POST['db_type'] == 'oci8'){
+					$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
+						" . $db->quoteIdentifier('data_id') . " INT,
+						" . $db->quoteIdentifier('part_id') . " INT,
+						" . $db->quoteIdentifier('data') . " LONG,
+						CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . ")";
+				}
+				elseif($_POST["db_type"] == 'mysql'){
+					$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
+						" . $db->quoteIdentifier('data_id') . " INT,
+						" . $db->quoteIdentifier('part_id') . " INT,
+						" . $db->quoteIdentifier('data') . " LONGTEXT,
+						CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . ")";
+				}
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+				
 				// Add all of the files to it.
+				$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_files');
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+				
+				while ($row = $result->fetchRow()){
+					write_file_to_db($row["key"],file_get_contents("item_files/".$row["file_name"]));
+				}
+				
+				@exec("rm -rf ".realpath("item_files/"));
 		}
 		
 		// Attempt to write the globals file.

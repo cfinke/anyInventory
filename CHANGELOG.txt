@@ -1,21 +1,18 @@
-2004/06/18
-Finished timed alerts
-Added timed alerts
-Added 'timed' variable to alert class
-Fixed get_item_options and get_category_options when the first item in the array is 0
-Changed behavior of get_item_options and get_category_options: they both return the lists with all of the options selected
-Added inHead and inBodyTag variables
-Changed 'values' and 'size' visibilty values to disabled value
-Added timed alerts documentation
+2004/06/27
+Finished up with the new layout
+Added request variables to admin globals redirect
+Removed image directory check from install file
+Added class includes to upgrade.php
+Updated documentation
 
-2004/06/21
-Changed some task priorities
-Fixed backwards stristr call
+2004/06/25
+Added automatic remote image downloading and thumbnailing.
 
-2004/06/22
-Changed file uploading to be a specific field type
-Finished file input type task, moving on to testing
-Added file as an input type
-Added a buffer Generic File field
-Updated documentation for fields
-Removed features present in 1.6 from What's Next documentation
+2004/06/24
+Fixed category drop-down bug, added multiple-caegory alerts
+
+2004/06/23
+Add built-in password protection for the admin directory
+Removed query() function and replaced with mysql_query calls
+Fixed too-long URL bug
+Fixed bug in item_processor when deleting a file

@@ -33,8 +33,9 @@ DONE - New layout
 
 BEFORE 1.8
 ===================
+Remote image thumbnailing - backup in case of missing libcurl
 Better advanced search, like phpMyAdmin's Search page
-Item associations
+CHRIS - ("Item" Field type) Item associations
 
 BEFORE 1.9
 ===================
@@ -43,6 +44,4 @@ Label Sheets
 
 BUGS
 ========================================
-FIXED - When a remote file's URL is too long, it stretches the page
-FIXED - The category drop down returns with the last item selected instead of the first
 When you try to move a category to one of its subcategories, the page times out, probably due to some infinite loop.  The fix should be: A category cannot be moved to a subcategory of itself, unless you can think of a better fix.

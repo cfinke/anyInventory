@@ -34,9 +34,26 @@ class user {
 		return (($cat_id == 0) || ($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_admin));
 	}
 	
-	function get_admin_categories_options($selected = null){
+	function can_admin_alert($alert_id){
+		$alert = new alert($alert_id);
+		
+		if (is_array($alert->category_ids)){
+			foreach($alert->category_ids as $cat_id){
+				if (!$this->can_admin($cat_id)){
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	function get_admin_categories_options($selected = null, $multiple = true){
 		if ($this->usertype == 'Administration'){
-			return get_category_options($selected);
+			return get_category_options($selected, $multiple);
 		}
 		else{
 			return category_array_to_options($this->categories_admin, $selected);
@@ -53,17 +70,21 @@ class user {
 	}
 	
 	function add_category_view($category_id){
-		$this->categories_view[] = $category_id;
-		
-		$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
-		mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		if ($this->usertype != 'Administration'){
+			$this->categories_view[] = $category_id;
+			
+			$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
+			mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		}
 	}
 	
 	function add_category_admin($category_id){
-		$this->categories_admin[] = $category_id;
-		
-		$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
-		mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		if ($this->usertype != 'Administration'){
+			$this->categories_admin[] = $category_id;
+			
+			$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
+			mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		}
 	}
 	
 	function update_categories_view($category_ids){

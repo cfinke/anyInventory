@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-$title = "anyInventory: Help > Items > Deleting Alerts";
+$title = "anyInventory: Help > Alerts > Deleting Alerts";
 
 $output .= '
 	<h2>Deleting Alerts</h2>

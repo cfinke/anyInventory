@@ -20,15 +20,15 @@ $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
 $db_pass = "'.$_REQUEST["db_pass"].'";
 
-';
+$admin_pass = "';
 
 if ($_REQUEST["password_protect"] == "yes"){
-	$writetoglobals .= '$admin_pass = "'.$_REQUEST["admin_password"].'";
-
-';
+	$writetoglobals .= $_REQUEST["admin_password"];
 }
 
-$writetoglobals .= 'include($DIR_PREFIX."functions.php");
+$writetoglobals .= '";
+
+include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");
 include($DIR_PREFIX."item_class.php");
@@ -97,7 +97,7 @@ if ($_REQUEST["action"] == "upgrade"){
 					`time` timestamp( 14 ) NOT NULL ,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
-				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_files` ADD `offsite_link` VARCHAR(255) NOT NULL";
 				@mysql_query($query);
@@ -165,7 +165,7 @@ if ($_REQUEST["action"] == "upgrade"){
 				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file' ) DEFAULT 'text' NOT NULL ";
-				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				@mysql_query($query);
 				
 				$query = "SELECT COUNT(`key`) AS `num_files` FROM `anyInventory_files` GROUP BY `key` ORDER BY `key` DESC LIMIT 1";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -186,10 +186,10 @@ if ($_REQUEST["action"] == "upgrade"){
 						
 						for($i = 1; $i <= $max_files + 1; $i++){
 							$query = "ALTER TABLE `anyInventory_items` ADD `Generic File ".$i."` INT NOT NULL";
-							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+							@mysql_query($query);
 							
 							$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`categories`,`values`) VALUES ('Generic File ".$i."','file','".serialize($cat_ids)."','".serialize($values)."')";
-							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+							@mysql_query($query);
 						}
 						
 						$query = "SELECT `id`,`key` FROM `anyInventory_files` ORDER BY `key`,`id`";
@@ -214,7 +214,7 @@ if ($_REQUEST["action"] == "upgrade"){
 				# Changes introduced in 1.7
 				
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `category_ids` TEXT NOT NULL";
-				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				@mysql_query($query);
 				
 				// Run script to add a category array for each alert
 				
@@ -222,17 +222,17 @@ if ($_REQUEST["action"] == "upgrade"){
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
-					$items = unserialize($row["item_ids"]);
-					
-					$item = new item($items[0]);
-					
-					$category_ids = array($item->category->id);
-					
-					$newquery = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($category_ids)."' WHERE `id`='".$row["id"]."'";
-					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+					if (!is_array(unserialize($row["category_ids"]))){
+						$items = unserialize($row["item_ids"]);
+						
+						$item = new item($items[0]);
+						
+						$category_ids = array($item->category->id);
+						
+						$newquery = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($category_ids)."' WHERE `id`='".$row["id"]."'";
+						$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+					}
 				}
-				
-				/////////////////////////////////////////////////////
 		}
 		
 		// Attempt to write the globals file.
@@ -346,8 +346,8 @@ elseif(!$globals_error){
 	$output .= '	<input type="hidden" name="action" value="upgrade" />
 					<table>
 						<tr>
-							<td>From which version of anyInventory are you upgrading?</td>
-							<td>
+							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
+							<td class="form_input">
 								<select name="old_version">
 									<option value="1.6">1.6</option>
 									<option value="1.5">1.5</option>
@@ -361,74 +361,86 @@ elseif(!$globals_error){
 							</td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="db_host">MySQL host:</label></td>
-							<td><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>
+							<td class="form_label"><label for="db_host">MySQL host:</label></td>
+							<td class="form_input"><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="db_user">MySQL Username:</label></td>
-							<td><input type="text" name="db_user" id="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" /></td>
+							<td class="form_label"><label for="db_user">MySQL Username:</label></td>
+							<td class="form_input"><input type="text" name="db_user" id="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="db_pass">MySQL Password:</label></td>
-							<td><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" /></td>
+							<td class="form_label"><label for="db_pass">MySQL Password:</label></td>
+							<td class="form_input"><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="db_name">MySQL Database:</label></td>
-							<td><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
+							<td class="form_label"><label for="db_name">MySQL Database:</label></td>
+							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="password_protect">Password protect admin directory:</label></td>
-							<td><input onclick="document.getElementById(\'admin_password\').disabled = !this.checked;" type="checkbox" name="password_protect" id="password_protect" value="yes"'.$ppchecked.' /></td>
+							<td class="form_label"><label for="password_protect">Password protect admin directory:</label></td>
+							<td class="form_input"><input onclick="document.getElementById(\'admin_password\').disabled = !this.checked;" type="checkbox" name="password_protect" id="password_protect" value="yes"'.$ppchecked.' /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="admin_password">Admin Password:</label></td>
-							<td><input type="text" name="admin_password" id="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" /></td>
+							<td class="form_label"><label for="admin_password">Admin Password:</label></td>
+							<td class="form_input"><input type="text" name="admin_password" id="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel">&nbsp;</td>
-							<td><input type="submit" name="submit" id="submit" value="Upgrade" /></td>
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Upgrade" /></td>
 						</tr>
 					</table>';
 }
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-	<html>
-		<head>
-			<title>anyInventory 1.7 Upgrade</title>
-			<link rel="stylesheet" type="text/css" href="style.css">
-		</head>
-		<body'.$inBodyTag.'>
-			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
-				<tr>
-					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-						<h1 class="title">anyInventory 1.7</h1>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
-						<div style="min-height: 400px; padding: 5px;">
-							<h2>Upgrade anyInventory</h2>
-							<form action="upgrade.php" method="post">
-								'.$output.'
-							</form>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div style="text-align: center; width: 100%; color: #cccccc; font-size: 10px; padding: 4px;">
-							<a href="http://anyinventory.sourceforge.net/">anyInventory, the web\'s most flexible and powerful inventory system</a>
-						</div>
-					</td>
-				</tr>
-			</table>
-		</body>
-	</html>';
+echo '
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<title>Upgrade anyInventory 1.7</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		'.$inHead.'
+	</head>
+	<body'.$inBodyTag.'>
+		<table style="width: 97%; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">
+			<tr>
+				<td id="appTitle">
+					anyInventory 1.7
+				</td>
+			</tr>
+			<tr>
+				<td id="mainMenu">
+					<table style="width: 100%;">
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div style="min-height: 400px;">
+						<table class="standardTable" cellspacing="0">
+							<tr class="tableHeader">
+								<td>Upgrade anyInventory 1.7</td>
+							</tr>
+							<tr>
+								<td class="tableData">
+									<p>Welcome to the upgrade page of anyInventory.  To upgrade, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the upgrade will continue.  After the upgrade has finished, you will be redirected to the home page of your anyInventory installation.  If you need any help, feel free to contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
+									<form action="upgrade.php" method="post">
+										'.$output.'
+									</form>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+			<tr class="footerCell">
+				<td>
+					<a href="http://anyinventory.sourceforge.net/">anyInventory, the web\'s most flexible and powerful inventory system</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>';
 
 exit;
 

@@ -19,13 +19,13 @@ $errors[4] = array("Sign In",'
 				<td class="form_input"><input type="password" name="password" value="" />
 			</tr>
 			<tr>
-				<td class="form_label">&nbsp;</td>
-				<td class="form_input" style="text-align: center;"><input type="submit" name="submit" value="Submit" /></td>
+				<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Submit" /></td>
 			</tr>
 		</table>
 	</form>',"breadcrumbs"=>'Administration > Sign in');
 $errors[5] = array('Error','An alert must apply to at least one category.','breadcrumbs'=>'Error');
 $errors[6] = array('Error','An alert must apply to at least one item.','breadcrumbs'=>'Error');
+$errors[7] = array('Error','The Top Level category cannot be edited or deleted.','breadcrumbs'=>'Error');
 
 $breadcrumbs = $errors[$_REQUEST["eid"]]["breadcrumbs"];
 

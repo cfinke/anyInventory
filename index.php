@@ -59,7 +59,13 @@ else{
 				<td style="width: 100%;">
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
-							<td>Categories ( <a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php">Delete</a> | <a href="admin/add_category.php?c='.$_REQUEST["c"].'">Add a category here</a> )</td>
+							<td>Sub-categories in '.$category->breadcrumb_names.' ( ';
+	
+	if ($category->id != 0){
+		$output .= '<a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_REQUEST["c"].'">Delete</a> | ';
+	}
+	
+	$output .= ' <a href="admin/add_category.php?c='.$_REQUEST["c"].'">Add a category here</a> )</td>
 							<td style="text-align: right;">[<a href="../docs/categories.php">Help</a>]</td>
 						</tr>
 						<tr>

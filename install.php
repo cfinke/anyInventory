@@ -18,15 +18,15 @@ $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
 $db_pass = "'.$_REQUEST["db_pass"].'";
 
-';
+$admin_pass = "';
 
 if ($_REQUEST["password_protect"] == "yes"){
-	$writetoglobals .= '$admin_pass = "'.$_REQUEST["admin_password"].'";
-
-';
+	$writetoglobals .= $_REQUEST["admin_password"];
 }
 
-$writetoglobals .= 'include($DIR_PREFIX."functions.php");
+$writetoglobals .= '";
+
+include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");
 include($DIR_PREFIX."item_class.php");
@@ -177,6 +177,7 @@ if ($_REQUEST["action"] == "install"){
 					`value` varchar( 255 ) NOT NULL default '',
 					`time` timestamp( 14 ) NOT NULL ,
 				 	`timed` TINYINT( 1 ) DEFAULT '0' NOT NULL,
+					`category_ids` TEXT NOT NULL,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -284,36 +285,35 @@ elseif(!$set_config_error){
 	$output .= '	<input type="hidden" name="action" value="install" />
 					<table>
 						<tr>
-							<td class="formlabel"><label for="db_host">MySQL host:</label></td>
-							<td><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>
+							<td class="form_label"><label for="db_host">MySQL host:</label></td>
+							<td class="form_input"><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="db_user">MySQL Username:</label></td>
-							<td><input type="text" name="db_user" id="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" /></td>
+							<td class="form_label"><label for="db_user">MySQL Username:</label></td>
+							<td class="form_input"><input type="text" name="db_user" id="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="db_password">MySQL Password:</label></td>
-							<td><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" /></td>
+							<td class="form_label"><label for="db_password">MySQL Password:</label></td>
+							<td class="form_input"><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="db_name">MySQL Database:</label></td>
-							<td><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
+							<td class="form_label"><label for="db_name">MySQL Database:</label></td>
+							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="overwrite_tables">Overwrite tables of the same name:</label></td>
-							<td><input type="checkbox" name="overwrite_tables" id="overwrite_tables" value="1"'.$checked.' /></td>
+							<td class="form_label"><input type="checkbox" name="overwrite_tables" id="overwrite_tables" value="1"'.$checked.' /></td>
+							<td class="form_input"><label for="overwrite_tables">Overwrite tables of the same name</label></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="password_protect">Password protect admin directory:</label></td>
-							<td><input onclick="document.getElementById(\'admin_password\').disabled = !this.checked;" type="checkbox" name="password_protect" id="password_protect" value="yes"'.$ppchecked.' /></td>
+							<td class="form_label"><input onclick="document.getElementById(\'admin_password\').disabled = !this.checked;" type="checkbox" name="password_protect" id="password_protect" value="yes"'.$ppchecked.' /></td>
+							<td class="form_input"><label for="password_protect">Password protect admin directory</label></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="admin_password">Admin Password:</label></td>
-							<td><input type="text" name="admin_password" id="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" /></td>
+							<td class="form_label"><label for="admin_password">Admin Password:</label></td>
+							<td class="form_input"><input type="text" name="admin_password" id="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel">&nbsp;</td>
-							<td><input type="submit" name="submit" id="submit" value="Install" /></td>
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Install" /></td>
 						</tr>
 					</table>';
 }
@@ -346,11 +346,19 @@ echo '
 			</tr>
 			<tr>
 				<td>
-						<div style="min-height: 400px; padding: 5px;">
-						<h2>Install anyInventory 1.7</h2>
-						<p>Welcome to the installation page of anyInventory.  To install, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the installation will continue.  After the installation has finished, you will be redirected to the home page of you anyInventory installation.  If you need any help, feel free to contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
-						'.$output.'
-						</div>
+					<div style="min-height: 400px;">
+						<table class="standardTable" cellspacing="0">
+							<tr class="tableHeader">
+								<td>Install anyInventory 1.7</td>
+							</tr>
+							<tr>
+								<td class="tableData">
+									<p>Welcome to the installation page of anyInventory.  To install, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the installation will continue.  After the installation has finished, you will be redirected to the home page of your anyInventory installation.  If you need any help, feel free to contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
+									'.$output.'
+								</td>
+							</tr>
+						</table>
+					</div>
 				</td>
 			</tr>
 			<tr class="footerCell">

@@ -30,7 +30,7 @@ $errors[8] = array('Error','You must supply a list of values for this field.','b
 $errors[9] = array('Error','Not logged in. Please <a href='.$DIR_PREFIX.'index.php">click here</a> to login. ','breadcrumbs'=>'Error');
 $errors[10] = array('Access Denied','You must be a privileged used to edit, add, or delete. ','breadcrumbs'=>'Access Denied');
 $errors[11] = array('Access Denied','You must be an administrator to add, edit, or delete users. ','breadcrumbs'=>'Access Denied');
-
+$errors[12] = array('Access Denied','You do not have viewing priveleges for this category.','breadcrumbs'=>'Access Denied');
 $breadcrumbs = $errors[$_REQUEST["eid"]]["breadcrumbs"];
 
 $output = '

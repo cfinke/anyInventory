@@ -207,17 +207,17 @@ elseif($_REQUEST["action"] == "do_delete"){
 		if (is_array($item->files)){
 			foreach($item->files as $file){
 				if (!$file->is_remote){
-					if (unlink($files_dir.$file["file_name"])){
-						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file["id"]."'";
+					if (unlink($files_dir.$file->file_name)){
+						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
 						query($query);
 					}
 					else{
-						echo "Could not delete ".$file["file_name"].'<br />';
+						echo "Could not delete ".$file->file_name.'<br />';
 						exit;
 					}
 				}
 				else{
-						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file["id"]."'";
+						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
 						query($query);
 				}
 			}

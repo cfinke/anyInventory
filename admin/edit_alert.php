@@ -3,13 +3,25 @@
 include("globals.php");
 
 $title = "anyInventory: Edit Alert";
+$inHead = '
+	<script type="text/javascript">
+		<!-- 
+			function toggle(){
+				document.getElementById(\'field\').disabled = document.getElementById(\'timed\').checked;
+				document.getElementById(\'condition\').disabled = document.getElementById(\'timed\').checked;
+				document.getElementById(\'value\').disabled = document.getElementById(\'timed\').checked;
+			}
+		// -->
+	</script>';
+$inBodyTag = ' onload="toggle();"';
 
 $alert = new alert($_REQUEST["id"]);
 
 $item = new item($alert->item_ids[0]);
 
 $output = '
-		<form method="post" action="alert_processor.php" enctype="multipart/form-data">
+	
+	<form method="post" action="alert_processor.php" enctype="multipart/form-data">
 		<table style="width: 100%;"><tr><td><h2>Edit an Alert</h2></td><td style="text-align: right;"><a href="../docs/editing_alerts.php">Help with editing alerts</a></td></tr></table>
 			<input type="hidden" name="action" value="do_edit" />
 			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
@@ -25,6 +37,14 @@ $output = '
 							'.get_item_options($item->category->id, $alert->item_ids).'
 						</select>
 					</td>
+				</tr>
+				<tr>
+					<td class="form_label"><input onclick="toggle();" type="checkbox" id="timed" name="timed" value="yes"';
+					if ($alert->timed) $output .= ' checked="checked"';
+$output .= ' />
+					</td>
+					<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+					<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
 				</tr>
 				<tr>
 					<td class="form_label"><label for="field">Field:</label></td>

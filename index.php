@@ -31,7 +31,7 @@ if ($_REQUEST["id"]){
 			$alert = new alert($row["id"]);
 			$field = new field($row["field_id"]);
 			
-			if (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");')){
+			if (($alert->timed) || (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");'))){
 				if (!$tripped){
 					$output .= '</td><td style="width: 30ex;">';
 					$tripped = true;
@@ -99,7 +99,7 @@ else{
 				$item = new item($item_id);
 				$field = new field($alert->field_id);
 				
-				if (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");')){
+				if (($alert->timed) || (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");'))){
 					if (!$tripped){
 						$output .= '</td><td>';
 						$tripped = true;

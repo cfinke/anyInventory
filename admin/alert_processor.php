@@ -14,14 +14,16 @@ if ($_REQUEST["action"] == "do_add"){
 				 `field_id`,
 				 `condition`,
 				 `value`,
-				 `time`)
+				 `time`,
+				 `timed`)
 				VALUES
 				('".$_REQUEST["title"]."',
 				 '".serialize($_REQUEST["i"])."',
 				 '".$_REQUEST["field"]."',
 				 '".$_REQUEST["condition"]."',
 				 '".$_REQUEST["value"]."',
-				 '".$timestamp."')";
+				 '".$timestamp."',
+				 '".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."')";
 	query($query);
 }
 elseif($_REQUEST["action"] == "do_edit"){
@@ -36,7 +38,8 @@ elseif($_REQUEST["action"] == "do_edit"){
 				`field_id`='".$_REQUEST["field"]."',
 				`condition`='".$_REQUEST["condition"]."',
 				`value`='".$_REQUEST["value"]."',
-				`time`='".$timestamp."' WHERE `id`='".$_REQUEST["id"]."'";
+				`time`='".$timestamp."' WHERE `id`='".$_REQUEST["id"]."',
+				`timed`='".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."'";
 	query($query);
 }
 elseif($_REQUEST["action"] == "do_delete"){

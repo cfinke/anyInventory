@@ -24,6 +24,17 @@ if (!isset($_REQUEST["c"])){
 		</form>';
 }
 else{
+	$inHead = '
+		<script type="text/javascript">
+			<!-- 
+				function toggle(){
+					document.getElementById(\'field\').disabled = document.getElementById(\'timed\').checked;
+					document.getElementById(\'condition\').disabled = document.getElementById(\'timed\').checked;
+					document.getElementById(\'value\').disabled = document.getElementById(\'timed\').checked;
+				}
+			// -->
+		</script>';
+	
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$_REQUEST["c"]."'";
 	$result = query($query);
 	
@@ -51,6 +62,11 @@ else{
 								'.get_item_options($_REQUEST["c"]).'
 							</select>
 						</td>
+					</tr>
+					<tr>
+						<td class="form_label"><input onclick="toggle();" type="checkbox" id="timed" name="timed" value="yes" /></td>
+						<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+						<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
 					</tr>
 					<tr>
 						<td class="form_label"><label for="field">Field:</label></td>

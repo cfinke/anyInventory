@@ -54,11 +54,11 @@ if ($_REQUEST["action"] == "install"){
 		$errors[] = 'Please enter the MySQL password.';
 	}
 	
-	$files_to_read = array("./","./admin","./images","./docs","./docs/images","./fonts","./item_files");
+	$files_to_read = array("./","./admin","./docs","./docs/images","./fonts","./item_files");
 	
 	foreach($files_to_read as $file){
 		if (!is_readable(realpath($file))){
-			$errors[] = "The path ".realpath($file)." is not readable.";
+			$errors[] = "The path ".realpath($file)." (".$file.") is not readable.";
 		}
 	}
 	
@@ -210,7 +210,7 @@ if ($_REQUEST["action"] == "install"){
 			$output .= '</ul>
 						<table>
 							<tr>
-								<td colspan="2" style="text-align: center;"><input type="submit" name="submit" value="Try Again" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Try Again" /></td>
 							</tr>
 						</table>';
 		}
@@ -261,7 +261,7 @@ if($_REQUEST["action"] == "try_again"){
 		$output .= '</ul>
 					<table>
 						<tr>
-							<td colspan="2" style="text-align: center;"><input type="submit" name="submit" value="Try Again" /></td>
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Try Again" /></td>
 						</tr>
 					</table>';
 	}

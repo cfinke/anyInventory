@@ -9,7 +9,7 @@
 		<table id="maintable" cellspacing="1" cellpadding="0" border="0">
 			<tr>
 				<td id="header_cell" style="background-image: url(<?php echo $DIR_PREFIX; ?>images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-					<h1 class="title">anyInventory 1.5</h1>		
+					<h1 class="title">anyInventory 1.6</h1>		
 				</td>
 			</tr>
 			<tr>

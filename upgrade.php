@@ -34,14 +34,14 @@ connect_to_database();
 $output = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 	<html>
 		<head>
-			<title>anyInventory 1.5 Upgrade</title>
+			<title>anyInventory 1.6 Upgrade</title>
 			<link rel="stylesheet" type="text/css" href="style.css">
 		</head>
 		<body>
 			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
 				<tr>
 					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-						<h1 class="title">anyInventory 1.5</h1>
+						<h1 class="title">anyInventory 1.6</h1>
 					</td>
 				</tr>
 				<tr>
@@ -338,6 +338,7 @@ elseif(!$globals_error){
 							<td>From which version of anyInventory are you upgrading?</td>
 							<td>
 								<select name="old_version">
+									<option value="1.5">1.5</option>
 									<option value="1.4">1.4.1</option>
 									<option value="1.4">1.4</option>
 									<option value="1.3">1.3</option>

@@ -33,18 +33,23 @@ DONE - New layout
 
 BEFORE 1.8
 ===================
-Remote image thumbnailing - backup in case of missing libcurl
-Better advanced search, like phpMyAdmin's Search page
+DONE - Bring back quick search
+Field Dividers
+Ability to have auto-increment field
+Required fields
 CHRIS - Item associations ("Item" Field type) 
 
 BEFORE 1.9
 ===================
-Label Sheets
+Remote image thumbnailing - backup in case of missing libcurl
+Better advanced search, like phpMyAdmin's Search page
+Multiple-condition alerts
 Download inventory as XML file
 
 BEFORE 2.0
 ===================
 Upload inventory as XML file
+Label Sheets
 
 BUGS
 ========================================

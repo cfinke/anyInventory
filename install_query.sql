@@ -28,7 +28,7 @@ CREATE TABLE `anyInventory_items` (
 CREATE TABLE `anyInventory_files` (
 	`id` INT NOT NULL AUTO_INCREMENT ,
 	`key` INT NOT NULL ,
-	`file_name` VARCHAR( 64 ) NOT NULL ,
+	`file_name` VARCHAR( 255 ) NOT NULL ,
 	`file_size` INT NOT NULL ,
 	`file_type` VARCHAR( 32 ) NOT NULL ,
 	UNIQUE (

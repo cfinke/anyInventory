@@ -106,10 +106,12 @@ class file_object{
 	}
 	
 	function has_thumbnail(){
-		$supported_types = array("image/jpg","image/jpeg","image/png","image/pjpg","image/pjpeg","image/gif","image/bmp");
-		
-		if (in_array($this->file_type, $supported_types)) return true;
-		else return false;
+		if (stristr($this->file_type, "image/") !== false){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
 

@@ -6,11 +6,14 @@ body {
 
 td {
 	font-size: 10pt;
+	vertical-align: top;
 }
 
 img {
 	border: 0;
 }
+
+a { color: #554E48; }
 
 .form_input {
 	width: 100%;
@@ -42,11 +45,14 @@ img {
 #mainmenu a {
 	color: #D3D3A6;
 }
-a { color: #554E48; }
+
 .row_head {background-color : #554E48; color: #ffffff;}
 .row_on {background-color : #D3D3A6;}
 .row_off {background-color : #CCCC99;}
 .row_head a { color: #ffffff;}
-
-
 .row_on a, .row_off a { color: #000000; }
+
+.thumbnail {
+	float: left;
+	padding: 10px;
+}

@@ -33,6 +33,7 @@ function display($output){
 	global $title;
 	global $DIR_PREFIX;
 	
+	header("Content-Type: text/html; charset=ISO-8859-1");
 	include($DIR_PREFIX."header.php");
 	echo $output;
 	include($DIR_PREFIX."footer.php");

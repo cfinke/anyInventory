@@ -59,7 +59,7 @@ class item {
 	function export_teaser(){
 		global $DIR_PREFIX;
 		
-		$output .= '<p><a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'">'.$this->name.'</a></p>';
+		$output .= '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'">'.$this->name.'</a>';
 		return $output;
 	}
 	

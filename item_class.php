@@ -185,7 +185,7 @@ class item {
 						$output .= ' class="highlighted_field"';
 					}
 					
-					$output .= '><td>&nbsp;</td><td><b>'.$field->name.':</b></td><td> ';
+					$output .= '><td>&nbsp;</td><td style="text-align: right;"><b>'.$field->name.':</b></td><td> ';
 					
 					foreach($this->fields[$field->name] as $val){
 						$output .= $val.", ";

@@ -30,7 +30,6 @@ else{
 			<form method="post" action="alert_processor.php" enctype="multipart/form-data">
 				<h2>Add an Alert</h2>
 				<input type="hidden" name="action" value="do_add" />
-				<input type="hidden" name="i" value="'.htmlentities(serialize($_REQUEST["i"])).'" />
 				<table>
 					<tr>
 						<td class="form_label"><label for="name">Alert Title:</label></td>

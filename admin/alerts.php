@@ -5,7 +5,7 @@ include("globals.php");
 $title = 'anyInventory: Alerts';
 
 $output .= '<p><a href="add_alert.php">Add an alert.</a></p>';
-$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts`";
+$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` ORDER BY `title` ASC";
 $result = query($query);
 
 $table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Title</td><td>Item</td><td>Effective as of...</td></tr>';

@@ -25,12 +25,25 @@ if ($_REQUEST["action"] == "do_add"){
 	query($query);
 }
 elseif($_REQUEST["action"] == "do_edit"){
-	$query = "UPDATE `anyInventory_alerts` SET `title`='".$_REQUEST["title"]."'";
+	$timestamp = $_REQUEST["year"];
+	$timestamp .= ($_REQUEST["month"] < 10) ? '0' . $_REQUEST["month"] : $_REQUEST["month"];
+	$timestamp .= ($_REQUEST["day"] < 10) ? '0' . $_REQUEST["day"] : $_REQUEST["day"];
+	$timestamp .= '000000';
+	
+	$query = "UPDATE `anyInventory_alerts` SET 
+				`title`='".$_REQUEST["title"]."',
+				`item_ids`='".serialize($_REQUEST["i"])."',
+				`field_id`='".$_REQUEST["field"]."',
+				`condition`='".$_REQUEST["condition"]."',
+				`value`='".$_REQUEST["value"]."',
+				`time`='".$timestamp."' WHERE `id`='".$_REQUEST["id"]."'";
 	query($query);
 }
 elseif($_REQUEST["action"] == "do_delete"){
-	$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_REQUEST["id"]."'";
-	query($query);
+	if ($_REQUEST["delete"] == "Delete"){
+		$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_REQUEST["id"]."'";
+		query($query);
+	}
 }
 
 header("Location: alerts.php");

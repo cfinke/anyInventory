@@ -94,17 +94,19 @@ else{
 		$items = unserialize($row["item_ids"]);
 		$alert = new alert($row["id"]);
 		
-		foreach ($items as $item_id){
-			$item = new item($item_id);
-			$field = new field($row["field_id"]);
-			
-			if (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");')){
-				if (!$tripped){
-					$output .= '</td><td>';
-					$tripped = true;
-				}
+		if (is_array($items)){
+			foreach ($items as $item_id){
+				$item = new item($item_id);
+				$field = new field($row["field_id"]);
 				
-				$output .= alert_box($row["title"],$item_id);
+				if (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");')){
+					if (!$tripped){
+						$output .= '</td><td>';
+						$tripped = true;
+					}
+					
+					$output .= alert_box($row["title"],$item_id);
+				}
 			}
 		}
 	}

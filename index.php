@@ -25,7 +25,7 @@ if ($_REQUEST["id"]){
 	
 	$output .= $item->export_description();
 	
-	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
+	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%' AND `time` <= NOW()";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
@@ -104,7 +104,7 @@ else{
 		$output .= '
 			<tr class="tableHeader">
 				<td>Items in this Category';
-
+		
 		if(($admin_pass == '') || $_SESSION["anyInventory"]["signed_in"]){				
 			if ($_REQUEST["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )';
 		}
@@ -119,8 +119,14 @@ else{
 		if (mysql_num_rows($result) > 0){
 			while ($row = mysql_fetch_array($result)){
 				$item = new item($row["id"]);
-			
-				$output .= '<tr><td>'.$item->export_teaser().'</td></tr>';
+				
+				$output .= '<tr>';
+				
+				if ($item->category->auto_inc_field){
+					$output .= '<td>'.$item->id.'</td>';
+				}
+				
+				$output .= '<td>'.$item->export_teaser().'</td></tr>';
 			}
 		}
 		else{

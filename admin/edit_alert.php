@@ -51,7 +51,7 @@ else{
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
 				<td>'.EDIT_ALERT.': '.$alert->title.'</td>
-				<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_alerts.php">'.HELPS.'</a>]</td>
+				<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_alerts.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">

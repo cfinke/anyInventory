@@ -290,49 +290,40 @@ elseif(!$set_config_error){
 $output .= '</form>';
 
 echo '
-<html>
-	<head>
-		<title>anyInventory: Install</title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
-	</head>
-	<body>
-		<table align="center" id="maintable" cellspacing="1" cellpadding="0" border="0" width="80%">
-			<tr>
-				<td colspan="2">
-					<div align="right" style="width: 100%;height: 100%;color: #cccccc; background: #000000;">
+	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+	<html>
+		<head>
+			<title>anyInventory 1.4 Install</title>
+			<link rel="stylesheet" type="text/css" href="style.css">
+		</head>
+		<body>
+			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
+				<tr>
+					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
+						<h1 class="title">anyInventory 1.4</h1>
+					</td>
+				</tr>
+				<tr>
+					<td>
 						&nbsp;
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td valign="top" class="row_head" style="background: rgb(213,175,112);" colspan="2">
-					<h1 style="padding: 6px; font-size: 36pt;">anyInventory</h1>
-				</td>
-			</tr>
-			<tr>
-				<td align="top" colspan="2">
-					<div id="mainmenu"style="">
-						&nbsp;
-					</div>
-				</td>
-			</tr>
-			<tr height="100%">
-				<td class="row_head" width="20%" align="left" valign="top" style="padding:5px">
-					&nbsp;
-				</td>
-				<td bgcolor="#ffffff" width="80%" align="left" valign="top" style="padding:5px">
-					'.$output.'
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<div align="center" style="width: 100%; height: 100%; color: #cccccc; FONT-SIZE: 10px; padding:4px">
-						anyInventory web-based inventory system: <a href="http://sourceforge.net/projects/anyinventory/">http://sourceforge.net/projects/anyinventory/</a>
-					</div>
-				</td>
-			</tr>
-		</table>
-	</body>
-</html>';
+					</td>
+				</tr>
+				<tr>
+					<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
+						<div style="height: 400px; padding: 5px; overflow: auto;">
+						'.$output.'
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div style="text-align: center; width: 100%; color: #cccccc; font-size: 10px; padding: 4px;">
+							<a href="http://anyinventory.sourceforge.net/">anyInventory, the web\'s most flexible and powerful inventory system</a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</body>
+	</html>';
 
 ?>

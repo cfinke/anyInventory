@@ -2,15 +2,15 @@
 
 function connect_to_database(){
 	// This function opens and returns the database connection.
-	global $dsn;
+	global $db_host;
+	global $db_name;
+	global $db_user;
+	global $db_pass;
 	
-	$db = DB::connect($dsn);
+	$link = mysql_connect($db_host, $db_user, $db_pass);
+	mysql_select_db($db_name, $link);
 	
-	if (DB::isError($db)) {
-		die($db->getMessage());
-	}
-	
-	return $db;
+	return $link;
 }
 
 function display($output){
@@ -22,7 +22,6 @@ function display($output){
 	global $inBodyTag;
 	global $breadcrumbs;
 	global $sectionTitle;
-	global $db;
 	
 	global $DIR_PREFIX;
 	
@@ -47,26 +46,23 @@ function get_category_options($selected = null, $multiple = true, $exclude = nul
 }
 
 function get_options_children($id, $pre = null, $selected = null, $multiple = true, $exclude){
-	global $db;
-	
 	// This function creates select box options for the children of a category
 	// with the id $id.
 	
 	$query = "SELECT `id`,`name` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
-		$names = $newresult->fetchRow();
-		$category_name = $names[0];
+		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		$category_name = mysql_result($newresult, 0, 'name');
 		$pre .= $category_name . ' > ';
 	}
 	
 	$list = '';
 	
-	if ($result->numRows() > 0){
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	if (mysql_num_rows($result) > 0){
+		while ($row = mysql_fetch_array($result)){
 			$category = $row["name"];
 			
 			if (!in_array($row["id"],$exclude)){
@@ -102,8 +98,6 @@ function category_array_to_options($array, $selected = null, $exclude = null){
 }
 
 function get_item_options($cat_ids = 0, $selected = null){
-	global $db;
-	
 	// This function creates select box options for the items in the category $cat.
 	if (!is_array($selected)) $selected = array($selected);
 	if (!is_array($cat_ids)) $cat_ids = array($cat_ids);
@@ -117,9 +111,9 @@ function get_item_options($cat_ids = 0, $selected = null){
 	$query = substr($query, 0, strlen($query) - 2);
 	
 	$query .= ")";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	while ($row = mysql_fetch_array($result)){
 		$options .= '<option value="'.$row["id"].'"';
 		if (($selected[0] === null) || (in_array($row["id"],$selected))) $options .= ' selected="selected"';
 		$options .= '>'.$row["name"].'</option>';
@@ -129,15 +123,13 @@ function get_item_options($cat_ids = 0, $selected = null){
 }
 
 function get_fields_checkbox_area($checked = array()){
-	global $db;
-	
 	// This function returns the field checkboxes.
 	// Any field ids in the array $checked will be checked.
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
 		
 		if ($field->input_type == 'divider'){
@@ -172,8 +164,6 @@ function get_fields_checkbox_area($checked = array()){
 }
 
 function get_category_array($top = 0){
-	global $db;
-	
 	// This function returns an array of categories, starting with
 	// the category id'd by $top and working down.
 	
@@ -181,11 +171,10 @@ function get_category_array($top = 0){
 	
 	if ($top != 0){
 		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$top."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		if ($result->numRows() > 0){
-			$row = $result->fetchRow();
-			$array[] = array("name"=>$row(0),"id"=>$top);
+		if (mysql_num_rows($result) > 0){
+			$array[] = array("name"=>mysql_result($result, 0, 'name'),"id"=>$top);
 		}
 		else{
 			return $array;
@@ -198,22 +187,19 @@ function get_category_array($top = 0){
 }
 
 function get_array_children($id, &$array, $pre = ""){
-	global $db;
-	
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
-		$names = $newresult->fetchRow();
-		$pre .= $names[0] . ' > ';
+		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		$pre .= mysql_result($newresult, 0, 'name') . ' > ';
 	}
 	
-	if ($result->numRows() > 0){
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	if (mysql_num_rows($result) > 0){
+		while ($row = mysql_fetch_array($result)){
 			$array[] = array("name"=>$pre.$row["name"],"id"=>$row["id"]);
 			
 			get_array_children($row["id"], $array, $pre);
@@ -228,7 +214,7 @@ function get_category_id_array($top = 0){
 	$array = array();
 	
 	if ($top != 0){
-		if ($result->numRows() > 0){
+		if (mysql_num_rows($result) > 0){
 			$array[] = $top;
 		}
 		else{
@@ -242,15 +228,13 @@ function get_category_id_array($top = 0){
 }
 
 function get_array_id_children($id, &$array){
-	global $db;
-	
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	if ($result->numRows() > 0){
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	if (mysql_num_rows($result) > 0){
+		while ($row = mysql_fetch_array($result)){
 			$array[] = $row["id"];
 			
 			get_array_id_children($row["id"], $array);
@@ -272,8 +256,6 @@ function delete_subcategories($category){
 }
 
 function delete_subcategory($category){
-	global $db;
-	
 	// This function deletes a subcategory $category and its children.
 	
 	if (is_array($category->children_ids)){
@@ -284,34 +266,31 @@ function delete_subcategory($category){
 	}
 	
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-	
-	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				
+	while ($row = mysql_fetch_array($result)){
 		$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-		$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
+		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 		
-		while ($newrow = $newresult->fetchRow(DB_FETCHMODE_ASSOC)){
+		while ($newrow = mysql_fetch_array($newresult)){
 			$alert = new alert($newrow["id"]);
 			
 			$alert->remove_item($row["id"]);
 			
 			if (count($alert->item_ids) == 0){
 				$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-				$db->query($newerquery) or die($db->error() . '<br /><br />'. $newerquery);
+				mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
 			}
 		}
-		
-		$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$row["id"]."'";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
 	}
 	
 	// Delete all of the items in the category
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	$db->query($query) or die($db->error() . '<br /><br />'. $query);
+	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Delete this category.
 	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
-	$db->query($query) or die($db->error() . '<br /><br />'. $query);
+	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	remove_from_fields($category->id);
 	
@@ -319,18 +298,64 @@ function delete_subcategory($category){
 }
 
 function remove_from_fields($cat_id){
-	global $db;
-	
 	// This function removes all fields from a category.
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$cat_id."\"%'";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
 		$field->remove_category($cat_id);
 	}
 	
 	return;
+}
+
+function get_mysql_column_type($input_type, $size, $values, $default_value){
+	// This function returns the MySQL column type for a new field.
+	
+	switch($input_type){
+		case 'file':
+			$type = " INT ";
+			break;
+		case 'checkbox':
+		case 'item':
+			$type = " TEXT ";
+			break;
+		case 'multiple':
+			$size = 64;
+		case 'text':
+			if ($size < 256){
+				$type = " VARCHAR(".$size.") DEFAULT '".$default_value."' ";
+			}
+			else{
+				// Text fields cannot have a default value.
+				$type = " TEXT ";
+			}
+			break;
+		case 'radio':
+		case 'select':
+			$type = " ENUM(";
+			
+			$enums = explode(",",$values);
+			
+			if (is_array($enums)){
+				foreach($enums as $enum){
+					$type .= "'".trim($enum)."',";
+				}
+				
+				$type = substr($type, 0, strlen($type) - 1);
+			}
+			else{
+				$type .= "''";
+			}
+			
+			$type .= ") DEFAULT '".$default_value."' ";
+			break;
+	}
+	
+	$type .= " NOT NULL";
+	
+	return $type;
 }
 
 ?>

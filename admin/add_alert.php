@@ -47,14 +47,14 @@ else{
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	if ($result->numRows() == 0){
+	if (mysql_num_rows($result) == 0){
 		header("Location: ../error_handler.php?eid=3");
 		exit;
 	}
 	else{
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 			$fields[] = $row;
 		}
 		
@@ -83,9 +83,9 @@ else{
 		$query = substr($query, 0, strlen($query) - 2);
 		
 		$query .= ")";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		if ( $result->numRows() == 0){
+		if (mysql_num_rows($result) == 0){
 			header("Location: ../error_handler.php?eid=2");
 			exit;
 		}
@@ -111,7 +111,7 @@ else{
 											<td class="form_input">
 												<select name="i[]" id="i[]" multiple="multiple" size="10" style="width: 100%;">';
 			
-			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+			while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 				$output .= '<option value="'.$row["id"].'" selected="selected">'.$row["name"].'</option>';
 			}
 			

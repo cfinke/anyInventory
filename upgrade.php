@@ -1,11 +1,16 @@
 <?php
 
+// Upgrade file.
+
 error_reporting(E_ALL ^ E_NOTICE);
 
-require_once('DB.php');
-
-require_once("functions.php");
-require_once("item_class.php");
+include("functions.php");
+include("category_class.php");
+include("field_class.php");
+include("item_class.php");
+include("file_class.php");
+include("alert_class.php");
+include("user_class.php");
 
 $errors = array();
 
@@ -22,7 +27,6 @@ $db_host = "'.$_POST["db_host"].'";
 $db_name = "'.$_POST["db_name"].'";
 $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
-$db_type = "'.$_POST["db_type"].'";
 
 include($DIR_PREFIX."environment.php");
 
@@ -32,19 +36,16 @@ if (is_array($_POST)) foreach($_POST as $key => $value) $_POST[$key] = stripslas
 
 if ($_POST["action"] == "upgrade"){
 	if (strlen(trim($_POST["db_host"])) == 0){
-		$errors[] = 'Please enter the name of your database server.';
+		$errors[] = 'Please enter the name of your MySQL host.';
 	}
 	if (strlen(trim($_POST["db_user"])) == 0){
-		$errors[] = 'Please enter your database username.';
+		$errors[] = 'Please enter the MySQL username.';
 	}
 	if (strlen(trim($_POST["db_name"])) == 0){
-		$errors[] = 'Please enter the database name.';
+		$errors[] = 'Please enter the MySQL database name.';
 	}
 	if (strlen(trim($_POST["db_pass"])) == 0){
-		$errors[] = 'Please enter the database password.';
-	}
-	if (strlen(trim($_POST["db_type"])) == 0){
-		$errors[] = 'Please enter the database type.';
+		$errors[] = 'Please enter the MySQL password.';
 	}
 	if ($_POST["password_protect_admin"] || $_POST["password_protect_view"]){
 		if (strlen(trim($_POST["username"])) == 0){
@@ -69,23 +70,18 @@ if ($_POST["action"] == "upgrade"){
 	
 	// Check for the correct database information.	
 	if (count($errors) == 0){
-
-		// check for Oracle 8 - data source name syntax is different
-                if ($_POST['db_type'] != 'oci8'){
-                      $dsn = $_POST['db_type']."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
-                } else {
-                      $net8name = 'www';
-                      $dsn = $_POST['db_type']."://".$_POST['db_user'].":".$_POST['db_pass']."@".$net8name;
+		if(!@mysql_connect($_POST["db_host"],$_POST["db_user"],$_POST["db_pass"])){
+			$errors[] = 'anyInventory could not connect to the MySQL host with the information you provided.';
 		}
-	        // establish the connection
-                $db = DB::connect($dsn);
-		if($DB::isError($db)){
-	                  $errors[] = 'anyInventory could not connect to the SQL server with the information you provided.';
-	         }
+		elseif(!mysql_select_db($_POST["db_name"])){
+			$errors[] = 'anyInventory connected to the MySQL host, but could not find the database '.$_POST["db_name"].'.';
+		}
 	}
 	
 	// Make the appropriate changes, depending on the old version.	
 	if (count($errors) == 0){
+		mysql_connect($_POST["db_host"],$_POST["db_user"],$_POST["db_pass"]);
+		mysql_select_db($_POST["db_name"]);
 		
 		switch($_POST["old_version"]){
 			case '1.0':
@@ -102,17 +98,17 @@ if ($_POST["action"] == "upgrade"){
 					`time` timestamp( 14 ) NOT NULL ,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_files` ADD `offsite_link` VARCHAR(255) NOT NULL";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				// Fix field values data type
 				
 				$query = "SELECT `id`,`values` FROM `anyInventory_fields`";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
-				while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+				while ($row = mysql_fetch_array($result)){
 					$values = unserialize($row["values"]);
 					
 					if (!is_array($values)){
@@ -128,16 +124,16 @@ if ($_POST["action"] == "upgrade"){
 						$sql_values = serialize($values);
 						
 						$new_query = "UPDATE `anyInventory_fields` SET `values`='".$sql_values."' WHERE `id`='".$row["id"]."'";
-						$db->query($query) or die($db->error() . '<br /><br />'. $query);
+						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 					}
 				}
 				
 				// Fix field categories data type
 				
 				$query = "SELECT `id`,`categories` FROM `anyInventory_fields`";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
-				while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+				while ($row = mysql_fetch_array($result)){
 					$categories = unserialize($row["categories"]);
 					
 					if (!is_array($categories)){
@@ -155,7 +151,7 @@ if ($_POST["action"] == "upgrade"){
 						$sql_categories = serialize($categories);
 						
 						$new_query = "UPDATE `anyInventory_fields` SET `categories`='".$sql_categories."' WHERE `id`='".$row["id"]."'";
-						$db->query($new_query) or die($db->error() . '<br /><br />'. $new_query);
+						mysql_query($new_query) or die(mysql_error() . '<br /><br />'. $new_query);
 					}
 				}
 				
@@ -167,49 +163,49 @@ if ($_POST["action"] == "upgrade"){
 				
 				// Added timed alerts
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `timed` TINYINT( 1 ) DEFAULT '0' NOT NULL";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file' ) DEFAULT 'text' NOT NULL ";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "SELECT COUNT(`key`) AS `num_files` FROM `anyInventory_files` GROUP BY `key` ORDER BY `key` DESC LIMIT 1";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
-				while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 					$max_files = $row["num_files"];
 					
 					if ($max_files > 0){
 						$catquery = "SELECT `id` FROM `anyInventory_categories`";
-						$catresult = $db->query($catquery) or die($db->error() . '<br /><br />'. $catquery);
+						$catresult = mysql_query($catquery) or die(mysql_error() . '<br /><br />'. $catquery);
 						
 						$cat_ids = array();
 						$values = array();
 						
-						while ($catrow = $catresult->fetchRow(DB_FETCHMODE_ASSOC)){
+						while ($catrow = mysql_fetch_array($catresult)){
 							$cat_ids[] = $catrow["id"];
 						}
 						
 						for($i = 1; $i <= $max_files + 1; $i++){
 							$query = "ALTER TABLE `anyInventory_items` ADD `Generic File ".$i."` INT NOT NULL";
-							@$db->query($query);
+							@mysql_query($query);
 							
 							$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`categories`,`values`) VALUES ('Generic File ".$i."','file','".serialize($cat_ids)."','".serialize($values)."')";
-							@$db->query($query);
+							@mysql_query($query);
 						}
 						
 						$query = "SELECT `id`,`key` FROM `anyInventory_files` ORDER BY `key`,`id`";
-						$file_result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+						$file_result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 						
 						$currrent_key = 0;
 						
-						while($file_row = $file_result->fetchRow(DB_FETCHMODE_ASSOC)){
+						while($file_row = mysql_fetch_array($file_result, MYSQL_ASSOC)){
 							if ($current_key != $file_row["key"]){
 								$i = 1;
 								$current_key = $file_row["key"];
 							}
 							
 							$query = "UPDATE `anyInventory_items` SET `Generic File ".$i."`='".$file_row["id"]."' WHERE `id`='".$file_row["key"]."'";
-							$db->query($query) or die($db->error() . '<br /><br />'. $query);
+							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 							
 							$i++;
 						}
@@ -219,14 +215,14 @@ if ($_POST["action"] == "upgrade"){
 				# Changes introduced in 1.7
 				
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `category_ids` TEXT NOT NULL";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				// Run script to add a category array for each alert
 				
 				$query = "SELECT * FROM `anyInventory_alerts`";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
-				while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 					if (!is_array(unserialize($row["category_ids"]))){
 						$items = unserialize($row["item_ids"]);
 						
@@ -235,7 +231,7 @@ if ($_POST["action"] == "upgrade"){
 						$category_ids = array($item->category->id);
 						
 						$newquery = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($category_ids)."' WHERE `id`='".$row["id"]."'";
-						$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
+						$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 					}
 				}
 			
@@ -243,13 +239,13 @@ if ($_POST["action"] == "upgrade"){
 				# Changes introduced in 1.7.1
 				
 				$query = "ALTER TABLE `anyInventory_categories` ADD `auto_inc_field` TINYINT( 1 ) DEFAULT '0' NOT NULL";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` ADD `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `name` `name` VARCHAR( 64 ) NOT NULL";
-				@$db->query($query); 
+				@mysql_query($query); 
 			case '1.7.1':
 				# Changes introduced in 1.8
 				
@@ -260,16 +256,16 @@ if ($_POST["action"] == "upgrade"){
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `key` ( `key` )
 					) TYPE = MYISAM";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('AUTO_INC_FIELD_NAME','anyInventory ID')";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('NAME_FIELD_NAME','Name')";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$query = "CREATE TABLE `anyInventory_users` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -281,7 +277,7 @@ if ($_POST["action"] == "upgrade"){
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `username` (`username`)
 					) TYPE=MyISAM";
-				@$db->query($query);
+				@mysql_query($query);
 				
 				$blank = array();
 				
@@ -300,85 +296,34 @@ if ($_POST["action"] == "upgrade"){
 							 'Administrator',
 							 '".addslashes(serialize($blank))."',
 							 '".addslashes(serialize($blank))."')";
-				@$db->query($query);
-				
-				$maxidres = $db->query("SELECT MAX('id') from anyInventory_users;");
-				$maxid = $maxidres->fetchRow();
-				
-				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".$maxid[0]."')";
-				@$db->query($query);
-				
-				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
-				$db->query($query) or die($db->error() . '<br /><br />'. $query);
-				
-				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
-				$db->query($query) or die($db->error() . '<br /><br />'. $query);
-				
-				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider' ) DEFAULT 'text' NOT NULL ";
-				@$db->query($query);
-				
-				$query = "ALTER TABLE `anyInventory_fields` DROP INDEX `name`";
-				@$db->query($query);
-			case '1.8':
-				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider', 'item' ) DEFAULT 'text' NOT NULL ";
-				@$db->query($query);
-				
-				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('LANG','".$_REQUEST["lang"]."')";
-				@$db->query($query);
-				
-				$query = "ALTER TABLE `anyInventory_alerts` ADD `modified` TIMESTAMP NOT NULL AFTER `value`";
-				@$db->query($query);
-				
-				$query = "ALTER TABLE `anyInventory_alerts` ADD `expire_time` TIMESTAMP NOT NULL AFTER `time`";
-				@$db->query($query);
-				
-				// The following code uses mysql-only commands because I'm not sure of all of the DB equivalents.
-				// It's a moot point because users of pre-1.9 versions could only be using MySQL anyway
-				
-				$query = "CREATE TABLE `anyInventory_values` (
-					`item_id` int( 11 ) NOT NULL default '0',
-					`field_id` int( 11 ) NOT NULL default '0',
-					`value` text NOT NULL ,
-					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
-					) TYPE = MYISAM";
 				@mysql_query($query);
 				
-				$query = "SELECT * FROM `anyInventory_categories`";
-				$result = mysql_query($query) or die(mysql_error() . '<br />' . $query);
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
+				@mysql_query($query);
 				
-				while ($row = mysql_fetch_array($result)){
-					$newquery = "SELECT * FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$row["id"]."\"%'";
-					$newresult = mysql_query($newquery) or die(mysql_error() . '<br />' . $newquery);
-					
-					$newestquery = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."' ORDER BY `id`";
-					$newestresult = mysql_query($newestquery) or die(mysql_error() . '<br />' . $newestquery);
-					
-					while ($newestrow = mysql_fetch_array($newestresult)){
-						while ($newrow = mysql_fetch_array($newresult)){
-							$insert_query = "INSERT INTO `anyInventory_values` 
-										(`item_id`,`field_id`,`value`)
-										VALUES
-										('".$newestrow["id"]."',
-										 '".$newrow["id"]."',
-										 '".$newestrow[$newrow["name"]]."')";
-							@mysql_query($insert_query);
-						}
-						
-						mysql_data_seek($newresult, 0);
-					}
-				}
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
+				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
-				$query = "SHOW COLUMNS FROM `anyInventory_items`";
-				$result = mysql_query($query) or die(mysql_error() . '<br />' . $query);
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
+				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
-				while ($row = mysql_fetch_array($result)){
-					if (($row["Field"] != 'id') && ($row["Field"] != 'name') && ($row["Field"] != 'item_category')){
-						$newquery = "ALTER TABLE `anyInventory_items` DROP `".$row["Field"]."`";
-						mysql_query($newquery) or die(mysql_error() . '<br />' . $newquery);
-					}
-				}
+				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider' ) DEFAULT 'text' NOT NULL ";
+				@mysql_query($query);
 				
-				/////////////////////////////////
+				$query = "ALTER TABLE `anyInventory_fields` DROP INDEX `name`";
+				@mysql_query($query);
+			case '1.8':
+				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider', 'item' ) DEFAULT 'text' NOT NULL ";
+				@mysql_query($query);
+				
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('LANG','".$_REQUEST["lang"]."')";
+				@mysql_query($query);
+				
+				$query = "ALTER TABLE `anyInventory_alerts` ADD `modified` TIMESTAMP NOT NULL AFTER `value`";
+				@mysql_query($query);
+				
+				$query = "ALTER TABLE `anyInventory_alerts` ADD `expire_time` TIMESTAMP NOT NULL AFTER `time`";
+				@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.
@@ -410,7 +355,6 @@ if ($_POST["action"] == "upgrade"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_POST["db_name"]).'" />
-				<input type="hidden" name="db_type" value="'.stripslashes($_POST["db_type"]).'" />
 				<input type="hidden" name="password_protect_view" value="'.stripslashes($_POST["password_protect_view"]).'" />
 				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_POST["password_protect_admin"]).'" />
 				<input type="hidden" name="username" value="'.stripslashes($_POST["username"]).'" />
@@ -464,7 +408,6 @@ if($_POST["action"] == "try_again"){
 			<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 			<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
 			<input type="hidden" name="db_name" value="'.stripslashes($_POST["db_name"]).'" />
-			<input type="hidden" name="db_type" value="'.stripslashes($_POST["db_type"]).'" />
 			<input type="hidden" name="password_protect_view" value="'.stripslashes($_POST["password_protect_view"]).'" />
 			<input type="hidden" name="password_protect_admin" value="'.stripslashes($_POST["password_protect_admin"]).'" />
 			<input type="hidden" name="username" value="'.stripslashes($_POST["username"]).'" />
@@ -526,32 +469,21 @@ elseif(!$globals_error){
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_host">DB Server:</label></td>
+							<td class="form_label"><label for="db_host">MySQL host:</label></td>
 							<td class="form_input"><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_user">DB Username:</label></td>
+							<td class="form_label"><label for="db_user">MySQL Username:</label></td>
 							<td class="form_input"><input type="text" name="db_user" id="db_user" value="'.stripslashes($_POST["db_user"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_pass">DB Password:</label></td>
+							<td class="form_label"><label for="db_pass">MySQL Password:</label></td>
 							<td class="form_input"><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_POST["db_pass"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_name">DB Name:</label></td>
+							<td class="form_label"><label for="db_name">MySQL Database:</label></td>
 							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_POST["db_name"]).'" /></td>
 						</tr>
-						<tr>
-							<td class="form_label"><label for="db_type">DB Type:</label></td>
-							<td class="form_input">
-								<select name="db_type">
-									<option value="mysql"';if($_REQUEST["db_type"] == 'mysql') $output .= ' selected="selected"'; $output .= '>MySQL</option>
-									<option value="pgsql"';if($_REQUEST["db_type"] == 'pgsql') $output .= ' selected="selected"'; $output .= '>PostgreSQL</option>
-									<option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
 							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_view" id="password_protect_view" value="yes"'.$pp_view_checked.' /></td>
 							<td class="form_input"><label for="password_protect">Password protect entire inventory</label></td>
 						</tr>

@@ -13,26 +13,34 @@ if ($_GET["action"] == "quick_search"){
 	$output .= '<table>';
 	
 	if ($_GET["q"] != ''){
-		$search_query = "SELECT `item_id` FROM `anyInventory_values` LEFT JOIN `anyInventory_items` USING `anyInventory_values`.`item_id`=`anyInventory_items`.`id` WHERE 1 AND ((( ";
+		$query = "SELECT `name` FROM `anyInventory_fields` WHERE `input_type` NOT IN ('file','divider','item')";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		
+		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			$search_fields[] = $row["name"];
+		}
+		
+		$search_query = "SELECT `id`,`item_category` FROM `anyInventory_items` WHERE 1 AND ((( ";
 		
 		if ((count($search_terms) == 1) && (is_numeric($search_terms[0]))){
-			$search_query .= " `item_id`='".$search_terms[0]."')) OR (( ";
+			$search_query .= " `id`='".$search_terms[0]."')) OR (( ";
 		}
 		
 		foreach($search_terms as $search_term){
-				$search_query .= " `value` LIKE '%".$search_term."%' OR ";
+			foreach($search_fields as $search_field){
+				$search_query .= " `".$search_field."` LIKE '%".$search_term."%' OR ";
 			}
 			
 			$search_query = substr($search_query,0,strlen($search_query) - 3).") AND (";
 		}
 		
-		$search_query = substr($search_query,0,strlen($search_query) - 6).")) GROUP BY `item_id` ORDER BY `item_category`";
-		$search_result = $db->query($search_query) or die($db->error() . '<br /><br />' . $search_query);
+		$search_query = substr($search_query,0,strlen($search_query) - 6).")) ORDER BY `item_category`";
+		$search_result = mysql_query($search_query) or die(mysql_error() . '<br /><br />' . $search_query);
 		
 		$cat_id = -1;
 		
-		if ($search_result->numRows() > 0){
-			while($row = $search_result->fetchRow(DB_FETCHMODE_ASSOC)){
+		if (mysql_num_rows($search_result) > 0){
+			while($row = mysql_fetch_array($search_result)){
 				$item = new item($row["id"]);
 				
 				if ($view_user->can_view($item->category->id)){

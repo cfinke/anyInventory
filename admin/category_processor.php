@@ -166,20 +166,17 @@ elseif($_POST["action"] == "do_delete"){
 				while ($row = mysql_fetch_array($result)){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
 					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-					
+		
 					while ($newrow = mysql_fetch_array($newresult)){
 						$alert = new alert($newrow["id"]);
-						
+			
 						$alert->remove_item($row["id"]);
-						
+			
 						if (count($alert->item_ids) == 0){
 							$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
 							mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
 						}
 					}
-					
-					$newquery = "DELETE FROM `anyInventory_fields` WHERE `item_id`='".$row["id"]."'";
-					mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 				}
 				
 				// Delete all of the items in the category
@@ -191,17 +188,17 @@ elseif($_POST["action"] == "do_delete"){
 				
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-				
+
 				while($row = mysql_fetch_array($result)){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
 					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-					
+		
 					while ($newrow = mysql_fetch_array($newresult)){
 						$alert = new alert($newrow["id"]);
 						
 						if (!in_array($alert->field_id, $newcategory->field_ids)){
 							$alert->remove_item($row["id"]);
-							
+			
 							if (count($alert->item_ids) == 0){
 								$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
 								mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
@@ -211,8 +208,7 @@ elseif($_POST["action"] == "do_delete"){
 				}
 				
 				// Move the items to a different category
-				
-				$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
+								$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
 			

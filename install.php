@@ -2,8 +2,6 @@
 
 // Installation file.
 
-require_once('DB.php');
-
 error_reporting(E_ALL ^ E_NOTICE);
 
 include("functions.php");
@@ -21,7 +19,6 @@ $db_host = "'.$_POST["db_host"].'";
 $db_name = "'.$_POST["db_name"].'";
 $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
-$db_type = "'.$_POST["db_type"].'";
 
 include($DIR_PREFIX."environment.php");
 
@@ -32,19 +29,16 @@ $output .= '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
 if ($_POST["action"] == "install"){
 	// First, check for missing data.
 	if (strlen(trim($_POST["db_host"])) == 0){
-		$errors[] = 'Please enter the name of your database server.';
+		$errors[] = 'Please enter the name of your MySQL host.';
 	}
 	if (strlen(trim($_POST["db_user"])) == 0){
-		$errors[] = 'Please enter your database username.';
+		$errors[] = 'Please enter the MySQL username.';
 	}
 	if (strlen(trim($_POST["db_name"])) == 0){
-		$errors[] = 'Please enter the database name.';
+		$errors[] = 'Please enter the MySQL database name.';
 	}
 	if (strlen(trim($_POST["db_pass"])) == 0){
-		$errors[] = 'Please enter the database password.';
-	}
-	if (strlen(trim($_POST['db_type'])) == 0){
-		$errors[] = 'Please enter the database type.';
+		$errors[] = 'Please enter the MySQL password.';
 	}
 	if ($_POST["password_protect_admin"] || $_POST["password_protect_view"]){
 		if (strlen(trim($_POST["username"])) == 0){
@@ -69,23 +63,11 @@ if ($_POST["action"] == "install"){
 	
 	// Check for the correct database information.	
 	if (count($errors) == 0){
-		
-		// check for Oracle 8 - data source name syntax is different
-
-		if ($_POST['db_type'] != 'oci8'){
-		      $dsn = $_POST['db_type']."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
-		} else {
-		      $net8name = 'www';
-		      $dsn = $_POST['db_type']."://".$_POST['db_user'].":".$_POST['db_pass']."@".$net8name;
+		if(!@mysql_connect($_POST["db_host"],$_POST["db_user"],$_POST["db_pass"])){
+			$errors[] = 'anyInventory could not connect to the MySQL host with the information you provided.';
 		}
-	
-		// establish the connection
-	
-		$db = DB::connect($dsn);
-							
-		
-		if($DB::isError($db)){
-			$errors[] = 'anyInventory could not connect to the SQL server with the information you provided.';
+		elseif(!mysql_select_db($_POST["db_name"])){
+			$errors[] = 'anyInventory connected to the MySQL host, but could not find the database '.$_POST["db_name"].'.';
 		}
 	}
 	
@@ -121,7 +103,7 @@ if ($_POST["action"] == "install"){
 			`anyInventory_alerts`,
 			`anyInventory_config`,
 			`anyInventory_users`";
-		@$db->query($query);
+		@mysql_query($query);
 		
 		$query = "CREATE TABLE `anyInventory_categories` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -131,7 +113,7 @@ if ($_POST["action"] == "install"){
 				  UNIQUE KEY `id` (`id`),
 				  KEY `parent` (`parent`)
 				) TYPE=MyISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_fields` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -145,7 +127,7 @@ if ($_POST["action"] == "install"){
 				  `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_items` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -153,15 +135,7 @@ if ($_POST["action"] == "install"){
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
-		
-		$query = "CREATE TABLE `anyInventory_values` (
-					`item_id` int( 11 ) NOT NULL default '0',
-					`field_id` int( 11 ) NOT NULL default '0',
-					`value` text NOT NULL ,
-					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
-					) TYPE = MYISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_files` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
@@ -174,7 +148,7 @@ if ($_POST["action"] == "install"){
 						`id`
 					)
 				)";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_alerts` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -190,7 +164,7 @@ if ($_POST["action"] == "install"){
 					`category_ids` TEXT NOT NULL,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_users` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -202,7 +176,7 @@ if ($_POST["action"] == "install"){
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `username` (`username`)
 					) TYPE=MyISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_config` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -211,22 +185,22 @@ if ($_POST["action"] == "install"){
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `key` ( `key` )
 					) TYPE = MYISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('AUTO_INC_FIELD_NAME','anyInventory ID')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('LANG','".$_REQUEST["lang"]."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$blank = array();
 		
@@ -245,16 +219,13 @@ if ($_POST["action"] == "install"){
 					 'Administrator',
 					 '".addslashes(serialize($blank))."',
 					 '".addslashes(serialize($blank))."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		$maxidres = $db->query("select MAX('id') from anyInventory_users;");
-		$maxid = $maxidres->fetchRow();
-		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".$maxid[0]."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('NAME_FIELD_NAME','Name')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		if (count($config_errors) == 0){
 			// Delete the install file.
@@ -274,7 +245,6 @@ if ($_POST["action"] == "install"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_POST["db_name"]).'" />
-				<input type="hidden" name="db_type" value="'.stripslashes($_POST["db_type"]).'" />
 				<input type="hidden" name="password_protect_view" value="'.stripslashes($_POST["password_protect_view"]).'" />
 				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_POST["password_protect_admin"]).'" />
 				<input type="hidden" name="username" value="'.stripslashes($_POST["username"]).'" />
@@ -329,7 +299,6 @@ if($_POST["action"] == "try_again"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_POST["db_name"]).'" />
-				<input type="hidden" name="db_type" value="'.stripslashes($_POST["db_type"]).'" />
 				<input type="hidden" name="password_protect_view" value="'.stripslashes($_POST["password_protect_view"]).'" />
 				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_POST["password_protect_admin"]).'" />
 				<input type="hidden" name="username" value="'.stripslashes($_POST["username"]).'" />
@@ -371,57 +340,25 @@ elseif(!$set_config_error){
 							<td class="form_input">
 								<select name="lang" id="lang">
 									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
-<<<<<<< install.php
-									<option value="es"';if($_REQUEST["lang"] == "es") $output .= ' selected="selected"'; $output .= '>Espa&ntilde;ol</option>
-								</select>
-							</td>
-						</tr>
-						<tr class="tableHeader">
-							<td colspan="2">Database</td>
-						</tr>
-						<tr>
-							<td class="form_label"><label for="db_type">Database Type:</label></td>
-							<td class="form_input">
-								<select name="db_type">
-								       <option value="mysql"';if($_REQUEST["db_type"] == 'mysql') $output .= ' selected="selected"'; $output .= '>MySQL</option>
-<!--								       <option value="mssql"';if($_REQUEST["db_type"] == 'mssql') $output .= ' selected="selected"'; $output .= '>MSSQL</option>
-								       <option value="pgsql"';if($_REQUEST["db_type"] == 'pgsql') $output .= ' selected="selected"'; $output .= '>PostgreSQL</option>
-                                       <option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
-								       <option value="odbc"';if($_REQUEST["db_type"] == 'odbc') $output .= ' selected="selected"'; $output .= '>ODBC</option>
-								       <option value="fbsql"';if($_REQUEST["db_type"] == 'fbsql') $output .= ' selected="selected"'; $output .= '>FrontBase</option>
-								       <option value="msql"';if($_REQUEST["db_type"] == 'msql') $output .= ' selected="selected"'; $output .= '>MiniSQL</option>
-								       <option value="SQLite"';if($_REQUEST["db_type"] == 'SQLite') $output .= ' selected="selected"'; $output .= '>SQLite</option>-->
-=======
 									<option value="es"';if($_REQUEST["lang"] == "es") $output .= ' selected="selected"'; $output .= '>Espanol</option>
->>>>>>> 1.49
 								</select>
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_host">DB Server:</label></td>
+							<td class="form_label"><label for="db_host">MySQL host:</label></td>
 							<td class="form_input"><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_user">DB Username:</label></td>
+							<td class="form_label"><label for="db_user">MySQL Username:</label></td>
 							<td class="form_input"><input type="text" name="db_user" id="db_user" value="'.stripslashes($_POST["db_user"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_password">DB Password:</label></td>
+							<td class="form_label"><label for="db_password">MySQL Password:</label></td>
 							<td class="form_input"><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_POST["db_pass"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_name">DB Name:</label></td>
+							<td class="form_label"><label for="db_name">MySQL Database:</label></td>
 							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_POST["db_name"]).'" /></td>
-						</tr>
-						<tr>
-							<td class="form_label"><label for="db_type">DB Type:</label></td>
-							<td class="form_input">
-								<select name="db_type">
-									<option value="mysql"';if($_REQUEST["db_type"] == 'mysql') $output .= ' selected="selected"'; $output .= '>MySQL</option>
-									<option value="pgsql"';if($_REQUEST["db_type"] == 'pgsql') $output .= ' selected="selected"'; $output .= '>PostgreSQL</option>
-									<option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
-								</select>
-							</td>
 						</tr>
 						<tr>
 							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_view" id="password_protect_view" value="yes"'.$pp_view_checked.' /></td>

@@ -13,15 +13,13 @@ class field {
 	var $highlight = false;		// Whether or not the field is highlighted
 	
 	function field($field_id){
-		global $db;
-		
 		// Set the id of this field.
 		$this->id = $field_id;
 		
 		// Get the information about this field.
 		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$row = mysql_fetch_array($result);
 		
 		// Set the name and input type
 		$this->name = $row["name"];
@@ -82,12 +80,10 @@ class field {
 	// This function synchronizes the category list in the database with the category list in the object.
 	
 	function refresh_categories($cat_ids){
-		global $db;
-		
 		if ($this->input_type != 'divider'){
 			if (is_array($cat_ids)){
 				$query = "UPDATE `anyInventory_fields` SET `categories`='".serialize($cat_ids)."' WHERE `id`='".$this->id."'";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
 			
 			return;

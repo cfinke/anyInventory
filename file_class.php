@@ -16,7 +16,6 @@ class file_object{
 	var $is_remote = false; // Whether or not this is a remote file
 	
 	function file_object($id){
-		global $db;
 		global $DIR_PREFIX;
 		
 		// Set the id of this file.
@@ -24,8 +23,8 @@ class file_object{
 		
 		// Get the information about this file.
 		$query = "SELECT * FROM `anyInventory_files` WHERE `id`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$row = mysql_fetch_array($result);
 		
 		// Set the id of the item that owns this file.
 		$this->item_id = $row["key"];

@@ -4,21 +4,20 @@ include("globals.php");
 
 if ($_REQUEST["action"] == "log_in"){
 	$query = "SELECT * FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."'";
-	$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 	
-	if ($result->numRows() == 0){
+	if (mysql_num_rows($result) == 0){
 		header("Location: login.php?f=1&return_to=".$_POST["return_to"]);
 		exit;
 	}
 	else{
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
-		if (md5($_POST["password"]) == $row['password']){
+		if (md5($_POST["password"]) == mysql_result($result, 0, 'password')){
 			unset($_SESSION["user"]);
 			
 			$_SESSION["user"] = array();
-			$_SESSION["user"]["id"] = $row['id'];
-			$_SESSION["user"]["username"] = $row['username'];
-			$_SESSION["user"]["usertype"] = $row['usertype'];
+			$_SESSION["user"]["id"] = mysql_result($result, 0, 'id');
+			$_SESSION["user"]["username"] = mysql_result($result, 0, 'username');
+			$_SESSION["user"]["usertype"] = mysql_result($result, 0, 'usertype');
 			
 			if ($_POST["return_to"] == ''){
 				$_POST["return_to"] = './admin/index.php';

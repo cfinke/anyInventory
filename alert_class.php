@@ -22,13 +22,11 @@ class alert {
 	var $expires = false;
 	
 	function alert($alert_id){
-		global $db;
-		
 		$this->id = $alert_id;
 		
 		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time`, UNIX_TIMESTAMP(`expire_time`) AS `unix_expire_time` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$row = mysql_fetch_array($result);
 		
 		$this->title = $row["title"];
 		
@@ -61,8 +59,6 @@ class alert {
 	// This function removes an item from the alert.
 	
 	function remove_item($item_id){
-		global $db;
-		
 		// Find the key of the category id in the array.
 		$key = array_search($item_id, $this->item_ids);
 		
@@ -76,7 +72,7 @@ class alert {
 			$query = "UPDATE `anyInventory_alerts` SET `item_ids`='".serialize($this->item_ids)."' WHERE `id`='".$this->id."'";
 		}
 		
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 	
 	// This function returns a full description of the item.
@@ -184,7 +180,7 @@ class alert {
 	
 	function trip($item_id = null){
 		$query = "UPDATE `anyInventory_alerts` SET `tripped`='1' WHERE `id`='".$this->id."'";
-		$db->query($query) or die($db->error() . '<br /><br />' . $query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 		
 		$this->tripped = true;
 		

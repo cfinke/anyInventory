@@ -20,8 +20,6 @@ class category {
 	var $auto_inc_field = false;
 	
 	function category($cat_id){
-		global $db;
-		
 		// Set the id of this category.
 		$this->id = $cat_id;
 		
@@ -31,8 +29,8 @@ class category {
 			
 			// Get all of the information about this category from the categories table.
 			$query = "SELECT `name`,`parent`,`auto_inc_field` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-			$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$row = mysql_fetch_array($result);
 			
 			// Set the name and parent id
 			$this->name = $row["name"];
@@ -69,8 +67,8 @@ class category {
 					else{
 						// Find the name of the current category
 						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
-						$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-						$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+						$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						$row = mysql_fetch_array($result);
 						$this->breadcrumb_names .= $row["name"] . ' > ';
 					}
 				}
@@ -81,10 +79,10 @@ class category {
 			
 			// Get all of the fields that this category uses.
 			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$this->id."\"%' OR `input_type`='divider'  ORDER BY `importance` ASC";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// Add each field's id and name to the appropriate arrays.
-			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+			while ($row = mysql_fetch_array($result)){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -100,10 +98,10 @@ class category {
 			
 			// Get the fields that the Top Level uses.
 			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' OR `input_type`='divider' ORDER BY `importance`";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// Add each field id and name to the arrays.
-			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+			while ($row = mysql_fetch_array($result)){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -111,9 +109,9 @@ class category {
 		
 		// Find the children of the current category
 		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while($row = mysql_fetch_array($result)){
 			$this->children_ids[] = $row["id"];
 			$this->num_children++;
 		}
@@ -124,12 +122,10 @@ class category {
 	// This function returns the number of items that are inventoried in this category.
 	
 	function num_items(){
-		global $db;
-		
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		return $result->numRows();
+		return mysql_num_rows($result);
 	}
 	
 	// This function returns the number of items that are inventoried in this category AND its subcategories.
@@ -166,8 +162,6 @@ class category {
 	// This function returns the parent id of a given category id.
 	
 	function find_parent_id($cat_id){
-		global $db;
-		
 		if ($cat_id == 0){
 			// The Top Level is its own category.
 			return 0;
@@ -175,15 +169,14 @@ class category {
 		else{
 			// Get the parent from the categories table.
 			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id`='".$cat_id."'";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// If there is no parent, then, the parent is the Top Level.
-			if ($result->numRows() == 0){
+			if (mysql_num_rows($result) == 0){
 				return 0;
 			}
 			else{
-				$resultrows = $result->fetchRow(DB_FETCHMODE_ASSOC);
-				return $resultrows['parent'];
+				return mysql_result($result, 0, 'parent');
 			}
 		}
 	}

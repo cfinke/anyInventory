@@ -2,6 +2,8 @@
 
 include("globals.php");
 
+foreach($_REQUEST as $key => $value) $_REQUEST[$key] = trim($value);
+
 if ($_REQUEST["action"] == "do_add"){
 	if (($_REQUEST["size"] == '') && ($_REQUEST["input_type"] == "text")){
 		$_REQUEST["size"] = 255;
@@ -27,7 +29,7 @@ if ($_REQUEST["action"] == "do_add"){
 		case 'select':
 			$query .= " ENUM(".$extra;
 			
-			$enums = explode(",",$_REQUEST["values"]);
+			$enums = explode(",",trim($_REQUEST["values"]));
 			
 			foreach($enums as $enum){
 				$query .= "'".trim(str_replace("'","",str_replace('"','',$enum)))."',";

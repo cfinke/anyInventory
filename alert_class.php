@@ -15,6 +15,8 @@ class alert {
 	var $time;
 	var $unix_time;
 	
+	var $timed = false;
+	
 	function alert($alert_id){
 		$this->id = $alert_id;
 		
@@ -29,6 +31,7 @@ class alert {
 		$this->value = $row["value"];
 		$this->time = $row["time"];
 		$this->unix_time = $row["unix_time"];
+		$this->timed = $row["timed"];
 	}
 	
 	// This function returns a "teaser" or short description for the alert.

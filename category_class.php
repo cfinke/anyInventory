@@ -1,40 +1,39 @@
 <?php
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 class category {
 	var $id;
 	
 	var $name;
 	
 	var $parent;
-	var $children = array();
+	var $children;
 	
-	var $breadcrumbs = array();
+	var $breadcrumbs;
 	var $breadcrumb_names;
 	
-	var $fields = array();
+	var $fields;
 	
 	function category($cat_id){
 		$this->id = $cat_id;
 		
 		$query = "SELECT * FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
-		$result = query($query);		
+		$result = query($query);
 		$row = fetch_array($result);
 		
 		$this->name = $row["name"];
-		$this->parent = $row["parent"];
+		$this->parent_id = $row["parent"];
 		
 		$query = "SELECT * FROM `anyInventory_categories` WHERE `parent` = '".$this->id."'";
 		$result = query($query);
 		
 		while($row = fetch_array($result)){
-			$this->children[] = $row["id"];
+			$this->children[] = new category($row["id"]);
 		}
 		
-		$this->parent = $this->find_parent($this->id);
-		$parent = $this->parent;
-
-		$this->breadcrumbs[] = $this->id;		
-
+		$this->breadcrumbs[] = $this->id;
+		
 		while ($parent != 0){
 			$this->breadcrumbs[] = $parent;
 			
@@ -68,10 +67,18 @@ class category {
 	}
 	
 	function num_items_r(){
-		return num_items();
+		$total = $this->num_items();
+		
+		if (is_array($this->children)){
+			foreach($this->children as $child){
+				$total += $child->num_items();
+			}
+		}
+		
+		return $total;
 	}
 	
-	function find_parent($cat_id){
+	function find_parent_id($cat_id){
 		$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id`='".$cat_id."'";
 		$result = query($query);
 		

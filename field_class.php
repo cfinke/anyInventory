@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 class field {
 	var $id;
 	
@@ -28,7 +30,7 @@ class field {
 		
 		if ($key) unset($this->categories[$key]);
 		
-		refresh_categories($this->categories);
+		$this->refresh_categories($this->categories);
 	}
 	
 	function add_category($cat_id){
@@ -45,10 +47,11 @@ class field {
 			$query = "UPDATE `anyInventory_fields` SET `categories`='";
 			
 			foreach($cat_ids as $cat_id){
-				$query .= $cat_id.",";
+				if ($cat_id != ''){
+					$query .= $cat_id.",";
+				}
 			}
 			
-			$query = substr($query,0,strlen($query) - 1);
 			$query .= "' WHERE `id`='".$this->id."'";
 			$result = query($query);
 		}

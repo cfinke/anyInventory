@@ -19,9 +19,31 @@ if ($_REQUEST["action"] == "do_add"){
 }
 elseif($_REQUEST["action"] == "do_delete"){
 	if ($_REQUEST["delete"] == "Delete"){
-		//	$query = "DELETE FROM `categories` WHERE `id`='".$_REQUEST["id"]"; 
+		$category = new category($_REQUEST["id"]);
+		
+		$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_REQUEST["id"]."'"; 
+		$result = query($query);
+		
+		if ($_REQUEST["item_action"] == "delete"){
+			$query = "DELETE FROM `anyInventory_items` WEHRE `category`='".$category->id."'";
+			$result = query($query);
+		}
+		elseif($_REQUEST["item_action"] == "move"){
+			$query = "UPDATE `anyInventory_items` SET `category`='".$_REQUEST["move_items_to"]."'";
+			$result = query($query);
+		}
+		
+		if ($_REQUEST["subcat_action"] == "delete"){
+			delete_subcategories($category);
+		}
+		elseif($_REQUEST["subcat_action"] == "move"){
+			$query = "UPDATE `anyInventory_categories` SET `parent`='".$_REQUEST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
+			$result = query($query);
+		}
+		
+		remove_from_fields($category->id);
 	}
-
+	
 	header("Location: ".$_SERVER["PHP_SELF"]);
 }
 
@@ -64,32 +86,50 @@ elseif($_REQUEST["action"] == "delete"){
 	
 	$output .= '
 		<form method="post" action="'.$_SERVER["PHP_SELF"].'">
+			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+			<input type="hidden" name="action" value="do_delete" />
 			<p>Are you sure you want to delete this category?</p>';
 	
 	$output .= '
 		<div class="category_info">
 			<p class="category_name"><b>Name:</b> '.$category->breadcrumb_names.'</p>
 			<p class="category_fields"><b>Fields:</b> ';
-			
+	
 	if(is_array($category->fields)){
 		foreach($category->fields as $field){
 			$output .= $field["name"].', ';
 		}
 		$output = substr($output, 0, strlen($output) - 2);
 	}
-	
-	$output .= '</p>
-		<p class="category_num_items">Number of items inventoried in this category: '.$category->num_items().'</p>';
-		
-	if ($category->num_items() > 0){
-		$output .= '<p><input type="radio" name="item_action" value="delete" /> Delete all items in this category<br />
-			<input type="radio" name="item_action" value="move_up" /> Move all items in this category to <select name="move_to" id="move_to">'.get_category_dropdown($category->parent).'</select></p>';
+	else{
+		$output .= 'None';
 	}
 	
-	$output .= '<p class="submit_buttons"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="cancel" /></p>
-			</form>';
-		
-}	
+	$output .= '</p><p class="category_num_items"><b>Number of items inventoried in this category:</b> '.$category->num_items().'</p>';
+	
+	if ($category->num_items() > 0){
+		$output .= '
+			<p>
+				<input type="radio" name="item_action" value="delete" /> Delete all items in this category<br />
+			   	<input type="radio" name="item_action" value="move" /> Move all items in this category to <select name="move_items_to" id="move_items_to">'.get_category_dropdown($category->parent_id).'</select>.
+			</p>';
+	}
+	
+	$output .= '<p><b>Number of subcategories:</b> '.count($category->children).'</p>';
+	
+	if (count($category->children) > 0){
+		$output .= '
+			<p>
+				<input type="radio" name="subcat_action" value="delete" /> Delete all sub-categories<br />
+			   	<input type="radio" name="subcat_action" value="move" /> Move all sub-categories to <select name="move_subcats_to" id="move_subcats_to">'.get_category_dropdown($category->parent_id).'</select>.
+			</p>';
+	}
+	
+	$output .= '
+			<p class="category_num_items"><b>Number of items inventoried in this category\'s subcategories:</b> '.$category->num_items_r().'</p>
+			<p style="text-align: center;"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></p>
+		</form>';
+}
 else{
 	$output .= '<p><a href="'.$_SERVER["PHP_SELF"].'?action=add">Add a Category.</a></p>';
 	
@@ -109,7 +149,7 @@ else{
 			$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
 			$table_set .= '<tr class="'.$color_code.'">';
 			$table_set .= '<td align="center" style="width: 10%; white-space: nowrap;"><a href="'.$_SERVER["PHP_SELF"].'?action=edit&amp;id='.$row["id"].'">[edit]</a> <a href="'.$_SERVER["PHP_SELF"].'?action=delete&amp;id='.$row["id"].'">[delete]</a></td>';
-			$table_set .= '<td>'.$row["name"].'</td>';
+			$table_set .= '<td style="white-space: nowrap;">'.$row["name"].'</td>';
 			$table_set .= '<td>';
 			
 			if (count($temp->fields) > 0){
@@ -226,6 +266,49 @@ function get_array_children($id, &$array, $pre = ""){
 			get_array_children($row["id"], $array, $pre);
 		}
 	}
+}
+
+function delete_subcategories($category){
+	if (is_array($category->children)){
+		foreach($category->children as $child){
+			delete_subcategory($child);
+		}
+	}
+	
+	return;
+}
+
+function delete_subcategory($category){
+	if (is_array($category->children)){
+		foreach($category->children as $child){
+			delete_subcategories($child);
+		}
+	}
+	
+	$query = "DELETE FROM `anyInventory_items` WHERE `category`='".$category->id."'";
+	$result = query($query);
+	
+	$query = "UPDATE `anyInventory_categories` SET `parent`='".$category->parent_id."' WHERE `parent`='".$category->id."'";
+	$result = query($query);
+	
+	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
+	$result = query($query);
+	
+	remove_from_fields($category->id);
+	
+	return;
+}
+
+function remove_from_fields($cat_id){
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%".$cat_id.",%'";
+	$result = query($query);
+	
+	while($row = fetch_array($result)){
+		$field = new field($row["id"]);
+		$field->remove_category($cat_id);
+	}
+	
+	return;
 }
 
 ?>

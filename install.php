@@ -24,6 +24,7 @@ include($DIR_PREFIX."field_class.php");
 include($DIR_PREFIX."item_class.php");
 include($DIR_PREFIX."file_class.php");
 include($DIR_PREFIX."alert_class.php");
+include($DIR_PREFIX."user_class.php");
 
 connect_to_database();
 
@@ -173,8 +174,10 @@ if ($_REQUEST["action"] == "install"){
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
 					`username` varchar(32) NOT NULL default '',
 					`password` varchar(32) NOT NULL default '',
-					`type` int(11) NOT NULL default '0',
-					`object` text not null,
+					`usertype` ENUM( 'User', 'Administrator' ) DEFAULT 'User' NOT NULL,
+					`categories_view` text NOT NULL ,
+					`categories_admin` text NOT NULL ,
+					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `username` (`username`)
 					) TYPE=MyISAM";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -200,15 +203,24 @@ if ($_REQUEST["action"] == "install"){
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) $_REQUEST["password_protect_admin"]) / 1)."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
+		$blank = array();
+		
 		if ($_REQUEST["password_protect_admin"] || $_REQUEST["password_protect_view"]){
 			$query = "INSERT INTO `anyInventory_users`
 						(`username`,
 						 `password`,
-						 `type`)
+						 `usertype`,
+						 `categories_admin`,
+						 `categories_view`)
 						VALUES
 						('".$_REQUEST["username"]."',
 						 '".md5($_REQUEST["password"]."',
-						 '0')";
+						 'Administrator',
+						 '".addslashes(serialize($blank))."',
+						 '".addslashes(serialize($blank))."')";
+			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			
+			$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
 			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		}
 		

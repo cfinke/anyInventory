@@ -17,7 +17,7 @@ class field {
 		
 		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`='".$this->id."'";
 		$result = query($query);
-		$row = fetch_array($result);
+		$row = mysql_fetch_array($result);
 		
 		$this->name = $row["name"];
 		$this->input_type = $row["input_type"];

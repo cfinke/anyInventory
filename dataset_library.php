@@ -49,7 +49,7 @@
 // |	    						 									  |
 // |	/*generate body of table cells making sure we have one <td>       |
 // |		per sortcol_* in our query */    					      	  |
-// |	if (mysql_num_rows($result) > 0 ) {    						 	  |
+// |	if (mysql_mysql_num_rows($result) > 0 ) {    						 	  |
 // |		$i = 0;    													  |
 // |		while($row = mysql_fetch_assoc($result)) {    				  |
 // |			$color_code = (($i % 2) == 1)? 'row_on':'row_off';    	  |

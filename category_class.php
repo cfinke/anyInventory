@@ -23,7 +23,7 @@ class category {
 		if ($this->id != 0){
 			$query = "SELECT * FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
 			$result = query($query);
-			$row = fetch_array($result);
+			$row = mysql_fetch_array($result);
 			
 			$this->name = $row["name"];
 			$this->parent_id = $row["parent"];
@@ -48,7 +48,7 @@ class category {
 					$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
 					$result = query($query);
 					
-					$this->breadcrumb_names .= result($result, 0, 'name') . ' > ';
+					$this->breadcrumb_names .= mysql_result($result, 0, 'name') . ' > ';
 				}
 			}
 			
@@ -57,7 +57,7 @@ class category {
 			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%,".$this->id.",%' OR `categories` LIKE '%,".$this->id."' ORDER BY `importance` ASC";
 			$result = query($query);
 			
-			while ($row = fetch_array($result)){
+			while ($row = mysql_fetch_array($result)){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -72,7 +72,7 @@ class category {
 			$this->breadcrumbs[] = 0;
 			$this->breadcrumb_names[] = "Top";
 			
-			while ($row = fetch_array($result)){
+			while ($row = mysql_fetch_array($result)){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -81,7 +81,7 @@ class category {
 		$query = "SELECT * FROM `anyInventory_categories` WHERE `parent` = '".$this->id."'";
 		$result = query($query);
 		
-		while($row = fetch_array($result)){
+		while($row = mysql_fetch_array($result)){
 			$this->children[] = new category($row["id"]);
 			$this->num_children++;
 		}
@@ -91,7 +91,7 @@ class category {
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
 		$result = query($query);
 		
-		return num_rows($result);
+		return mysql_num_rows($result);
 	}
 	
 	function num_items_r(){
@@ -114,11 +114,11 @@ class category {
 			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id`='".$cat_id."'";
 			$result = query($query);
 			
-			if (num_rows($result) == 0){
+			if (mysql_num_rows($result) == 0){
 				return 0;
 			}
 			else{
-				return result($result, 0, 'parent');
+				return mysql_result($result, 0, 'parent');
 			}
 		}
 	}

@@ -18,54 +18,46 @@ function query($query){
 	return $result;
 }
 
-function fetch_array($result){
-	$row = mysql_fetch_array($result);
+function display($output){
+	include("header.php");
+	echo $output;
+	include("footer.php");
+	exit;
+}
+
+function get_category_options($selected = null){
+	if (!is_array($selected)) $selected = array($selected);
 	
-	return $row;
-}
-
-function num_rows($result){
-	return mysql_num_rows($result);
-}
-
-function result($result, $row, $field){
-	return mysql_result($result, $row, $field);
-}
-
-function insert_id(){
-	return mysql_insert_id();
-}
-
-
-function get_category_dropdown($selected = 0){
-	$output = '<option value="0">Top Level</option>';
-	$output .= get_dropdown_children(0, '', $selected);
+	$output = '<option value="0"';
+	if (in_array(0,$selected)) $output .= ' selected="selected"';
+	$output .= '>Top Level</option>';
+	$output .= get_options_children(0, '', $selected);
 	
 	return $output;
 }
 
-function get_dropdown_children($id, $pre = "", $selected = 0){
+function get_options_children($id, $pre = "", $selected = 0){
 	$query = "SELECT * FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
 	$result = query($query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
 		$newresult = query($newquery);
-		$category_name = result($newresult, 0, 'name');
+		$category_name = mysql_result($newresult, 0, 'name');
 		$pre .= $category_name . ' > ';
 	}
 	
 	$list = '';
 	
-	if (num_rows($result) > 0){
-		while ($row = fetch_array($result)){
+	if (mysql_num_rows($result) > 0){
+		while ($row = mysql_fetch_array($result)){
 			$category = $row["name"];
 			
 			$list .= '<option value="'.$row["id"].'"';
-			if ($row["id"] == $selected) $list .= ' selected="selected"';
+			if (in_array($row["id"],$selected)) $list .= ' selected="selected"';
 			$list .= '>'.$pre . $category.'</option>';
 			
-			$list .= get_dropdown_children($row["id"], $pre, $selected);
+			$list .= get_options_children($row["id"], $pre, $selected);
 		}
 	}
 	
@@ -76,24 +68,24 @@ function get_fields_checkbox_area($checked = array()){
 	$query = "SELECT * FROM `anyInventory_fields` WHERE 1 ORDER BY `name` ASC";
 	$result = query($query);
 	
-	$num_fields = num_rows($result);
+	$num_fields = mysql_num_rows($result);
 	
 	$output .= '<div id="field_checkboxes">
 		<div style="float: left;">';
 	
 	for ($i = 0; $i < ceil($num_fields / 2); $i++){
-		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.result($result, $i, "id").']" value="yes" ';
-		if ((is_array($checked)) && (in_array(result($result, $i, "id"), $checked))) $output .= ' checked="checked"';
-		$output .= ' /> '.result($result, $i, "name").'</div>';
+		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.mysql_result($result, $i, "id").']" value="yes" ';
+		if ((is_array($checked)) && (in_array(mysql_result($result, $i, "id"), $checked))) $output .= ' checked="checked"';
+		$output .= ' /> '.mysql_result($result, $i, "name").'</div>';
 	}
 	
 	$output .= '</div>
 		<div>';
 	
 	for (; $i < $num_fields; $i++){
-		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.result($result, $i, "id").']" value="yes" ';
-		if ((is_array($checked)) && (in_array(result($result, $i, "id"), $checked))) $output .= ' checked="checked"';
-		$output .= '/> '.result($result, $i, "name").'</div>';	
+		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.mysql_result($result, $i, "id").']" value="yes" ';
+		if ((is_array($checked)) && (in_array(mysql_result($result, $i, "id"), $checked))) $output .= ' checked="checked"';
+		$output .= '/> '.mysql_result($result, $i, "name").'</div>';	
 	}
 	
 	$output .= '</div>';
@@ -101,10 +93,10 @@ function get_fields_checkbox_area($checked = array()){
 	return $output;
 }
 
-function get_category_array(){
+function get_category_array($top = 0){
 	$array = array();
 	
-	get_array_children(0, $array);
+	get_array_children($top, $array);
 	
 	return $array;
 }
@@ -116,13 +108,13 @@ function get_array_children($id, &$array, $pre = ""){
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
 		$newresult = query($newquery);
-		$pre .= result($newresult, 0, 'name') . ' > ';
+		$pre .= mysql_result($newresult, 0, 'name') . ' > ';
 	}
 	
-	if (num_rows($result) > 0){
-		while ($row = fetch_array($result)){
+	if (mysql_num_rows($result) > 0){
+		while ($row = mysql_fetch_array($result)){
 			$array[] = array("name"=>$pre.$row["name"],"id"=>$row["id"]);
-						
+			
 			get_array_children($row["id"], $array, $pre);
 		}
 	}
@@ -163,7 +155,7 @@ function remove_from_fields($cat_id){
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%".$cat_id.",%'";
 	$result = query($query);
 	
-	while($row = fetch_array($result)){
+	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
 		$field->remove_category($cat_id);
 	}

@@ -14,7 +14,7 @@ if ($_REQUEST["id"]){
 	$output .= $item->export_description();
 }
 else{
-	$output .= '<p><a href="items.php?action=add&amp;c='.$_REQUEST["c"].'">Add an item here.</a></p>';
+	$output .= '<p><a href="add_item.php?c='.$_REQUEST["c"].'">Add an item here.</a></p>';
 	$output .= '<table style="width: 90%; margin-left: 5%; margin-right: 5%;"><tr><td style="width: 50%;">';
 	
 	$i = 0;
@@ -38,7 +38,7 @@ else{
 				<td style="white-space: nowrap; width: 5%; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;"font-weight: bold;">aI ID #</td>
 				<td style="border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;">Item Name</td>
 			</tr>';
-	while ($row = fetch_array($result)){
+	while ($row = mysql_fetch_array($result)){
 		$item = new item($row["id"]);
 		
 		$output .= '<tr><td>'.$item->id.'</td><td>'.$item->export_teaser().'</td></tr>';
@@ -46,9 +46,6 @@ else{
 	$output .= '</table>';
 }
 
-include("header.php");
-echo $output;
-include("footer.php");
-exit;
+display($output);
 
 ?>

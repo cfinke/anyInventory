@@ -1,10 +1,4 @@
-<?php
-
-$top_links = array(array("key"=>"fields","url"=>"fields.php","name"=>"Fields"),
-				   array("key"=>"categories","url"=>"categories.php","name"=>"Categories"),
-				   array("key"=>"items","url"=>"items.php","name"=>"Items"));
-
-?><html>
+<html>
 	<head>
 		<title><?php echo $title; ?></title>
 		<link rel="stylesheet" type="text/css" href="style.css" />
@@ -37,21 +31,5 @@ $top_links = array(array("key"=>"fields","url"=>"fields.php","name"=>"Fields"),
 			</tr>
 			<tr height="100%">
 				<td class="row_head" width="150" align="left" valign="top" style="padding:5px">
-					<?php 
-					
-					foreach($top_links as $top_link){
-						echo '<p style="font-weight: bold;"><a href="'.$top_link["url"].'">'.$top_link["name"].'</a></p>';
-						
-						if ($page_key == $top_link["key"]){
-							echo '<p style="margin-left: 2ex;">';
-							
-							foreach($links as $link){
-								echo '<a href="'.$link["url"].'">'.$link["name"].'</a><br />';
-							}
-							
-							echo '</p>';
-						}
-					}
-					
-					?></td>
+				</td>
 				<td bgcolor="#ffffff" width="650" align="left" valign="top" style="padding:5px">

@@ -114,19 +114,14 @@ function get_fields_checkbox_area($checked = array()){
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `name` ASC";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	$output .= '<table>';
-	
 	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
 		
 		$output .= '
-			<tr>
-				<td style="vertical-align: top;">
-					<input type="checkbox" name="fields['.$field->id.']" value="yes" ';
+			<input type="checkbox" name="fields['.$field->id.']" value="yes" ';
 				if ((is_array($checked)) && (in_array($field->id, $checked))) $output .= ' checked="checked"';
 				$output .= ' />
-				</td>
-				<td>'.$field->name.' ('.$field->input_type.'; ';
+				'.$field->name.' ('.$field->input_type.'; ';
 				if ($field->input_type == "text"){
 					$output .= ' '.$field->size.' characters';
 				}
@@ -141,10 +136,8 @@ function get_fields_checkbox_area($checked = array()){
 					}
 				}
 				
-				$output .= ')</td></tr>';
+				$output .= ')<br />';
 	}
-	
-	$output .= '</table>';
 	
 	return $output;
 }

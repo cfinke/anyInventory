@@ -53,7 +53,8 @@ if ($_POST["action"] == "do_add"){
 							"expire_time"=>$expire_timestamp,
 							"timed"=>intval(($_POST["timed"] == "yes")),
 							"category_ids"=>stripslashes($_POST["c"]))
-		$db->autoExecute('anyInventory_alerts',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_alerts',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }
 elseif($_POST["action"] == "do_edit_cat_ids"){
@@ -76,7 +77,8 @@ elseif($_POST["action"] == "do_edit_cat_ids"){
 		}
 		
 		$query = substr($query, 0, strlen($query) - 4);
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		if ($result->numRows() == 0){
 			header("Location: ../error_handler.php?eid=3");
@@ -84,7 +86,8 @@ elseif($_POST["action"] == "do_edit_cat_ids"){
 		}
 		else{
 			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($_POST["c"])."'";
-			$db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$result = $db->query($query);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			
 			header("Location: edit_alert.php?id=".$_POST["id"]);
 			exit;
@@ -133,7 +136,8 @@ elseif($_POST["action"] == "do_edit"){
 					`expire_time`='".$expire_timestamp."',
 					`timed`='".(((bool) ($_POST["timed"] == "yes")) / 1)."'
 					 WHERE `id`='".$_POST["id"]."'";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }
 elseif($_POST["action"] == "do_delete"){
@@ -150,7 +154,8 @@ elseif($_POST["action"] == "do_delete"){
 		}
 		
 		$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_POST["id"]."'";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }
 

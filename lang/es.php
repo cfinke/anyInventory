@@ -76,7 +76,6 @@ define('DATA_TYPE','Tipo de dato');
 define('TEXT','Campo de texto');
 define('RADIO','Radio botones');
 define('CHECKBOX','Casillas de verificaci&oacute;n');
-define('ITEMS','Art&iacute;culo(s)');
 define('SELECT_BOX','Opci&oacute;n m&uacute;ltiple');
 define('MULTIPLE','Compuestos ('.TEXT.' + '.SELECT_BOX.')');
 define('FILE','Archivo');

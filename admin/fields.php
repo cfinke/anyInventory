@@ -6,7 +6,8 @@ $title = FIELDS;
 $breadcrumbs = ADMINISTRATION.' > '.FIELDS;
 
 $query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
-$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+$result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 if ($admin_user->usertype == 'Administrator'){
 	$table_rows .= '

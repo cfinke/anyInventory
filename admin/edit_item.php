@@ -62,8 +62,8 @@ if (is_array($item->category->field_ids)){
 					$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select">';
 					$output .= '<option value="">Select One</option>';
 					
-					if (is_array($field->values)){
-						foreach($field->values as $value){
+					if (is_array($field->field_values)){
+						foreach($field->field_values as $value){
 							$output .= '<option value="'.$value.'"';
 							if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
 							$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
@@ -76,8 +76,8 @@ if (is_array($item->category->field_ids)){
 				case 'select':
 					$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">';
 					
-					if (is_array($field->values)){
-						foreach($field->values as $value){
+					if (is_array($field->field_values)){
+						foreach($field->field_values as $value){
 							$output .= '<option value="'.$value.'"';
 							if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
 							$output .= '>'.$value.'</option>';
@@ -90,8 +90,8 @@ if (is_array($item->category->field_ids)){
 					else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">'.$item->fields[$field->name].'</textarea>';
 					break;
 				case 'radio':
-					if (is_array($field->values)){
-						foreach($field->values as $value){
+					if (is_array($field->field_values)){
+						foreach($field->field_values as $value){
 							$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
 							if ($value == $item->fields[$field->name]) $output .= ' checked="checked"';
 							$output .= ' /> '.$value.'<br />';
@@ -100,8 +100,8 @@ if (is_array($item->category->field_ids)){
 					
 					break;
 				case 'checkbox':
-					if (is_array($field->values)){
-						foreach($field->values as $value){
+					if (is_array($field->field_values)){
+						foreach($field->field_values as $value){
 							$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
 							if ((is_array($item->fields[$field->name])) && in_array($value,$item->fields[$field->name])) $output .= ' checked="checked"';
 							$output .= ' /> '.$value.'<br />';

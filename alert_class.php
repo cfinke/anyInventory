@@ -30,6 +30,7 @@ class alert {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$row = $result->fetchRow();
 		
@@ -76,13 +77,15 @@ class alert {
 			$query = "DELETE FROM `anyInventory_alerts` WHERE `id`= ?";
 			$query_data = array($this->id);
 			$pquery = $db->prepare($query);
-			$db->execute($pquery, $query_data);
+			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		}
 		else{
 			$query = "UPDATE `anyInventory_alerts` SET `item_ids`= ? WHERE `id`= ?";
 			$query_data = array(serialize($this->item_ids), $this->id);
 			$pquery = $db->prepare($query);
-			$db->execute($pquery, $query_data);
+			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		}
 	}
 	

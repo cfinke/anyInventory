@@ -5,7 +5,7 @@ class field {
 	
 	var $name;					// The name of this field.
 	var $input_type;			// The input type of this field, can be one of: text, select, radio, checkbox, multiple
-	var $values = array();		// The possible values for this field, doesn't apply to input type text
+	var $field_values = array();// The possible values for this field, doesn't apply to input type text
 	var $default_value = '';	// The default value for this field, doesn't apply to input type text when size is greater than 255
 	var $size = 0;				// The size (number of characters allowed) of this field, only entered by the user for input type text
 	var $categories = array();	// The ids of the categories that use this field
@@ -23,6 +23,7 @@ class field {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$row = $result->fetchRow();
 		
@@ -32,7 +33,7 @@ class field {
 		
 		if ($this->input_type != 'divider'){
 			// Set the values; the values are stored separated by commas
-			$this->values = unserialize($row["values"]);
+			$this->field_values = unserialize($row["field_values"]);
 			
 			// Set the default value
 			$this->default_value = $row["default_value"];
@@ -91,8 +92,9 @@ class field {
 			if (is_array($cat_ids)){
 				$query = "UPDATE `anyInventory_fields` SET `categories` = ? WHERE `id` = ?";
 				$query_data = array(serialize($cat_ids),$this->id);
-				$pquery = $db->process($query);
-				$db->execute($pquery, $query_data);
+				$pquery = $db->prepare($query);
+				$result = $db->execute($pquery, $query_data);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			}
 			
 			return;

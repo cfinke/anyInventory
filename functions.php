@@ -16,11 +16,15 @@ function connect_to_database(){
 }
 
 function get_unique_id($table){
+	global $db;
+	
 	$query = "SELECT MAX(`id`) AS `seq_id` FROM `".$table."`";
 	$result = $db->query($query);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+	
 	$row = $result->fetchRow();
 	
-	return ($row["id"] + 1);
+	return ($row["seq_id"] + 1);
 }
 
 function display($output){
@@ -67,6 +71,7 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 		$query_data = array($id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$names = $result->fetchRow();
 		$category_name = $names["name"];
@@ -77,6 +82,7 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	$list = '';
 	
@@ -127,6 +133,7 @@ function get_item_options($cat_ids = 0, $selected = null){
 	$query_data = array(implode(", ",$cat_ids));
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	while ($row = $result->fetchRow()){
 		$options .= '<option value="'.$row["id"].'"';
@@ -145,6 +152,7 @@ function get_fields_checkbox_area($checked = array()){
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
 	$result = $db->query($query);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	while($row = $result->fetchRow()){
 		$field = new field($row["id"]);
@@ -165,8 +173,8 @@ function get_fields_checkbox_area($checked = array()){
 					elseif (($field->input_type != 'file') && ($field->input_type != 'item')){
 						$output .= '; values: ';
 						
-						if (is_array($field->values)){
-							foreach($field->values as $val){
+						if (is_array($field->field_values)){
+							foreach($field->field_values as $val){
 								$output .= $val .', ';
 							}
 							$output = substr($output, 0, strlen($output) - 2);
@@ -193,6 +201,7 @@ function get_category_array($top = 0){
 		$query_data = array($top);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		if ($result->numRows() > 0){
 			$row = $result->fetchRow();
@@ -218,6 +227,7 @@ function get_array_children($id, &$array, $pre = ""){
 		$query_data = array($id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$row = $result->fetchRow();
 		$pre .= $row["name"] . ' > ';
@@ -227,6 +237,7 @@ function get_array_children($id, &$array, $pre = ""){
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	if ($result->numRows() > 0){
 		while ($row = $result->fetchRow()){
@@ -266,6 +277,7 @@ function get_array_id_children($id, &$array){
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	if ($result->numRows() > 0){
 		while ($row = $result->fetchRow()){
@@ -305,12 +317,14 @@ function delete_subcategory($category){
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	while ($row = $result->fetchRow()){
 		$query2 = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE ?";
 		$query2_data = array('%"'.$row["id"].'"%');
 		$pquery2 = $db->prepare($query2);
 		$result2 = $db->execute($pquery2, $query2_data);
+		if (DB::isError($result2)) die($result2->getMessage().': line '.__LINE__.'<br /><br />'.$result2->userinfo);
 		
 		while ($row2 = $result2->fetchRow()){
 			$alert = new alert($row2["id"]);
@@ -322,26 +336,30 @@ function delete_subcategory($category){
 				$query3_data = array($alert->id);
 				$pquery3 = $db->prepare($query3);
 				$db->execute($pquery3, $query3_data);
+				if (DB::isError($result3)) die($result3->getMessage().': line '.__LINE__.'<br /><br />'.$result3->userinfo);
 			}
 		}
 		
 		$query4 = "DELETE FROM `anyInventory_values` WHERE `item_id` = ?";
 		$query4_data = array($row["id"]);
 		$pquery4 = $db->prepare($query4);
-		$db->execute($pquery4, $query4_data);
+		$result4 = $db->execute($pquery4, $query4_data);
+		if (DB::isError($result4)) die($result4->getMessage().': line '.__LINE__.'<br /><br />'.$result4->userinfo);
 	}
 	
 	// Delete all of the items in the category
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category` = ?";
 	$query_data = arrau($category->id);
 	$pquery = $db->prepare($query);
-	$db->execute($pquery, $query_data);
+	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	// Delete this category.
 	$query = "DELETE FROM `anyInventory_categories` WHERE `id` = ?";
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
-	$db->execute($pquery, $query_data);
+	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	remove_from_fields($category->id);
 	
@@ -356,6 +374,7 @@ function remove_from_fields($cat_id){
 	$query_data = array('%"'.$cat_id.'"%');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	while($row = $result->fetchRow()){
 		$field = new field($row["id"]);
@@ -430,6 +449,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 			}
 			
 			$result = $db->query($query);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			
 			if ($result->numRows() == 0){
 				header("Location: ../error_handler.php?eid=3");
@@ -442,6 +462,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 				
 				$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (".implode(", ",$c).")";
 				$result = $db->query($query);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				if ($result->numRows() == 0){
 					header("Location: ../error_handler.php?eid=2");
@@ -596,9 +617,9 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 	return $output;
 }
 
-function display_field_form($c_options = null, $name = null, $input_type = null, $values = null, $default_value = null, $size = null, $highlight = false){
+function display_field_form($c_options = null, $name = null, $input_type = null, $field_values = null, $default_value = null, $size = null, $highlight = false){
 	if ($highlight) $checked = ' checked="checked"';
-	if (!is_array($values)) $values = array($values);
+	if (!is_array($field_values)) $field_values = array($field_values);
 	
 	$output .= '
 		<tr>
@@ -620,8 +641,8 @@ function display_field_form($c_options = null, $name = null, $input_type = null,
 			</td>
 		</tr>
 		<tr>
-			<td class="form_label"><label for="values">'.VALUES.':</label></td>
-			<td class="form_input"><input type="text" name="values" id="values" value="'.implode(", ",$values).'" /><br /><small>'.VALUES_INFO.'</small></td>
+			<td class="form_label"><label for="field_values">'.VALUES.':</label></td>
+			<td class="form_input"><input type="text" name="field_values" id="field_values" value="'.implode(", ",$field_values).'" /><br /><small>'.VALUES_INFO.'</small></td>
 		</tr>
 		<tr>
 			<td class="form_label"><label for="default_value">'.DEFAULT_VALUE.':</label></td>

@@ -7,6 +7,7 @@
 					
 					$query = "SELECT `id` FROM `anyInventory_items`";
 					$result = $db->query($query);
+					if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 					
 					echo intval($result->numRows());
 					

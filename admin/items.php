@@ -8,7 +8,8 @@ $breadcrumbs = ITEMS;
 $category = new category(0);
 
 $query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+$result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 if ($result->numRows() > 0){
 	$table_rows .= '
@@ -46,7 +47,8 @@ if (is_array($cat_ids)){
 			$category = new category($cat["id"]);
 			
 			$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$result = $db->query($query);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			
 			if ($result->numRows() > 0){
 				$table_rows .= '

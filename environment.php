@@ -30,9 +30,10 @@ $db = connect_to_database();
 
 $query = "SELECT * FROM `anyInventory_config`";
 $result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 while ($row = $result->fetchRow()){
-	define($row["key"],$row["value"]);
+	define($row["key_value"],$row["value"]);
 }
 
 require_once($DIR_PREFIX."lang/".LANG.".php");

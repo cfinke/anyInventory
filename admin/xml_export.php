@@ -7,7 +7,8 @@ $cr = "\n";
 $output .= '<?xml version="1.0" ?>'.$cr.'<anyinventory>'.$cr;
 
 $query = "SELECT * FROM `anyInventory_fields` ORDER BY `importance` ASC";
-$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+$result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 if ($result->numRows() > 0){
 	$output .= '	<fields>'.$cr;
@@ -21,14 +22,14 @@ if ($result->numRows() > 0){
 			$output .= '			<type>'.$field->input_type.'</type>'.$cr;
 			
 			if (($field->input_type == 'select') || ($field->input_type == 'multiple') || ($field->input_type == 'checkbox') || ($field->input_type == 'radio')){
-				if (is_array($field->values)){
-					$output .= '			<values>'.$cr;
+				if (is_array($field->field_values)){
+					$output .= '			<field_values>'.$cr;
 					
-					foreach($field->values as $value){
+					foreach($field->field_values as $value){
 						$output .= '				<value>'.$value.'</value>'.$cr;
 					}
 					
-					$output .= '			</values>'.$cr;
+					$output .= '			</field_values>'.$cr;
 				}
 			}
 			
@@ -61,7 +62,8 @@ if (is_array($cat_ids)){
 		$output .= '		<category id="'.$category->id.'" name="'.$category->breadcrumb_names.'">'.$cr;
 		
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
-		$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		while ($row = $result->fetchRow()){
 			$item = new item($row["id"]);

@@ -9,12 +9,12 @@ $inHead = '
 		
 		function toggle(){
 			if ((document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'file\') || (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'item\')){
-				document.getElementById(\'values\').disabled = true;
+				document.getElementById(\'field_values\').disabled = true;
 				document.getElementById(\'default_value\').disabled = true;
 				document.getElementById(\'size\').disabled = true;
 			}
 			else{
-				document.getElementById(\'values\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
+				document.getElementById(\'field_values\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
 				document.getElementById(\'size\').disabled = !(document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
 				document.getElementById(\'default_value\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "checkbox");
 			}

@@ -81,6 +81,7 @@ elseif (!isset($_POST["i"])){
 	
 	$query = substr($query, 0, strlen($query) - 4);
 	$result = $db->query($query);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	if ($result->numRows() == 0){
 		header("Location: error_handler.php?eid=3");

@@ -22,6 +22,7 @@ class item {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$row = $result->fetchRow();
 		
@@ -35,6 +36,7 @@ class item {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		while($row = $result->fetchRow()){
 			$field = new field($row["field_id"]);
@@ -64,10 +66,11 @@ class item {
 		}
 		
 		// Get each of this item's files and add it to the array.
-		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key` = ?";
+		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key_value` = ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		while ($row = $result->fetchRow()){
 			$this->files[] = new file_object($row["id"]);
@@ -247,12 +250,14 @@ class item {
 			$query_data = array('item');
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			
 			while ($row = $result->fetchRow()){
 				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE ?";
 				$query2_data = array('%"'.$this->id.'"%');
 				$pquery2 = $db->prepare($query2);
 				$result2 = $db->execute($pquery2, $query2_data);
+				if (DB::isError($result2)) die($result2->getMessage().': line '.__LINE__.'<br /><br />'.$result2->userinfo);
 				
 				while ($row2 = $result2->fetchRow()){
 					$backlinks[] = $row2["id"];

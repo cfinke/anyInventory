@@ -38,7 +38,8 @@ if (PP_VIEW){
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = $db->query($query) or die(db->error() . '<br /><br />' . $query);
+$result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 while($row = $result->fetchRow()){
 	$output .= '<option value="'.$row["id"].'" selected="selected">'.$row["username"].'</option>';
@@ -58,7 +59,8 @@ if (PP_ADMIN){
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = $db->query($query) or die(db->error() . '<br /><br />' . $query);
+$result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 while($row = $result->fetchRow()){
 	$output .= '<option value="'.$row["id"].'">'.$row["username"].'</option>';
@@ -75,7 +77,7 @@ $output .= '
 							<td class="form_label">'.FIELDS.':</td>
 							<td class="form_input">
 								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" checked="checked" /> '.SHOW_AUTOINC_FIELD.'<br /><br />
-								<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" checked="checked" /> '.INHERIT_FIELDS.'<br /><br />
+								<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" /> '.INHERIT_FIELDS.'<br /><br />
 								'.get_fields_checkbox_area().'
 							</td>
 						</tr>

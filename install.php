@@ -134,12 +134,13 @@ if ($_POST["action"] == "install"){
 				  KEY `parent` (`parent`)
 				) TYPE=MyISAM";
 		$db->query($query);
+		$result = if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query = "CREATE TABLE `anyInventory_fields` (
 				  `id` int(11) NOT NULL auto_increment,
 				  `name` varchar(64) NOT NULL default '',
 				  `input_type` enum('text','textarea','checkbox','radio','select','multiple','file','divider','item') NOT NULL default 'text',
-				  `values` text NOT NULL,
+				  `field_values` text NOT NULL,
 				  `default_value` varchar(32) NOT NULL default '',
 				  `size` int(11) NOT NULL default '0',
 				  `categories` text NOT NULL,
@@ -147,7 +148,8 @@ if ($_POST["action"] == "install"){
 				  `highlight` INT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
-		$db->query($query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query = "CREATE TABLE `anyInventory_items` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -155,7 +157,8 @@ if ($_POST["action"] == "install"){
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
-		$db->query($query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query = "CREATE TABLE `anyInventory_values` (
 					`item_id` int( 11 ) NOT NULL default '0',
@@ -163,11 +166,12 @@ if ($_POST["action"] == "install"){
 					`value` text NOT NULL ,
 					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
 					) TYPE = MYISAM";
-		$db->query($query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query = "CREATE TABLE `anyInventory_files` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
-					`key` INT NOT NULL ,
+					`key_value` INT NOT NULL ,
 					`file_name` VARCHAR( 255 ) NOT NULL ,
 					`file_size` INT NOT NULL ,
 					`file_type` VARCHAR( 32 ) NOT NULL ,
@@ -176,7 +180,8 @@ if ($_POST["action"] == "install"){
 						`id`
 					)
 				)";
-		$db->query($query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query = "CREATE TABLE `anyInventory_alerts` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -192,7 +197,8 @@ if ($_POST["action"] == "install"){
 					`category_ids` TEXT NOT NULL,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
-		$db->query($query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query = "CREATE TABLE `anyInventory_users` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -204,51 +210,60 @@ if ($_POST["action"] == "install"){
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `username` (`username`)
 					) TYPE=MyISAM";
-		$db->query($query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query = "CREATE TABLE `anyInventory_config` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
-					`key` varchar( 64 ) NOT NULL default '',
+					`key_value` varchar( 64 ) NOT NULL default '',
 					`value` text NOT NULL ,
 					UNIQUE KEY `id` ( `id` ),
-					UNIQUE KEY `key` ( `key` )
+					UNIQUE KEY `key_value` ( `key_value` )
 					) TYPE = MYISAM";
-		$db->query($query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query_data = array("id"=>get_unique_id('anyInventory_config'),
-							"key"=>'AUTO_INC_FIELD_NAME',
+							"key_value"=>'AUTO_INC_FIELD_NAME',
 							"value"=>'anyInventory ID');
-		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query_data = array("id"=>get_unique_id('anyInventory_config'),
-							"key"=>'FRONT_PAGE_TEXT',
+							"key_value"=>'FRONT_PAGE_TEXT',
 							"value"=>'This is the front page and top-level category of anyInventory.  You can <a href=\"docs/en/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.');
-		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query_data = array("id"=>get_unique_id('anyInventory_config'),
-							"key"=>'LANG',
+							"key_value"=>'LANG',
 							"value"=>$_REQUEST["lang"]);
-		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query_data = array("id"=>get_unique_id('anyInventory_config'),
-							"key"=>'PP_VIEW',
+							"key_value"=>'PP_VIEW',
 							"value"=>intval(($_POST["password_protect_view"] == "yes")));
-		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query_data = array("id"=>get_unique_id('anyInventory_config'),
-							"key"=>'PP_ADMIN',
+							"key_value"=>'PP_ADMIN',
 							"value"=>intval(($_POST["password_protect_admin"] == "yes")));
-		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query_data = array("id"=>get_unique_id('anyInventory_config'),
-							"key"=>'ADMIN_USER_ID',
+							"key_value"=>'ADMIN_USER_ID',
 							"value"=>(get_unique_id('anyInventory_users') - 1));
-		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query_data = array("id"=>get_unique_id('anyInventory_config'),
-							"key"=>'NAME_FIELD_NAME',
+							"key_value"=>'NAME_FIELD_NAME',
 							"value"=>NAME);
-		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$query_data = array("id"=>get_unique_id('anyInventory_users'),
 							"username"=>$_POST["username"],
@@ -256,7 +271,8 @@ if ($_POST["action"] == "install"){
 							"usertype"=>'Administrator',
 							"categories_admin"=>serialize($blank),
 							"categories_view"=>serialize($blank));
-		$db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		if (count($config_errors) == 0){
 			// Delete the install file.

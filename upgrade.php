@@ -111,32 +111,32 @@ if ($_POST["action"] == "upgrade"){
 				// Fix field values data type
 				
 				$query = "SELECT `id`,`values` FROM `anyInventory_fields`";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = $db->query($query);
 				
 				while ($row = $result->fetchRow()){
-					$values = unserialize($row["values"]);
+					$field_values = unserialize($row["values"]);
 					
-					if (!is_array($values)){
-						$values = explode(",",$row["values"]);
+					if (!is_array($field_values)){
+						$field_values = explode(",",$row["values"]);
 						
-						if (is_array($values)){
-							foreach($values as $key => $thing) $values[$key] = trim($thing);
+						if (is_array($field_values)){
+							foreach($field_values as $key => $thing) $field_values[$key] = trim($thing);
 						}
 						else{
-							$values = array();
+							$field_values = array();
 						}
 						
-						$sql_values = serialize($values);
+						$sql_values = serialize($field_values);
 						
 						$new_query = "UPDATE `anyInventory_fields` SET `values`='".$sql_values."' WHERE `id`='".$row["id"]."'";
-						$db->query($query) or die($db->error() . '<br /><br />'. $query);
+						$db->query($query);
 					}
 				}
 				
 				// Fix field categories data type
 				
 				$query = "SELECT `id`,`categories` FROM `anyInventory_fields`";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = $db->query($query);
 				
 				while ($row = $result->fetchRow()){
 					$categories = unserialize($row["categories"]);
@@ -156,7 +156,7 @@ if ($_POST["action"] == "upgrade"){
 						$sql_categories = serialize($categories);
 						
 						$new_query = "UPDATE `anyInventory_fields` SET `categories`='".$sql_categories."' WHERE `id`='".$row["id"]."'";
-						$db->query($new_query) or die($db->error() . '<br /><br />'. $new_query);
+						$db->query($new_query);
 					}
 				}
 				
@@ -174,17 +174,17 @@ if ($_POST["action"] == "upgrade"){
 				@$db->query($query);
 				
 				$query = "SELECT COUNT(`key`) AS `num_files` FROM `anyInventory_files` GROUP BY `key` ORDER BY `key` DESC LIMIT 1";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = $db->query($query);
 				
 				while ($row = $result->fetchRow()){
 					$max_files = $row["num_files"];
 					
 					if ($max_files > 0){
 						$catquery = "SELECT `id` FROM `anyInventory_categories`";
-						$catresult = $db->query($catquery) or die($db->error() . '<br /><br />'. $catquery);
+						$catresult = $db->query($catquery);
 						
 						$cat_ids = array();
-						$values = array();
+						$field_values = array();
 						
 						while ($catrow = $catresult->fetchRow()){
 							$cat_ids[] = $catrow["id"];
@@ -198,14 +198,15 @@ if ($_POST["action"] == "upgrade"){
 												"name"=>"Generic File ".$i,
 												"input_type"=>"file",
 												"categories"=>serialize($cat_ids),
-												"values"=>serialize($values));
-							$db->autoExecute('anyInventory_fields',$query_data,DB_AUTOQUERY_INSERT);
+												"values"=>serialize($field_values));
+							$result = $db->autoExecute('anyInventory_fields',$query_data,DB_AUTOQUERY_INSERT);
+							if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 						}
 						
 						$query = "SELECT `id`,`key` FROM `anyInventory_files` ORDER BY `key`,`id`";
-						$file_result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+						$file_result = $db->query($query);
 						
-						$currrent_key = 0;
+						$current_key = 0;
 						
 						while($file_row = $file_result->fetchRow()){
 							if ($current_key != $file_row["key"]){
@@ -214,7 +215,7 @@ if ($_POST["action"] == "upgrade"){
 							}
 							
 							$query = "UPDATE `anyInventory_items` SET `Generic File ".$i."`='".$file_row["id"]."' WHERE `id`='".$file_row["key"]."'";
-							$db->query($query) or die($db->error() . '<br /><br />'. $query);
+							$db->query($query);
 							
 							$i++;
 						}
@@ -229,7 +230,7 @@ if ($_POST["action"] == "upgrade"){
 				// Run script to add a category array for each alert
 				
 				$query = "SELECT * FROM `anyInventory_alerts`";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$result = $db->query($query);
 				
 				while ($row = $result->fetchRow()){
 					if (!is_array(unserialize($row["category_ids"]))){
@@ -240,7 +241,7 @@ if ($_POST["action"] == "upgrade"){
 						$category_ids = array($item->category->id);
 						
 						$newquery = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($category_ids)."' WHERE `id`='".$row["id"]."'";
-						$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
+						$newresult = $db->query($newquery);
 					}
 				}
 			
@@ -281,7 +282,8 @@ if ($_POST["action"] == "upgrade"){
 									"usertype"=>'Administrator',
 									"categories_admin"=>serialize($blank),
 									"categories_view"=>serialize($blank));
-				$db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
+				$result = $db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				$query = "CREATE TABLE `anyInventory_config` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -295,32 +297,38 @@ if ($_POST["action"] == "upgrade"){
 				$query_data = array("id"=>get_unique_id('anyInventory_config'),
 									"key"=>'AUTO_INC_FIELD_NAME',
 									"value"=>'anyInventory ID');
-				$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				$query_data = array("id"=>get_unique_id('anyInventory_config'),
 									"key"=>'FRONT_PAGE_TEXT',
 									"value"=>'This is the front page and top-level category of anyInventory.  You can <a href=\"docs/en/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.');
-				$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				$query_data = array("id"=>get_unique_id('anyInventory_config'),
 									"key"=>'PP_VIEW',
 									"value"=>intval(($_POST["password_protect_view"] == "yes")));
-				$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				$query_data = array("id"=>get_unique_id('anyInventory_config'),
 									"key"=>'PP_ADMIN',
 									"value"=>intval(($_POST["password_protect_admin"] == "yes")));
-				$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				$query_data = array("id"=>get_unique_id('anyInventory_config'),
 									"key"=>'ADMIN_USER_ID',
 									"value"=>(get_unique_id('anyInventory_users') - 1));
-				$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				$query_data = array("id"=>get_unique_id('anyInventory_config'),
 									"key"=>'NAME_FIELD_NAME',
 									"value"=>NAME);
-				$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				$maxidres = $db->query("SELECT MAX('id') from anyInventory_users;");
 				$maxid = $maxidres->fetchRow();
@@ -331,13 +339,23 @@ if ($_POST["action"] == "upgrade"){
 				$query = "ALTER TABLE `anyInventory_fields` DROP INDEX `name`";
 				@$db->query($query);
 			case '1.8':
+				$query = "ALTER TABLE `anyInventory_config` CHANGE `key` `key_value` VARCHAR( 64 ) NOT NULL";
+				@$db->query($query);
+				
+				$query = "ALTER TABLE `anyInventory_files` CHANGE `key` `key_value` INT( 11 ) DEFAULT '0' NOT NULL";
+				@$db->query($query);
+				
+				$query = "ALTER TABLE `anyInventory_fields` CHANGE `values` `field_values` TEXT NOT NULL";
+				@$db->query($query);
+				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider', 'item' ) DEFAULT 'text' NOT NULL ";
 				@$db->query($query);
 				
 				$query_data = array("id"=>get_unique_id('anyInventory_config'),
-									"key"=>'LANG',
+									"key_value"=>'LANG',
 									"value"=>$_REQUEST["lang"]);
-				$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				$result = $db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 				
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `modified` TIMESTAMP NOT NULL AFTER `value`";
 				@$db->query($query);
@@ -357,7 +375,7 @@ if ($_POST["action"] == "upgrade"){
 				@mysql_query($query);
 				
 				$query = "SELECT * FROM `anyInventory_categories`";
-				$result = mysql_query($query) or die(mysql_error() . '<br />' . $query);
+				$result = mysql_query($query);
 				
 				while ($row = mysql_fetch_array($result)){
 					$newquery = "SELECT * FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$row["id"]."\"%'";
@@ -371,7 +389,8 @@ if ($_POST["action"] == "upgrade"){
 							$query_data = array("item_id"=>$newestrow["id"],
 												"field_id"=>$newrow["id"],
 												"value"=>$newestrow[$newrow["name"]]);
-							$db->autoExecute('anyInventory_values',$query_data,DB_AUTOQUERY_INSERT);
+							$xresult = $db->autoExecute('anyInventory_values',$query_data,DB_AUTOQUERY_INSERT);
+							if (DB::isError($xresult)) die($xresult->getMessage().': line '.__LINE__.'<br /><br />'.$xresult->userinfo);
 						}
 						
 						mysql_data_seek($newresult, 0);
@@ -379,7 +398,7 @@ if ($_POST["action"] == "upgrade"){
 				}
 				
 				$query = "SHOW COLUMNS FROM `anyInventory_items`";
-				$result = mysql_query($query) or die(mysql_error() . '<br />' . $query);
+				$result = mysql_query($query);
 				
 				while ($row = mysql_fetch_array($result)){
 					if (($row["Field"] != 'id') && ($row["Field"] != 'name') && ($row["Field"] != 'item_category')){

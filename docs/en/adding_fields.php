@@ -80,7 +80,7 @@ $output .= '
 				<p>This field, when it is shown on an item addition page, will look like this:</p>
 				<form style="padding-left: 50px; margin: 10px;">
 					<input type="text" value="Office Max" id="store_we_shop_at"/>
-					<select name="values">
+					<select name="field_values">
 						<option onclick="document.getElementById(\'store_we_shop_at\').value = \'Staples\';">Staples</option>
 						<option onclick="document.getElementById(\'store_we_shop_at\').value = \'Office Max\';">Office Max</option>
 						<option onclick="document.getElementById(\'store_we_shop_at\').value = \'Office Depot\';">Office Depot</option>

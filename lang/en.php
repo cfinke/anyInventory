@@ -80,7 +80,6 @@ define('DATA_TYPE','Data type');
 define('TEXT','Text');
 define('RADIO','Radio Buttons');
 define('CHECKBOX','Checkboxes');
-define('ITEMS','Item(s)');
 define('SELECT_BOX','Select Box');
 define('MULTIPLE','Multiple ('.TEXT.' + '.SELECT_BOX.')');
 define('FILE','File');

@@ -27,11 +27,12 @@ class file_object{
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$row = $result->fetchRow();
 		
 		// Set the id of the item that owns this file.
-		$this->item_id = $row["key"];
+		$this->item_id = $row["key_value"];
 		
 		if (trim($row["offsite_link"]) != ''){
 			$this->is_remote = true;

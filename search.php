@@ -28,6 +28,7 @@ if ($_GET["action"] == "quick_search"){
 		
 		$search_query = substr($search_query,0,strlen($search_query) - 6).")) GROUP BY `item_id` ORDER BY `item_category`";
 		$search_result = $db->query($search_query);
+		if (DB::isError($search_result)) die($search_result->getMessage().': line '.__LINE__.'<br /><br />'.$search_result->userinfo);
 		
 		$cat_id = -1;
 		

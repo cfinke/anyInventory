@@ -6,7 +6,8 @@ $title = USERS;
 $breadcrumbs = ADMINISTRATION.' > '.USERS;
 
 $query = "SELECT * FROM `anyInventory_users` ORDER BY `username` ASC";
-$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+$result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 if ($result->numRows() > 0){
 	$i = 0;

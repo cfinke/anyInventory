@@ -32,6 +32,7 @@ if ($_GET["id"]){
 	$query_data = array('%"'.$item->id.'"%','NOW()','NOW()','00000000000000');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	if ($result->numRows() > 0){
 		$output .= '
@@ -111,6 +112,7 @@ else{
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	if (($_GET["c"] != 0) || ($result->numRows() > 0)){
 		$output .= '
@@ -160,6 +162,7 @@ else{
 	$query_data = array('NOW()','NOW()','00000000000000');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	while ($row = $result->fetchRow()){
 		$alert = new alert($row["id"]);

@@ -42,8 +42,8 @@ if (($field->input_type != "text") && ($field->input_type != 'file') && ($field-
 					<td class="form_label">'.VALUES.':</td>
 					<td>';
 	
-	if(is_array($field->values)){
-		foreach($field->values as $value){
+	if(is_array($field->field_values)){
+		foreach($field->field_values as $value){
 			$output .= $value.', ';
 		}
 		$output = substr($output, 0, strlen($output) - 2);

@@ -34,6 +34,8 @@ class category {
 			$query_data = array($this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+			
 			$row = $result->fetchRow();
 			
 			// Set the name and parent id
@@ -74,6 +76,8 @@ class category {
 						$query_data = array($crumb);
 						$pquery = $db->prepare($query);
 						$result = $db->execute($pquery, $query_data);
+						if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
+						
 						$row = $result->fetchRow();
 						$this->breadcrumb_names .= $row["name"] . ' > ';
 					}
@@ -88,6 +92,7 @@ class category {
 			$query_data = array('%"'.$this->id.'"%', 'divider');
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			
 			// Add each field's id and name to the appropriate arrays.
 			while ($row = $result->fetchRow()){
@@ -109,6 +114,7 @@ class category {
 			$query_data = array('%"0"%','divider');
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			
 			// Add each field id and name to the arrays.
 			while ($row = $result->fetchRow()){
@@ -122,10 +128,7 @@ class category {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data); 
-		
-		if (DB::isError($result)) {
-		    die($result->getMessage());
-		}
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		while($row = $result->fetchRow()){
 			$this->children_ids[] = $row["id"];
@@ -144,6 +147,7 @@ class category {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		return $result->numRows();
 	}
@@ -194,6 +198,7 @@ class category {
 			$query_data = array($cat_id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			
 			// If there is no parent, then, the parent is the Top Level.
 			if ($result->numRows() == 0){

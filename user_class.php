@@ -19,6 +19,7 @@ class user {
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$row = $result->fetchRow();
 		
@@ -112,7 +113,8 @@ class user {
 			$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id`= ?";
 			$query_data = array(addslashes(serialize($this->categories_view)),$this->id);
 			$pquery = $db->prepare($query);
-			$db->execute($pquery, $query_data);
+			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		}
 	}
 	
@@ -125,7 +127,8 @@ class user {
 			$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
 			$query_data = array(addslashes(serialize($this->categories_admin)),$this->id);
 			$pquery = $db->prepare($query);
-			$db->execute($pquery, $query_data);
+			$result = $db->execute($pquery, $query_data);
+			if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		}
 	}
 	
@@ -143,7 +146,8 @@ class user {
 				$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id` = ?";
 				$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
 				$pquery = $db->prepare($query);
-				$db->execute($pquery, $query_data);
+				$result = $db->execute($pquery, $query_data);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			}
 		}
 	}
@@ -162,7 +166,8 @@ class user {
 				$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
 				$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
 				$pquery = $db->prepare($query);
-				$db->execute($pquery, $query_data);
+				$result = $db->execute($pquery, $query_data);
+				if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 			}
 		}
 	}
@@ -175,7 +180,8 @@ class user {
 		$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id` = ?";
 		$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
 		$pquery = $db->prepare($query);
-		$db->execute($pquery, $query_data);
+		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 	
 	function update_categories_admin($category_ids){
@@ -186,7 +192,8 @@ class user {
 		$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
 		$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
 		$pquery = $db->prepare($query);
-		$db->execute($pquery, $query_data);
+		$result = $db->execute($pquery, $query_data);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 	
 	function export_description(){

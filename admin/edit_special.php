@@ -13,7 +13,8 @@ switch($_GET["id"]){
 		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_AUTOINC_FIELD;
 		
 		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `auto_inc_field`='1'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 		
 		$categories = array();
 		

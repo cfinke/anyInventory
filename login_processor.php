@@ -7,6 +7,7 @@ if ($_REQUEST["action"] == "log_in"){
 	$query_data = array($_POST["username"]);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	if ($result->numRows() == 0){
 		header("Location: login.php?f=1&return_to=".$_POST["return_to"]);

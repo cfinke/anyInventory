@@ -55,7 +55,8 @@ if (PP_VIEW){
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+$result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 while($row = $result->fetchRow()){
 	$temp_user = new user($row["id"]);
@@ -79,7 +80,8 @@ if (PP_ADMIN){
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+$result = $db->query($query);
+if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 
 while($row = $result->fetchRow()){
 	$temp_user = new user($row["id"]);

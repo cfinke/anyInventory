@@ -34,7 +34,7 @@ $output .= '
 					<b>Select field</b>, which holds a value that can only be one out of a list.  An example of this
 					would be selecting your country of residence from a drop-down list.
 					<form style="padding-left: 50px; margin: 10px;">
-						<select name="values">
+						<select name="field_values">
 							<option>Canada</option>
 							<option>England</option>
 							<option>Germany</option>

@@ -10,7 +10,8 @@ if ($_POST["action"] == "do_add"){
 	
 	// Check for duplicate username
 	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."'";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = $db->query($query);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	if ($result->numRows() > 0){
 		header("Location: ../error_handler.php?eid=11");
@@ -23,7 +24,8 @@ if ($_POST["action"] == "do_add"){
 							"usertype"=>$_POST["usertype"],
 							"categories_view"=>serialize($_POST["c_view"]),
 							"categories_admin"=>serialize($_POST["c_admin"]));
-		$db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
+		$result = $db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }
 elseif($_POST["action"] == "do_edit"){
@@ -34,7 +36,8 @@ elseif($_POST["action"] == "do_edit"){
 	
 	// Check for duplicate username
 	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."' AND `id` != '".$_POST["id"]."'";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = $db->query($query);
+	if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	
 	if ($result->numRows() > 0){
 		header("Location: ../error_handler.php?eid=16");
@@ -59,7 +62,8 @@ elseif($_POST["action"] == "do_edit"){
 		}
 		
 		$query .= " WHERE `id`='".$_POST["id"]."'";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }
 elseif($_POST["action"] == "do_edit_own"){
@@ -70,7 +74,8 @@ elseif($_POST["action"] == "do_edit_own"){
 	
 	if ($_POST["password"] != ''){
 		$query = "UPDATE `anyInventory_users` SET `password`='".md5($_POST["password"])."' WHERE `id`='".$_POST["id"]."'";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }
 elseif($_POST["action"] == "do_delete"){
@@ -81,7 +86,8 @@ elseif($_POST["action"] == "do_delete"){
 	
 	if ($_POST["delete"] == "Delete"){
 		$query = "DELETE FROM `anyInventory_users` WHERE `id`='".$_POST["id"]."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().': line '.__LINE__.'<br /><br />'.$result->userinfo);
 	}
 }
 

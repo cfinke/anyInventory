@@ -12,7 +12,7 @@ class field {
 	function field($field_id){
 		$this->id = $field_id;
 		
-		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`='".$field_id."'";
+		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`='".$this->id."'";
 		$result = query($query);
 		$row = fetch_array($result);
 		

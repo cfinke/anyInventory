@@ -47,7 +47,7 @@ if ($_REQUEST["action"] == "add_field"){
 	header("Location: ".$_SERVER["PHP_SELF"]);
 }
 elseif($_REQUEST["action"] == "delete_field"){
-	$field = new field($_REQUEST["field"]);
+	$field = new field($_REQUEST["id"]);
 	
 	$query = "ALTER TABLE `anyInventory_items` DROP `".$field->name."`";
 	$result = query($query);
@@ -59,11 +59,6 @@ elseif($_REQUEST["action"] == "delete_field"){
 }
 
 $output = '
-	<html>
-		<head>
-			<link rel="stylesheet" type="text/css" href="style.css" />
-		</head>
-		<body>
 			<form method="post" action="'.$_SERVER["PHP_SELF"].'" enctype="multipart/form-data">
 				<h2>Add Field</h2>
 				<input type="hidden" name="action" value="add_field" />
@@ -101,36 +96,41 @@ $output = '
 						<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 					</tr>
 				</table>
-			</form>
-			<form method="post" action="'.$_SERVER["PHP_SELF"].'" enctype="multipart/form-data">
-				<h2>Delete Field</h2>
-				<input type="hidden" name="action" value="delete_field" />
-				<table>
-					<tr>
-						<td class="form_label"><label for="field">Field:</label></td>
-						<td class="form_input">
-							<select name="field" id="field">';
+			</form>';
 
-$query = "SELECT * FROM `anyInventory_fields` WHERE 1 ORDER BY `name` ASC";
-$result = query($query);
+$query = "SELECT *,'' as `nosortcol_`,`name` as `sortcol_Name`,`input_type` as `nosortcol_Type`,`values` as `nosortcol_Values`,`default_value` as `nosortcol_Default Value`,`size` as `nosortcol_Size` FROM `anyInventory_fields`";
+$data_obj = new dataset_library("Fields", $query, $_REQUEST, "mysql");
+$result = $data_obj->get_result_resource();
+$rows = $data_obj->get_result_set();
 
-while ($row = fetch_array($result)){
-	$output .= '<option value="'.$row["id"].'">'.$row["name"].'</option>';
+if (mysql_num_rows($result) > 0){
+	$i = 0;
+	
+	while($row = mysql_fetch_assoc($result)){
+		$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
+		$table_set .= '<tr class="'.$color_code.'">';
+		$table_set .= '<td align="center" style="width: 10%; white-space: nowrap;"><a href="'.$_SERVER["PHP_SELF"].'?action=edit_field&amp;id='.$row["id"].'">[edit]</a> <a href="'.$_SERVER["PHP_SELF"].'?action=delete_field&amp;id='.$row["id"].'">[delete]</a></td>';
+		$table_set .= '<td>'.$row["name"].'</td>';
+		$table_set .= '<td>'.$row["input_type"].'</td>';
+		$table_set .= '<td>'.$row["values"].'</td>';
+		$table_set .= '<td>'.$row["default_value"].'</td>';
+		$table_set .= '<td>'.$row["size"].'</td>';
+		$table_set .= '</tr>';
+		$i++;
+	}
+}
+else{
+	$table_set .= '<tr class="row_off"><td>There are no fields to display.</td></tr>';
 }
 
-$output .= '				</select>
-						</td>
-					</tr>
-					<tr>
-						<td class="form_label">&nbsp;</td>
-						<td class="form_input"><input type="submit" name="submit" id="submit" value="Delete" /></td>
-					</tr>
-				</table>
-			</form>
-		</body>
-	</html>';
+$table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();
 
+$output .= '<table style="width: 100%; background-color: #000000;" cellspacing="1" cellpadding="2">'.$table_set.'</table>';
+
+include("header.php");
 echo $output;
+include("footer.php");
+
 exit;
 
 ?>

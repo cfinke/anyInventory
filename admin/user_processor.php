@@ -2,13 +2,6 @@
 
 include("globals.php");
 
-/*
-if ($_SESSION["usertype"] != 'Administrator'){
-	header("Location: ../error_handler.php?eid=11");
-	exit;
-}
-*/
-
 if ($_REQUEST["action"] == "do_add"){
 	// Check for duplicate username
 	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_REQUEST["username"]."'";

@@ -7,7 +7,7 @@ class user {
 	
 	var $username;
 	
-	var $user_type;
+	var $usertype;
 	
 	var $categories_view = array();
 	var $categories_admin = array();
@@ -22,16 +22,16 @@ class user {
 		$this->username = $row["username"];
 		$this->usertype = $row["usertype"];
 		
-		$this->categories_view = unserialize($row["categories_view"]);
-		$this->categories_admin = unserialize($row["categories_admin"]);
+		$this->categories_view = (is_array(unserialize($row["categories_view"]))) ? unserialize($row["categories_view"]) : array();
+		$this->categories_admin = (is_array(unserialize($row["categories_admin"]))) ? unserialize($row["categories_admin"]) : array();
 	}
 	
 	function can_view($cat_id){
-		return (($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_view));
+		return (($cat_id == 0) || ($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_view));
 	}
 	
 	function can_admin($cat_id){
-		return (($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_admin));
+		return (($cat_id == 0) || ($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_admin));
 	}
 	
 	function add_category_view($category_id){

@@ -21,7 +21,7 @@
 			</tr>
 			<tr>
 				<td valign="top" class="row_head" style="background: rgb(213,175,112);" colspan="2">
-					<h1 style="padding: 6px; font-size: 36pt;">anyInventory</h1>		
+					<h1 style="padding: 6px; font-size: 36pt;">anyInventory 1.0</h1>		
 				</td>
 			</tr>
 			<tr>

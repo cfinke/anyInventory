@@ -9,10 +9,10 @@ $result = query($query);
 
 $output .= '<p><a href="add_field.php">Add a field.</a></p>';
 
+$table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td><td>Type</td><td>Default Value</td><td>Size</td></tr>';
+
 if (mysql_num_rows($result) > 0){
 	$i = 0;
-	
-	$table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td><td>Type</td><td>Default Value</td><td>Size</td></tr>';
 	
 	while($row = mysql_fetch_assoc($result)){
 		$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';

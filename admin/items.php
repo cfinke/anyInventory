@@ -8,10 +8,10 @@ $output .= '<p><a href="add_item.php">Add an item.</a></p>';
 $query = "SELECT * FROM `anyInventory_items`";
 $result = query($query);
 
+$table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td></tr>';
+
 if (mysql_num_rows($result) > 0){
 	$i = 0;
-	
-	$table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td></tr>';
 	
 	while($row = mysql_fetch_assoc($result)){
 		$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';

@@ -8,25 +8,23 @@ $breadcrumbs = 'Administration > Fields';
 $query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
 $result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
+if ($admin_user->usertype == 'Administrator'){
+	$table_rows .= '
+		<tr>
+			<td align="center" style="width: 15ex; white-space: nowrap;">
+				<nobr>
+					[<a href="edit_special.php?id=auto_inc_field">edit</a>]
+					[delete]
+					[up]
+					[down]
+				</nobr>
+			</td>
+			<td style="white-space: nowrap;">'.get_config_value("AUTO_INC_FIELD_NAME").'</td>
+			<td>auto-increment</td>
+		</tr>';
+}
+
 if (mysql_num_rows($result) > 0){
-	$i = 0;
-	
-	if ($admin_user->usertype == 'Administrator'){
-		$table_rows .= '
-			<tr>
-				<td align="center" style="width: 15ex; white-space: nowrap;">
-					<nobr>
-						[<a href="edit_special.php?id=auto_inc_field">edit</a>]
-						[delete]
-						[up]
-						[down]
-					</nobr>
-				</td>
-				<td style="white-space: nowrap;">'.get_config_value("AUTO_INC_FIELD_NAME").'</td>
-				<td>auto-increment</td>
-			</tr>';
-	}
-	
 	while($row = mysql_fetch_assoc($result)){
 		if ($row["input_type"] != 'divider'){
 			$table_rows .= '
@@ -71,9 +69,9 @@ if (mysql_num_rows($result) > 0){
 				</tr>';
 		}
 	}
-	
-	$table_rows = '<table>'.$table_rows.'</table>';
 }
+
+$table_rows = '<table>'.$table_rows.'</table>';
 
 $output .= '
 	<table class="standardTable" cellspacing="0">

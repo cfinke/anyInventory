@@ -59,14 +59,21 @@ else{
 								</tr>';
 	
 	if ($category->field_ids){
+		$last_divider = false;
+		
 		foreach($category->field_ids as $field_id){
 			
 			$field = new field($field_id);
 			
 			if ($field->input_type == 'divider'){
-				$output .= '<tr><td colspan="2"><hr /></td></tr>';
+				if (!$last_divider){
+					$last_divider = true;
+					$output .= '<tr><td colspan="2"><hr /></td></tr>';
+				}
 			}
 			else{
+				$last_divider = false;
+				
 				if ($field->highlight) $extra = ' class="highlighted_field"';
 				else $extra = '';
 				

@@ -250,7 +250,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 		}
 		
 		// Change the importance of the fields below it.
-		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` + 1) WHERE `importance` < '".$field->importance."'";
+		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` - 1) WHERE `importance` >= '".$field->importance."'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		if ($field->input_type != 'divider'){

@@ -16,7 +16,7 @@ $num_per_column = ceil($category->num_children / 2);
 // Display the breadcrumb links to this category.
 $output .= '<p style="padding-bottom: 5px; padding-top: 0px; padding-left: 0; padding-right: 0; margin-bottom: 10px;border-width: 0px 0px 1px 0px; border-style: solid; border-color: #000000;">'.$category->get_breadcrumb_links().'</p>';
 
-$output .= '<table><tr><td style="width: 85%;">';
+$output .= '<table style="width: 100%;"><tr><td style="width: 85%;">';
 
 if ($_REQUEST["id"]){
 	// A specific item has been requested.
@@ -57,11 +57,14 @@ else{
 		
 		foreach($category->children_ids as $child_id){
 			$child = new category($child_id);
-			if ($i == $num_per_column) $output .= '</td><td style="width: 50%; vertical-align: top;">';
 			
-			$output .= '<p><a href="'.$_SERVER["PHP_SELF"].'?c='.$child->id.'"><b>'.$child->name.'</b></a></p>';
-			
-			$i++;
+			//if ($child->num_items_r() > 0){
+				if ($i == $num_per_column) $output .= '</td><td style="width: 50%; vertical-align: top;">';
+				
+				$output .= '<p><a href="'.$_SERVER["PHP_SELF"].'?c='.$child->id.'"><b>'.$child->name.'</b></a></p>';
+				
+				$i++;
+			//}
 		}
 		
 		$output .= '</td></tr></table>';

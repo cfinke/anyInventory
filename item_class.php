@@ -79,10 +79,16 @@ class item {
 					$output .= '<b>'.$key.':</b> '.$value.', ';
 				}
 			}
+			$output = rtrim($output, ", ");
 			$output .= '</span>';
 		}
 		
-		$output = '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'" style="text-decoration: none;">'.substr($output,0,135).'</a>';
+		// Limit the "teaser" to 135 chars; if it's larger, truncate it with "..."
+		if(strlen($output) > 135) {
+			$output = substr($output,0,132)."...";
+		}
+		$output = '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'" style="text-decoration: none;">'.$output.'</a>';
+
 		
 		return $output;
 	}

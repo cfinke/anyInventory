@@ -75,7 +75,7 @@ else{
 	
 	if($admin_user->can_admin($category->id)){
 		if ($category->id != 0){
-			$output .= ' ( <a href="admin/edit_category.php?id='.$_GET["c"].'">'.EDIT.'t</a> | <a href="admin/delete_category.php?id='.$_GET["c"].'">'._DELETE.'</a> | ';
+			$output .= ' ( <a href="admin/edit_category.php?id='.$_GET["c"].'">'.EDIT.'</a> | <a href="admin/delete_category.php?id='.$_GET["c"].'">'._DELETE.'</a> | ';
 		}
 		else{
 			$output .= ' (';

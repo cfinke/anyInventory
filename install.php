@@ -6,6 +6,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 include("functions.php");
 
+// Set the text of globals.php
 $writetoglobals = '<?php
 
 error_reporting(E_ALL ^ E_NOTICE);
@@ -46,7 +47,6 @@ if ($_REQUEST["action"] == "install"){
 	if (strlen(trim($_REQUEST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
 	}
-	
 	if (strlen(trim($_REQUEST["files_dir"])) == 0){
 		$errors[] = 'Please enter the full path of the directory where uploaded files will be stored.';
 	}
@@ -54,6 +54,7 @@ if ($_REQUEST["action"] == "install"){
 		$errors[] = 'The path '.$_REQUEST["files_dir"].' is not writable by the Web server.';
 	}
 	
+	// Check for the correct database information.	
 	if (count($errors) == 0){
 		if(!@mysql_connect($_REQUEST["db_host"],$_REQUEST["db_user"],$_REQUEST["db_pass"])){
 			$errors[] = 'anyInventory could not connect to the MySQL host with the information you provided.';
@@ -61,29 +62,35 @@ if ($_REQUEST["action"] == "install"){
 		elseif(!mysql_select_db($_REQUEST["db_name"])){
 			$errors[] = 'anyInventory connected to the MySQL host, but could not find the database '.$_REQUEST["db_name"].'.';
 		}
-		else{
-			if (!$_REQUEST["overwrite_tables"]){
-				$tables = array("anyInventory_items","anyInventory_categories","anyInventory_fields","anyInventory_files");
+	}
+	
+	// Check for current tables with the same names as those we are creating.
+	if (count($errors) == 0){
+		if (!$_REQUEST["overwrite_tables"]){
+			$tables = array("anyInventory_items","anyInventory_categories","anyInventory_fields","anyInventory_files");
+			
+			foreach ($tables as $table){
+				$query = "SHOW TABLES LIKE '".$table."'";
+				$result = mysql_query($query) or die(mysql_error() . '<br />' .$query);
 				
-				foreach ($tables as $table){
-					$query = "SHOW TABLES LIKE '".$table."'";
-					$result = mysql_query($query) or die(mysql_error() . '<br />' .$query);
-					
-					if (mysql_num_rows($result) > 0){
-						$errors[] = "The table `".$table."` already exists in the MySQL database ".$_REQUEST["db_name"].".";
-					}
+				if (mysql_num_rows($result) > 0){
+					$errors[] = "The table `".$table."` already exists in the MySQL database ".$_REQUEST["db_name"].".";
 				}
 			}
 		}
 	}
 	
+	// Try to write the globals.php file.
 	if (count($errors) == 0){
+		// Open the file for writing.
 		$handle = @fopen($path . "globals.php","w");
+		
 		if ($handle){
 			fwrite($handle, $writetoglobals);
 			fclose($handle);
 		}
 		else{
+			// Try chmodding the file.
 			@chmod($path . "globals.php", 0666);
 			
 			$handle = @fopen($path . "globals.php","w");
@@ -99,11 +106,12 @@ if ($_REQUEST["action"] == "install"){
 	}
 	
 	if (count($errors) == 0){
-			$query = "DROP TABLE `anyInventory_categories` ,
+		// Begin writing the database information.
+		$query = "DROP TABLE `anyInventory_categories` ,
 			`anyInventory_fields` ,
 			`anyInventory_items` ,
 			`anyInventory_files`";
-		$result = @mysql_query($query);
+		@mysql_query($query);
 		
 		$query = "CREATE TABLE `anyInventory_categories` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -112,7 +120,7 @@ if ($_REQUEST["action"] == "install"){
 				  UNIQUE KEY `id` (`id`),
 				  KEY `parent` (`parent`)
 				) TYPE=MyISAM";
-		$result = mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br />'.$query);
 		
 		$query = "CREATE TABLE `anyInventory_fields` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -126,7 +134,7 @@ if ($_REQUEST["action"] == "install"){
 				  UNIQUE KEY `id` (`id`),
 				  UNIQUE KEY `name` (`name`)
 				) TYPE=MyISAM";
-		$result = mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br />'.$query);
 		
 		$query = "CREATE TABLE `anyInventory_items` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -134,7 +142,7 @@ if ($_REQUEST["action"] == "install"){
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
-		$result = mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br />'.$query);
 		
 		$query = "CREATE TABLE `anyInventory_files` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
@@ -146,15 +154,18 @@ if ($_REQUEST["action"] == "install"){
 						`id`
 					)
 				)";
-		$result = mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br />'.$query);
 		
 		if (count($config_errors) == 0){
+			// Delete the install file.
 			if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);
 			
 			header("Location: index.php");
 		}
 		else{
 			$set_config_error = true;
+			
+			// Display the config error information
 			
 			$output .= '
 				<input type="hidden" name="action" value="try_again" />
@@ -180,6 +191,7 @@ if ($_REQUEST["action"] == "install"){
 }
 
 if($_REQUEST["action"] == "try_again"){
+	// The user has done the database setup, but the globals.php file has not been written.
 	$handle = @fopen($path . "globals.php","w");
 	if ($handle){
 		fwrite($handle, $writetoglobals);
@@ -287,7 +299,7 @@ echo '
 			<tr>
 				<td colspan="2">
 					<div align="right" style="width: 100%;height: 100%;color: #cccccc; background: #000000;">
-						.
+						&nbsp;
 					</div>
 				</td>
 			</tr>

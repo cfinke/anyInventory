@@ -290,4 +290,16 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 	return $type;
 }
 
+function get_config_value($key){
+	$query = "SELECT * FROM `anyInventory_config` WHERE `key`='".$key."'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	
+	if (mysql_num_rows($result) > 0){
+		return mysql_result($result, 0, 'value');
+	}
+	else{
+		return '';
+	}
+}
+
 ?>

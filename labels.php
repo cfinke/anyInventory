@@ -68,7 +68,7 @@ elseif (!isset($_REQUEST["i"])){
 		$_REQUEST["c"] = array($_REQUEST["c"]);
 	}
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE ";
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `id` > 0 AND ";
 	
 	foreach($_REQUEST["c"] as $cat_id){
 		$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";

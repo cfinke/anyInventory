@@ -36,6 +36,8 @@ BEFORE 1.8
 DONE - Bring back quick search
 DONE - Ability to have auto-increment field
 DONE - Administration Hiding
+DONE - Customization of auto-inc field
+CHRIS - Customization of front-page text
 Item associations ("Item" Field type)
 Field Dividers
 Required fields

@@ -29,24 +29,6 @@ $field = new field($_REQUEST["id"]);
 $checked = ($field->highlight) ? ' checked="checked"' : '';
 
 $output = '
-		<script type="text/javascript">
-			<!--
-			
-			function show_hide(selObj){
-				if(selObj.options[selObj.selectedIndex].value == "text"){
-					document.getElementById(\'values_row\').style.display = \'none\';
-					document.getElementById(\'size_row\').style.display = \'\';
-				}
-				else {
-					document.getElementById(\'values_row\').style.display = \'\';
-					document.getElementById(\'size_row\').style.display = \'none\';
-				}
-				
-				return true;
-			}
-			
-			// -->
-		</script>
 		<form method="post" action="field_processor.php">
 			<input type="hidden" name="action" value="do_edit" />
 			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />

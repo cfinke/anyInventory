@@ -250,6 +250,21 @@ if ($_REQUEST["action"] == "upgrade"){
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `name` `name` VARCHAR( 64 ) NOT NULL";
 				@mysql_query($query); 
+			case '1.7.1':
+				$query = "CREATE TABLE `anyInventory_config` (
+					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
+					`key` varchar( 64 ) NOT NULL default '',
+					`value` text NOT NULL ,
+					UNIQUE KEY `id` ( `id` ),
+					UNIQUE KEY `key` ( `key` )
+					) TYPE = MYISAM";
+				@mysql_query($query);
+				
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('AUTO_INC_FIELD_NAME','anyInventory ID')";
+				@mysql_query($query);
+				
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
+				@mysql_query($query);
 				
 				//$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file') DEFAULT 'text' NOT NULL ";
 				//@mysql_query($query);

@@ -92,14 +92,19 @@ class item {
 						<table cellspacing="0" cellpadding="3">';
 		
 		if ($this->category->auto_inc_field){
-			$output .= '
-				<tr class="highlighted_field">
-					<td style="width: 5%;">
-						&nbsp;
-					</td>
-					<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>anyInventory ID:</b></nobr></td>
-					<td style="width: 85%;"></b> '.$this->id.'</td>
-				</tr>';
+			$query = "SELECT * FROM `anyInventory_config` WHERE `key`='AUTO_INC_FIELD_NAME'";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+			
+			if (mysql_num_rows($result) > 0){
+				$output .= '
+					<tr class="highlighted_field">
+						<td style="width: 5%;">
+							&nbsp;
+						</td>
+						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.mysql_result($result, 0, 'value').':</b></nobr></td>
+						<td style="width: 85%;"></b> '.$this->id.'</td>
+					</tr>';
+			}
 		}
 		
 		// Output each field with its value.

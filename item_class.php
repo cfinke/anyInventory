@@ -26,30 +26,30 @@ class item {
 		// Create the category object.
 		$this->category = new category($row["item_category"]);
 		
-		// Add each field and its value to the array.
-		if (is_array($this->category->field_ids)){
-			foreach($this->category->field_ids as $field_id){
-				$field = new field($field_id);
-				
-				if ($field->input_type == 'file'){
-					$this->fields[$field->name] = array("is_file"=>true,"file_id"=>$row[$field->name]);
-				}
-				elseif($field->input_type == 'item'){
-					$this->fields[$field->name] = unserialize($row[$field->name]);
-				}
-				elseif($field->input_type == 'divider'){
-					$this->fields[$field->name] = array("is_divider"=>true);
-				}
-				elseif ($field->input_type != "checkbox"){
-					$this->fields[$field->name] = $row[$field->name];
-				}
-				else{
-					if (strstr($row[$field->name],",") !== false){
-						$this->fields[$field->name] = explode(",",$row[$field->name]);
-						if (is_array($this->fields[$field->name])){
-							foreach($this->fields[$field->name] as $key => $value){
-								$this->fields[$field->name][$key] = trim($value);
-							}
+		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		
+		while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+			$field = new field($row["field_id"]);
+			
+			if ($field->input_type == 'file'){
+				$this->fields[$field->name] = array("is_file"=>true,"file_id"=>$row["value"]);
+			}
+			elseif($field->input_type == 'item'){
+				$this->fields[$field->name] = unserialize($row["value"]);
+			}
+			elseif($field->input_type == 'divider'){
+				$this->fields[$field->name] = array("is_divider"=>true);
+			}
+			elseif ($field->input_type != "checkbox"){
+				$this->fields[$field->name] = $row["value"];
+			}
+			else{
+				if (strstr($row["value"],",") !== false){
+					$this->fields[$field->name] = explode(",",$row["value"]);
+					if (is_array($this->fields[$field->name])){
+						foreach($this->fields[$field->name] as $key => $value){
+							$this->fields[$field->name][$key] = trim($value);
 						}
 					}
 				}
@@ -87,8 +87,8 @@ class item {
 		if(strlen($output) > 135) {
 			$output = substr($output,0,132)."...";
 		}
+		
 		$output = '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'" style="text-decoration: none;">'.$output.'</a>';
-
 		
 		return $output;
 	}
@@ -121,13 +121,12 @@ class item {
 			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 			
 			if ($result->numRows() > 0){
-				$resrow = $result->fetchRow(DB_FETCHMODE_ASSOC);
 				$output .= '
 					<tr class="highlighted_field">
 						<td style="width: 5%;">
 							&nbsp;
 						</td>
-						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$resrow['value'].':</b></nobr></td>
+						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.AUTO_INC_FIELD_NAME.':</b></nobr></td>
 						<td style="width: 85%;"></b> '.$this->id.'</td>
 					</tr>';
 			}
@@ -142,29 +141,29 @@ class item {
 					if ($this->fields[$field->name]["file_id"] > 0){
 						$output .= '
 							<tr';
-								
+						
 						if ($field->highlight){
 							$output .= ' class="highlighted_field"';
 						}
-							
+						
 						$output .= '>
 								<td>&nbsp;</td>
 								<td style="white-space: nowrap; text-align: right;"><b>'.$field->name.':</b></td>
 								<td>';
-							
+						
 						$file = new file_object($this->fields[$field->name]["file_id"]);
-							
+						
 						if ($file->is_image()){
 							$output .= '<a href="'.$file->web_path.'"><img src="';
 							if ($file->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$file->id;
 							else $output .= $DIR_PREFIX."item_files/no_thumb.gif";
-								
+							
 							$output .= '" class="thumbnail" /></a>';
 						}
 						else{
 							$output .= $file->get_download_link();
 						}
-							
+						
 						$output .= '
 								</td>
 							</tr>';
@@ -176,7 +175,7 @@ class item {
 					if (is_array($this->fields[$field->name]) && (count($this->fields[$field->name]) > 0)){
 						$output .= '
 							<tr';
-								
+						
 						if ($field->highlight){
 							$output .= ' class="highlighted_field"';
 						}
@@ -210,7 +209,7 @@ class item {
 					}
 					
 					$output .= '><td>&nbsp;</td><td><b>'.$field->name.':</b></td><td> ';
-						
+					
 					foreach($this->fields[$field->name] as $val){
 						$output .= $val.", ";
 					}
@@ -239,11 +238,11 @@ class item {
 				}
 			}
 			
-			$query = "SELECT `name` FROM `anyInventory_fields` WHERE `input_type`='item'";
+			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type`='item'";
 			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 			
 			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
-				$new_query = "SELECT `id` FROM `anyInventory_items` WHERE `".$row["name"]."` LIKE '%\"".$this->id."\"%'";
+				$new_query = "SELECT `id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%'";
 				$new_result = $db->query($new_query) or die($db->error() . '<br /><br />' . $new_query);
 				
 				while ($newrow = $new_result->fetchRow(DB_FETCHMODE_ASSOC)){

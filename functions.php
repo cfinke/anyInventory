@@ -269,7 +269,7 @@ function delete_subcategory($category){
 	
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-				
+	
 	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
 		$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
@@ -284,6 +284,9 @@ function delete_subcategory($category){
 				$db->query($newerquery) or die($db->error() . '<br /><br />'. $newerquery);
 			}
 		}
+		
+		$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$row["id"]."'";
+		$db->query($query) or die($db->error() . '<br /><br />'. $query);
 	}
 	
 	// Delete all of the items in the category
@@ -310,54 +313,6 @@ function remove_from_fields($cat_id){
 	}
 	
 	return;
-}
-
-function get_mysql_column_type($input_type, $size, $values, $default_value){
-	// This function returns the MySQL column type for a new field.
-	
-	switch($input_type){
-		case 'file':
-			$type = " INT ";
-			break;
-		case 'checkbox':
-		case 'item':
-			$type = " TEXT ";
-			break;
-		case 'multiple':
-			$size = 64;
-		case 'text':
-			if ($size < 256){
-				$type = " VARCHAR(".$size.") DEFAULT '".$default_value."' ";
-			}
-			else{
-				// Text fields cannot have a default value.
-				$type = " TEXT ";
-			}
-			break;
-		case 'radio':
-		case 'select':
-			$type = " ENUM(";
-			
-			$enums = explode(",",$values);
-			
-			if (is_array($enums)){
-				foreach($enums as $enum){
-					$type .= "'".trim($enum)."',";
-				}
-				
-				$type = substr($type, 0, strlen($type) - 1);
-			}
-			else{
-				$type .= "''";
-			}
-			
-			$type .= ") DEFAULT '".$default_value."' ";
-			break;
-	}
-	
-	$type .= " NOT NULL";
-	
-	return $type;
 }
 
 ?>

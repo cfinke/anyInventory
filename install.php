@@ -83,7 +83,7 @@ if ($_REQUEST["action"] == "install"){
 			
 			foreach ($tables as $table){
 				$query = "SHOW TABLES LIKE '".$table."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br />' .$query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
 				if (mysql_num_rows($result) > 0){
 					$errors[] = "The table `".$table."` already exists in the MySQL database ".$_REQUEST["db_name"].".";
@@ -131,7 +131,7 @@ if ($_REQUEST["action"] == "install"){
 				  UNIQUE KEY `id` (`id`),
 				  KEY `parent` (`parent`)
 				) TYPE=MyISAM";
-		mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_fields` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -145,7 +145,7 @@ if ($_REQUEST["action"] == "install"){
 				  UNIQUE KEY `id` (`id`),
 				  UNIQUE KEY `name` (`name`)
 				) TYPE=MyISAM";
-		mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_items` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -153,7 +153,7 @@ if ($_REQUEST["action"] == "install"){
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
-		mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_files` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
@@ -166,7 +166,7 @@ if ($_REQUEST["action"] == "install"){
 						`id`
 					)
 				)";
-		mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_alerts` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -179,7 +179,7 @@ if ($_REQUEST["action"] == "install"){
 				 	`timed` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
-		mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		if (count($config_errors) == 0){
 			// Delete the install file.

@@ -24,7 +24,7 @@ if ($_REQUEST["action"] == "do_add"){
 				 '".$_REQUEST["value"]."',
 				 '".$timestamp."',
 				 '".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."')";
-	query($query);
+	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 elseif($_REQUEST["action"] == "do_edit"){
 	$timestamp = $_REQUEST["year"];
@@ -41,12 +41,12 @@ elseif($_REQUEST["action"] == "do_edit"){
 				`time`='".$timestamp."',
 				`timed`='".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."'
 				 WHERE `id`='".$_REQUEST["id"]."'";
-	query($query);
+	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 elseif($_REQUEST["action"] == "do_delete"){
 	if ($_REQUEST["delete"] == "Delete"){
 		$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_REQUEST["id"]."'";
-		query($query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
 

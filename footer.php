@@ -7,7 +7,7 @@
 						you have inventoried <b><?php
 						
 						$query = "SELECT `id` FROM `anyInventory_items`";
-						$result = query($query);
+						$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 						
 						echo (mysql_num_rows($result) / 1);
 						

@@ -17,7 +17,7 @@ class item {
 		
 		// Get the information about this item.
 		$query = "SELECT * FROM `anyInventory_items` WHERE `id`='".$this->id."'";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		$row = mysql_fetch_array($result);
 		
 		// Set the item name.
@@ -52,7 +52,7 @@ class item {
 		
 		// Get each of this item's files and add it to the array.
 		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key`='".$this->id."'";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		while ($row = mysql_fetch_array($result)){
 			$this->files[] = new file_object($row["id"]);

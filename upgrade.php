@@ -97,7 +97,7 @@ if ($_REQUEST["action"] == "upgrade"){
 					`time` timestamp( 14 ) NOT NULL ,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
-				query($query);
+				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
 				$query = "ALTER TABLE `anyInventory_files` ADD `offsite_link` VARCHAR(255) NOT NULL";
 				@mysql_query($query);
@@ -105,7 +105,7 @@ if ($_REQUEST["action"] == "upgrade"){
 				// Fix field values data type
 				
 				$query = "SELECT `id`,`values` FROM `anyInventory_fields`";
-				$result = query($query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result)){
 					$values = unserialize($row["values"]);
@@ -123,14 +123,14 @@ if ($_REQUEST["action"] == "upgrade"){
 						$sql_values = serialize($values);
 						
 						$new_query = "UPDATE `anyInventory_fields` SET `values`='".$sql_values."' WHERE `id`='".$row["id"]."'";
-						query($new_query);
+						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 					}
 				}
 				
 				// Fix field categories data type
 				
 				$query = "SELECT `id`,`categories` FROM `anyInventory_fields`";
-				$result = query($query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result)){
 					$categories = unserialize($row["categories"]);
@@ -150,7 +150,7 @@ if ($_REQUEST["action"] == "upgrade"){
 						$sql_categories = serialize($categories);
 						
 						$new_query = "UPDATE `anyInventory_fields` SET `categories`='".$sql_categories."' WHERE `id`='".$row["id"]."'";
-						query($new_query);
+						mysql_query($new_query) or die(mysql_error() . '<br /><br />'. $new_query);
 					}
 				}
 				
@@ -165,17 +165,17 @@ if ($_REQUEST["action"] == "upgrade"){
 				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file' ) DEFAULT 'text' NOT NULL ";
-				query($query);
+				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
 				$query = "SELECT COUNT(`key`) AS `num_files` FROM `anyInventory_files` GROUP BY `key` ORDER BY `key` DESC LIMIT 1";
-				$result = query($query);
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				
 				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
 					$max_files = $row["num_files"];
 					
 					if ($max_files > 0){
 						$catquery = "SELECT `id` FROM `anyInventory_categories`";
-						$catresult = query($catquery);
+						$catresult = mysql_query($catquery) or die(mysql_error() . '<br /><br />'. $catquery);
 						
 						$cat_ids = array();
 						$values = array();
@@ -186,14 +186,14 @@ if ($_REQUEST["action"] == "upgrade"){
 						
 						for($i = 1; $i <= $max_files + 1; $i++){
 							$query = "ALTER TABLE `anyInventory_items` ADD `Generic File ".$i."` INT NOT NULL";
-							query($query);
+							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 							
 							$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`categories`,`values`) VALUES ('Generic File ".$i."','file','".serialize($cat_ids)."','".serialize($values)."')";
-							query($query);
+							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 						}
 						
 						$query = "SELECT `id`,`key` FROM `anyInventory_files` ORDER BY `key`,`id`";
-						$file_result = query($query);
+						$file_result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 						
 						$currrent_key = 0;
 						
@@ -204,7 +204,7 @@ if ($_REQUEST["action"] == "upgrade"){
 							}
 							
 							$query = "UPDATE `anyInventory_items` SET `Generic File ".$i."`='".$file_row["id"]."' WHERE `id`='".$file_row["key"]."'";
-							query($query);
+							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 							
 							$i++;
 						}

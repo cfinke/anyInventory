@@ -24,7 +24,7 @@ if ($_REQUEST["id"]){
 	$output .= $item->export_description();
 	
 	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
 		while ($row = mysql_fetch_array($result)){
@@ -69,7 +69,7 @@ else{
 	
 	// Display any items in this category.
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
 		$output .= '
@@ -89,7 +89,7 @@ else{
 	}
 	
 	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW()";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	while ($row = mysql_fetch_array($result)){
 		$alert = new alert($row["id"]);

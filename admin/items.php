@@ -9,7 +9,7 @@ $output .= '<table style="width: 100%;"><tr><td><a href="add_item.php">Add an it
 $category = new category(0);
 
 $query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-$result = query($query);
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
 if (mysql_num_rows($result) > 0){
 	$output .= '<h3>'.$category->breadcrumb_names.'</h3>';
@@ -44,7 +44,7 @@ if (is_array($cat_ids)){
 		$category = new category($cat["id"]);
 		
 		$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		if (mysql_num_rows($result) > 0){
 			$output .= '<h3>'.$category->breadcrumb_names.'</h3>';

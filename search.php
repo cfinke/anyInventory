@@ -33,7 +33,7 @@ if (!$_REQUEST["action"]){
 	
 	// Get each field and output a search field for it.
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `name`";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
@@ -112,7 +112,7 @@ if (!$_REQUEST["action"]){
 }
 else{
 	$query = "SELECT `name` FROM `anyInventory_fields`";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	while ($row = mysql_fetch_array($result)){
 		$fields[] = $row["name"];
@@ -153,7 +153,7 @@ else{
 	}
 	
 	$query .= " ORDER BY `item_category`,`Name`";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	$cat_id = -1;
 	

@@ -20,14 +20,6 @@ function connect_to_database(){
 	return $link;
 }
 
-function query($query){
-	// This function executes a query and returns the resulting resource.
-	
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-	
-	return $result;
-}
-
 function display($output){
 	// This function displays a page with the content in $output.
 	// $title should be declared before calling display()
@@ -62,11 +54,11 @@ function get_options_children($id, $pre = null, $selected = null){
 	// with the id $id.
 	
 	$query = "SELECT `id`,`name` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = query($newquery);
+		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 		$category_name = mysql_result($newresult, 0, 'name');
 		$pre .= $category_name . ' > ';
 	}
@@ -92,7 +84,7 @@ function get_item_options($cat = 0, $selected = null){
 	// This function creates select box options for the items in the category $cat.
 	if (!is_array($selected)) $selected = array($selected);
 	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category`='".$cat."' ORDER BY `name` ASC";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	while ($row = mysql_fetch_array($result)){
 		$options .= '<option value="'.$row["id"].'"';
@@ -108,7 +100,7 @@ function get_fields_checkbox_area($checked = array()){
 	// Any field ids in the array $checked will be checked.
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `name` ASC";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	$output .= '<table>';
 	
@@ -153,7 +145,7 @@ function get_category_array($top = 0){
 	
 	if ($top != 0){
 		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$top."'";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		if (mysql_num_rows($result) > 0){
 			$array[] = array("name"=>mysql_result($result, 0, 'name'),"id"=>$top);
@@ -172,11 +164,11 @@ function get_array_children($id, &$array, $pre = ""){
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = query($newquery);
+		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 		$pre .= mysql_result($newresult, 0, 'name') . ' > ';
 	}
 	
@@ -214,15 +206,15 @@ function delete_subcategory($category){
 	
 	// Delete all items in the current category.
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	query($query);
+	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Reset the parent of this categories subcategories
 	$query = "UPDATE `anyInventory_categories` SET `parent`='".$category->parent_id."' WHERE `parent`='".$category->id."'";
-	query($query);
+	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Delete this caegory.
 	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
-	query($query);
+	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	remove_from_fields($category->id);
 	
@@ -232,7 +224,7 @@ function delete_subcategory($category){
 function remove_from_fields($cat_id){
 	// This function removes all fields from a category.
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$cat_id."\"%'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);

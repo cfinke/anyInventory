@@ -5,7 +5,7 @@ include("globals.php");
 $title = 'anyInventory: Fields';
 
 $query = "SELECT * FROM `anyInventory_fields` ORDER BY `importance`";
-$result = query($query);
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
 $output .= '<table style="width: 100%;"><tr><td><a href="add_field.php">Add a field.</a></td><td style="text-align: right;"><a href="../docs/fields.php">Help with fields</a></td></tr></table>';
 

@@ -29,7 +29,7 @@ class category {
 			
 			// Get all of the information about this category from the categories table.
 			$query = "SELECT `name`,`parent` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
-			$result = query($query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			$row = mysql_fetch_array($result);
 			
 			// Set the name and parent id
@@ -66,7 +66,7 @@ class category {
 					else{
 						// Find the name of the current category
 						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
-						$result = query($query);
+						$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 						
 						$this->breadcrumb_names .= mysql_result($result, 0, 'name') . ' > ';
 					}
@@ -78,7 +78,7 @@ class category {
 			
 			// Get all of the fields that this category uses.
 			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$this->id."\"%' ORDER BY `importance` ASC";
-			$result = query($query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// Add each field's id and name to the appropriate arrays.
 			while ($row = mysql_fetch_array($result)){
@@ -97,7 +97,7 @@ class category {
 			
 			// Get the fields that the Top Level uses.
 			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' ORDER BY `importance`";
-			$result = query($query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// Add each field id and name to the arrays.
 			while ($row = mysql_fetch_array($result)){
@@ -108,7 +108,7 @@ class category {
 		
 		// Find the children of the current category
 		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		while($row = mysql_fetch_array($result)){
 			$this->children_ids[] = $row["id"];
@@ -120,7 +120,7 @@ class category {
 	
 	function num_items(){
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		return mysql_num_rows($result);
 	}
@@ -152,7 +152,7 @@ class category {
 		else{
 			// Get the parent from the categories table.
 			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id`='".$cat_id."'";
-			$result = query($query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// If there is no parent, then, the parent is the Top Level.
 			if (mysql_num_rows($result) == 0){

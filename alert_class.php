@@ -21,7 +21,7 @@ class alert {
 		$this->id = $alert_id;
 		
 		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		$row = mysql_fetch_array($result);
 		
 		$this->title = $row["title"];
@@ -56,7 +56,7 @@ class alert {
 			$query = "UPDATE `anyInventory_alerts` SET `item_ids`='".serialize($this->item_ids)."' WHERE `id`='".$this->id."'";
 		}
 		
-		query($query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 	
 	// This function returns a full description of the item.

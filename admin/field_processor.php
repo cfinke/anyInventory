@@ -5,7 +5,7 @@ include("globals.php");
 if ($_REQUEST["action"] == "do_add"){
 	// Check for duplicate fields
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_REQUEST["name"]."'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
 		header("Location: ../error_handler.php?eid=0");
@@ -27,7 +27,7 @@ if ($_REQUEST["action"] == "do_add"){
 		
 		// Add the field to the items table
 		$query = "ALTER TABLE `anyInventory_items` ADD `".$_REQUEST["name"]."` ".get_mysql_column_type($_REQUEST["input_type"],$_REQUEST["size"],$_REQUEST["values"],$_REQUEST["default_value"]);
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$values = explode(",",$_REQUEST["values"]);
 		
@@ -46,12 +46,12 @@ if ($_REQUEST["action"] == "do_add"){
 		
 		// Get the field order for this field.
 		$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		$importance = mysql_result($result, 0, 'biggest') + 1;
 		
 		// Add this field.
 		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["input_type"]."','".$values."','".$_REQUEST["default_value"]."','".$_REQUEST["size"]."','".$categories."','".$importance."')";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$field = new field(mysql_insert_id());
 		
@@ -65,7 +65,7 @@ if ($_REQUEST["action"] == "do_add"){
 }
 elseif($_REQUEST["action"] == "do_edit"){
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_REQUEST["name"]."'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if ((mysql_num_rows($result) > 0) && (mysql_result($result, 0, 'id') != $_REQUEST["id"])){
 		header("Location: ../error_handler.php?eid=0");
@@ -109,12 +109,12 @@ elseif($_REQUEST["action"] == "do_edit"){
 				`default_value`='".$_REQUEST["default_value"]."',
 				`size`='".$_REQUEST["size"]."'
 				WHERE `id`='".$_REQUEST["id"]."'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Change the items table name.
 	$query = "ALTER TABLE `anyInventory_items` CHANGE `".$old_field->name."` `".$_REQUEST["name"]."` ";
  	$query .= get_mysql_column_type($_REQUEST["input_type"], $_REQUEST["size"], $_REQUEST["values"], $_REQUEST["default_value"]);
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Make an object from the new field.
 	$new_field = new field($_REQUEST["id"]);
@@ -142,11 +142,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 		
 		if ($field->input_type == 'file'){
 			$query = "SELECT `".$field->name."` FROM `anyInventory_items` GROUP BY `".$field->name."`";
-			$result = query($query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			while ($row = mysql_fetch_array($result)){
 				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row[$field->name]."'";
-				$newresult = query($newquery);
+				$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 				$newrow = mysql_fetch_array($newresult);
 				
 				$file = new file_object($newrow["id"]);
@@ -156,38 +156,38 @@ elseif($_REQUEST["action"] == "do_delete"){
 				}
 				
 				$newestquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-				query($newestquery);
+				mysql_query($newestquery) or die(mysql_error() . '<br /><br />'. $newestquery);
 			}
 		}
 		
 		// Change the importance of the fields below it.
 		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` + 1) WHERE `importance` < '".$field->importance."'";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		// Remove the field from the items table
 		$query = "ALTER TABLE `anyInventory_items` DROP `".$field->name."`";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		// Delete the field 
 		$query = "DELETE FROM `anyInventory_fields` WHERE `id`='".$field->id."'";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
 elseif($_REQUEST["action"] == "moveup"){
 	// Move a field up
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_REQUEST["i"]." WHERE `importance`='".($_REQUEST["i"] - 1)."'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_REQUEST["i"] - 1)." WHERE `id`='".$_REQUEST["id"]."'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 elseif($_REQUEST["action"] == "movedown"){
 	// Move a field down
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_REQUEST["i"]." WHERE `importance`='".($_REQUEST["i"] + 1)."'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_REQUEST["i"] + 1)." WHERE `id`='".$_REQUEST["id"]."'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 
 header("Location: fields.php");

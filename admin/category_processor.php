@@ -5,7 +5,7 @@ include("globals.php");
 if ($_REQUEST["action"] == "do_add"){
 	// Add a category.
 	$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["parent"]."')";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Get the id of the category
 	$this_id = mysql_insert_id();
@@ -36,7 +36,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 	
 	// Change the category information
 	$query = "UPDATE `anyInventory_categories` SET `name`='".$_REQUEST["name"]."',`parent`='".$_REQUEST["parent"]."' WHERE `id`='".$_REQUEST["id"]."'";
-	$result = query($query);
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Remove the category from all of the fields
 	if (is_array($old_category->field_ids)){
@@ -94,17 +94,17 @@ elseif($_REQUEST["action"] == "do_delete"){
 		
 		// Delete the category
 		$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_REQUEST["id"]."'"; 
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		if ($_REQUEST["item_action"] == "delete"){
 			// Delete all of the items in the category
 			$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-			$result = query($query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		}
 		elseif($_REQUEST["item_action"] == "move"){
 			// Move the items to a different category
 			$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["move_items_to"]."' WHERE `item_category`='".$category->id."'";
-			$result = query($query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		}
 		
 		if ($_REQUEST["subcat_action"] == "delete"){
@@ -114,7 +114,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 		elseif($_REQUEST["subcat_action"] == "move"){
 			// Move the subcategories
 			$query = "UPDATE `anyInventory_categories` SET `parent`='".$_REQUEST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
-			$result = query($query);
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		}
 		
 		// Remove all of the fields from this category.

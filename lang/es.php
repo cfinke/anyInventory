@@ -1,5 +1,11 @@
 <?php
 
+define('LANGUAGE','Idioma');
+define('ID_MATCH',AUTO_INC_FIELD_NAME.' Match');
+define('NAME_MATCH',NAME_FIELD_NAME.' Match');
+define('SWITCH_TO_TABLE','Switch to table view');
+define('SWITCH_TO_LIST','Switch to list view');
+
 // Dates (Fechas)
 define('MONTH_1','Enero');
 define('MONTH_2','Febrero');
@@ -37,7 +43,6 @@ define('DOWNLOAD_LINK','descagar');
 define('DOWNLOAD_AS_XML','Descargar el inventario en un archivo XML');
 define('SELECT_NONE','Ninguna selección');
 define('SUBMIT_REPORT','Tu puedes colaborar con el desarrollo de anyInventory al <a href="https://sourceforge.net/tracker/?func­d&amp;group_id.0239&amp;atide5777">enviar este error como un reporte de fallo</a>.');
-define('LANGUAGE','Idioma');
 
 // Buscar(Search)
 define('SEARCH','Buscar');

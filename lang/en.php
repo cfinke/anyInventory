@@ -2,6 +2,9 @@
 
 // English language file
 
+define('LANGUAGE','Language');
+define('ID_MATCH',AUTO_INC_FIELD_NAME.' Match');
+define('NAME_MATCH',NAME_FIELD_NAME.' Match');
 define('SWITCH_TO_TABLE','Switch to table view');
 define('SWITCH_TO_LIST','Switch to list view');
 
@@ -44,9 +47,6 @@ define('DELETE_LINK','delete');
 define('TYPE','Type');
 define('SELECT_NONE','Select none');
 define('SUBMIT_REPORT','You can assist in the development of anyInventory by <a href="https://sourceforge.net/tracker/?func=add&amp;group_id=110239&amp;atid=655777">submitting this error as a bug report</a>.');
-define('LANGUAGE','Language');
-define('ID_MATCH','Unique ID Match');
-define('NAME_MATCH',NAME_FIELD_NAME.' Match');
 
 // Search
 define('SEARCH','Search');

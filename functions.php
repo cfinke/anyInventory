@@ -40,23 +40,35 @@ function display($output){
 	exit;
 }
 
-function get_category_options($selected = null){
+function get_category_options($selected = null, $nonempty = false){
 	// This function returns the options for a category dropdown.
 	// Any category id's in the array $selected will be selected in the 
 	// resulting list.
 	
 	if (!is_array($selected)) $selected = array($selected);
 	
-	$output = '<option value="0"';
-	if (in_array(0,$selected)) $output .= ' selected="selected"';
-	$output .= '>Top Level</option>';
+	if ($nonempty){
+		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='0'";
+		$result = query($query);
+		
+		if (mysql_num_rows($result) > 0){
+			$output = '<option value="0"';
+			if (in_array(0,$selected)) $output .= ' selected="selected"';
+			$output .= '>Top Level</option>';
+		}
+	}
+	else{
+		$output = '<option value="0"';
+		if (in_array(0,$selected)) $output .= ' selected="selected"';
+		$output .= '>Top Level</option>';
+	}
 	
-	$output .= get_options_children(0, '', $selected);
+	$output .= get_options_children(0, '', $selected, $nonempty);
 	
 	return $output;
 }
 
-function get_options_children($id, $pre = "", $selected = 0){
+function get_options_children($id, $pre = "", $selected = 0, $nonempty = false){
 	// This function creates select box options for the children of a category
 	// with the id $id.
 	
@@ -76,9 +88,14 @@ function get_options_children($id, $pre = "", $selected = 0){
 		while ($row = mysql_fetch_array($result)){
 			$category = $row["name"];
 			
-			$list .= '<option value="'.$row["id"].'"';
-			if (in_array($row["id"],$selected)) $list .= ' selected="selected"';
-			$list .= '>'.$pre . $category.'</option>';
+			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."'";
+			$item_result = query($query);
+			
+			if ((!$nonempty) || (mysql_num_rows($item_result) > 0)){
+				$list .= '<option value="'.$row["id"].'"';
+				if (in_array($row["id"],$selected)) $list .= ' selected="selected"';
+				$list .= '>'.$pre . $category.'</option>';
+			}
 			
 			$list .= get_options_children($row["id"], $pre, $selected);
 		}

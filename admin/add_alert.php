@@ -12,7 +12,7 @@ if (!isset($_REQUEST["c"])){
 					<td class="form_label"><label for="c">Add alert in:</label></td>
 					<td class="form_input">
 						<select name="c" id="c">
-							'.get_category_options().'
+							'.get_category_options(null, true).'
 						</select>
 					</td>
 				</tr>

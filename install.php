@@ -46,7 +46,7 @@ if ($_REQUEST["action"] == "install"){
 		$errors[] = 'Please enter the MySQL password.';
 	}
 	
-	$files_to_read = array("./","./admin","./images","./docs","./item_files");
+	$files_to_read = array("./","./admin","./images","./docs","./docs/images","./fonts","./item_files");
 	
 	foreach($files_to_read as $file){
 		if (!is_readable(realpath($file))){

@@ -39,7 +39,6 @@ else{
 	$output .= '
 			<form method="post" action="item_processor.php" enctype="multipart/form-data">
 				<input type="hidden" name="action" value="do_add" />
-				<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 				<input type="hidden" name="c" value="'.$_REQUEST["c"].'" />
 				<table class="standardTable" cellspacing="0">
 					<tr class="tableHeader">

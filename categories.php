@@ -6,27 +6,31 @@ $title = 'anyInventory Categories';
 $page_key = "categories";
 $links = array(array("url"=>$_SERVER["PHP_SELF"]."?action=add","name"=>"Add a Category"));
 
-if ($_REQUEST["action"] == "add"){
+if (($_REQUEST["action"] == "add") || ($_REQUEST["action"] == "edit")){
+	if ($_REQUEST["action"] == "edit"){
+		$category = new category($_REQUEST["id"]);
+	}
 	$output = '
 		<form method="post" action="categories_actions.php" enctype="multipart/form-data">
-			<input type="hidden" name="action" value="do_add" />
+			<input type="hidden" name="action" value="do_'.$_REQUEST["action"].'" />
+			<input type="hidden" name="id" value="'.$category->id.'" />
 			<table>
 				<tr>
 					<td class="form_label"><label for="name">Name:</label></td>
-					<td class="form_input"><input type="text" name="name" id="name" value="" /></td>
+					<td class="form_input"><input type="text" name="name" id="name" value="'.$category->name.'" /></td>
 				</tr>
 				<tr>
 					<td class="form_label"><label for="parent">Parent Category:</label></td>
 					<td class="form_input">
 						<select name="parent" id="parent">
-							'.get_category_dropdown().'
+							'.get_category_dropdown($category->parent_id).'
 						</select>
 					</td>
 				</tr>
 				<tr>
 					<td class="form_label">Fields:</td>
 					<td class="form_input">
-						'.get_fields_checkbox_area().'
+						'.get_fields_checkbox_area($category->field_ids).'
 					</td>
 				</tr>
 				<tr>
@@ -50,9 +54,9 @@ elseif($_REQUEST["action"] == "delete"){
 			<p class="category_name"><b>Name:</b> '.$category->breadcrumb_names.'</p>
 			<p class="category_fields"><b>Fields:</b> ';
 	
-	if(is_array($category->fields)){
-		foreach($category->fields as $field){
-			$output .= $field["name"].', ';
+	if(is_array($category->field_names)){
+		foreach($category->field_names as $field){
+			$output .= $field.', ';
 		}
 		$output = substr($output, 0, strlen($output) - 2);
 	}
@@ -107,9 +111,9 @@ else{
 			$table_set .= '<td style="white-space: nowrap;">'.$row["name"].'</td>';
 			$table_set .= '<td>';
 			
-			if (count($temp->fields) > 0){
-				foreach($temp->fields as $field){
-					$table_set .= $field["name"] . ', ';
+			if (count($temp->field_names) > 0){
+				foreach($temp->field_names as $field){
+					$table_set .= $field . ', ';
 				}
 				
 				$table_set = substr($table_set, 0, strlen($table_set) - 2);

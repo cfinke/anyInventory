@@ -13,7 +13,8 @@ class category {
 	var $breadcrumbs;
 	var $breadcrumb_names;
 	
-	var $fields;
+	var $field_ids;
+	var $field_names;
 	
 	function category($cat_id){
 		$this->id = $cat_id;
@@ -55,7 +56,8 @@ class category {
 		$result = query($query);
 		
 		while ($row = fetch_array($result)){
-			$this->fields[] = $row;
+			$this->field_ids[] = $row["id"];
+			$this->field_names[] = $row["name"];
 		}
 	}
 	

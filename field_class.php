@@ -8,6 +8,7 @@ class field {
 	var $name;
 	var $input_type;
 	var $values = array();
+	var $default_value;
 	var $size;
 	var $categories = array();
 	
@@ -21,8 +22,18 @@ class field {
 		$this->name = $row["name"];
 		$this->input_type = $row["input_type"];
 		$this->values = explode(",",$row["values"]);
-		$this->size = $row["size"];
+		$this->clean_values();
+		$this->default_value = $row["default_value"];
+		$this->size = ($row["size"] > 0) ? $row["size"] : '';
 		$this->categories = explode(",",$row["categories"]);
+	}
+	
+	function clean_values(){
+		if (is_array($this->values)){
+			foreach($this->values as $key => $value){
+				$this->values[$key] = trim($value);
+			}
+		}
 	}
 	
 	function remove_category($cat_id){

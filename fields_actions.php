@@ -2,9 +2,9 @@
 
 include("globals.php");
 
-if ($_REQUEST["action"] == "add_field"){
-	$sized_input_types = array("text","multiple");
-	
+$sized_input_types = array("text","multiple");
+
+if ($_REQUEST["action"] == "do_add"){
 	if (($_REQUEST["size"] == '') && (in_array($_REQUEST["input_type"], $sized_input_types))){
 		$_REQUEST["size"] = 255;
 	}
@@ -32,7 +32,7 @@ if ($_REQUEST["action"] == "add_field"){
 			$enums = explode(",",$_REQUEST["values"]);
 			
 			foreach($enums as $enum){
-				$query .= $enum.",";
+				$query .= "'".trim(str_replace("'","",str_replace('"','',$enum)))."',";
 			}
 			
 			$query = substr($query, 0, strlen($query) - 1);
@@ -44,7 +44,33 @@ if ($_REQUEST["action"] == "add_field"){
 	$query .= " NOT NULL";
 	$result = query($query);
 }
-elseif($_REQUEST["action"] == "delete_field"){
+elseif($_REQUEST["action"] == "do_edit"){
+	$old_field = new field($_REQUEST["id"]);
+	
+	if (in_array($_REQUEST["input_type"], $sized_input_types)){
+		if($_REQUEST["size"] == 0){
+			$_REQUEST["size"] = 255;
+		}
+	}
+	else{
+		$_REQUEST["size"] = '';
+	}
+	
+	$query = "UPDATE `anyInventory_fields` SET
+				`name`='".$_REQUEST["name"]."',
+				`input_type`='".$_REQUEST["input_type"]."',
+				`values`='".$_REQUEST["values"]."',
+				`default_value`='".$_REQUEST["default_value"]."',
+				`size`='".$_REQUEST["size"]."'
+				WHERE `id`='".$_REQUEST["id"]."'";
+	$result = query($query);
+	
+	$query = "ALTER TABLE `anyInventory_items` CHANGE `".$old_field->name."` `".$_REQUEST["name"]."` ";
+ 	$query .= get_mysql_column_type($_REQUEST["input_type"], $_REQUEST["size"], $_REQUEST["values"], $_REQUEST["default_value"]);
+
+	$result = query($query);
+}
+elseif($_REQUEST["action"] == "do_delete"){
 	$field = new field($_REQUEST["id"]);
 	
 	$query = "ALTER TABLE `anyInventory_items` DROP `".$field->name."`";

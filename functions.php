@@ -72,7 +72,7 @@ function get_dropdown_children($id, $pre = "", $selected = 0){
 	return $list;
 }
 
-function get_fields_checkbox_area($checked = null){
+function get_fields_checkbox_area($checked = array()){
 	$query = "SELECT * FROM `anyInventory_fields` WHERE 1 ORDER BY `name` ASC";
 	$result = query($query);
 	
@@ -82,14 +82,18 @@ function get_fields_checkbox_area($checked = null){
 		<div style="float: left;">';
 	
 	for ($i = 0; $i < ceil($num_fields / 2); $i++){
-		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.result($result, $i, "id").']" value="yes" /> '.result($result, $i, "name").'</div>';
+		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.result($result, $i, "id").']" value="yes" ';
+		if ((is_array($checked)) && (in_array(result($result, $i, "id"), $checked))) $output .= ' checked="checked"';
+		$output .= ' /> '.result($result, $i, "name").'</div>';
 	}
 	
 	$output .= '</div>
 		<div>';
 	
 	for (; $i < $num_fields; $i++){
-		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.result($result, $i, "id").']" value="yes" /> '.result($result, $i, "name").'</div>';	
+		$output .= '<div class="checkbox"><input type="checkbox" name="fields['.result($result, $i, "id").']" value="yes" ';
+		if ((is_array($checked)) && (in_array(result($result, $i, "id"), $checked))) $output .= ' checked="checked"';
+		$output .= '/> '.result($result, $i, "name").'</div>';	
 	}
 	
 	$output .= '</div>';
@@ -165,6 +169,39 @@ function remove_from_fields($cat_id){
 	}
 	
 	return;
+}
+
+function get_mysql_column_type($input_type, $size, $values, $default_value){
+	switch($input_type){
+		case 'text':
+		case 'multiple':
+			if ($size < 256){
+				$type = " VARCHAR(".$size.") DEFAULT '".$default_value."' ";
+			}
+			else{
+				$type = " TEXT ";
+			}
+			break;
+		case 'radio':
+		case 'checkbox':
+		case 'select':
+			$type = " ENUM(";
+			
+			$enums = explode(",",$values);
+					
+			foreach($enums as $enum){
+				$type .= "'".trim(str_replace("'","",str_replace('"','',$enum)))."',";
+			}
+			
+			$type = substr($type, 0, strlen($type) - 1);
+			
+			$type .= ") DEFAULT '".$default_value."' ";
+			break;
+	}
+	
+	$type .= " NOT NULL";
+	
+	return $type;
 }
 
 ?>

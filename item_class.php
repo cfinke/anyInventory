@@ -238,7 +238,7 @@ class item {
 			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type` = 'item'";
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 			
-			while ($row = $result->fetchRow()){
+			while ($row = mysql_fetch_array($result)){
 				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%' GROUP BY `item_id`";
 				$result2 = mysql_query($query2) or die(mysql_error() . '<br /><br />' . $query2);				
 

@@ -143,10 +143,10 @@ function get_fields_checkbox_area($checked = array()){
 					'.$field->name.' ('.$field->input_type;
 					
 					if ($field->input_type == "text"){
-						$output .= '; '.$field->size.' characters';
+						$output .= '; '.$field->size;
 					}
 					elseif (($field->input_type != 'file') && ($field->input_type != 'item')){
-						$output .= '; values: ';
+						$output .= '; '.strtolower(VALUES).': ';
 						
 						if (is_array($field->values)){
 							foreach($field->values as $val){
@@ -281,6 +281,9 @@ function delete_subcategory($category){
 				$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
 				mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
 			}
+			
+			$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$newrow["id"]."'";
+			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		}
 	}
 	
@@ -308,54 +311,6 @@ function remove_from_fields($cat_id){
 	}
 	
 	return;
-}
-
-function get_mysql_column_type($input_type, $size, $values, $default_value){
-	// This function returns the MySQL column type for a new field.
-	
-	switch($input_type){
-		case 'file':
-			$type = " INT ";
-			break;
-		case 'checkbox':
-		case 'item':
-			$type = " TEXT ";
-			break;
-		case 'multiple':
-			$size = 64;
-		case 'text':
-			if ($size < 256){
-				$type = " VARCHAR(".$size.") DEFAULT '".$default_value."' ";
-			}
-			else{
-				// Text fields cannot have a default value.
-				$type = " TEXT ";
-			}
-			break;
-		case 'radio':
-		case 'select':
-			$type = " ENUM(";
-			
-			$enums = explode(",",$values);
-			
-			if (is_array($enums)){
-				foreach($enums as $enum){
-					$type .= "'".trim($enum)."',";
-				}
-				
-				$type = substr($type, 0, strlen($type) - 1);
-			}
-			else{
-				$type .= "''";
-			}
-			
-			$type .= ") DEFAULT '".$default_value."' ";
-			break;
-	}
-	
-	$type .= " NOT NULL";
-	
-	return $type;
 }
 
 ?>

@@ -60,10 +60,6 @@ if ($_POST["action"] == "do_add"){
 			$_POST["size"] = 255;
 		}
 		
-		// Add the field to the items table
-		$query = "ALTER TABLE `anyInventory_items` ADD `".$_POST["name"]."` ".get_mysql_column_type($_POST["input_type"],$_POST["size"],$_POST["values"],$_POST["default_value"]);
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		
 		$values = explode(",",$_POST["values"]);
 		
 		if (is_array($values)){
@@ -193,11 +189,6 @@ elseif($_POST["action"] == "do_edit"){
 				`size`='".$_POST["size"]."',
 				`highlight`='".((int) (($_POST["highlight"] == "yes") / 1))."'
 				WHERE `id`='".$_POST["id"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-	
-	// Change the items table name.
-	$query = "ALTER TABLE `anyInventory_items` CHANGE `".$old_field->name."` `".$_POST["name"]."` ";
- 	$query .= get_mysql_column_type($_POST["input_type"], $_POST["size"], $_POST["values"], $_POST["default_value"]);
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Make an object from the new field.

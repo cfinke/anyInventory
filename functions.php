@@ -104,14 +104,18 @@ function get_options_children($id, $pre = "", $selected = 0, $nonempty = false){
 	return $list;
 }
 
-function get_item_options($cat = 0){
+function get_item_options($cat = 0, $selected = null){
+	if (!is_array($selected)) $selected = array($selected);
+	
 	// This function creates select box options for the items in the category $cat.
 	
 	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category`='".$cat."' ORDER BY `name` ASC";
 	$result = query($query);
 	
 	while ($row = mysql_fetch_array($result)){
-		$options .= '<option value="'.$row["id"].'">'.$row["name"].'</option>';
+		$options .= '<option value="'.$row["id"].'"';
+		if (in_array($row["id"],$selected)) $options .= ' selected="selected"';
+		$options .= '>'.$row["name"].'</option>';
 	}
 	
 	return $options;

@@ -81,7 +81,7 @@ if (is_array($item->files) && (count($item->files) > 0)){
 	
 	foreach($item->files as $file){
 		$output .= '<p><input type="checkbox" name="delete_files[]" value="'.$file->id.'" /> Delete this file: '.$file->get_download_link().'';
-		if ($file->has_thumbnail()) $output .= '<br /><img src="thumbnail.php?id='.$file->id.'" />';
+		if ($file->has_thumbnail()) $output .= '<br /><img src="'.$DIR_PREFIX.'thumbnail.php?id='.$file->id.'" />';
 		$output .= '</p>';
 	}
 	

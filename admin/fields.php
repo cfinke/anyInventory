@@ -26,8 +26,8 @@ if (mysql_num_rows($result) > 0){
 		$table_set .= '<td align="center" style="width: 15ex; white-space: nowrap;">
 				<a href="edit_field.php?id='.$row["id"].'">[edit]</a>
 				<a href="delete_field.php?id='.$row["id"].'">[delete]</a>
-				[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'"><img src="images/arrow_up.gif" /></a>]
-				[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'"><img src="images/arrow_down.gif" /></a>]
+				[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'"><img src="'.$DIR_PREFIX.'images/arrow_up.gif" /></a>]
+				[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'"><img src="'.$DIR_PREFIX.'images/arrow_down.gif" /></a>]
 			</td>';
 		$table_set .= '<td style="width: 10%; white-space: nowrap;">'.$row["name"].'</td>';
 		$table_set .= '<td>'.$row["input_type"].'</td>';

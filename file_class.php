@@ -13,6 +13,7 @@ class file_object{
 	
 	function file_object($id){
 		global $files_dir;
+		global $DIR_PREFIX;
 		
 		$this->id = $id;
 		
@@ -26,7 +27,7 @@ class file_object{
 		$this->file_size = $row["file_size"];
 		$this->file_type = $row["file_type"];
 		
-		$this->web_path = "item_files/".$this->file_name;
+		$this->web_path = $DIR_PREFIX."item_files/".$this->file_name;
 		$this->server_path = $files_dir.$this->file_name;
 	}
 	

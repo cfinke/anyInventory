@@ -45,7 +45,9 @@ class item {
 	}
 	
 	function export_teaser(){
-		$output .= '<p><a href="index.php?c='.$this->category->id.'&amp;id='.$this->id.'">'.$this->name.'</a></p>';
+		global $DIR_PREFIX;
+		
+		$output .= '<p><a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'">'.$this->name.'</a></p>';
 		return $output;
 	}
 	
@@ -91,7 +93,7 @@ class item {
 			if (is_array($images) && (count($images) > 0)){
 				$output .= '<h2>Images</h2>';
 				foreach($images as $image){
-					$output .= '<a href="'.$image->web_path.'"><img src="thumbnail.php?id='.$image->id.'" class="thumbnail" /></a>';
+					$output .= '<a href="'.$image->web_path.'"><img src="'.$DIR_PREFIX.'thumbnail.php?id='.$image->id.'" class="thumbnail" /></a>';
 					if ($i++ % 4 == 0)$output .= '<br style="clear: both;" />';
 				}
 			}

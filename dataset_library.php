@@ -1,4 +1,5 @@
 <?php
+
 // +----------------------------------------------------------------------+
 // | Dataset Library	1.02b			                                  |
 // | Started by Blaine Garrett & Justin Gehring on 2004-05-21 09:30:00 	  |
@@ -90,7 +91,7 @@ class dataset_library {
 	var $result_resource;
 	var $col_num = 0;
 	var $header_cols_sort = array(); //headers
-		
+	
 	var $start_offset = 0;
 	var $result_length = 20;
 	var $sort_col = false;
@@ -99,8 +100,13 @@ class dataset_library {
 	//image sources for sorting arrows
 	var $up_arrow_img_src = 'images/arrow_up.gif';
 	var $down_arrow_img_src = 'images/arrow_down.gif';
-		
+	
 	function dataset_library($id, $query, $request, $db_type, $default_sort_column = false){
+		global $DIR_PREFIX;
+		
+		$this->up_arrow_img_src = $DIR_PREFIX.$this->up_arrow_img_src;
+		$this->down_arrow_img_src = $DIR_PREFIX.$this->down_arrow_img_src;
+		
 		///////////////////////////////////////////////////
 		// Step 1) Store important arguements
 		///////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title><?php echo $title; ?></title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $DIR_PREFIX; ?>style.css" />
 	</head>
 	<body>
 		<table align="center" id="maintable" cellspacing="1" cellpadding="0" border="0">

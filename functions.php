@@ -20,6 +20,7 @@ function query($query){
 
 function display($output){
 	global $title;
+	global $DIR_PREFIX;
 	
 	include("header.php");
 	echo $output;

@@ -14,9 +14,9 @@ if ($_GET["action"] == "quick_search"){
 	
 	if ($_GET["q"] != ''){
 		$query = "SELECT `name` FROM `anyInventory_fields` WHERE `input_type` NOT IN ('file','divider','item')";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 		
-		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$search_fields[] = $row["name"];
 		}
 		
@@ -35,12 +35,12 @@ if ($_GET["action"] == "quick_search"){
 		}
 		
 		$search_query = substr($search_query,0,strlen($search_query) - 6).")) ORDER BY `item_category`";
-		$search_result = mysql_query($search_query) or die(mysql_error() . '<br /><br />' . $search_query);
+		$search_result = $db->query($search_query) or die($db->error() . '<br /><br />' . $search_query);
 		
 		$cat_id = -1;
 		
-		if (mysql_num_rows($search_result) > 0){
-			while($row = mysql_fetch_array($search_result)){
+		if ($search_result->numRows() > 0){
+			while($row = $search_result->fetchRow(DB_FETCHMODE_ASSOC)){
 				$item = new item($row["id"]);
 				
 				if ($view_user->can_view($item->category->id)){

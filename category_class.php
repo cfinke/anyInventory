@@ -29,8 +29,8 @@ class category {
 			
 			// Get all of the information about this category from the categories table.
 			$query = "SELECT `name`,`parent`,`auto_inc_field` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-			$row = mysql_fetch_array($result);
+			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
 			
 			// Set the name and parent id
 			$this->name = $row["name"];
@@ -67,8 +67,8 @@ class category {
 					else{
 						// Find the name of the current category
 						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
-						$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-						$row = mysql_fetch_array($result);
+						$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+						$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
 						$this->breadcrumb_names .= $row["name"] . ' > ';
 					}
 				}
@@ -79,10 +79,10 @@ class category {
 			
 			// Get all of the fields that this category uses.
 			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$this->id."\"%' OR `input_type`='divider'  ORDER BY `importance` ASC";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			
 			// Add each field's id and name to the appropriate arrays.
-			while ($row = mysql_fetch_array($result)){
+			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -98,10 +98,10 @@ class category {
 			
 			// Get the fields that the Top Level uses.
 			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' OR `input_type`='divider' ORDER BY `importance`";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			
 			// Add each field id and name to the arrays.
-			while ($row = mysql_fetch_array($result)){
+			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -109,9 +109,9 @@ class category {
 		
 		// Find the children of the current category
 		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		while($row = mysql_fetch_array($result)){
+		while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$this->children_ids[] = $row["id"];
 			$this->num_children++;
 		}
@@ -123,9 +123,9 @@ class category {
 	
 	function num_items(){
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		return mysql_num_rows($result);
+		return $result->numRows();
 	}
 	
 	// This function returns the number of items that are inventoried in this category AND its subcategories.
@@ -169,14 +169,15 @@ class category {
 		else{
 			// Get the parent from the categories table.
 			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id`='".$cat_id."'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			
 			// If there is no parent, then, the parent is the Top Level.
-			if (mysql_num_rows($result) == 0){
+			if ($result->numRows() == 0){
 				return 0;
 			}
 			else{
-				return mysql_result($result, 0, 'parent');
+				$resultrows = $result->fetchRow(DB_FETCHMODE_ASSOC);
+				return $resultrows['parent'];
 			}
 		}
 	}

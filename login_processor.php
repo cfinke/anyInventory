@@ -11,11 +11,11 @@ if ($_REQUEST["action"] == "log_in"){
 		exit;
 	}
 	else{
-		if (md5($_POST["password"]) == mysql_result($result, 0, 'password')){
+		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		if (md5($_POST["password"]) == $row['password']){
 			unset($_SESSION["user"]);
 			
 			$_SESSION["user"] = array();
-			$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
 			$_SESSION["user"]["id"] = $row['id'];
 			$_SESSION["user"]["username"] = $row['username'];
 			$_SESSION["user"]["usertype"] = $row['usertype'];

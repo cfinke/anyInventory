@@ -54,3 +54,4 @@ Label Sheets
 
 BUGS
 ========================================
+Remove multiple checkbox values

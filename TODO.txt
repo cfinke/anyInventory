@@ -53,14 +53,20 @@ DONE - Download inventory as XML file
 
 BEFORE 2.0
 ===================
-Table view
-? DREW - Stronger CSS support
+DONE - Table view
+CHRIS - Sort by other field
+Fill values field with data in inventory
+DREW - Stronger CSS support
 DREW - Remote image thumbnailing - backup in case of missing libcurl
+
+OTHER
+===================
 Multiple-condition alerts
 Upload inventory as XML file
 Required fields
-? Label Sheets
-CHRIS - Alert E-mails
+Label Sheets
+Alert E-mails
 
 BUGS
 ========================================
+Search page is non-functional

@@ -9,9 +9,9 @@ Categories
 Items
 =====
 Alerts
+Add support for adding remote files (ie. for a move, the user could add the picture from an amazon.com listing without downloading and uploading)
 
 BEFORE NEXT RELEASE
 ===================
-Search function
 Instructions for use
 

@@ -74,7 +74,7 @@ if ($_REQUEST["action"] == "do_add"){
 		$result = query($query);
 	}
 	
-	header("Location: index.php?c=".$_REQUEST["c"]);
+	header("Location: items.php");
 }
 elseif($_REQUEST["action"] == "do_edit"){
 	$category = new category($_REQUEST["c"]);

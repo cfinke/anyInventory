@@ -367,6 +367,12 @@ if ($_POST["action"] == "upgrade"){
 						mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newquery);
 					}
 				}
+			case 1.9:
+				# Changes introduced in 2.0
+				
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ITEM_VIEW','list')";
+				@mysql_query($query);
+				
 		}
 		
 		// Attempt to write the globals file.

@@ -112,7 +112,7 @@ if ($_POST["action"] == "install"){
 			 	  `auto_inc_field` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`),
 				  KEY `parent` (`parent`)
-				) TYPE=MyISAM";
+				)";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_fields` (
@@ -126,7 +126,7 @@ if ($_POST["action"] == "install"){
 				  `importance` int(11) NOT NULL default '0',
 				  `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`)
-				) TYPE=MyISAM";
+				)";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_items` (
@@ -134,7 +134,7 @@ if ($_POST["action"] == "install"){
 				  `item_category` int(11) NOT NULL default '0',
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
-				) TYPE=MyISAM";
+				)";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_files` (
@@ -163,7 +163,7 @@ if ($_POST["action"] == "install"){
 				 	`timed` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 					`category_ids` TEXT NOT NULL,
 					UNIQUE KEY `id` ( `id` )
-					) TYPE = MYISAM ;";
+					)";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_users` (
@@ -175,7 +175,7 @@ if ($_POST["action"] == "install"){
 					`categories_admin` text NOT NULL ,
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `username` (`username`)
-					) TYPE=MyISAM";
+					)";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_config` (
@@ -184,7 +184,7 @@ if ($_POST["action"] == "install"){
 					`value` text NOT NULL ,
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `key` ( `key` )
-					) TYPE = MYISAM";
+					)";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('AUTO_INC_FIELD_NAME','anyInventory ID')";
@@ -200,6 +200,9 @@ if ($_POST["action"] == "install"){
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ITEM_VIEW','list')";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$blank = array();

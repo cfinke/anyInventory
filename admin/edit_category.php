@@ -12,6 +12,9 @@ else{
 	
 	$category = new category($_REQUEST["id"]);
 	
+	$exclude = $category->all_children_ids;
+	$exclude[] = $category->id;
+	
 	$output = '
 		<form method="post" action="category_processor.php">
 			<input type="hidden" name="action" value="do_edit" />
@@ -33,7 +36,7 @@ else{
 							<td class="form_input">
 								<select name="parent" id="parent">
 									<option value="0">Top Level</option>
-									'.get_category_options($category->parent_id, false).'
+									'.get_category_options($category->parent_id, false, $exclude).'
 								</select>
 							</td>
 						</tr>

@@ -13,6 +13,8 @@ class category {
 	var $children_ids = array();	// An array of category ids that are children of this category
 	var $num_children = 0;			// The number of children this category has.  (Counts children only throught the first generation.)
 	
+	var $all_children_ids = array();
+	
 	var $breadcrumbs = array();		// An array of the parents of this category, starting at 0, the top level.
 	var $breadcrumb_names;			// A breadcrumb style string of $this->breadcrumbs, ie. Top > Books > Fiction
 	
@@ -114,6 +116,8 @@ class category {
 			$this->children_ids[] = $row["id"];
 			$this->num_children++;
 		}
+		
+		$this->get_all_subcats($this->all_children_ids);
 	}
 	
 	// This function returns the number of items that are inventoried in this category.
@@ -140,6 +144,20 @@ class category {
 		}
 		
 		return $total;
+	}
+	
+	function get_all_subcats(&$subcats){
+		if ($this->num_children > 0){
+			foreach($this->children_ids as $child_id){	
+				$subcats[] = $child_id;
+				
+				$child = new category($child_id);
+				
+				$child->get_all_subcats($subcats);
+			}
+		}
+		
+		sort($subcats);
 	}
 	
 	// This function returns the parent id of a given category id.

@@ -59,7 +59,7 @@ else{
 				<td style="width: 100%;">
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
-							<td>Sub-categories in '.$category->breadcrumb_names.' ( ';
+							<td>Sub-categories in '.$category->get_breadcrumb_links().' ( ';
 	
 	if ($category->id != 0){
 		$output .= '<a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_REQUEST["c"].'">Delete</a> | ';

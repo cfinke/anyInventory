@@ -39,19 +39,20 @@ function display($output){
 	exit;
 }
 
-function get_category_options($selected = null, $multiple = true){
+function get_category_options($selected = null, $multiple = true, $exclude){
 	// This function returns the options for a category dropdown.
 	// Any category id's in the array $selected will be selected in the 
 	// resulting list.
 	
 	if (!is_array($selected)) $selected = array($selected);
+	if (!is_array($exclude)) $exclude = array($exclude);
 	
-	$output .= get_options_children(0, '', $selected, $multiple);
+	$output .= get_options_children(0, '', $selected, $multiple, $exclude);
 	
 	return $output;
 }
 
-function get_options_children($id, $pre = null, $selected = null, $multiple = true){
+function get_options_children($id, $pre = null, $selected = null, $multiple = true, $exclude){
 	// This function creates select box options for the children of a category
 	// with the id $id.
 	
@@ -71,11 +72,13 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 		while ($row = mysql_fetch_array($result)){
 			$category = $row["name"];
 			
-			$list .= '<option value="'.$row["id"].'"';
-			if ((($selected[0] === null) && ($multiple == true)) || (in_array($row["id"],$selected))) $list .= ' selected="selected"';
-			$list .= '>'.$pre . $category.'</option>';
+			if (!in_array($row["id"],$exclude)){
+				$list .= '<option value="'.$row["id"].'"';
+				if ((($selected[0] === null) && ($multiple == true)) || (in_array($row["id"],$selected))) $list .= ' selected="selected"';
+				$list .= '>'.$pre . $category.'</option>';
+			}
 			
-			$list .= get_options_children($row["id"], $pre, $selected, $multiple);
+			$list .= get_options_children($row["id"], $pre, $selected, $multiple, $exclude);
 		}
 	}
 	

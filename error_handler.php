@@ -27,6 +27,9 @@ $errors[5] = array('Error','An alert must apply to at least one category.','brea
 $errors[6] = array('Error','An alert must apply to at least one item.','breadcrumbs'=>'Error');
 $errors[7] = array('Error','The Top Level category cannot be edited or deleted.','breadcrumbs'=>'Error');
 $errors[8] = array('Error','You must supply a list of values for this field.','breadcrumbs'=>'Error');
+$errors[9] = array('Error','Not logged in. Please <a href='.$DIR_PREFIX.'index.php">click here</a> to login. ','breadcrumbs'=>'Error');
+$errors[10] = array('Access Denied','You must be a privileged used to edit, add, or delete. ','breadcrumbs'=>'Access Denied');
+$errors[11] = array('Access Denied','You must be an administrator to add, edit, or delete users. ','breadcrumbs'=>'Access Denied');
 
 $breadcrumbs = $errors[$_REQUEST["eid"]]["breadcrumbs"];
 

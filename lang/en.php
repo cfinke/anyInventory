@@ -1,6 +1,25 @@
 <?php
 
+// New Constants
+define('EXPIRATION_DATE','Expiration date');
+define('EMAIL_ALERT','E-mail alert to');
+define('ALLOW_EXPIRATION','Allow this alert to expire');
+
 // English language file
+
+// Dates
+define('MONTH_1','January');
+define('MONTH_2','February');
+define('MONTH_3','March');
+define('MONTH_4','April');
+define('MONTH_5','May');
+define('MONTH_6','June');
+define('MONTH_7','July');
+define('MONTH_8','August');
+define('MONTH_9','September');
+define('MONTH_10','October');
+define('MONTH_11','November');
+define('MONTH_12','December');
 
 // General
 define('APP_TITLE','anyInventory');
@@ -135,7 +154,7 @@ define('CONDITION','Condition');
 define('ADD_ALERT','Add Alert');
 define('ADD_ALERT_IN','Add alert in');
 define('ALERT_TITLE','Alert Title');
-define('TIMED_ONLY_LABEL.','Make this alert <a href="../docs/en/alerts.php#time_based">time-based only</a>.');
+define('TIMED_ONLY_LABEL','Make this alert <a href="../docs/en/alerts.php#time_based">time-based only</a>.');
 define('TIMED_ONLY_EXPLANATION','For time-based alerts, you do not need to fill in the field, condition, or value.');
 define('DELETE_ALERT','Delete Alert');
 define('DELETE_ALERT_CONFIRM','Are you sure you want to delete this alert?');

@@ -3,6 +3,15 @@
 include("globals.php");
 
 $title = ADD_ALERT;
+$inHead = '
+	<script type="text/javascript">
+		function toggle(){
+			alert(document.getElementById(\'expire_month\').disabled);// = true;//!document.getElementById(\'expire\').checked;
+			document.getElementById(\'expire_day\').disabled = !document.getElementById(\'expire\').checked;
+			document.getElementById(\'expire_year\').disabled = !document.getElementById(\'expire\').checked;
+		}
+	</script>';
+$inBodyTag = ' onload="toggle();"';
 $breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.ADD_ALERT;
 
 if (!is_array($_GET["c"])){
@@ -183,6 +192,44 @@ else{
 			
 			
 			$output .= '			</select>
+										</td>
+									</tr>
+									<tr>
+										<td class="form_label"><label for="expire_month">'.EXPIRATION_DATE.':</label></td>
+										<td class="form_input">
+											<select name="expire_month" id="expire_month">
+												<option value="1"';if(date("n") == 1) $output .= ' selected="selected"'; $output .= '>'.MONTH_1.'</option>
+												<option value="2"';if(date("n") == 2) $output .= ' selected="selected"'; $output .= '>'.MONTH_2.'</option>
+												<option value="3"';if(date("n") == 3) $output .= ' selected="selected"'; $output .= '>'.MONTH_3.'</option>
+												<option value="4"';if(date("n") == 4) $output .= ' selected="selected"'; $output .= '>'.MONTH_4.'</option>
+												<option value="5"';if(date("n") == 5) $output .= ' selected="selected"'; $output .= '>'.MONTH_5.'</option>
+												<option value="6"';if(date("n") == 6) $output .= ' selected="selected"'; $output .= '>'.MONTH_6.'</option>
+												<option value="7"';if(date("n") == 7) $output .= ' selected="selected"'; $output .= '>'.MONTH_7.'</option>
+												<option value="8"';if(date("n") == 8) $output .= ' selected="selected"'; $output .= '>'.MONTH_8.'</option>
+												<option value="9"';if(date("n") == 9) $output .= ' selected="selected"'; $output .= '>'.MONTH_9.'</option>
+												<option value="10"';if(date("n") == 10) $output .= ' selected="selected"'; $output .= '>'.MONTH_10.'</option>
+												<option value="11"';if(date("n") == 11) $output .= ' selected="selected"'; $output .= '>'.MONTH_11.'</option>
+												<option value="12"';if(date("n") == 12) $output .= ' selected="selected"'; $output .= '>'.MONTH_12.'</option>
+											</select>
+											<select name="expire_day" id="expire_day">';
+					
+			for ($i = 1; $i <= 31; $i++){
+				$output .= '<option value="'.$i.'"';if(date("j") == $i) $output .= ' selected="selected"'; $output .= '>'.$i.'</option>';
+			}
+			
+			
+			$output .= '			</select>,
+									<select name="expire_year" id="expire_year">';
+				
+			$year = date("Y");
+			
+			for ($i = 0; $i < 20; $i++){
+				$output .= '<option value="'.($i + $year).'">'.($i + $year).'</option>';
+			}
+			
+			
+			$output .= '			</select>
+									<input type="checkbox" name="expire" id="expire" value="yes" checked="checked" onclick="toggle();" /> '.ALLOW_EXPIRATION.'
 										</td>
 									</tr>
 									<tr>

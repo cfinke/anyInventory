@@ -342,6 +342,7 @@ elseif(!$set_config_error){
 							<td class="form_input">
 								<select name="lang" id="lang">
 									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
+									<option value="es"';if($_REQUEST["lang"] == "es") $output .= ' selected="selected"'; $output .= '>Espanol</option>
 								</select>
 							</td>
 						</tr>

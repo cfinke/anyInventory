@@ -14,12 +14,21 @@ class alert {
 	var $time;
 	var $unix_time;
 	
+	var $expiration_date;
+	var $unix_expiration_date;
+	
 	var $timed = false;
+	
+	var $expires = false;
+	
+	var $email;
+	
+	var $tripped;
 	
 	function alert($alert_id){
 		$this->id = $alert_id;
 		
-		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
+		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time`, UNIX_TIMESTAMP(`expires`) AS `unix_expires` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		$row = mysql_fetch_array($result);
 		
@@ -31,9 +40,21 @@ class alert {
 		$this->field_id = $row["field_id"];
 		$this->condition = $row["condition"];
 		$this->value = $row["value"];
+		
 		$this->time = $row["time"];
 		$this->unix_time = $row["unix_time"];
+		
+		$this->expiration_date = $row["expires"];
+		$this->unix_expiration_date = $row["unix_expires"];
+		
+		if ($this->expiration_date != '99999999999999'){
+			$this->expires = true;
+		}
+		
 		$this->timed = $row["timed"];
+		
+		$this->email = $row["email"];
+		$this->tripped = $row["tripped"];
 	}
 	
 	// This function returns a "teaser" or short description for the alert.
@@ -103,7 +124,25 @@ class alert {
 							<tr>
 								<td class="form_label">'.EFFECTIVE_DATE.':</td>
 								<td>'.date("Y m d",$this->unix_time).'</td>
-							</tr>
+							</tr>';
+		
+		if ($this->expires){
+			$output .= '
+				<tr>
+					<td class="form_label">'.EXPIRATION_DATE.':</td>
+					<td>'.date("Y m d",$this->unix_expiration_date).'</td>
+				</tr>';
+		}
+		
+		if ($this->email != ''){
+			$output .= '
+				<tr>
+					<td class="form_label">'.EMAIL_ALERT.':</td>
+					<td>'.$this->email.'</td>
+				</tr>';
+		}
+		
+		$output .= '
 						</table>
 					</td>
 				</tr>
@@ -142,6 +181,11 @@ class alert {
 			</table>';
 		
 		return $output;
+	}
+	
+	function trip(){
+		$query = "UPDATE `anyInventory_alerts` SET `tripped`='1' WHERE `id`='".$this->id."'";
+		mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 	}
 }
 

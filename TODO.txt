@@ -19,5 +19,3 @@ Allow searching within category
 
 BEFORE NEXT RELEASE
 ===================
-Add a check for item_files being writable
-If thumbnailing is not supported, export gif file

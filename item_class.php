@@ -86,7 +86,7 @@ class item {
 		
 		if (is_array($this->files) && (count($this->files) > 0)){
 			foreach($this->files as $file){
-				if ($file->has_thumbnail()){
+				if ($file->is_image()){
 					$images[] = $file;
 				}
 				else{
@@ -99,7 +99,11 @@ class item {
 			if (is_array($images) && (count($images) > 0)){
 				$output .= '<h2>Images</h2>';
 				foreach($images as $image){
-					$output .= '<a href="'.$image->web_path.'"><img src="'.$DIR_PREFIX.'thumbnail.php?id='.$image->id.'" class="thumbnail" /></a>';
+					$output .= '<a href="'.$image->web_path.'"><img src="';
+					if ($image->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$image->id;
+					else $output .= "item_files/no_thumb.gif";
+					
+					$output .= '" class="thumbnail" /></a>';
 					if ($i++ % 4 == 0)$output .= '<br style="clear: both;" />';
 				}
 			}

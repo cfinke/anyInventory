@@ -74,10 +74,6 @@ class file_object{
 					imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
 					imagedestroy($image);
 					break;
-				default:
-					// Unsupported
-					$thumb = imagecreatefromgif($files_dir."no_thumb.gif");
-					break;
 			}
 		}
 		else{
@@ -89,10 +85,6 @@ class file_object{
 				case 3:
 					// PNG
 					$thumb = imagecreatefrompng($this->server_path);
-					break;
-				default:
-					// Unsupported
-					$thumb = imagecreatefromgif($files_dir."no_thumb.gif");
 					break;
 			}
 		}
@@ -106,16 +98,24 @@ class file_object{
 		exit;
 	}
 	
-	function has_thumbnail(){
+	function is_image(){
 		if (stristr($this->file_type, "image/") !== false){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	function has_thumbnail(){
+		if ((stristr($this->file_type, "/jpg") !== false) || (stristr($this->file_type, "/png") !== false) || (stristr($this->file_type, "/jpeg") !== false)){
 			if (function_exists('getimagesize') && 
 			    function_exists('imagecreate') && 
 				function_exists('imagecreatefromjpeg') && 
 				function_exists('imagecopyresized') && 
 				function_exists('imagedestroy') && 
 				function_exists('imagecreatefrompng') && 
-				function_exists('imagejpeg') && 
-				function_exists('imagecreatefromgif')){
+				function_exists('imagejpeg')){
 				return true;
 			}
 			else{

@@ -16,6 +16,7 @@ if ($_REQUEST["id"]){
 	$output .= $item->export_description();
 }
 else{
+	$output .= '<p style="padding: 15px;">This is the front page and top-level category of anyInventory.  You can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.</p>';
 	if (is_array($category->children) && (count($category->children) > 0)){
 		$output .= '<table style="width: 90%; margin-left: 5%; margin-right: 5%;"><tr><td style="width: 50%;">';
 		

@@ -6,7 +6,7 @@ $title = "anyInventory: Help > Fields > Adding Fields";
 
 $output .= '
 	<h2>Adding Fields</h2>
-	<p>To begin tracking your receipts, you must add the fields listed above so that you can enter in the data later.
+	<p>To begin tracking your receipts, you must add the fields listed on the previous page so that you can enter in the data later.
 	   For this, proceed to the <a href="'.$DIR_PREFIX.'admin/add_field.php">field addition</a> page.  There, you will see
 	   something that looks like this:</p>
    <form method="post" action="#">
@@ -91,7 +91,7 @@ $output .= '
 		</table>
 	</form>
 	<p>There we go.  Now, we select what type of field we want.  Since "text" is already selected here, there\'s no need to change the data type.</p>
-	<p>The "default value" defines what will appear in a field by default when you add an item.  For this, maybe we want to remember what format to add our date in, so we set the default as YYYY/MM/DD:</p>
+	<p>The "default value" defines what will appear in a field by default when you add an item.  For this, maybe we want to remember what format in which to enter the date, so we set the default as YYYY/MM/DD:</p>
 		   <form method="post" action="#">
 		<table>
 			<tr style="display: auto;">
@@ -132,9 +132,9 @@ $output .= '
 		</table>
 	</form>
 	<p>Next is the size of the field.  This limits how many characters can be entered in the field.  Since we already know the format of our date, we can set this to 10, exactly enough to hold our format of date.</p>
-	<p><em>Note: if this is set to 65 or more, you will be given a text box rather than a text field to enter your data.  The text box, shown below, simply makes more data visible as your enter it in.</em></p>
+	<p><em>Note: if this is set to 65 or more, you will be given a text box rather than a text field to enter your data.  The text box, shown below, simply makes more data visible as your enter it.</em></p>
 	<form style="padding-left: 50px; margin: 10px;">
-		<textarea rows="4" cols="60">text box</textarea>
+		<textarea rows="4" cols="60">This is a text box.  Feel free to type in it.</textarea>
 	</form>
 	<br />
    <form method="post" action="#">
@@ -176,12 +176,12 @@ $output .= '
 			</tr>
 		</table>
 	</form>
-	<p>The last field, "Apply to," deals with applying this field to a set of categories.  We don\'t need to worry about this, since we have not added any categories yet.</p>
-	<p>Adding the total price and item purchased fields will work the same way, but let\'s take a look at one of the other fields to see how adding an enumered field works, "enumerated" meaning that you can specify a set of values to choose from.</p>
+	<p>The last field, "Apply to," deals with applying this field to a set of categories.  We don\'t need to worry about this, since we have not added any categories yet.  If we had already added some categories, we could select which categories we wanted to contain this field.  Adding fields to categories is described lated in <a href="adding_categories.php">adding categories</a>.</p>
+	<p>Adding the total price and item purchased fields will work the same way, but let\'s take a look at one of the other fields to see how adding an enumerated field works, "enumerated" meaning that you can specify a set of values for the field.</p>
 	
 	<p>Let\'s add the "place of purchase" field now, which is of type "multiple."  (We set it as multiple instead of select in order 
 	to allow us to type in a place if it doesn\'t appear in the list.)</p>
-	<p>Back to the purchase date: first, we enter in the field name and choose the field type:</p>
+	<p>First, we enter in the field name and choose the field type:</p>
    <form method="post" action="#">
 		<table>
 			<tr style="display: auto;">
@@ -221,8 +221,8 @@ $output .= '
 			</tr>
 		</table>
 	</form>
-	<p>As you can see, a new field has appeared (appears) and one field has disappeared (size).  This is because the size field only applies to text fields and the values field only applies to enumerated fields.  By changing the field type, you can see what fields need to be filled in.</p>
-	<p>The next thing we need to do is to give this field some values. We do this by entering in the values we want to appear in the list, separated by commas. So, let\'s put in the five stores we shop at the most often, and we\'ll set the default to the store that we shop at the most.</p>
+	<p>As you can see, a new field has appeared (values) and one field has disappeared (size).  This is because the size field only applies to text fields, and the values field only applies to enumerated fields.  By changing the field type, you can see what fields need to be filled in.</p>
+	<p>The next thing we need to do is to give this field some values. We do this by entering the stores we want to appear in the list, separated by commas. So, let\'s put in the five stores we shop at the most often, and we\'ll set the default to the store that we shop at the most.</p>
    <form method="post" action="#">
 		<table>
 			<tr style="display: auto;">
@@ -274,8 +274,8 @@ $output .= '
 			<option onclick="document.getElementById(\'country\').value = \'Sam Goody\';">Sam Goody</option>
 		</select>
 	</form>
-	<p>Adding a radio button, checkbox, or select box field works in the same way.</p>
-	<div style="float: left;"><a href="fields.php">&lt;&lt; Previous: Fields</a></div>
+	<p>Adding a radio button, checkbox, or select field works in the same way.</p>
+	<div style="float: left;"><a href="fields.php#types">&lt;&lt; Previous: Field Types</a></div>
 	<div style="text-align: right;"><a href="editing_fields.php">Next: Editing Fields &gt;&gt;</a></div>';
 
 display($output);

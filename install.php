@@ -46,8 +46,12 @@ if ($_REQUEST["action"] == "install"){
 	if (strlen(trim($_REQUEST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
 	}
+	
 	if (strlen(trim($_REQUEST["files_dir"])) == 0){
 		$errors[] = 'Please enter the full path of the directory where uploaded files will be stored.';
+	}
+	elseif(!is_writable($_REQUEST["files_dir"])){
+		$errors[] = 'The path '.$_REQUEST["files_dir"].' is not writable by the Web server.';
 	}
 	
 	if (count($errors) == 0){

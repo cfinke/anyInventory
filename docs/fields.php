@@ -6,22 +6,21 @@ $title = "anyInventory: Help > Fields";
 
 $output .= '
 	<h2>Fields</h2>
-	<p>Fields are the basis of anyInventory.  They define the type of data that you want to track in 
-	   your inventory. Let\'s take a look at the different types of fields.
+	<p>Fields are the basis of anyInventory.  They define the type of data that you want to track. Let\'s take a look at the different types of fields.
 	</p>
-	<h3><a name="types">Field Types</a></h3>
+	<h2><a name="types">Field Types</a></h2>
 	<p>There are five types of fields from which to choose when setting up anyInventory.  Each one
-	   is described below, with an example of that type shown below it.</p>
+	   is described below, with an example shown below it.</p>
 	<ul>
 		<li>
-			Text field, which holds a word or phrase that is usually different for each item.  An example
+			<b>Text field</b>, which holds a word or phrase that is usually different for each item.  An example
 		    of this would be the name of each item.
 			<form style="padding-left: 50px; margin: 10px;">
 				<input type="text" value="Name of item" />
 			</form>
 		</li>
 		<li>
-			Select field, which holds a value that can only be one out of a list.  An example of this
+			<b>Select field</b>, which holds a value that can only be one out of a list.  An example of this
 			would be selecting your country of residence from a drop-down list.
 			<form style="padding-left: 50px; margin: 10px;">
 				<select name="values">
@@ -33,17 +32,16 @@ $output .= '
 			</form>
 		</li>
 		<li>
-			Radio buttons, which hold a value that can only be one out of a few values.  An example of
-		    this would be selecting "Yes" or "No" to a question: it has to be one of the two, and it 
-			cannot be both, unless you happen to be a woman.  Just kidding, ladies!  (However, in the
-			case that you would want to be able to choose both, you\'d be better served by checkboxes,
-			shown below.)
+			<b>Radio buttons</b>, which hold a value that can only be one out of a few values.  An example of
+		    this would be selecting "Yes" or "No" as an answer to a question: it has to be one of the two, and it 
+			cannot be both.
 			<form style="padding-left: 50px; margin: 10px;">
 				<input type="radio" name="q" /> Yes<br />
 				<input type="radio" name="q" /> No
 			</form>
 		</li>
-		<li>Checkboxes, which hold values that can be zero or more out of a list of values.  An example
+		<li>
+			<b>Checkboxes</b>, which hold values that can be zero or more out of a list of values.  An example
 			of this would be selecting all of the colors that appear in a painting.
 			<form style="padding-left: 50px; margin: 10px;">
 				<input type="checkbox" name="q" /> Red<br />
@@ -56,10 +54,10 @@ $output .= '
 			</form>
 		</li>
 		<li>
-			Multiple, which is a combination the select field and the text field.  This gives you the
+			<b>Multiple</b>, which is a combination of the select field and the text field.  This gives you the
 			option of selecting one of several commonly used values from a drop-down or entering in a
 			unique value for this item.  (If you have a Web browser with Javascript enabled, the text
-			box should take the value of the last selected option from the dropdown.)
+			field should take the value of the last selected option from the dropdown.)
 			<form style="padding-left: 50px; margin: 10px;">
 				<input type="text" value="Mexico" id="country"/>
 				<select name="values">
@@ -71,13 +69,13 @@ $output .= '
 			</form>
 		</li>
 	</ul>
-	<p>If this all seems confusing, don\'t worry.  It should become clearer with a few examples.</p>
+	<p>If this all seems confusing, don\'t worry.  It should become clearer with an example.</p>
 	<h4>An Example</h4>
 	<p>
 		Let\'s say that you are documenting all of your receipts for tax purposes.
 	   	You might want to keep track of the following: date of purchase, place of purchase, total price, tax paid, item 
 	   	purchased, whether or not it was a business expense, an image of the receipt, and an image of the 
-	   	item.  Your fields for this type of item would look like the following:
+	   	item purchased.  Your fields for this type of item would look like the following:
 	</p>
 	<ul>
 		<li>Date of purchase: text field</li>
@@ -85,7 +83,7 @@ $output .= '
 		<li>Total price: text field</li>
 		<li>Item purchased: text field</li>
 		<li>Business expense: radio buttons, with values "Yes" and "No"</li>
-		<li>Reciept and item image: files, handled by anyInventory\'s file upload functionality</li>
+		<li>Receipt and item image: files, handled by anyInventory\'s file upload functionality</li>
 	</ul>
 	<p>Now that we have a group of items we want to track, let\'s see how we would go about <a href="adding_fields.php">adding
 		the fields.</a>

@@ -26,10 +26,7 @@ class field {
 		$this->input_type = $row["input_type"];
 		
 		// Set the values; the values are stored separated by commas
-		$this->values = explode(",",$row["values"]);
-		
-		// Remove the whitespace from each value.
-		$this->clean_values();
+		$this->values = unserialize($row["values"]);
 		
 		// Set the default value
 		$this->default_value = $row["default_value"];
@@ -38,30 +35,7 @@ class field {
 		$this->size = ($row["size"] > 0) ? $row["size"] : '';
 		
 		// Set the categories, which are also stores separated by commas
-		$this->categories = explode(",",$row["categories"]);
-		
-		// Remove the whitespace from each category id
-		$this->clean_categories();
-	}
-	
-	// This function removes the whitespace from each value.
-	
-	function clean_values(){
-		if (is_array($this->values)){
-			foreach($this->values as $key => $value){
-				$this->values[$key] = trim($value);
-			}
-		}
-	}
-	
-	// This function removes the whitespace from each category id
-	
-	function clean_categories(){
-		if (is_array($this->categories)){
-			foreach($this->categories as $key => $value){
-				$this->categories[$key] = trim($value);
-			}
-		}
+		$this->categories = unserialize($row["categories"]);
 	}
 	
 	// This function removes a field from a category.
@@ -83,10 +57,10 @@ class field {
 	
 	function add_category($cat_id){
 		// Add the category id to the array
-		$this->categories[] = $cat_id;
+		$this->categories[] = (string) $cat_id;
 		
 		// Remove any duplicate values.
-		array_unique($this->categories);
+		$this->categories = array_unique($this->categories);
 		
 		// Sort the values in order.
 		sort($this->categories);
@@ -99,15 +73,7 @@ class field {
 	
 	function refresh_categories($cat_ids){
 		if (is_array($cat_ids)){
-			$query = "UPDATE `anyInventory_fields` SET `categories`='";
-			
-			foreach($cat_ids as $cat_id){
-				if ($cat_id != ''){
-					$query .= $cat_id.",";
-				}
-			}
-			
-			$query .= "' WHERE `id`='".$this->id."'";
+			$query = "UPDATE `anyInventory_fields` SET `categories`='".serialize($cat_ids)."' WHERE `id`='".$this->id."'";
 			$result = query($query);
 		}
 		

@@ -145,7 +145,14 @@ function get_fields_checkbox_area($checked = array()){
 					$output .= ' '.$field->size.' characters';
 				}
 				else{
-					$output .= ' values: '.$row["values"];
+					$output .= ' values: ';
+					
+					if (is_array($field->values)){
+						foreach($field->values as $val){
+							$output .= $val .', ';
+						}
+						$output = substr($output, 0, strlen($output) - 2);
+					}
 				}
 				
 				$output .= ')</td></tr>';
@@ -228,7 +235,7 @@ function delete_subcategory($category){
 
 function remove_from_fields($cat_id){
 	// This function removes all fields from a category.
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%".$cat_id.",%'";
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$cat_id."\"%'";
 	$result = query($query);
 	
 	while($row = mysql_fetch_array($result)){

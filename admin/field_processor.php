@@ -16,7 +16,7 @@ if ($_REQUEST["action"] == "do_add"){
 	switch($_REQUEST["input_type"]){
 		case 'text':
 			if ($_REQUEST["size"] < 256){
-				$query .= " VARCHAR(".$_REQUEST["size"].") DEFAULT '' ";
+				$query .= " VARCHAR(".$_REQUEST["size"].") DEFAULT '".$_REQUEST["default_value"]."' ";
 			}
 			else{
 				$query .= " TEXT ";
@@ -39,12 +39,27 @@ if ($_REQUEST["action"] == "do_add"){
 			
 			$query = substr($query, 0, strlen($query) - 1);
 			
-			$query .= ") DEFAULT '' ";
+			$query .= ") DEFAULT '".$_REQUEST["default_value"]."' ";
 			break;
 	}
 	
 	$query .= " NOT NULL";
 	$result = query($query);
+	
+	$values = explode(",",$_REQUEST["values"]);
+	
+	if (is_array($values)){
+		foreach($values as $key => $value){
+			$values[$key] = trim($value);
+		}
+	}
+	else{
+		$values = array();
+	}
+	
+	$values = serialize($values);
+	$categories = array(0);
+	$categories = serialize($categories);
 	
 	// Get the field order for this field.
 	$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
@@ -52,7 +67,7 @@ if ($_REQUEST["action"] == "do_add"){
 	$importance = mysql_result($result, 0, 'biggest') + 1;
 	
 	// Add this field.
-	$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["input_type"]."','".$_REQUEST["values"]."','".$_REQUEST["default_value"]."','".$_REQUEST["size"]."','0','".$importance."')";
+	$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["input_type"]."','".$values."','".$_REQUEST["default_value"]."','".$_REQUEST["size"]."','".$categories."','".$importance."')";
 	$result = query($query);
 	
 	$field = new field(mysql_insert_id());
@@ -81,11 +96,24 @@ elseif($_REQUEST["action"] == "do_edit"){
 		$_REQUEST["size"] = '';
 	}
 	
+	$values = explode(",",$_REQUEST["values"]);
+	
+	if (is_array($values)){
+		foreach($values as $key => $value){
+			$values[$key] = trim($value);
+		}
+	}
+	else{
+		$values = array();
+	}
+	
+	$values = serialize($values);
+	
 	// Change the field.
 	$query = "UPDATE `anyInventory_fields` SET
 				`name`='".$_REQUEST["name"]."',
 				`input_type`='".$_REQUEST["input_type"]."',
-				`values`='".$_REQUEST["values"]."',
+				`values`='".$values."',
 				`default_value`='".$_REQUEST["default_value"]."',
 				`size`='".$_REQUEST["size"]."'
 				WHERE `id`='".$_REQUEST["id"]."'";

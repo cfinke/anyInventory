@@ -20,11 +20,7 @@ include($DIR_PREFIX."functions.php");
 
 // Check for Oracle 8 - data source name syntax is different
 
-if ($db_type == 'oci8'){
-	$dsn = $db_type."://".$db_user.":".$db_pass."@www";
-} else {
-	$dsn = $db_type."://".$db_user.":".$db_pass."@".$db_host."/".$db_name;
-}
+$dsn = $db_type."://".$db_user.":".$db_pass."@".$db_host."/".$db_name;
 
 $db = connect_to_database();
 

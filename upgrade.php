@@ -70,12 +70,7 @@ if ($_POST["action"] == "upgrade"){
 	// Check for the correct database information.	
 	if (count($errors) == 0){
 		// check for Oracle 8 - data source name syntax is different
-		if ($_POST["db_type"] != 'oci8'){
-			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
-		}
-		else {
-			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@www";
-		}
+		$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
 		
 	    // establish the connection
 		$db = DB::connect($dsn);
@@ -591,7 +586,6 @@ elseif(!$globals_error){
 								       <option value="fbsql"';if($_REQUEST["db_type"] == 'fbsql') $output .= ' selected="selected"'; $output .= '>FrontBase</option>
 								       <option value="msql"';if($_REQUEST["db_type"] == 'msql') $output .= ' selected="selected"'; $output .= '>MiniSQL</option>
 								       <option value="SQLite"';if($_REQUEST["db_type"] == 'SQLite') $output .= ' selected="selected"'; $output .= '>SQLite</option>
-									   <option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
 								</select>
 							</td>
 						</tr>

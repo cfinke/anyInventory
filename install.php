@@ -62,7 +62,7 @@ if ($_REQUEST["action"] == "install"){
 	// Check for current tables with the same names as those we are creating.
 	if (count($errors) == 0){
 		if (!$_REQUEST["overwrite_tables"]){
-			$tables = array("anyInventory_items","anyInventory_categories","anyInventory_fields","anyInventory_files");
+			$tables = array("anyInventory_items","anyInventory_categories","anyInventory_fields","anyInventory_files","anyInventory_alerts");
 			
 			foreach ($tables as $table){
 				$query = "SHOW TABLES LIKE '".$table."'";
@@ -105,7 +105,8 @@ if ($_REQUEST["action"] == "install"){
 		$query = "DROP TABLE `anyInventory_categories` ,
 			`anyInventory_fields` ,
 			`anyInventory_items` ,
-			`anyInventory_files`";
+			`anyInventory_files`,
+			`anyInventory_alerts`";
 		@mysql_query($query);
 		
 		$query = "CREATE TABLE `anyInventory_categories` (
@@ -248,19 +249,19 @@ elseif(!$set_config_error){
 	$output .= '	<input type="hidden" name="action" value="install" />
 					<table>
 						<tr>
-							<td class="formlabel"><label for="database_host">MySQL host:</label></td>
+							<td class="formlabel"><label for="db_host">MySQL host:</label></td>
 							<td><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="database_user">MySQL Username:</label></td>
+							<td class="formlabel"><label for="db_user">MySQL Username:</label></td>
 							<td><input type="text" name="db_user" id="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="database_password">MySQL Password:</label></td>
+							<td class="formlabel"><label for="db_password">MySQL Password:</label></td>
 							<td><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="database_name">MySQL Database:</label></td>
+							<td class="formlabel"><label for="db_name">MySQL Database:</label></td>
 							<td><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
 						</tr>
 						<tr>

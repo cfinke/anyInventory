@@ -3,8 +3,12 @@
 include("globals.php");
 
 if ($_REQUEST["action"] == "do_add"){
+	// Add an item
+	
+	// Create an object of the current category
 	$category = new category($_REQUEST["c"]);
 	
+	// Put the query together
 	$query = "INSERT INTO `anyInventory_items` (";
 	
 	foreach($category->field_ids as $field_id){
@@ -47,11 +51,15 @@ if ($_REQUEST["action"] == "do_add"){
 	$query .= " '".$_REQUEST["c"]."','".$_REQUEST["name"]."')";
 	$result = query($query);
 	
+	// Get the id of the item
+	$key = mysql_insert_id();
+	
 	if (is_uploaded_file($_FILES["file"]["tmp_name"])){
-		$key = mysql_insert_id();
+		// Copy the uploaded file
 		
 		$i = 1;
 		
+		// Find a filename
 		do {
 			$filename = $key.".".$i++.".".$_FILES["file"]["name"];
 		} while (is_file($files_dir.$filename));
@@ -71,14 +79,26 @@ if ($_REQUEST["action"] == "do_add"){
 				 '".$filename."',
 				 '".$_FILES["file"]["size"]."',
 				 '".$_FILES["file"]["type"]."')";
-		$result = query($query);
+		query($query);
 	}
 	
-	header("Location: items.php");
+	if ($_REQUEST["remote_file"] != ''){
+		$query = "INSERT INTO `anyInventory_files` 
+				(`key`,
+				 `offsite_link`)
+				VALUES
+				('".$key."',
+				 '".$_REQUEST["remote_file"]."')";
+		query($query);
+	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
+	// Edit an item
+	
+	// Create an object of the current category
 	$category = new category($_REQUEST["c"]);
 	
+	// Put the query together
 	$query = "UPDATE `anyInventory_items` SET ";
 	
 	foreach($category->field_ids as $field_id){
@@ -116,12 +136,14 @@ elseif($_REQUEST["action"] == "do_edit"){
 	$result = query($query);
 	
 	if (is_array($_REQUEST["delete_files"])){
+		// Delete any checked files
+		
 		foreach($_REQUEST["delete_files"] as $file_id){
 			$query = "SELECT * FROM `anyInventory_files` WHERE `id`='".$file_id."'";
 			$result = query($query);
 			$row = mysql_fetch_array($result);
 			
-			if (!unlink($files_dir.$row["file_name"])){
+			if (($row["offsite_link"] == '') && (!unlink($files_dir.$row["file_name"]))){
 				echo "Could not delete ".$row["file_name"].'<br />';
 				exit;
 			}
@@ -131,8 +153,10 @@ elseif($_REQUEST["action"] == "do_edit"){
 		}
 	}
 	
+	$key = $_REQUEST["id"];
+	
 	if (is_uploaded_file($_FILES["file"]["tmp_name"])){
-		$key = $_REQUEST["id"];
+		// Copy any uploaded files
 		
 		$i = 1;
 		
@@ -158,27 +182,43 @@ elseif($_REQUEST["action"] == "do_edit"){
 		$result = query($query);
 	}
 	
-	header("Location: items.php");
+	if ($_REQUEST["remote_file"] != ''){
+		$query = "INSERT INTO `anyInventory_files` 
+				(`key`,
+				 `offsite_link`)
+				VALUES
+				('".$key."',
+				 '".$_REQUEST["remote_file"]."')";
+		query($query);
+	}
 }
 elseif($_REQUEST["action"] == "do_move"){
+	// Move an item.
+	
 	$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["c"]."' WHERE `id`='".$_REQUEST["id"]."'";
 	$result = query($query);
-	
-	header("Location: items.php");
 }
 elseif($_REQUEST["action"] == "do_delete"){
+	// Delete an item
+	
 	if ($_REQUEST["delete"] == "Delete"){
 		$item = new item($_REQUEST["id"]);
 		
 		if (is_array($item->files)){
 			foreach($item->files as $file){
-				if (unlink($files_dir.$file["file_name"])){
-					$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file["id"]."'";
-					$result = query($query);
+				if (!$file->is_remote){
+					if (unlink($files_dir.$file["file_name"])){
+						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file["id"]."'";
+						query($query);
+					}
+					else{
+						echo "Could not delete ".$file["file_name"].'<br />';
+						exit;
+					}
 				}
 				else{
-					echo "Could not delete ".$file["file_name"].'<br />';
-					exit;
+						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file["id"]."'";
+						query($query);
 				}
 			}
 		}
@@ -186,8 +226,8 @@ elseif($_REQUEST["action"] == "do_delete"){
 		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$item->id."'";
 		$result = query($query);
 	}
-	
-	header("Location: items.php");
 }
+
+header("Location: items.php");
 
 ?>

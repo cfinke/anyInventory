@@ -24,7 +24,45 @@ if ($_REQUEST["id"]){
 else{
 	// We are in a specific category.
 	if ($_REQUEST["c"] == 0){
-		// Display introductory text.
+		// Display introductory text, check for alerts
+		
+		$query = "SELECT * FROM `anyInventory_alerts` WHERE `time` <= NOW()";
+		$result = query($query);
+		
+		while ($row = mysql_fetch_array($result)){
+			$items = unserialize($row["item_ids"]);
+			
+			foreach ($items as $item_id){
+				$item = new item($item_id);
+				$field = new field($row["field_id"]);
+				
+				$trip_alert = eval('return ($item->fields[$field->name] '.$row["condition"].' $row["value"]);');
+				
+				if ($trip_alert){
+					if (!$tripped){
+						$output .= '<table><tr><td>';
+						$tripped = true;
+					}
+					
+					$output .= '
+						<table cellspacing="1" cellpadding="2" style="background: #000000; width: 25ex; margin-bottom: 10px;" border="0">
+							<tr style="background: #000000; color: #D3D3A6;">
+								<td>
+									Alert
+								</td>
+							</tr>
+							<tr style="background: #D3D3A6;">
+								<td style="text-align: center;">
+									<b>'.$item->name.'</b><br /> '.$row["title"].'<br />
+								</td>
+							</tr>
+						</table>';
+				}
+			}
+		}
+		
+		if ($tripped) $output .= '</td><td>';
+		
 		$output .= '<p style="padding: 15px;">This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.</p>';
 	}
 	
@@ -65,6 +103,8 @@ else{
 		
 		$output .= '</table>';
 	}
+	
+	if ($tripped) $output .= '</td></tr></table>';
 }
 
 display($output);

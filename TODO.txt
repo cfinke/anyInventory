@@ -1,6 +1,3 @@
-FEATURES
-========================================
-
 BEFORE 1.1
 ===================
 DONE - Searching within a category
@@ -26,7 +23,7 @@ BEFORE 1.6
 ===================
 DONE - Timed Alerts
 DREW - Thumbnails of remote images
-CHRIS - Better advanced search, like phpMyAdmin's Search page
+CHRIS - Add input type of "File" to replace generic file uploads and remote files
 
 BEFORE 1.7
 ===================
@@ -35,8 +32,14 @@ Internal password protection
 
 BEFORE 1.8
 ===================
+Better advanced search, like phpMyAdmin's Search page
+Item associations
+
+BEFORE 1.9
+===================
 Label Sheets
+
 
 BUGS
 ========================================
-Put any bugs you find here.
+When a remote file's URL is too long, it stretches the page

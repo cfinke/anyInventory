@@ -131,6 +131,15 @@ class item {
 		
 		return $count;
 	}
+	
+	function in_or_below($cat_id){
+		if (in_array($cat_id, $this->category->breadcrumbs)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }
 
 ?>

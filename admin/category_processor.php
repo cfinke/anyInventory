@@ -46,6 +46,18 @@ elseif($_REQUEST["action"] == "do_edit"){
 		}
 	}
 	
+	if ($_REQUEST["inherit_fields"] == "yes"){
+		// Add the fields from the parent category
+		$parent = new category($_REQUEST["parent"]);
+		
+		if(is_array($parent->field_ids)){
+			foreach($parent->field_ids as $field_id){
+				$field = new field($field_id);
+				$field->add_category($_REQUEST["id"]);
+			}
+		}
+	}
+	
 	// Add the checked fields
 	if (is_array($_REQUEST["fields"])){
 		foreach($_REQUEST["fields"] as $key => $value){

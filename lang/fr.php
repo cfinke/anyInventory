@@ -5,21 +5,32 @@
 // French language file
 
 
-define('SWITCH_TO_TABLE','Afficher en vue tableau');
-define('SWITCH_TO_LIST','Afficher en vue liste');
 
+define('PAGE_DIMENSIONS','Dimensions Page');
+
+define('LABEL_DIMENSIONS','Dimensions Etiquette');
+
+define('ROWS','rang&eacute;es');
+
+define('COLUMNS','colonnes');
+
+define('LABEL_TEMPLATE','Gabarit');
+
+define('LANGUAGE','Langue');
 
 define('ID_MATCH',AUTO_INC_FIELD_NAME.' Correspondant');
 
 define('NAME_MATCH',NAME_FIELD_NAME.' Correspondant');
 
+define('SWITCH_TO_TABLE','Afficher en vue tableau');
 
-
-define('LANGUAGE','Langue');
+define('SWITCH_TO_LIST','Afficher en vue liste');
 
 
 
 // Dates
+
+
 
 define('MONTH_1','Janvier');
 
@@ -49,6 +60,8 @@ define('MONTH_12','D&#233;cembre');
 
 // XML
 
+
+
 define('DOWNLOAD_LINK','t&#233;l&#233;charger');
 
 define('DOWNLOAD_AS_XML','T&#233;l&#233;charger le fichier XML d&#146;inventaire');
@@ -56,6 +69,8 @@ define('DOWNLOAD_AS_XML','T&#233;l&#233;charger le fichier XML d&#146;inventaire
 
 
 // General
+
+
 
 define('APP_TITLE','anyInventory');
 
@@ -101,6 +116,8 @@ define('SUBMIT_REPORT','Vous pouvez aider au d&#233;veloppement de anyInventory 
 
 // Search
 
+
+
 define('SEARCH','Rechercher');
 
 define('SEARCH_RESULTS','R&#233;sultats de la Recherche');
@@ -114,6 +131,8 @@ define('NO_MATCHING_ITEMS','Il n&#146;y avait aucun article correspondant &#224;
 
 
 // Error messages
+
+
 
 define('ERROR','Erreur');
 
@@ -145,6 +164,8 @@ define('ERROR_DUPLICATE_USER','Un utilisateur avec ce nom existe d&#233;j&#224;.
 
 // Labels
 
+
+
 define('LABEL','Etiquette');
 
 define('LABELS','Etiquettes');
@@ -164,6 +185,8 @@ define('GENERATE_FOR','G&#233;n&#233;rer pour');
 
 
 // Fields
+
+
 
 define('FIELD','Champ');
 
@@ -241,6 +264,7 @@ define('EDIT_FIELD','Editer le Champ');
 
 // Categories
 
+
 define('CATEGORIES','Cat&#233;gories');
 
 define('ADD_CATEGORY','Ajouter une Cat&#233;gorie');
@@ -285,6 +309,8 @@ define('EDIT_CATEGORY','Editer une Cat&#233;gorie');
 
 // Items
 
+
+
 define('ITEMS','Articles');
 
 define('ADD_ITEM','Ajouter un Article');
@@ -319,6 +345,8 @@ define('EDIT_ITEM','Editer l&#146;Article');
 
 // Alerts
 
+
+
 define('ALERT','Alerte');
 
 define('ALERTS','Alertes');
@@ -333,9 +361,9 @@ define('ADD_ALERT_IN','Ajouter une alerte dans');
 
 define('ALERT_TITLE','Titre de l&#146;alerte');
 
-define('TIMED_ONLY_LABEL','Faire que cette alerte soit <a href="../docs/fr/alerts.php#time_based">bas=E9 sur le temps seulement</a>.');
+define('TIMED_ONLY_LABEL','Faire que cette alerte soit <a href="../docs/fr/alerts.php#time_based">bas&eacute; sur le temps seulement</a>.');
 
-define('TIMED_ONLY_EXPLANATION','Pour les alertes temporelles, vous n&#146;avez pas besoin de compl=E9ter le champ, la condition, ou la valeur.');
+define('TIMED_ONLY_EXPLANATION','Pour les alertes temporelles, vous n&#146;avez pas besoin de compl&eacute;ter le champ, la condition, ou la valeur.');
 
 define('DELETE_ALERT','Supprimer l&#146;Alerte');
 
@@ -356,6 +384,8 @@ define('ALERT_ACTIVATED_BY','Cette alerte a &#233;t&#233; initialement activ&#23
 
 
 // Users
+
+
 
 define('USERS','Utilisateurs');
 
@@ -392,7 +422,5 @@ define('USER','Utilisateur');
 define('ADMINISTRATOR','Administrateur');
 
 define('EDIT_USER','Editer l&#146;utilisateur');
-
-
 
 ?>

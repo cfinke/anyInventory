@@ -562,6 +562,7 @@ elseif(!$globals_error){
 									<option';if($_REQUEST["db_type"] == 'FrontBase') $output .= ' selected="selected"'; $output .= '>FrontBase</option>
 									<option';if($_REQUEST["db_type"] == 'MiniSQL') $output .= ' selected="selected"'; $output .= '>MiniSQL</option>
 									<option';if($_REQUEST["db_type"] == 'SQLite') $output .= ' selected="selected"'; $output .= '>SQLite</option>
+									<option';if($_REQUEST["db_type"] == 'Oracle') $output .= ' selected="selected"'; $output .= '>SQLite</option>
 								</select>
 							</td>
 						</tr>

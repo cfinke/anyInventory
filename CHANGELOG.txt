@@ -1,15 +1,21 @@
-2004/06/07
-Cleaned up layout.
-Removed dataset library due to conflicting licenses,
-Changed trimming not to trim arrays.
-Reorganized layout of search page.
-Changed 'Apply' default to checked
-Added ability to inherit fields from parent category on an edit.
-Changed 'Inherit' and 'Apply' checkbox defaults to checked
-Reorganized table of contents in documentation
+2004/06/09
+Added get_items_options function.
+Fixed problem where field order would not affect field table
 
-2004/06/08
-Validated HTML and updated layout.
-Added header image.
-Added charset header to display()
-Changed item teaser to be inline instead of block
+2004/06/10
+Began work on alerts
+Changed categories and values to be serialized arrays in the database
+Added a selected option to get_item_options
+Added the option of getting a category dropdown of the non-empty categories
+Made header image right-aligned
+Moved some code to alert_box function
+Fixed a few small bugs in install file
+Added help links to all pages.
+Fixed bug when searching from menu bar
+Added upgrade file
+Finished alert administration
+Added documentation for alerts.
+
+2004/06/11
+Finished alerts
+Added alert table to install file.

@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-$title = "anyInventory: Help > What\'s Next?";
+$title = "anyInventory: Help > What's Next?";
 
 $output .= '
 	<h2>What\'s Next?</h2>

@@ -145,7 +145,7 @@ function delete_subcategory($category){
 		}
 	}
 	
-	$query = "DELETE FROM `anyInventory_items` WHERE `category`='".$category->id."'";
+	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 	$result = query($query);
 	
 	$query = "UPDATE `anyInventory_categories` SET `parent`='".$category->parent_id."' WHERE `parent`='".$category->id."'";
@@ -175,6 +175,7 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 	switch($input_type){
 		case 'text':
 		case 'multiple':
+		case 'checkbox':
 			if ($size < 256){
 				$type = " VARCHAR(".$size.") DEFAULT '".$default_value."' ";
 			}
@@ -183,7 +184,6 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 			}
 			break;
 		case 'radio':
-		case 'checkbox':
 		case 'select':
 			$type = " ENUM(";
 			

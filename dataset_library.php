@@ -1,6 +1,6 @@
 <?php
 // +----------------------------------------------------------------------+
-// | Dataset Library	1.01b			                                  |
+// | Dataset Library	1.02b			                                  |
 // | Started by Blaine Garrett & Justin Gehring on 2004-05-21 09:30:00 	  |
 // +----------------------------------------------------------------------+
 // | Purpose Description...									              |
@@ -97,10 +97,10 @@ class dataset_library {
 	var $sort_order = 'ASC';
 	
 	//image sources for sorting arrows
-	var $up_arrow_img_src = 'https://mycla.umn.edu/images/mta/MTA_arrowup.gif';
-	var $down_arrow_img_src = 'https://mycla.umn.edu/images/mta/MTA_arrowdown.gif';
+	var $up_arrow_img_src = 'images/arrow_up.gif';
+	var $down_arrow_img_src = 'images/arrow_down.gif';
 		
-	function dataset_library($id, $query, $request, $db_type, $default_sort_column = false) {
+	function dataset_library($id, $query, $request, $db_type, $default_sort_column = false){
 		///////////////////////////////////////////////////
 		// Step 1) Store important arguements
 		///////////////////////////////////////////////////
@@ -146,7 +146,7 @@ class dataset_library {
 		
 		//Append Ordering Info
 		if ($this->sort_col) 
-			$result_query .= ' ORDER BY ' . $this->sort_col . ' ' . $this->sort_order;
+			$result_query .= ' ORDER BY `' . $this->sort_col . '` ' . $this->sort_order;
 			
 		//Append Limit information to base query
 		if (strtolower($this->result_length) != 'all')
@@ -219,7 +219,20 @@ class dataset_library {
 			
 			//if the page is sortable, then display sort link/info
 			if ($sortable) {
-				$output .= '<a href="javascript:void(0);" title="Sort by ' . $colname . '" onClick="javascript:var sort_form_obj = document.forms[\'paging_form_' . $this->name . '\'];var sort_col_obj =  sort_form_obj.elements[\'nav[' . $this->name . '][sort_col]\'];var sort_order_obj = sort_form_obj.elements[\'nav[' . $this->name . '][sort_order]\'];if (sort_col_obj.value == \'sortcol_' . $colname . '\') sort_order_obj.value = (sort_order_obj.value == \'DESC\') ? \'ASC\' : \'DESC\';else {sort_order_obj.value = \'ASC\';sort_col_obj.value = \'sortcol_' . $colname . '\';}sort_form_obj.submit();return false;">' . $colname .'</a>'; 
+				$output .= '<a href="javascript:void(0);" title="Sort by ' . $colname . '"
+				onClick="
+				javascript:
+				var sort_form_obj = document.forms[\'paging_form_' . $this->name . '\'];
+				var sort_col_obj =  sort_form_obj.elements[\'nav[' . $this->name . '][sort_col]\'];
+				var sort_order_obj = sort_form_obj.elements[\'nav[' . $this->name . '][sort_order]\'];
+				if (sort_col_obj.value == \'sortcol_' . $colname . '\') 
+					sort_order_obj.value = (sort_order_obj.value == \'DESC\') ? \'ASC\' : \'DESC\';
+				else {
+					sort_order_obj.value = \'ASC\';
+					sort_col_obj.value = \'sortcol_' . $colname . '\';
+				}
+				sort_form_obj.submit();
+				return false;">' . $colname .'</a>'; 
 				
 				if ('sortcol_' . $colname == $this->sort_col) 
 					$output .= '<img src="' . (($this->sort_order == 'ASC') ? $this->up_arrow_img_src : $this->down_arrow_img_src) . '" title="Sorted ' . (($this->sort_order == 'ASC') ? 'ascending' : 'descending') . '"/>';
@@ -313,7 +326,9 @@ class dataset_library {
 // +----------------------------------------------------------------------+
 // |																	  |
 // +----------------------------------------------------------------------+
-// |																	  |
+// | 2004-05-28 : 1.02b : Fixed bug for when sort column names 			  |
+// |					contain spaces. Special thanks to Chris Finke 	  |
+// |					<chris@efinke.com>	for finding this.     		  |
 // +----------------------------------------------------------------------+
 // | 2004-05-21 : 1.01b : Added FOUND_ROWS() to calculate total items     |
 // |					instead of doing an extra query.     			  |
@@ -338,4 +353,3 @@ class dataset_library {
 // |	Make base class and child classes for msql, mssql, and arrays	  |
 // |		to have unified function names, but keeping code separate	  |
 // +----------------------------------------------------------------------+
-?>

@@ -64,7 +64,7 @@ elseif($_REQUEST["action"] == "delete"){
 		$output .= 'None';
 	}
 	
-	$output .= '</p><p class="category_num_items"><b>Number of items inventoried in this category:</b> '.$category->num_items().'</p>';
+	$output .= '</p><p><b>Number of items inventoried in this category:</b> '.$category->num_items().'</p>';
 	
 	if ($category->num_items() > 0){
 		$output .= '
@@ -85,7 +85,7 @@ elseif($_REQUEST["action"] == "delete"){
 	}
 	
 	$output .= '
-			<p class="category_num_items"><b>Number of items inventoried in this category\'s subcategories:</b> '.$category->num_items_r().'</p>
+			<p><b>Number of items inventoried in this category\'s subcategories:</b> '.$category->num_items_r().'</p>
 			<p style="text-align: center;"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></p>
 		</form>';
 }

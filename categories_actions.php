@@ -43,11 +43,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 		$result = query($query);
 		
 		if ($_REQUEST["item_action"] == "delete"){
-			$query = "DELETE FROM `anyInventory_items` WEHRE `category`='".$category->id."'";
+			$query = "DELETE FROM `anyInventory_items` WEHRE `item_category`='".$category->id."'";
 			$result = query($query);
 		}
 		elseif($_REQUEST["item_action"] == "move"){
-			$query = "UPDATE `anyInventory_items` SET `category`='".$_REQUEST["move_items_to"]."'";
+			$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["move_items_to"]."'";
 			$result = query($query);
 		}
 		

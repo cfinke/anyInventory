@@ -27,7 +27,7 @@ if (($_REQUEST["action"] == "add") || ($_REQUEST["action"] == "edit")){
 							<select name="input_type" id="input_type"">
 								<option onclick="document.getElementById(\'values_row\').style.display = \'none\';document.getElementById(\'size_row\').style.display = \'\';" value="text"';if($field->input_type == 'text') $output .= ' selected="selected"';$output.='>Text</option>
 								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'none\';" value="select"';if($field->input_type == 'select') $output .= ' selected="selected"';$output.='>Select Box</option>
-								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'\';" value="multiple"';if($field->input_type == 'multiple') $output .= ' selected="selected"';$output.='>Multiple (Select + Text)</option>
+								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'none\';" value="multiple"';if($field->input_type == 'multiple') $output .= ' selected="selected"';$output.='>Multiple (Select + Text)</option>
 								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'none\';" value="checkbox"';if($field->input_type == 'checkbox') $output .= ' selected="selected"';$output.='>Checkboxes</option>
 								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'none\';" value="radio"';if($field->input_type == 'radio') $output .= ' selected="selected"';$output.='>Radio Buttons</option>
 							</select>
@@ -49,7 +49,7 @@ if (($_REQUEST["action"] == "add") || ($_REQUEST["action"] == "edit")){
 						<td class="form_input"><input type="text" name="default_value" id="default_value" value="'.$field->default_value.'" /></td>
 					</tr>
 					<tr style="display: auto;" id="size_row">
-						<td class="form_label"><label for="size">Size, in characters:</label><br /><small>Only for data types \'Multiple\' and \'Text\'.</small></td>
+						<td class="form_label"><label for="size">Size, in characters:</label><br /><small>Only for \'text\' data type.</small></td>
 						<td class="form_input"><input type="text" name="size" id="size" value="'.$field->size.'" /></td>
 					</tr>
 					<tr style="display: auto;">
@@ -103,7 +103,7 @@ else{
 	$output .= '<p><a href="'.$_SERVER["PHP_SELF"].'?action=add">Add a field.</a></p>';
 	
 	$query = "SELECT *,'' as `nosortcol_`,`name` as `sortcol_Name`,`input_type` as `nosortcol_Type`,`values` as `nosortcol_Values`,`default_value` as `nosortcol_Default Value`,`size` as `nosortcol_Size` FROM `anyInventory_fields`";
-	$data_obj = new dataset_library("Fields", $query, $_REQUEST, "mysql");
+	$data_obj = new dataset_library("Fields", $query, $_REQUEST, "mysql","importance");
 	$result = $data_obj->get_result_resource();
 	$rows = $data_obj->get_result_set();
 	
@@ -113,8 +113,13 @@ else{
 		while($row = mysql_fetch_assoc($result)){
 			$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
 			$table_set .= '<tr class="'.$color_code.'">';
-			$table_set .= '<td align="center" style="width: 10%; white-space: nowrap;"><a href="'.$_SERVER["PHP_SELF"].'?action=edit&amp;id='.$row["id"].'">[edit]</a> <a href="'.$_SERVER["PHP_SELF"].'?action=delete&amp;id='.$row["id"].'">[delete]</a></td>';
-			$table_set .= '<td>'.$row["name"].'</td>';
+			$table_set .= '<td align="center" style="width: 10%; white-space: nowrap;">
+					<a href="'.$_SERVER["PHP_SELF"].'?action=edit&amp;id='.$row["id"].'">[edit]</a>
+					<a href="'.$_SERVER["PHP_SELF"].'?action=delete&amp;id='.$row["id"].'">[delete]</a><br />
+					[move <a href="fields_actions.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">up</a> |
+					<a href="fields_actions.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">down</a>]
+				</td>';
+			$table_set .= '<td style="width: 10%; white-space: nowrap;">'.$row["name"].'</td>';
 			$table_set .= '<td>'.$row["input_type"].'</td>';
 			$table_set .= '<td>'.$row["values"].'</td>';
 			$table_set .= '<td>'.$row["default_value"].'</td>';
@@ -129,7 +134,7 @@ else{
 	
 	$table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();
 	
-	$output .= '<table style="width: 100%; background-color: #000000;" cellspacing="1" cellpadding="2">'.$table_set.'</table>';
+	$output .= '<table style="width: 100%; background-color: #000000;" cellspacing="1" cellpadding="3">'.$table_set.'</table>';
 }
 
 include("header.php");

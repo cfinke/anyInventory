@@ -28,26 +28,33 @@ class category {
 			$this->name = $row["name"];
 			$this->parent_id = $row["parent"];
 			
-			$this->breadcrumbs[] = $this->id;
+			$parent_id = $this->id;
 			
-			while ($parent != 0){
-				$this->breadcrumbs[] = $parent;
+			while ($parent_id != 0){
+				$this->breadcrumbs[] = $parent_id;
 				
-				$parent = $this->find_parent($parent);
+				$parent_id = $this->find_parent_id($parent_id);
 			}
+			
+			$this->breadcrumbs[] = 0;
 			
 			$this->breadcrumbs = array_reverse($this->breadcrumbs);
 			
 			foreach($this->breadcrumbs as $crumb){
-				$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
-				$result = query($query);
-				
-				$this->breadcrumb_names .= result($result, 0, 'name') . ' > ';
+				if ($crumb == 0){
+					$this->breadcrumb_names .= "Top";
+				}
+				else{
+					$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
+					$result = query($query);
+					
+					$this->breadcrumb_names .= result($result, 0, 'name') . ' > ';
+				}
 			}
 			
 			$this->breadcrumb_names = substr($this->breadcrumb_names, 0, strlen($this->breadcrumb_names) - 3);
 			
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%,".$this->id.",%' OR `categories` LIKE '%,".$this->id."'";
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%,".$this->id.",%' OR `categories` LIKE '%,".$this->id."' ORDER BY `importance` ASC";
 			$result = query($query);
 			
 			while ($row = fetch_array($result)){
@@ -59,8 +66,11 @@ class category {
 			$this->name = "Top Level";
 			$this->parent_id = 0;
 			
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields`";
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` ORDER BY `importance`";
 			$result = query($query);
+			
+			$this->breadcrumbs[] = 0;
+			$this->breadcrumb_names[] = "Top";
 			
 			while ($row = fetch_array($result)){
 				$this->field_ids[] = $row["id"];
@@ -78,7 +88,7 @@ class category {
 	}
 	
 	function num_items(){
-		$query = "SELECT `id` FROM `anyInventory_items` WHERE `category`='".$this->id."'";
+		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
 		$result = query($query);
 		
 		return num_rows($result);
@@ -114,15 +124,19 @@ class category {
 	}
 	
 	function get_breadcrumb_links(){
-		if ($this->id != 0){
-			foreach($this->breadcrumbs as $id){
-				$child = new category($id);
-				
-				$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c='.$child->id.'">'.$child->name.'</a> &gt; ';
+		foreach($this->breadcrumbs as $id){
+			if($id == 0){
+				$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c=0">Top</a> &gt; ';
 			}
-			
-			$breadcrumbs = substr($breadcrumbs, 0, strlen($breadcrumbs) - 6);
+			else{
+				$crumb = new category($id);
+				
+				if ($crumb->id)
+				$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c='.$crumb->id.'">'.$crumb->name.'</a> &gt; ';
+			}
 		}
+		
+		$breadcrumbs = substr($breadcrumbs, 0, strlen($breadcrumbs) - 6);
 		
 		return $breadcrumbs;
 	}

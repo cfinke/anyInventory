@@ -1,42 +1,16 @@
-2004/06/02
-Swapped DOCUMENT_ROOTs for PATH_TRANSLATEDs, fixed some thumbnailing problems, fixed a path problem in display()
-Added check in install script for writablity of the item_files dir; made changes to documentation based on user feedback.
-Fixed search function, added header and footer text, made layout fluid, fixed pathname to images in item_class.
-Finished off the first version of the documentation.
+2004/06/04
+Commented the functions.php file.
+Commented the index.php file.
+Commented the install.php file.
+Commented the item_class.php file.
+Commented the search.php file.
 
-date: 2004/05/31
-Added search and advanced search.
-Sends user to admin side of item after adding item instead of display side.
-Fixed paths to allow for different directories.
-
-2004/05/30
-Added better image thumbnailing, created a class for files related to items.
-Added file previews to item description.
-Changed picture uploading to a generic file upload.
-Updated the README, added an install file.
-Added more information to field list in adding a category.
-When an option is chosen in a 'multiple' field, the text box takes the dropdown value.
-Added image uploading, item deletion, item editing.
-Moved query to install file.
-Moved adminstrative files to admin to allow for password protection.
-
-2004/05/29
-Added item addition, fixed various bugs with categories and fields.
-Added picture table.
-Cleaned up tables.
-Moved code into more organized file structure.
-
-2004/05/28
-Category and field editing and deletion both work now.
-
-2004/05/27
-Deleting categories works now.
-Field fields only show up for their input type.
-Added field editing and deletion.  Working on the same for categories.
-
-2004/05/26
-Did some more work on categories, mostly with deleting.
-Made some changes to the category page.
-
-2004/05/25
-Initial import.
+2004/06/03
+Updated TODO with specific features and release numbers.
+Commented entire category_class file.
+Commented the field_class.php file.
+Commented the file_class.php file.
+Introductory text shows up only on top-level category now.
+Added function in_or_under() to item class.
+Added the ability to limit the search to a category.
+Updated documentation for searching.

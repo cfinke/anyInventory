@@ -70,7 +70,7 @@ elseif (!isset($_POST["i"])){
 		$_POST["c"] = array($_POST["c"]);
 	}
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `id` > 0 AND ";
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('id') . " > 0 AND ";
 	
 	foreach($_POST["c"] as $cat_id){
 		if (!$view_user->can_view($cat_id)){
@@ -78,7 +78,7 @@ elseif (!isset($_POST["i"])){
 			exit;
 		}
 		
-		$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
+		$query .= " " . $db->quoteIdentifier('categories') . " LIKE '%\"".$cat_id."\"%' AND ";
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);

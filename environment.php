@@ -24,7 +24,7 @@ $dsn = $db_type."://".$db_user.":".$db_pass."@".$db_host."/".$db_name;
 
 $db = connect_to_database();
 
-$query = "SELECT * FROM `anyInventory_config`";
+$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_config') . "";
 $result = $db->query($query);
 if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 

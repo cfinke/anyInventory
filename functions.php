@@ -18,7 +18,7 @@ function connect_to_database(){
 function get_unique_id($table){
 	global $db;
 	
-	$query = "SELECT MAX(`id`) AS `seq_id` FROM `".$table."`";
+	$query = "SELECT MAX(" . $db->quoteIdentifier('id') . ") AS " . $db->quoteIdentifier('seq_id') . " FROM " . $db->quoteIdentifier('".$table."') . "";
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
@@ -72,7 +72,7 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 	// with the id $id.
 	
 	if ($id != 0){
-		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id` = ?";
+		$query = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 		$query_data = array($id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -82,7 +82,7 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 		$pre .= $row["name"] . ' > ';
 	}
 	
-	$query = "SELECT `id`,`name` FROM `anyInventory_categories` WHERE `parent`= ? ORDER BY `name` ASC";
+	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . "= ? ORDER BY " . $db->quoteIdentifier('name') . " ASC";
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -133,7 +133,7 @@ function get_item_options($cat_ids = 0, $selected = null, $multiple = false){
 	if (!is_array($selected)) $selected = array($selected);
 	if (!is_array($cat_ids)) $cat_ids = array($cat_ids);
 	
-	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (?)";
+	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . " IN (?)";
 	$query_data = array(implode(", ",$cat_ids));
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -154,7 +154,7 @@ function get_fields_checkbox_area($checked = array()){
 	// This function returns the field checkboxes.
 	// Any field ids in the array $checked will be checked.
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " ORDER BY " . $db->quoteIdentifier('importance') . " ASC";
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
@@ -201,7 +201,7 @@ function get_category_array($top = 0){
 	$array = array();
 	
 	if ($top != 0){
-		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id` = ?";
+		$query = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 		$query_data = array($top);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -227,7 +227,7 @@ function get_array_children($id, &$array, $pre = ""){
 	// This function creates array entries for any child of $id.
 	
 	if ($id != 0){
-		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id` = ?";
+		$query = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 		$query_data = array($id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -237,7 +237,7 @@ function get_array_children($id, &$array, $pre = ""){
 		$pre .= $row["name"] . ' > ';
 	}
 	
-	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent` = ? ORDER BY `name` ASC";
+	$query = "SELECT " . $db->quoteIdentifier('name') . "," . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . " = ? ORDER BY " . $db->quoteIdentifier('name') . " ASC";
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -277,7 +277,7 @@ function get_array_id_children($id, &$array){
 	
 	// This function creates array entries for any child of $id.
 	
-	$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = ? ORDER BY `name` ASC";
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . " = ? ORDER BY " . $db->quoteIdentifier('name') . " ASC";
 	$query_data = array($id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -317,14 +317,14 @@ function delete_subcategory($category){
 		}
 	}
 	
-	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category` = ?";
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . " = ?";
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	while ($row = $result->fetchRow()){
-		$query2 = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE ?";
+		$query2 = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('item_ids') . " LIKE ?";
 		$query2_data = array('%"'.$row["id"].'"%');
 		$pquery2 = $db->prepare($query2);
 		$result2 = $db->execute($pquery2, $query2_data);
@@ -336,7 +336,7 @@ function delete_subcategory($category){
 			$alert->remove_item($row["id"]);
 			
 			if (count($alert->item_ids) == 0){
-				$query3 = "DELETE FROM `anyInventory_alerts` WHERE `id` = ?";
+				$query3 = "DELETE FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 				$query3_data = array($alert->id);
 				$pquery3 = $db->prepare($query3);
 				$db->execute($pquery3, $query3_data);
@@ -344,7 +344,7 @@ function delete_subcategory($category){
 			}
 		}
 		
-		$query4 = "DELETE FROM `anyInventory_values` WHERE `item_id` = ?";
+		$query4 = "DELETE FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('item_id') . " = ?";
 		$query4_data = array($row["id"]);
 		$pquery4 = $db->prepare($query4);
 		$result4 = $db->execute($pquery4, $query4_data);
@@ -352,14 +352,14 @@ function delete_subcategory($category){
 	}
 	
 	// Delete all of the items in the category
-	$query = "DELETE FROM `anyInventory_items` WHERE `item_category` = ?";
+	$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . " = ?";
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	// Delete this category.
-	$query = "DELETE FROM `anyInventory_categories` WHERE `id` = ?";
+	$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -374,7 +374,7 @@ function remove_from_fields($cat_id){
 	global $db;
 	
 	// This function removes all fields from a category.
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE ?";
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('categories') . " LIKE ?";
 	$query_data = array('%"'.$cat_id.'"%');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -440,7 +440,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 	}
 	else{
 		if (count($c) > 0){
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE 1 ";
+			$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE 1 ";
 			
 			foreach($c as $cat_id){
 				if (!$admin_user->can_admin($cat_id)){
@@ -448,7 +448,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 					exit;
 				}
 				else{
-					$query .= " AND `categories` LIKE '%\"".$cat_id."\"%' AND `input_type` NOT IN ('divider','file','item') ";
+					$query .= " AND " . $db->quoteIdentifier('categories') . " LIKE '%\"".$cat_id."\"%' AND " . $db->quoteIdentifier('input_type') . " NOT IN ('divider','file','item') ";
 				}
 			}
 			
@@ -464,7 +464,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 					$fields[] = $row;
 				}
 				
-				$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (".implode(", ",$c).")";
+				$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . " IN (".implode(", ",$c).")";
 				$result = $db->query($query);
 				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				

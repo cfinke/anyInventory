@@ -3,7 +3,7 @@
 include("globals.php");
 
 if ($_REQUEST["action"] == "log_in"){
-	$query = "SELECT * FROM `anyInventory_users` WHERE `username` = ?";
+	$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_users') . " WHERE " . $db->quoteIdentifier('username') . " = ?";
 	$query_data = array($_POST["username"]);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);

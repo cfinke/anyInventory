@@ -18,7 +18,7 @@ class item {
 		$this->id = $item_id;
 		
 		// Get the information about this item.
-		$query = "SELECT * FROM `anyInventory_items` WHERE `id` = ?";
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -32,7 +32,7 @@ class item {
 		// Create the category object.
 		$this->category = new category($row["item_category"]);
 		
-		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id` = ?";
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('item_id') . " = ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -66,7 +66,7 @@ class item {
 		}
 		
 		// Get each of this item's files and add it to the array.
-		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key_value` = ?";
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('key_value') . " = ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -246,14 +246,14 @@ class item {
 				}
 			}
 			
-			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type` = ?";
+			$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('input_type') . " = ?";
 			$query_data = array('item');
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
 			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			
 			while ($row = $result->fetchRow()){
-				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE ? GROUP BY `item_id`";
+				$query2 = "SELECT " . $db->quoteIdentifier('item_id') . " FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('value') . " LIKE ? GROUP BY " . $db->quoteIdentifier('item_id') . "";
 				$query2_data = array('%"'.$this->id.'"%');
 				$pquery2 = $db->prepare($query2);
 				$result2 = $db->execute($pquery2, $query2_data);

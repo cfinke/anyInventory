@@ -23,7 +23,7 @@ class file_object{
 		$this->id = $id;
 		
 		// Get the information about this file.
-		$query = "SELECT * FROM `anyInventory_files` WHERE `id` = ?";
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);

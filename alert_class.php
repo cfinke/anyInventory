@@ -26,7 +26,7 @@ class alert {
 		
 		$this->id = $alert_id;
 		
-		$query = "SELECT * FROM `anyInventory_alerts` WHERE `id`= ?";
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('id') . "= ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -74,14 +74,14 @@ class alert {
 		if ($key) unset($this->item_ids[$key]);
 		
 		if (count($this->item_ids) == 0){
-			$query = "DELETE FROM `anyInventory_alerts` WHERE `id`= ?";
+			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('id') . "= ?";
 			$query_data = array($this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
 			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		}
 		else{
-			$query = "UPDATE `anyInventory_alerts` SET `item_ids`= ? WHERE `id`= ?";
+			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_alerts') . " SET " . $db->quoteIdentifier('item_ids') . "= ? WHERE " . $db->quoteIdentifier('id') . "= ?";
 			$query_data = array(serialize($this->item_ids), $this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);

@@ -113,120 +113,120 @@ if ($_POST["action"] == "install"){
 		$_POST["password"] = ($_POST["password"] == '') ? 'password' : $_POST["password"];
 		
 		// Begin writing the database information.
-		$query = "DROP TABLE `anyInventory_categories` ,
-			`anyInventory_fields` ,
-			`anyInventory_items` ,
-			`anyInventory_files`,
-			`anyInventory_alerts`,
-			`anyInventory_config`,
-			`anyInventory_users`,
-			`anyInventory_values`";
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_categories') . " ,
+			" . $db->quoteIdentifier('anyInventory_fields') . " ,
+			" . $db->quoteIdentifier('anyInventory_items') . " ,
+			" . $db->quoteIdentifier('anyInventory_files') . ",
+			" . $db->quoteIdentifier('anyInventory_alerts') . ",
+			" . $db->quoteIdentifier('anyInventory_config') . ",
+			" . $db->quoteIdentifier('anyInventory_users') . ",
+			" . $db->quoteIdentifier('anyInventory_values') . "";
 		$db->query($query);
 		
-		$query = "CREATE TABLE `anyInventory_categories` (
-				  `id` int(11) NOT NULL auto_increment,
-				  `parent` int(11) NOT NULL default '0',
-				  `name` varchar(32) NOT NULL default '',
-			 	  `auto_inc_field` INT( 1 ) DEFAULT '0' NOT NULL,
-				  UNIQUE KEY `id` (`id`),
-				  KEY `parent` (`parent`)
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_categories') . " (
+				  " . $db->quoteIdentifier('id') . " int(11) NOT NULL auto_increment,
+				  " . $db->quoteIdentifier('parent') . " int(11) NOT NULL default '0',
+				  " . $db->quoteIdentifier('name') . " varchar(32) NOT NULL default '',
+			 	  " . $db->quoteIdentifier('auto_inc_field') . " INT( 1 ) DEFAULT '0' NOT NULL,
+				  UNIQUE KEY " . $db->quoteIdentifier('id') . " (" . $db->quoteIdentifier('id') . "),
+				  KEY " . $db->quoteIdentifier('parent') . " (" . $db->quoteIdentifier('parent') . ")
 				)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "CREATE TABLE `anyInventory_fields` (
-				  `id` int(11) NOT NULL auto_increment,
-				  `name` varchar(64) NOT NULL default '',
-				  `input_type` enum('text','textarea','checkbox','radio','select','multiple','file','divider','item') NOT NULL default 'text',
-				  `field_values` text NOT NULL,
-				  `default_value` varchar(32) NOT NULL default '',
-				  `size` int(11) NOT NULL default '0',
-				  `categories` text NOT NULL,
-				  `importance` int(11) NOT NULL default '0',
-				  `highlight` INT( 1 ) DEFAULT '0' NOT NULL,
-				  UNIQUE KEY `id` (`id`)
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_fields') . " (
+				  " . $db->quoteIdentifier('id') . " int(11) NOT NULL auto_increment,
+				  " . $db->quoteIdentifier('name') . " varchar(64) NOT NULL default '',
+				  " . $db->quoteIdentifier('input_type') . " enum('text','textarea','checkbox','radio','select','multiple','file','divider','item') NOT NULL default 'text',
+				  " . $db->quoteIdentifier('field_values') . " text NOT NULL,
+				  " . $db->quoteIdentifier('default_value') . " varchar(32) NOT NULL default '',
+				  " . $db->quoteIdentifier('size') . " int(11) NOT NULL default '0',
+				  " . $db->quoteIdentifier('categories') . " text NOT NULL,
+				  " . $db->quoteIdentifier('importance') . " int(11) NOT NULL default '0',
+				  " . $db->quoteIdentifier('highlight') . " INT( 1 ) DEFAULT '0' NOT NULL,
+				  UNIQUE KEY " . $db->quoteIdentifier('id') . " (" . $db->quoteIdentifier('id') . ")
 				)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "CREATE TABLE `anyInventory_items` (
-				  `id` int(11) NOT NULL auto_increment,
-				  `item_category` int(11) NOT NULL default '0',
-				  `name` varchar(64) NOT NULL default '',
-				  UNIQUE KEY `id` (`id`)
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_items') . " (
+				  " . $db->quoteIdentifier('id') . " int(11) NOT NULL auto_increment,
+				  " . $db->quoteIdentifier('item_category') . " int(11) NOT NULL default '0',
+				  " . $db->quoteIdentifier('name') . " varchar(64) NOT NULL default '',
+				  UNIQUE KEY " . $db->quoteIdentifier('id') . " (" . $db->quoteIdentifier('id') . ")
 				)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "CREATE TABLE `anyInventory_values` (
-					`item_id` int( 11 ) NOT NULL default '0',
-					`field_id` int( 11 ) NOT NULL default '0',
-					`value` text NOT NULL ,
-					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_values') . " (
+					" . $db->quoteIdentifier('item_id') . " int( 11 ) NOT NULL default '0',
+					" . $db->quoteIdentifier('field_id') . " int( 11 ) NOT NULL default '0',
+					" . $db->quoteIdentifier('value') . " text NOT NULL ,
+					UNIQUE KEY " . $db->quoteIdentifier('item_id') . " ( " . $db->quoteIdentifier('item_id') . " , " . $db->quoteIdentifier('field_id') . " )
 					)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "CREATE TABLE `anyInventory_files` (
-					`id` INT NOT NULL AUTO_INCREMENT ,
-					`key_value` INT NOT NULL ,
-					`file_name` VARCHAR( 255 ) NOT NULL ,
-					`file_size` INT NOT NULL ,
-					`file_type` VARCHAR( 32 ) NOT NULL ,
-					`offsite_link` VARCHAR( 255 ) NOT NULL,
-					UNIQUE KEY `id` (`id`))";
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_files') . " (
+					" . $db->quoteIdentifier('id') . " INT NOT NULL AUTO_INCREMENT ,
+					" . $db->quoteIdentifier('key_value') . " INT NOT NULL ,
+					" . $db->quoteIdentifier('file_name') . " VARCHAR( 255 ) NOT NULL ,
+					" . $db->quoteIdentifier('file_size') . " INT NOT NULL ,
+					" . $db->quoteIdentifier('file_type') . " VARCHAR( 32 ) NOT NULL ,
+					" . $db->quoteIdentifier('offsite_link') . " VARCHAR( 255 ) NOT NULL,
+					UNIQUE KEY " . $db->quoteIdentifier('id') . " (" . $db->quoteIdentifier('id') . "))";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "CREATE TABLE `anyInventory_alerts` (
-					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
-					`item_ids` text NOT NULL ,
-					`title` varchar( 255 ) NOT NULL default '',
-					`field_id` int( 11 ) NOT NULL default '0',
-					`condition` enum( '==', '!=', '<', '>', '<=', '>=' ) NOT NULL default '==',
-					`value` varchar( 255 ) NOT NULL default '',
-					`modified` timestamp( 14 ) NOT NULL ,
-					`time` timestamp( 14 ) NOT NULL ,
-					`expire_time` timestamp( 14 ) NOT NULL ,
-				 	`timed` INT( 1 ) DEFAULT '0' NOT NULL,
-					`category_ids` TEXT NOT NULL,
-					UNIQUE KEY `id` ( `id` )
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_alerts') . " (
+					" . $db->quoteIdentifier('id') . " int( 11 ) NOT NULL AUTO_INCREMENT ,
+					" . $db->quoteIdentifier('item_ids') . " text NOT NULL ,
+					" . $db->quoteIdentifier('title') . " varchar( 255 ) NOT NULL default '',
+					" . $db->quoteIdentifier('field_id') . " int( 11 ) NOT NULL default '0',
+					" . $db->quoteIdentifier('condition') . " enum( '==', '!=', '<', '>', '<=', '>=' ) NOT NULL default '==',
+					" . $db->quoteIdentifier('value') . " varchar( 255 ) NOT NULL default '',
+					" . $db->quoteIdentifier('modified') . " timestamp( 14 ) NOT NULL ,
+					" . $db->quoteIdentifier('time') . " timestamp( 14 ) NOT NULL ,
+					" . $db->quoteIdentifier('expire_time') . " timestamp( 14 ) NOT NULL ,
+				 	" . $db->quoteIdentifier('timed') . " INT( 1 ) DEFAULT '0' NOT NULL,
+					" . $db->quoteIdentifier('category_ids') . " TEXT NOT NULL,
+					UNIQUE KEY " . $db->quoteIdentifier('id') . " ( " . $db->quoteIdentifier('id') . " )
 					)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "CREATE TABLE `anyInventory_users` (
-					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
-					`username` varchar(32) NOT NULL default '',
-					`password` varchar(32) NOT NULL default '',
-					`usertype` ENUM( 'User', 'Administrator' ) DEFAULT 'User' NOT NULL,
-					`categories_view` text NOT NULL ,
-					`categories_admin` text NOT NULL ,
-					UNIQUE KEY `id` ( `id` ),
-					UNIQUE KEY `username` (`username`)
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_users') . " (
+					" . $db->quoteIdentifier('id') . " int( 11 ) NOT NULL AUTO_INCREMENT ,
+					" . $db->quoteIdentifier('username') . " varchar(32) NOT NULL default '',
+					" . $db->quoteIdentifier('password') . " varchar(32) NOT NULL default '',
+					" . $db->quoteIdentifier('usertype') . " ENUM( 'User', 'Administrator' ) DEFAULT 'User' NOT NULL,
+					" . $db->quoteIdentifier('categories_view') . " text NOT NULL ,
+					" . $db->quoteIdentifier('categories_admin') . " text NOT NULL ,
+					UNIQUE KEY " . $db->quoteIdentifier('id') . " ( " . $db->quoteIdentifier('id') . " ),
+					UNIQUE KEY " . $db->quoteIdentifier('username') . " (" . $db->quoteIdentifier('username') . ")
 					)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
 		$admin_user_id = get_unique_id('anyInventory_users');
 		
-		$query = "INSERT INTO `anyInventory_users` (`id`,`username`,`password`,`usertype`,`categories_admin`,`categories_view`) VALUES (?, ?, ?, ?, ?, ?)";
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_users') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('username') . "," . $db->quoteIdentifier('password') . "," . $db->quoteIdentifier('usertype') . "," . $db->quoteIdentifier('categories_admin') . "," . $db->quoteIdentifier('categories_view') . ") VALUES (?, ?, ?, ?, ?, ?)";
 		$query_data = array($admin_user_id,$_POST["username"],md5($_POST["password"]),'Administrator',serialize($blank),serialize($blank));
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "CREATE TABLE `anyInventory_config` (
-					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
-					`key_value` varchar( 64 ) NOT NULL default '',
-					`value` text NOT NULL ,
-					UNIQUE KEY `id` ( `id` ),
-					UNIQUE KEY `key_value` ( `key_value` )
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_config') . " (
+					" . $db->quoteIdentifier('id') . " int( 11 ) NOT NULL AUTO_INCREMENT ,
+					" . $db->quoteIdentifier('key_value') . " varchar( 64 ) NOT NULL default '',
+					" . $db->quoteIdentifier('value') . " text NOT NULL ,
+					UNIQUE KEY " . $db->quoteIdentifier('id') . " ( " . $db->quoteIdentifier('id') . " ),
+					UNIQUE KEY " . $db->quoteIdentifier('key_value') . " ( " . $db->quoteIdentifier('key_value') . " )
 					)";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "INSERT INTO `anyInventory_config` (`id`,`key_value`,`value`) VALUES (?, ?, ?)";
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key_value') . "," . $db->quoteIdentifier('value') . ") VALUES (?, ?, ?)";
 		$pquery = $db->prepare($query);
 		
 		$query_data = array(get_unique_id('anyInventory_config'),'AUTO_INC_FIELD_NAME','anyInventory ID');

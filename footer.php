@@ -5,7 +5,7 @@
 				<td>
 					 <?php echo FOOTER_TEXT_PRE; ?> <b><?php
 					
-					$query = "SELECT `id` FROM `anyInventory_items`";
+					$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . "";
 					$result = $db->query($query);
 					if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 					

@@ -15,7 +15,7 @@ class user {
 		
 		$this->id = $user_id;
 		
-		$query = "SELECT * FROM `anyInventory_users` WHERE `id` = ?";
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_users') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -110,7 +110,7 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$this->categories_view[] = $category_id;
 			
-			$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id`= ?";
+			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . " = ? WHERE " . $db->quoteIdentifier('id') . "= ?";
 			#$query_data = array(addslashes(serialize($this->categories_view)),$this->id);
 			$query_data = array(serialize($this->categories_view),$this->id);
 			$pquery = $db->prepare($query);
@@ -125,7 +125,7 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$this->categories_admin[] = $category_id;
 			
-			$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
+			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
 			#$query_data = array(addslashes(serialize($this->categories_admin)),$this->id);
 			$query_data = array(serialize($this->categories_admin),$this->id);
 			$pquery = $db->prepare($query);
@@ -145,7 +145,7 @@ class user {
 				
 				$this->categories_view = array_unique($this->categories_view);
 				
-				$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id` = ?";
+				$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
 				#$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
 				$query_data = array(serialize($this->categories_view), $this->id);
 				$pquery = $db->prepare($query);
@@ -166,7 +166,7 @@ class user {
 				
 				$this->categories_admin = array_unique($this->categories_admin);
 				
-				$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
+				$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
 				#$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
 				$query_data = array(serialize($this->categories_admin), $this->id);
 				$pquery = $db->prepare($query);
@@ -181,7 +181,7 @@ class user {
 		
 		$this->categories_view = $category_ids;
 		
-		$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id` = ?";
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
 		$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -193,7 +193,7 @@ class user {
 		
 		$this->categories_admin = $category_ids;
 		
-		$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
 		$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);

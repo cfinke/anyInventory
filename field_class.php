@@ -19,7 +19,7 @@ class field {
 		$this->id = $field_id;
 		
 		// Get the information about this field.
-		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`= ?";
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('id') . "= ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -90,7 +90,7 @@ class field {
 		
 		if ($this->input_type != 'divider'){
 			if (is_array($cat_ids)){
-				$query = "UPDATE `anyInventory_fields` SET `categories` = ? WHERE `id` = ?";
+				$query = "UPDATE " . $db->quoteIdentifier('anyInventory_fields') . " SET " . $db->quoteIdentifier('categories') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
 				$query_data = array(serialize($cat_ids),$this->id);
 				$pquery = $db->prepare($query);
 				$result = $db->execute($pquery, $query_data);

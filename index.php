@@ -28,7 +28,7 @@ if ($_GET["id"]){
 	
 	$output .= $item->export_description();
 	
-	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE ? AND `time` <= ? AND (`expire_time` >= ? OR `expire_time` = ?)";
+	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('field_id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('item_ids') . " LIKE ? AND " . $db->quoteIdentifier('time') . " <= ? AND (" . $db->quoteIdentifier('expire_time') . " >= ? OR " . $db->quoteIdentifier('expire_time') . " = ?)";
 	$query_data = array('%"'.$item->id.'"%',date("YmdHis"),date("YmdHis"),'00000000000000');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -108,7 +108,7 @@ else{
 			</tr>';
 	
 	// Display any items in this category.
-	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`= ? ORDER BY `name` ASC";
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "= ? ORDER BY " . $db->quoteIdentifier('name') . " ASC";
 	$query_data = array($category->id);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -158,7 +158,7 @@ else{
 		</td>
 		<td style="padding-left: 5px;">';
 	
-	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= ? AND (`expire_time` >= ? OR `expire_time` = ?)";
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('time') . " <= ? AND (" . $db->quoteIdentifier('expire_time') . " >= ? OR " . $db->quoteIdentifier('expire_time') . " = ?)";
 	$query_data = array(date("YmdHis"),date("YmdHis"),'00000000000000');
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);

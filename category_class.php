@@ -30,7 +30,7 @@ class category {
 			// Not the Top Level
 			
 			// Get all of the information about this category from the categories table.
-			$query = "SELECT `name`,`parent`,`auto_inc_field` FROM `anyInventory_categories` WHERE `id`= ?";
+			$query = "SELECT " . $db->quoteIdentifier('name') . "," . $db->quoteIdentifier('parent') . "," . $db->quoteIdentifier('auto_inc_field') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "= ?";
 			$query_data = array($this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
@@ -72,7 +72,7 @@ class category {
 					}
 					else{
 						// Find the name of the current category
-						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`= ?";
+						$query  = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "= ?";
 						$query_data = array($crumb);
 						$pquery = $db->prepare($query);
 						$result = $db->execute($pquery, $query_data);
@@ -88,7 +88,7 @@ class category {
 			$this->breadcrumb_names = substr($this->breadcrumb_names, 0, strlen($this->breadcrumb_names) - 3);
 			
 			// Get all of the fields that this category uses.
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE ? OR `input_type`= ? ORDER BY `importance` ASC";
+			$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('categories') . " LIKE ? OR " . $db->quoteIdentifier('input_type') . "= ? ORDER BY " . $db->quoteIdentifier('importance') . " ASC";
 			$query_data = array('%"'.$this->id.'"%', 'divider');
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
@@ -110,7 +110,7 @@ class category {
 			$this->breadcrumb_names = TOP_LEVEL_CATEGORY;
 			
 			// Get the fields that the Top Level uses.
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE ?  OR `input_type`= ? ORDER BY `importance`";
+			$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('categories') . " LIKE ?  OR " . $db->quoteIdentifier('input_type') . "= ? ORDER BY " . $db->quoteIdentifier('importance') . "";
 			$query_data = array('%"0"%','divider');
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
@@ -124,7 +124,7 @@ class category {
 		}
 		
 		// Find the children of the current category
-		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = ? ORDER BY `name` ASC";
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . " = ? ORDER BY " . $db->quoteIdentifier('name') . " ASC";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data); 
@@ -143,7 +143,7 @@ class category {
 	function num_items(){
 		global $db;
 		
-		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`= ?";
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "= ?";
 		$query_data = array($this->id);
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -194,7 +194,7 @@ class category {
 		}
 		else{
 			// Get the parent from the categories table.
-			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id` = ?";
+			$query = "SELECT " . $db->quoteIdentifier('parent') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
 			$query_data = array($cat_id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);

@@ -101,8 +101,15 @@ else{
 	$output .= '<h2>Search Results</h2>';
 	$query = "SELECT `id`,`item_category` FROM `anyInventory_items` WHERE 1 ";
 	
-	if (trim($_REQUEST["name"]) != ''){
-		$query .= " AND `name` LIKE '%".$_REQUEST["name"]."%' ";
+	if ($_REQUEST["name"] != ''){
+		$name_parts = explode(" ",$_REQUEST["name"]);
+		$query .= " AND (";
+		
+		foreach($name_parts as $name_part){
+			$query .= " (`name` LIKE '%".$name_part."%') AND ";
+		}
+		
+		$query = substr($query, 0, strlen($query) - 5) . ") ";
 	}
 	
 	foreach($_REQUEST as $key => $value){

@@ -13,7 +13,7 @@ DONE - Searching within multiple categories
 
 BEFORE 1.4
 ===================
-Alerts
+DONE - Alerts
 
 BEFORE 1.5
 ===================

@@ -286,6 +286,38 @@ class item {
 		
 		return $output;
 	}
+	
+	function delete_self(){
+		global $admin_user;
+		
+		if (!$admin_user->can_admin($item->category->id)){
+			header("Location: ../error_handler.php?eid=13");
+			exit;
+		}
+		
+		if (is_array($this->files)){
+			foreach($this->files as $file){
+				$file->delete_self();
+			}
+		}
+
+		// Remove this item from any alerts		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$this->id."\"%'";
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		while ($row = mysql_fetch_array($result)){
+			$alert = new alert($row["id"]);
+			
+			$alert->remove_item($this->id);
+		}
+		
+		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$this->id."'";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	
+		return;
+	}
 }
 
 ?>

@@ -291,13 +291,14 @@ elseif($_POST["action"] == "do_edit"){
 				}
 				else{
 					$query = "UPDATE `anyInventory_values` SET `value`=";
+					$query_data = '';
 					
 					if ($field->input_type == "multiple"){
 						if ($_POST[str_replace(" ","_",$field->name)."_text"] == ""){
-							$query .= "'".$_POST[str_replace(" ","_",$field->name)."_select"]."'";
+							$query_data .= "'".$_POST[str_replace(" ","_",$field->name)."_select"]."'";
 						}
 						else{
-							$query .= "'".$_POST[str_replace(" ","_",$field->name)."_text"]."'";
+							$query_data .= "'".$_POST[str_replace(" ","_",$field->name)."_text"]."'";
 						}
 					}
 					elseif($field->input_type == "checkbox"){
@@ -307,26 +308,31 @@ elseif($_POST["action"] == "do_edit"){
 							}
 							
 							$_POST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
-							$query .= "'".$_POST[str_replace(" ","_",$field->name)]."'";
+							$query_data .= "'".$_POST[str_replace(" ","_",$field->name)]."'";
 						}
 						else{
-							$query .= "''";
+							$query_data .= "''";
 						}
 					}
 					elseif($field->input_type == 'item'){
 						if (is_array($_POST[str_replace(" ","_",$field->name)])){
-							$query .= "'".addslashes(serialize($_POST[str_replace(" ","_",$field->name)]))."'";
+							$query_data .= "'".addslashes(serialize($_POST[str_replace(" ","_",$field->name)]))."'";
 						}
 						else{
-							$query .= "'".addslashes(serialize(array()))."'";
+							$query_data .= "'".addslashes(serialize(array()))."'";
 						}
 					}
 					else{
-						$query .= "'".$_POST[str_replace(" ","_",$field->name)]."'";
+						$query_data .= "'".$_POST[str_replace(" ","_",$field->name)]."'";
 					}
 					
-					$query .= " WHERE `item_id`='".$item->id."' AND `field_id`='".$field->id."'";
+					$query .= $query_data." WHERE `item_id`='".$item->id."' AND `field_id`='".$field->id."'";
 					$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+					
+					if (mysql_affected_rows() == 0){
+						$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$item->id."','".$field->id."',".$query_data.")";
+						@mysql_query($query);
+					}
 				}
 			}
 		}
@@ -352,51 +358,7 @@ elseif($_POST["action"] == "do_delete"){
 	if ($_POST["delete"] == _DELETE){
 		$item = new item($_POST["id"]);
 		
-		if (!$admin_user->can_admin($item->category->id)){
-			header("Location: ../error_handler.php?eid=13");
-			exit;
-		}
-		
-		if (is_array($item->files)){
-			foreach($item->files as $file){
-				if (!$file->is_remote){
-					if (unlink(realpath($DIR_PREFIX."item_files/")."/".$file->file_name)){
-						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-						mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-					}
-					else{
-						echo "Could not delete ".$file->file_name.'<br />';
-						exit;
-					}
-				}
-				else{
-					$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-					mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-				}
-			}
-		}
-		
-		// Remove this item from any alerts
-		
-		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		
-		while ($row = mysql_fetch_array($result)){
-			$alert = new alert($row["id"]);
-			
-			$alert->remove_item($item->id);
-			
-			if (count($alert->item_ids) == 0){
-				$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-				mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-			}
-		}
-		
-		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$item->id."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		
-		$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$item->id."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$item->delete_self();
 	}
 }
 

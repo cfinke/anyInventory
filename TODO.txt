@@ -22,12 +22,11 @@ DONE - Labels
 BEFORE 1.6
 ===================
 DONE - Timed Alerts
-DREW - Thumbnails of remote images
 DONE - Add input type of "File" to replace generic file uploads and remote files
 
 BEFORE 1.7
 ===================
-Get more information out of remote files
+DREW - Thumbnails of remote images
 Internal password protection
 
 BEFORE 1.8

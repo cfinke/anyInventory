@@ -121,20 +121,22 @@ elseif($_REQUEST["action"] == "do_edit"){
 elseif($_REQUEST["action"] == "do_delete"){
 	// Delete a field.
 	
-	// Create an object of the field.
-	$field = new field($_REQUEST["id"]);
-	
-	// Change the importance of the fields below it.
-	$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` + 1) WHERE `importance` < '".$field->importance."'";
-	$result = query($query);
-	
-	// Remove the field from the items table
-	$query = "ALTER TABLE `anyInventory_items` DROP `".$field->name."`";
-	$result = query($query);
-	
-	// Delete the field 
-	$query = "DELETE FROM `anyInventory_fields` WHERE `id`='".$field->id."'";
-	$result = query($query);
+	if ($_REQUEST["delete"] == "Delete"){
+		// Create an object of the field.
+		$field = new field($_REQUEST["id"]);
+		
+		// Change the importance of the fields below it.
+		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` + 1) WHERE `importance` < '".$field->importance."'";
+		$result = query($query);
+		
+		// Remove the field from the items table
+		$query = "ALTER TABLE `anyInventory_items` DROP `".$field->name."`";
+		$result = query($query);
+		
+		// Delete the field 
+		$query = "DELETE FROM `anyInventory_fields` WHERE `id`='".$field->id."'";
+		$result = query($query);
+	}
 }
 elseif($_REQUEST["action"] == "moveup"){
 	// Move a field up

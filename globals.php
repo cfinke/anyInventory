@@ -15,4 +15,6 @@ $db_name = '';
 $db_user = '';
 $db_pass = '';
 
+include($DIR_PREFIX."environment.php");
+
 ?>

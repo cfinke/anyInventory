@@ -101,6 +101,9 @@ else{
 					}
 					
 					break;
+				case 'file':
+					$output .= '<input type="file" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" /> or <input type="text" name="'.str_replace(" ","_",$field->name).'remote" id="'.str_replace(" ","_",$field->name).'remote" value="http://" />';
+					break;
 			}
 			
 			$output .= '</td>
@@ -109,14 +112,6 @@ else{
 	}
 	
 	$output .= '
-					<tr>
-						<td class="form_label">File:</td>
-						<td class="form_input"><input type="file" name="file" id="file" /></td>
-					</tr>
-					<tr>
-						<td class="form_label">Remote file:<br /><small><a href="../docs/items.php#remote_files">What is this?</a></small></td>
-						<td class="form_input"><input type="text" name="remote_file" id="remote_file" /></td>
-					</tr>
 					<tr>
 						<td class="form_label">&nbsp;</td>
 						<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>

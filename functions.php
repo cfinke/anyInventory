@@ -246,6 +246,9 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 	// This function returns the MySQL column type for a new field.
 	
 	switch($input_type){
+		case 'file':
+			$type = " INT ";
+			break;
 		case 'checkbox':
 			$type = " TEXT ";
 			break;

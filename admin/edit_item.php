@@ -81,6 +81,15 @@ if (is_array($item->category->field_ids)){
 				}
 				
 				break;
+			case 'file':
+				if (is_array($item->fields[$field->name]) && ($item->fields[$field->name]["file_id"] > 0)){
+					$file = new file_object($item->fields[$field->name]["file_id"]);
+					$output .= '<input type="checkbox" name="delete_files[]" value="'.$file->id.'" /> Delete this file: '.$file->get_download_link().'';
+					if ($file->has_thumbnail()) $output .= '<br /><img src="'.$DIR_PREFIX.'thumbnail.php?id='.$file->id.'" />';
+					$output .= '<br /><br />Replace file: ';
+				}
+				
+				$output .= '<input type="file" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" /> or <input type="text" name="'.str_replace(" ","_",$field->name).'remote" id="'.str_replace(" ","_",$field->name).'remote" value="http://" />';
 		}
 		
 		$output .= '</td>
@@ -88,30 +97,7 @@ if (is_array($item->category->field_ids)){
 	}
 }
 
-if (is_array($item->files) && (count($item->files) > 0)){
-	$output .= '
-				<tr>
-					<td class="form_label">Files:</td>
-					<td class="form_input">';
-	
-	foreach($item->files as $file){
-		$output .= '<p><input type="checkbox" name="delete_files[]" value="'.$file->id.'" /> Delete this file: '.$file->get_download_link().'';
-		if ($file->has_thumbnail()) $output .= '<br /><img src="'.$DIR_PREFIX.'thumbnail.php?id='.$file->id.'" />';
-		$output .= '</p>';
-	}
-	
-	$output .= '</td></tr>';
-}
-
 $output .= '
-				<tr>
-					<td class="form_label">Upload Additional File:</td>
-					<td class="form_input"><input type="file" name="file" id="file" /></td>
-				</tr>
-				<tr>
-					<td class="form_label">Add Additional Remote File:</td>
-					<td class="form_input"><input type="text" name="remote_file" id="remote_file" /></td>
-				</tr>
 				<tr>
 					<td class="form_label">&nbsp;</td>
 					<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>

@@ -31,7 +31,10 @@ class item {
 			foreach($this->category->field_ids as $field_id){
 				$field = new field($field_id);
 				
-				if ($field->input_type != "checkbox"){
+				if ($field->input_type == 'file'){
+					$this->fields[$field->name] = array("is_file"=>true,"file_id"=>$row[$field->name]);
+				}
+				elseif ($field->input_type != "checkbox"){
 					$this->fields[$field->name] = $row[$field->name];
 				}
 				else{
@@ -86,7 +89,25 @@ class item {
 			$i = 0;
 			foreach($this->fields as $key => $value){
 				if (is_array($value)){
-					if (count($value) > 0){
+					if ($value["is_file"] == true){
+						if ($value["file_id"] > 0){
+							$output .= '<p><b>'.$key.':</b> ';
+							
+							$file = new file_object($value["file_id"]);
+							
+							if ($file->is_image()){
+								$output .= '<a href="'.$file->web_path.'"><img src="';
+								if ($file->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$file->id;
+								else $output .= "item_files/no_thumb.gif";
+								
+								$output .= '" class="thumbnail" /></a><br style="clear: both;" />';
+							}
+							else{
+								$output .= $file->get_download_link();
+							}
+						}
+					}
+					elseif (count($value) > 0){
 						$output .= '<p><b>'.$key.':</b> ';
 						
 						foreach($value as $val){
@@ -109,6 +130,7 @@ class item {
 				</table>';
 		}
 		
+		/*
 		// Output a preview of each file.
 		if (is_array($this->files) && (count($this->files) > 0)){
 			foreach($this->files as $file){
@@ -144,6 +166,7 @@ class item {
 			}
 			
 		}
+		*/
 		
 		return $output;
 	}

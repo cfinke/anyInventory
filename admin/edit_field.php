@@ -8,8 +8,16 @@ $inHead = '
 		<!--
 		
 		function toggle(){
-			document.getElementById(\'values\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
-			document.getElementById(\'size\').disabled = !(document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
+			if (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'file\'){
+				document.getElementById(\'values\').disabled = true;
+				document.getElementById(\'default_value\').disabled = true;
+				document.getElementById(\'size\').disabled = true;
+			}
+			else{
+				document.getElementById(\'values\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
+				document.getElementById(\'size\').disabled = !(document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
+				document.getElementById(\'default_value\').disabled = false;	
+			}
 		}
 		
 		// -->
@@ -55,6 +63,7 @@ $output = '
 							<option value="multiple"';if($field->input_type == 'multiple') $output .= ' selected="selected"';$output.='>Multiple (Select + Text)</option>
 							<option value="checkbox"';if($field->input_type == 'checkbox') $output .= ' selected="selected"';$output.='>Checkboxes</option>
 							<option value="radio"';if($field->input_type == 'radio') $output .= ' selected="selected"';$output.='>Radio Buttons</option>
+							<option value="file"';if($field->input_type == 'file') $output .= ' selected="selected"';$output.='>File</option>
 						</select>
 					</td>
 				</tr>

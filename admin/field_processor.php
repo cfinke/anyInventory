@@ -140,6 +140,26 @@ elseif($_REQUEST["action"] == "do_delete"){
 		// Create an object of the field.
 		$field = new field($_REQUEST["id"]);
 		
+		if ($field->input_type == 'file'){
+			$query = "SELECT `".$field->name."` FROM `anyInventory_items` GROUP BY `".$field->name."`";
+			$result = query($query);
+			
+			while ($row = mysql_fetch_array($result)){
+				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row[$field->name]."'";
+				$newresult = query($newquery);
+				$newrow = mysql_fetch_array($newresult);
+				
+				$file = new file_object($newrow["id"]);
+				
+				if (!$file->is_remote && is_file($file->server_path)){
+					unlink($file->server_path);
+				}
+				
+				$newestquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+				query($newestquery);
+			}
+		}
+		
 		// Change the importance of the fields below it.
 		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` + 1) WHERE `importance` < '".$field->importance."'";
 		$result = query($query);

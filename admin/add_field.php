@@ -8,8 +8,16 @@ $inHead = '
 		<!--
 		
 		function toggle(){
-			document.getElementById(\'values\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
-			document.getElementById(\'size\').disabled = !(document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
+			if (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'file\'){
+				document.getElementById(\'values\').disabled = true;
+				document.getElementById(\'default_value\').disabled = true;
+				document.getElementById(\'size\').disabled = true;
+			}
+			else{
+				document.getElementById(\'values\').disabled = (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
+				document.getElementById(\'size\').disabled = !(document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == "text");
+				document.getElementById(\'default_value\').disabled = false;	
+			}
 		}
 		
 		// -->
@@ -34,6 +42,7 @@ $output = '
 						<option value="multiple">Multiple (Select + Text)</option>
 						<option value="checkbox">Checkboxes</option>
 						<option value="radio">Radio Buttons</option>
+						<option value="file">File</option>
 					</select>
 				</td>
 			</tr>

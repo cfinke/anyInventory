@@ -238,6 +238,12 @@ if ($_REQUEST["action"] == "upgrade"){
 						$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 					}
 				}
+			
+			case '1.7':
+				# Changes introduced in 1.8
+				
+				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'item' ) DEFAULT 'text' NOT NULL ";
+				@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.

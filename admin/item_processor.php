@@ -73,7 +73,7 @@ if ($_REQUEST["action"] == "do_add"){
 					// Determine what to do - is the remote file an image?
 					// $_REQUEST[str_replace(" ","_",$field->name)."remote"]  = remote filename
 					$remote_url = $_REQUEST[str_replace(" ","_",$field->name)."remote"];
-					if (url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
+					if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
 						// Remote URL is an image; download it and add it as a local image
 
 						// Make the correct extension
@@ -250,7 +250,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 					// Determine what to do - is the remote file an image?
 					// $_REQUEST[str_replace(" ","_",$field->name)."remote"]  = remote filename
 					$remote_url = $_REQUEST[str_replace(" ","_",$field->name)."remote"];
-					if (url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
+					if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
 						// Remote URL is an image; download it and add it as a local image
 
 						// Make the correct extension

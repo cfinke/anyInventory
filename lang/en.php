@@ -27,10 +27,6 @@ define('MONTH_10','October');
 define('MONTH_11','November');
 define('MONTH_12','December');
 
-// XML
-define('DOWNLOAD_LINK','download');
-define('DOWNLOAD_AS_XML','Download inventory as XML file');
-
 // General
 define('APP_TITLE','anyInventory');
 define('HOME','Home');
@@ -210,24 +206,15 @@ define('USER','User');
 define('ADMINISTRATOR','Administrator');
 define('EDIT_USER','Edit User');
 
+define('ON_SUBMIT','On Submit');
+define('ADD_ITEM_HERE','Add another item here');
+define('RETURN_TO_ITEMS','Return to items page');
+
 // Barcodes
-define('BARCODE_I25', '<p>Interleaved 2 of 5 (Code 25)</p>
-							<p>Interleaved 2 of 5 is a high density variable length numeric only symbology
-							  that encodes digit pairs in an interleaved manner. The odd position digits
-							  are encoded in the bars and the even position digits are encoded in the
-							  spaces. Because of this, I 2 of 5 bar codes must consist of an even number
-							  of digits. Also, because partial scans of I 2 of 5 bar codes have a slight
-							  chance of being decoded as a valid (but shorter) bar code, readers are
-							  usually set to read a fixed (even) number of digits when reading I 2 of
-							  5 symbols. The number of digits are usually pre-defined for a particular
-							  application and all readers used in the application are programmed to only
-							  accept I 2 of 5 bar codes of the chosen length. Shorter data can be left
-							  padded with zeros to fit the proper length. Interleaved 2 of 5 optionally
-							  allows for a weighted modulo 10 check character for special situations
-							  where data security is important. <br>
-							  anyInventory will pad out your number
-							  to even length using the pad char, but it will not add the check character
-							automatically. </p> ');
+define('BARCODE_I25', '
+	<p>Interleaved 2 of 5 (Code 25)</p>
+	<p>Interleaved 2 of 5 is a high density variable length numeric only symbology that encodes digit pairs in an interleaved manner. The odd position digits are encoded in the bars and the even position digits are encoded in the spaces. Because of this, I 2 of 5 bar codes must consist of an even number of digits. Also, because partial scans of I 2 of 5 bar codes have a slight chance of being decoded as a valid (but shorter) bar code, readers are usually set to read a fixed (even) number of digits when reading I 2 of 5 symbols. The number of digits are usually pre-defined for a particular application and all readers used in the application are programmed to only accept I 2 of 5 bar codes of the chosen length. Shorter data can be left padded with zeros to fit the proper length. Interleaved 2 of 5 optionally allows for a weighted modulo 10 check character for special situations where data security is important.</p><p>anyInventory will pad out your number to even length using the pad char, but it will not add the check character automatically.</p>');
+
 define('BARCODE_C39', '<p>Code 39</p>
 							<p>Code 39 is a variable length symbology that can encode the
 							  following 44 characters: 1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%.
@@ -259,4 +246,7 @@ define('BARCODE_FOOTER', 'Check Digit Requirement - in Code 128, The modulo 103 
 						is required and it is only encoded in the bar code. The check digit should never
 						appear in human the readable interpretation below the bar code. anyInventory
 							  will automatically add a check digit to your Code 128 barcodes.');
+
+
+
 ?>

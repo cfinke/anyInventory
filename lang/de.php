@@ -27,10 +27,6 @@ define('MONTH_10','Oktober');
 define('MONTH_11','November');
 define('MONTH_12','Dezember');
 
-// XML
-define('DOWNLOAD_LINK','download');
-define('DOWNLOAD_AS_XML','Download der Inventar-Einträge als XML file');
-
 // General
 define('APP_TITLE','anyInventory');
 define('HOME','Home');
@@ -200,6 +196,10 @@ define('EDIT_PASSWORD_INFO','Wenn Sie kein neues Passwort eingeben bleibt das al
 define('USER','Benutzer');
 define('ADMINISTRATOR','Administrator');
 define('EDIT_USER','Benutzer editieren');
+
+define('ON_SUBMIT','On Submit');
+define('ADD_ITEM_HERE','Add another item here');
+define('RETURN_TO_ITEMS','Return to items page');
 
 // Barcodes
 define('BARCODE_I25', '<p>Interleaved 2 of 5 (Code 25)</p>

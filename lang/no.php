@@ -28,10 +28,6 @@ define('MONTH_10','Oktober');
 define('MONTH_11','November');
 define('MONTH_12','Desember');
 
-// XML
-define('DOWNLOAD_LINK','last ned');
-define('DOWNLOAD_AS_XML','Last ned lagerliste som XML fil');
-
 // General
 define('APP_TITLE','anyInventory');
 define('HOME','Hjem');
@@ -201,6 +197,10 @@ define('EDIT_PASSWORD_INFO','Hvis du ikke skriver nytt passord vil passordet for
 define('USER','Bruker');
 define('ADMINISTRATOR','Administrator');
 define('EDIT_USER','Rediger bruker');
+
+define('ON_SUBMIT','On Submit');
+define('ADD_ITEM_HERE','Add another item here');
+define('RETURN_TO_ITEMS','Return to items page');
 
 // Barcodes
 define('BARCODE_I25', '<p>Interleaved 2 of 5 (Code 25)</p>

@@ -15,7 +15,7 @@ if (!function_exists('imagecreate') ||
 	display($output);
 }
 
-define('FPDF_FONTPATH','font/');
+define('FPDF_FONTPATH','barcode/');
 
 require_once("fpdf/fpdf.php");
 require_once("label_templates.php");

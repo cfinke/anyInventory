@@ -173,20 +173,20 @@ else{
 	
 	$output .= '
 								<tr>
-									<td class="form_label">On Submit:</td>
+									<td class="form_label">'.ON_SUBMIT.':</td>
 									<td class="form_input"><input type="radio" name="on_submit" value="add_another" ';
 	
 	if($_SESSION["ai_options"]["on_submit"] == 'add_another'){
 		$output .= ' checked="checked"';
 	}
 	
-	$output .= ' />Add another item here <input type="radio" name="on_submit" value="return" ';
+	$output .= ' />'.ADD_ITEM_HERE.' <input type="radio" name="on_submit" value="return" ';
 	
 	if($_SESSION["ai_options"]["on_submit"] == 'return'){
 		$output .= ' checked="checked"';
 	}
 	
-	$output .= ' /> Return to Items page</td>
+	$output .= ' /> '.RETURN_TO_ITEMS.'</td>
 								</tr>
 								<tr>
 									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>

@@ -771,4 +771,35 @@ function incision_sort($arr, $col){
 	return $arr;
 }
 
+function write_file_to_db($file_id, $string){
+	global $db;
+	
+	$file_data = base64_encode($string);
+	
+	$bookmark = 0;
+	$part_id = 0;
+	
+	$length = strlen($file_data);
+	
+	// Write the data in chunks of 100000 to the database to avoid
+	// the max_packet_size error.
+	
+	while ($bookmark < $length){
+		$bodypart = substr($file_data,$bookmark,100000);
+		
+		if (strlen($bodypart) > 0){
+			$query = "INSERT INTO " . $db->quoteIdentifier("anyInventory_file_data") . "
+						(" . $db->quoteIdentifier("file_id") . "," . $db->quoteIdentifier("part_id") . "," . $db->quoteIdentifier("data") . ")
+						VALUES 
+						('".$file_id."',
+						 ".$part_id++.",
+						 '".$db->escapeSimple($bodypart)."')";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		}
+		
+		$bookmark += 100000;
+	}
+}
+
 ?>

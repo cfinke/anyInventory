@@ -75,14 +75,13 @@ class alert {
 	}
 	
 	function remove_category($category_id){
-		// Make a copy of the $item_ids array because remove_item modifies it
-		$temp_item_ids = $this->item_ids;
+		$query = "SELECT " . $db->quoteIdentifier("id") . ", " . $db->quoteIdentifier("category_id") . " FROM " . $db->quoteIdentifier("anyInventory_items") . " WHERE " . $db->quoteIdentifier("id") . " IN ('".implode("','", $this->item_ids)."')";
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		foreach($temp_item_ids as $item_id){
-			$item = new item($item_id);
-			
-			if ($item->category->id == $category_id){
-				$this->remove_item($item->id);
+		while ($row = $result->fetchRow()){
+			if ($row["category_id"] == $category_id){
+				$this->remove_item($row["id"]);
 			}
 		}
 		
@@ -123,9 +122,12 @@ class alert {
 								<td>';
 		
 		if (is_array($this->item_ids)){
-			foreach($this->item_ids as $item_id){
-				$item = new item($item_id);
-				$output .= $item->export_teaser().'<br />';
+			$query = "SELECT " . $db->quoteIdentifier("id") . ", " . $db->quoteIdentifier("category_id") . ", " . $db->quoteIdentifier("name") . " FROM " . $db->quoteIdentifier("anyInventory_items") . " WHERE " . $db->quoteIdentifier("id") . " IN ('".implode("','", $this->item_ids)."')";
+			$result = $db->query($query);
+			if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			while ($row = $result->fetchRow()){
+				$output .= '<a href="'.$DIR_PREFIX.'index.php?c='.$row["category_id"].'&amp;id='.$row["id"].'" style="text-decoration: none;"><b>'.$row["name"].'</b></a>';
 			}
 		}
 		
@@ -135,9 +137,12 @@ class alert {
 							<td class="form_label">'.ACTIVE_WHEN.':</td>
 							<td>';
 		
-		$field = new field($this->field_id);
+		$query = "SELECT " . $db->quoteIdentifier("name") . " FROM " . $db->quoteIdentifier("anyInventory_fields") . " WHERE " . $db->quoteIdentifier("id") . " = '".$this->field_id."'";
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$row = $result->fetchRow();
 		
-		$output .= $field->name." ";
+		$output .= $row["name"]." ";
 		$output .= $this->condition;
 		$output .= (trim($this->value) == '') ? " ''" : ' '.$this->value;
 		
@@ -178,8 +183,11 @@ class alert {
 		global $DIR_PREFIX;
 		
 		if ($item_id != null){
-			$item = new item($item_id);
-			$item_link = '<br /><a href="'.$DIR_PREFIX.'index.php?id='.$item->id.'">'.$item->name.'</a>';
+			$query = "SELECT " . $db->quoteIdentifier("name") . " FROM " . $db->quoteIdentifier("anyInventory_items") . " WHERE " . $db->quoteIdentifier("id") . " ='".$item_id."'";
+			$result = $db->query($query);
+			if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			$item_link = '<br /><a href="'.$DIR_PREFIX.'index.php?id='.$item_id.'">'.$row["name"].'</a>';
 		}
 		else{
 			$item_link = '';

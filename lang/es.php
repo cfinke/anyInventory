@@ -44,8 +44,6 @@ define('NAME','Nombre');
 define('EDIT_LINK','editar');
 define('DELETE_LINK','eliminar');
 define('TYPE','Tipo');
-define('DOWNLOAD_LINK','descagar');
-define('DOWNLOAD_AS_XML','Descargar el inventario en un archivo XML');
 define('SELECT_NONE','Ninguna selección');
 define('SUBMIT_REPORT','Tu puedes colaborar con el desarrollo de anyInventory al <a href="https://sourceforge.net/tracker/?func­d&amp;group_id.0239&amp;atide5777">enviar este error como un reporte de fallo</a>.');
 
@@ -196,6 +194,10 @@ define('EDIT_PASSWORD_INFO','Si no escribes una nueva contraseña, la usada actua
 define('USER','Usuario');
 define('ADMINISTRATOR','Administrador');
 define('EDIT_USER','Editar Usuarios');
+
+define('ON_SUBMIT','En Enviar');
+define('ADD_ITEM_HERE','Agregar un articulo mas aqui');
+define('RETURN_TO_ITEMS','Vueltar a la pagina de los articulos');
 
 // Barcodes
 define('BARCODE_I25', '<p>Interleaved 2 of 5 (Code 25)</p>

@@ -28,11 +28,6 @@ define('MONTH_10','Octobre');
 define('MONTH_11','Novembre');
 define('MONTH_12','D&#233;cembre');
 
-// XML
-
-define('DOWNLOAD_LINK','t&#233;l&#233;charger');
-define('DOWNLOAD_AS_XML','T&#233;l&#233;charger le fichier XML d&#146;inventaire');
-
 // General
 
 define('APP_TITLE','anyInventory');
@@ -211,6 +206,11 @@ define('EDIT_PASSWORD_INFO','Si vous n&#146;entrez pas un nouveau mot de passe, 
 define('USER','Utilisateur');
 define('ADMINISTRATOR','Administrateur');
 define('EDIT_USER','Editer l&#146;utilisateur');
+
+define('ON_SUBMIT','On Submit');
+define('ADD_ITEM_HERE','Add another item here');
+define('RETURN_TO_ITEMS','Return to items page');
+
 // Barcodes
 define('BARCODE_I25', '<p>Interleaved 2 of 5 (Code 25)</p>
 							<p>Interleaved 2 of 5 is a high density variable length numeric only symbology

@@ -4,6 +4,8 @@
 
 error_reporting(E_ALL ^ E_NOTICE);
 
+set_time_limit(0);
+
 require_once("DB.php");
 require_once("functions.php");
 require_once("category_class.php");
@@ -400,34 +402,30 @@ if ($_POST["action"] == "upgrade"){
 				
 				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('BAR_TEMPLATE', '6')";
 				$result = $db->query($query);
-				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('LABEL_PADDING', '12')";
 				$result = $db->query($query);
-				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('PAD_CHAR','0')";
 				$result = $db->query($query);
-				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('BARCODE','C128C')";
 				$result = $db->query($query);
-				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				// Create the file_data table.
 				if($_POST['db_type'] == 'oci8'){
 					$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
-						" . $db->quoteIdentifier('data_id') . " INT,
+						" . $db->quoteIdentifier('file_id') . " INT,
 						" . $db->quoteIdentifier('part_id') . " INT,
 						" . $db->quoteIdentifier('data') . " LONG,
-						CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . ")";
+						CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
 				}
 				elseif($_POST["db_type"] == 'mysql'){
 					$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
-						" . $db->quoteIdentifier('data_id') . " INT,
+						" . $db->quoteIdentifier('file_id') . " INT,
 						" . $db->quoteIdentifier('part_id') . " INT,
 						" . $db->quoteIdentifier('data') . " LONGTEXT,
-						CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . ")";
+						CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
 				}
 				$result = $db->query($query);
 				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
@@ -438,10 +436,16 @@ if ($_POST["action"] == "upgrade"){
 				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				while ($row = $result->fetchRow()){
-					write_file_to_db($row["key"],file_get_contents("item_files/".$row["file_name"]));
+					if ($row["offsite_link"] == ''){
+						$file_data = @file_get_contents("item_files/".$row["file_name"]);
+						
+						if ($file_data !== false){
+							write_file_to_db($row["key"],$file_data);
+						}
+					}
 				}
 				
-				@exec("rm -rf ".realpath("item_files/"));
+				@exec("rm -rf item_files");
 		}
 		
 		// Attempt to write the globals file.

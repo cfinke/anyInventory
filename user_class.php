@@ -31,7 +31,12 @@ class user {
 	}
 	
 	function can_admin($cat_id){
-		return (($cat_id == 0) || ($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_admin));
+		if (($cat_id == 0) && ($this->usertype != 'Administrator')){
+			return false;
+		}
+		else{
+			return (($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_admin));
+		}
 	}
 	
 	function can_admin_alert($alert_id){
@@ -69,7 +74,7 @@ class user {
 	}
 	
 	function get_admin_categories_options($selected = null, $multiple = true, $exclude = null){
-		if ($this->usertype == 'Administration'){
+		if ($this->usertype == 'Administrator'){
 			return get_category_options($selected, $multiple, $exclude);
 		}
 		else{
@@ -78,7 +83,7 @@ class user {
 	}
 	
 	function get_view_categories_options(){
-		if ($this->usertype == 'Administration'){
+		if ($this->usertype == 'Administrator'){
 			return get_category_options($selected);
 		}
 		else{
@@ -87,7 +92,7 @@ class user {
 	}
 	
 	function add_category_view($category_id){
-		if ($this->usertype != 'Administration'){
+		if ($this->usertype != 'Administrator'){
 			$this->categories_view[] = $category_id;
 			
 			$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
@@ -96,11 +101,41 @@ class user {
 	}
 	
 	function add_category_admin($category_id){
-		if ($this->usertype != 'Administration'){
+		if ($this->usertype != 'Administrator'){
 			$this->categories_admin[] = $category_id;
 			
 			$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
 			mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		}
+	}
+	
+	function remove_category_view($category_id){
+		if ($this->usertype != 'Administrator'){
+			$key = array_search($category_id, $this->categories_view);
+			
+			if ($key){
+				unset($this->categories_view[$key]);
+				
+				$this->categories_view = array_unique($this->categories_view);
+				
+				$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
+				mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+			}
+		}
+	}
+	
+	function remove_category_admin($category_id){
+		if ($this->usertype != 'Administrator'){
+			$key = array_search($category_id, $this->categories_admin);
+			
+			if ($key){
+				unset($this->categories_admin[$key]);
+				
+				$this->categories_admin = array_unique($this->categories_admin);
+				
+				$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
+				mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+			}
 		}
 	}
 	

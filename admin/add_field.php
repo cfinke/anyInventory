@@ -8,7 +8,7 @@ $inHead = '
 		<!--
 		
 		function toggle(){
-			if (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'file\'){
+			if ((document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'file\') || (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'item\')){
 				document.getElementById(\'values\').disabled = true;
 				document.getElementById(\'default_value\').disabled = true;
 				document.getElementById(\'size\').disabled = true;
@@ -52,6 +52,7 @@ $output .= '
 									<option value="multiple">Multiple (Select + Text)</option>
 									<option value="checkbox">Checkboxes</option>
 									<option value="radio">Radio Buttons</option>
+									<option value="item">Item(s)</option>
 									<option value="file">File</option>
 								</select>
 							</td>
@@ -81,7 +82,7 @@ $output .= '
 							</td>
 						</tr>
 						<tr>
-							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 						</tr>
 					</table>
 				</form>

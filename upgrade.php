@@ -312,6 +312,9 @@ if ($_POST["action"] == "upgrade"){
 				
 				$query = "ALTER TABLE `anyInventory_fields` DROP INDEX `name`";
 				@mysql_query($query);
+			case '1.8':
+				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider', 'item' ) DEFAULT 'text' NOT NULL ";
+				@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.

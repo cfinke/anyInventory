@@ -20,11 +20,17 @@ class user {
 		$this->username = $row["username"];
 		$this->usertype = $row["usertype"];
 		
-		$categories_view = unserialize($row["categories_view"]);
-		$categories_admin = unserialize($row["categories_admin"]);
-		
-		$this->categories_view = (is_array($categories_view)) ? $categories_view : array();
-		$this->categories_admin = (is_array($categories_admin)) ? $categories_admin : array();
+		if ($this->usertype == 'Administrator'){
+			$this->categories_view = get_category_id_array();
+			$this->categories_admin = get_category_id_array();
+		}
+		else{
+			$categories_view = unserialize($row["categories_view"]);
+			$categories_admin = unserialize($row["categories_admin"]);
+			
+			$this->categories_view = (is_array($categories_view)) ? $categories_view : array();
+			$this->categories_admin = (is_array($categories_admin)) ? $categories_admin : array();
+		}
 	}
 	
 	function can_view($cat_id){

@@ -45,7 +45,7 @@ switch($_GET["id"]){
 										</td>
 									</tr>
 									<tr>
-										<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+										<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 									</tr>
 								</table>
 							</td>
@@ -69,7 +69,7 @@ switch($_GET["id"]){
 									<td class="form_input"><textarea name="front_page_text" id="front_page_text" rows="8" cols="40" style="width: 100%;">'.FRONT_PAGE_TEXT.'</textarea></td>
 								</tr>
 								<tr>
-									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 								</tr>
 							</table>
 						</td>
@@ -97,7 +97,7 @@ switch($_GET["id"]){
 										<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',NAME_FIELD_NAME).'" maxlength="64" /></td>
 									</tr>
 									<tr>
-										<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+										<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 									</tr>
 								</table>
 							</td>

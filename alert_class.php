@@ -76,7 +76,7 @@ class alert {
 					<td class="tableData">
 						<table>
 							<tr>
-								<td class="form_label">Applies to:</td>
+								<td class="form_label">'.APPLIES_TO.':</td>
 								<td>';
 		
 		if (is_array($this->item_ids)){
@@ -89,7 +89,7 @@ class alert {
 		$output .= '</td>
 						</tr>
 						<tr>
-							<td class="form_label">Active when:</td>
+							<td class="form_label">'.ACTIVE_WHEN.':</td>
 							<td>';
 		
 		$field = new field($this->field_id);
@@ -101,7 +101,7 @@ class alert {
 		$output .= '</td>
 							</tr>
 							<tr>
-								<td class="form_label">Effective as of:</td>
+								<td class="form_label">'.EFFECTIVE_DATE.':</td>
 								<td>'.date("Y m d",$this->unix_time).'</td>
 							</tr>
 						</table>
@@ -128,7 +128,7 @@ class alert {
 			<table class="alertBox" cellspacing="0" cellpadding="2" border="0">
 				<tr class="alertTitle">
 					<td>
-						Alert
+						'.ALERT.'
 					</td>
 					<td style="text-align: right;">
 						<a href="'.$DIR_PREFIX.'docs/alerts.php">?</a>

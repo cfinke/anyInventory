@@ -3,6 +3,13 @@
 include("globals.php");
 
 $title = "anyInventory: Edit Item";
+$inHead = '
+	<script type="text/javascript">
+	   _editor_url = "../htmlarea/";
+	   _editor_lang = "en";
+	</script>
+	<script type="text/javascript" src="../htmlarea/htmlarea.js"></script>';
+$inBodyTag = ' onload="HTMLArea.replaceAll();"';
 $breadcrumbs = 'Administration > <a href="items.php">Items</a> > Edit Item';
 
 $item = new item($_GET["id"]);
@@ -77,7 +84,7 @@ if (is_array($item->category->field_ids)){
 					break;
 				case 'text':
 					if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
-					else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">'.$item->fields[$field->name].'</textarea>';
+					else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">'.$item->fields[$field->name].'</textarea>';
 					break;
 				case 'radio':
 					if (is_array($field->values)){
@@ -108,6 +115,26 @@ if (is_array($item->category->field_ids)){
 					}
 					
 					$output .= '<input type="file" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" /> or <input type="text" name="'.str_replace(" ","_",$field->name).'remote" id="'.str_replace(" ","_",$field->name).'remote" value="http://" />';
+					break;
+				case 'item':
+					$output .= '<select name="'.str_replace(" ","_",$field->name).'[]" id="'.str_replace(" ","_",$field->name).'[]" style="width: 100%;" multiple="multiple" size="10">';
+					
+					if (is_array($view_user->categories_view)){
+						foreach($view_user->categories_view as $cat_id){
+							$category = new category($cat_id);
+							
+							$options = get_item_options($cat_id, $item->fields[$field->name]);
+							
+							if ($options != ''){
+								$output .= '<optgroup label="'.$category->breadcrumb_names.'">';
+								$output .= $options;
+								$output .= '</optgroup>';
+							}
+						}
+					}
+					 
+					$output .= '</select>';
+					break;
 			}
 			
 			$output .= '</td>
@@ -118,7 +145,7 @@ if (is_array($item->category->field_ids)){
 
 $output .= '
 							<tr>
-								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 							</tr>
 						</table>
 					</td>

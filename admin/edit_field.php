@@ -13,7 +13,7 @@ $inHead = '
 		<!--
 		
 		function toggle(){
-			if (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'file\'){
+			if ((document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'file\') || (document.getElementById(\'input_type\').options[document.getElementById(\'input_type\').selectedIndex].value == \'item\')){
 				document.getElementById(\'values\').disabled = true;
 				document.getElementById(\'default_value\').disabled = true;
 				document.getElementById(\'size\').disabled = true;
@@ -58,6 +58,7 @@ $output = '
 										<option value="multiple"';if($field->input_type == 'multiple') $output .= ' selected="selected"';$output.='>Multiple (Select + Text)</option>
 										<option value="checkbox"';if($field->input_type == 'checkbox') $output .= ' selected="selected"';$output.='>Checkboxes</option>
 										<option value="radio"';if($field->input_type == 'radio') $output .= ' selected="selected"';$output.='>Radio Buttons</option>
+										<option value="item"';if($field->input_type == 'item') $output .= ' selected="selected"';$output.='>Item(s)</option>
 										<option value="file"';if($field->input_type == 'file') $output .= ' selected="selected"';$output.='>File</option>
 									</select>
 								</td>
@@ -94,7 +95,7 @@ $output = '
 								</td>
 							</tr>
 							<tr>
-								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 							</tr>
 						</table>
 					</td>

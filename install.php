@@ -118,7 +118,7 @@ if ($_POST["action"] == "install"){
 		$query = "CREATE TABLE `anyInventory_fields` (
 				  `id` int(11) NOT NULL auto_increment,
 				  `name` varchar(64) NOT NULL default '',
-				  `input_type` enum('text','textarea','checkbox','radio','select','multiple','file','divider') NOT NULL default 'text',
+				  `input_type` enum('text','textarea','checkbox','radio','select','multiple','file','divider','item') NOT NULL default 'text',
 				  `values` text NOT NULL,
 				  `default_value` varchar(32) NOT NULL default '',
 				  `size` int(11) NOT NULL default '0',

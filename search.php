@@ -13,7 +13,7 @@ if ($_GET["action"] == "quick_search"){
 	$output .= '<table>';
 	
 	if ($_GET["q"] != ''){
-		$query = "SELECT `name` FROM `anyInventory_fields`";
+		$query = "SELECT `name` FROM `anyInventory_fields` WHERE `input_type` NOT IN ('file','divider','item')";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 		
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){

@@ -22,7 +22,6 @@ function display($output){
 	global $inBodyTag;
 	global $breadcrumbs;
 	global $sectionTitle;
-	global $appTitle;
 	
 	global $DIR_PREFIX;
 	
@@ -141,12 +140,13 @@ function get_fields_checkbox_area($checked = array()){
 				<input type="checkbox" name="fields['.$field->id.']" value="yes" ';
 					if ((is_array($checked)) && (in_array($field->id, $checked))) $output .= ' checked="checked"';
 					$output .= ' />
-					'.$field->name.' ('.$field->input_type.'; ';
+					'.$field->name.' ('.$field->input_type;
+					
 					if ($field->input_type == "text"){
-						$output .= ' '.$field->size.' characters';
+						$output .= '; '.$field->size.' characters';
 					}
-					else{
-						$output .= ' values: ';
+					elseif (($field->input_type != 'file') && ($field->input_type != 'item')){
+						$output .= '; values: ';
 						
 						if (is_array($field->values)){
 							foreach($field->values as $val){
@@ -207,6 +207,41 @@ function get_array_children($id, &$array, $pre = ""){
 	}
 }
 
+function get_category_id_array($top = 0){
+	// This function returns an array of categories, starting with
+	// the category id'd by $top and working down.
+	
+	$array = array();
+	
+	if ($top != 0){
+		if (mysql_num_rows($result) > 0){
+			$array[] = $top;
+		}
+		else{
+			return $array;
+		}
+	}
+	
+	get_array_id_children($top, $array);
+	
+	return $array;
+}
+
+function get_array_id_children($id, &$array){
+	// This function creates array entries for any child of $id.
+	
+	$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	
+	if (mysql_num_rows($result) > 0){
+		while ($row = mysql_fetch_array($result)){
+			$array[] = $row["id"];
+			
+			get_array_id_children($row["id"], $array);
+		}
+	}
+}
+
 function delete_subcategories($category){
 	// This function deletes any subcategories of $category.
 	
@@ -248,7 +283,7 @@ function delete_subcategory($category){
 			}
 		}
 	}
-				
+	
 	// Delete all of the items in the category
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -283,6 +318,7 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 			$type = " INT ";
 			break;
 		case 'checkbox':
+		case 'item':
 			$type = " TEXT ";
 			break;
 		case 'multiple':

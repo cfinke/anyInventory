@@ -14,16 +14,6 @@ if (is_array($_POST)){
 	}
 }
 
-$appTitle = 'anyInventory 1.8';
-
-include($DIR_PREFIX."functions.php");
-include($DIR_PREFIX."category_class.php");
-include($DIR_PREFIX."field_class.php");
-include($DIR_PREFIX."item_class.php");
-include($DIR_PREFIX."file_class.php");
-include($DIR_PREFIX."alert_class.php");
-include($DIR_PREFIX."user_class.php");
-
 connect_to_database();
 
 $query = "SELECT * FROM `anyInventory_config`";
@@ -32,6 +22,15 @@ $result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 while ($row = mysql_fetch_array($result)){
 	define($row["key"],$row["value"]);
 }
+
+include($DIR_PREFIX."lang/".LANG.".php");
+include($DIR_PREFIX."functions.php");
+include($DIR_PREFIX."category_class.php");
+include($DIR_PREFIX."field_class.php");
+include($DIR_PREFIX."item_class.php");
+include($DIR_PREFIX."file_class.php");
+include($DIR_PREFIX."alert_class.php");
+include($DIR_PREFIX."user_class.php");
 
 if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "/docs")){
 	if ((($DIR_PREFIX == './') && PP_VIEW && !isset($_SESSION["user"]["id"])) || 

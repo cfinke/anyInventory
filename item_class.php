@@ -34,6 +34,9 @@ class item {
 				if ($field->input_type == 'file'){
 					$this->fields[$field->name] = array("is_file"=>true,"file_id"=>$row[$field->name]);
 				}
+				elseif($field->input_type == 'item'){
+					$this->fields[$field->name] = unserialize($row[$field->name]);
+				}
 				elseif($field->input_type == 'divider'){
 					$this->fields[$field->name] = array("is_divider"=>true);
 				}
@@ -95,9 +98,9 @@ class item {
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.$this->name;
-					
+		
 		if($admin_user->can_admin($this->category->id)){
-			$output .= ' ( <a href="'.$DIR_PREFIX.'admin/move_item.php?id='.$this->id.'">Move</a> | <a href="'.$DIR_PREFIX.'admin/edit_item.php?id='.$this->id.'">Edit</a> | <a href="'.$DIR_PREFIX.'admin/delete_item.php?id='.$this->id.'">Delete</a> )';
+			$output .= ' ( <a href="'.$DIR_PREFIX.'admin/move_item.php?id='.$this->id.'">'.MOVE.'</a> | <a href="'.$DIR_PREFIX.'admin/edit_item.php?id='.$this->id.'">'.EDIT.'</a> | <a href="'.$DIR_PREFIX.'admin/delete_item.php?id='.$this->id.'">'._DELETE.'</a> )';
 		}
 		
 		$output .= '		
@@ -162,6 +165,32 @@ class item {
 					
 					$last_divider = false;
 				}
+				elseif($field->input_type == 'item'){
+					if (is_array($this->fields[$field->name]) && (count($this->fields[$field->name]) > 0)){
+						$output .= '
+							<tr';
+								
+						if ($field->highlight){
+							$output .= ' class="highlighted_field"';
+						}
+						
+						$output .= '>
+							<td>&nbsp;</td>
+							<td style="white-space: nowrap; text-align: right;"><b>'.$field->name.':</b></td>
+							<td>';
+						
+						foreach($this->fields[$field->name] as $item_id){
+							$item = new item($item_id);
+							$output .= $item->export_teaser() . '<br />';
+						}
+						
+						$output .= '
+								</td>
+							</tr>';
+						
+						$last_divider = false;
+					}
+				}
 				elseif($field->input_type == 'divider'){
 					if (!$last_divider)	$output .= '<tr><td colspan="3"><hr /></td></tr>';
 					$last_divider = true;
@@ -183,7 +212,7 @@ class item {
 					
 					$last_divider = false;
 				}
-				elseif (trim($this->fields[$field->name]) != ""){
+				elseif (trim(strip_tags($this->fields[$field->name])) != ""){
 					$output .= '
 						<tr';
 					
@@ -193,14 +222,48 @@ class item {
 					
 					$output .= '>
 							<td style="width: 5%;">
-								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;" title="Create a barcode label for the '.$key.' field">Label</a>
+								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;">'.LABEL.'</a>
 							</td>
 							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$field->name.'</b>:</nobr></td>
-							<td style="width: 85%;"></b> '.$this->fields[$field->name].'</td>
+							<td style="width: 85%;">'.$this->fields[$field->name].'</td>
 						</tr>';
 					
 					$last_divider = false;
 				}
+			}
+			
+			$query = "SELECT `name` FROM `anyInventory_fields` WHERE `input_type`='item'";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+			
+			while ($row = mysql_fetch_array($result)){
+				$new_query = "SELECT `id` FROM `anyInventory_items` WHERE `".$row["name"]."` LIKE '%\"".$this->id."\"%'";
+				$new_result = mysql_query($new_query) or die(mysql_error() . '<br /><br />' . $new_query);
+				
+				while ($newrow = mysql_fetch_array($new_result)){
+					$backlinks[] = $newrow["id"];
+				}
+			}
+			
+			if (is_array($backlinks)){
+				if (!$last_divider){
+					$output .= '<tr><td colspan="3"><hr /></td></tr>';
+					$last_divider = true;
+				}
+				
+				$output .= '
+					<tr>
+						<td>&nbsp;</td>
+						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.RELATED_ITEMS.':</b></nobr></td>
+						<td>';
+				
+				foreach($backlinks as $item_id){
+					$item = new item($item_id);
+					
+					$output .= $item->export_teaser().'<br />';
+				}
+				
+				$output .= '</td>
+						</tr>';
 			}
 			
 			$output .= '

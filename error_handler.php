@@ -2,25 +2,25 @@
 
 include("globals.php");
 
-$title = "anyInventory: Error";
+$title = APP_TITLE.": ".ERROR;
 
 $errors = array();
 
-$errors[0] = array("Error","There is already a field with the name you specified.  If you wish to add a field to multiple categories, you can do so by editing the field and selecting several categories by holding down the Ctrl key.","breadcrumbs"=>"Error");
-$errors[1] = array("Error","The default value for a select or radio field must be included in the list of values.","breadcrumbs"=>"Error");
-$errors[2] = array("Error","There were no items in the categories you selected; there must be items in a category for you to add an alert in it.","breadcrumbs"=>"Error");
-$errors[3] = array("Error","There were no common fields in the categories you selected.","breadcrumbs"=>"Error");
-$errors[5] = array('Error','An alert must apply to at least one category.','breadcrumbs'=>'Error');
-$errors[6] = array('Error','An alert must apply to at least one item.','breadcrumbs'=>'Error');
-$errors[7] = array('Error','The Top Level category cannot be edited or deleted.','breadcrumbs'=>'Error');
-$errors[8] = array('Error','You must supply a list of values for this field.','breadcrumbs'=>'Error');
-$errors[10] = array('Access Denied','You must be a privileged used to edit, add, or delete. ','breadcrumbs'=>'Access Denied');
-$errors[11] = array('Access Denied','You must be an administrator to add, edit, or delete users. ','breadcrumbs'=>'Access Denied');
-$errors[12] = array('Access Denied','You do not have viewing priveleges for this category.','breadcrumbs'=>'Access Denied');
-$errors[13] = array('Access Denied','You do not have editing priveleges for this category.','breadcrumbs'=>'Access Denied');
-$errors[14] = array('Access Denied','You cannot delete your own user account.','breadcrumbs'=>'Access Denied');
-$errors[15] = array('Access Denied','You must be an administrator to access this page.','breadcrumbs'=>'Access Denied');
-$errors[16] = array('Error','A user with that name already exists.','breadcrumbs'=>'Error');
+$errors[0] = array(ERROR,ERROR_DUPLICATE_FIELD,"breadcrumbs"=>ERROR);
+$errors[1] = array(ERROR,ERROR_BAD_DEFAULT_VALUE,"breadcrumbs"=>ERROR);
+$errors[2] = array(ERROR,ERROR_EMPTY_CATEGORY,"breadcrumbs"=>ERROR);
+$errors[3] = array(ERROR,ERROR_NO_COMMON_FIELDS,"breadcrumbs"=>ERROR);
+$errors[5] = array(ERROR,ERROR_ALERT_NO_CATEGORIES,'breadcrumbs'=>ERROR);
+$errors[6] = array(ERROR,ERROR_ALERT_NO_ITEMS,'breadcrumbs'=>ERROR);
+$errors[7] = array(ERROR,ERROR_NO_TOP_LEVEL_EDIT,'breadcrumbs'=>ERROR);
+$errors[8] = array(ERROR,ERROR_NO_VALUES,'breadcrumbs'=>ERROR);
+$errors[10] = array(ACCESS_DENIED,ERROR_PRIVELEGES,'breadcrumbs'=>ACCESS_DENIED);
+$errors[11] = array(ACCESS_DENIED,ERROR_PRIVELEGES,'breadcrumbs'=>ACCESS_DENIED);
+$errors[12] = array(ACCESS_DENIED,ERROR_PRIVELEGES,'breadcrumbs'=>ACCESS_DENIED);
+$errors[13] = array(ACCESS_DENIED,ERROR_PRIVELEGES,'breadcrumbs'=>ACCESS_DENIED);
+$errors[14] = array(ACCESS_DENIED,ERROR_DELETE_OWN_ACCOUNT'breadcrumbs'=>ACCESS_DENIED);
+$errors[15] = array(ACCESS_DENIED,ERROR_PRIVELEGES,,'breadcrumbs'=>ACCESS_DENIED);
+$errors[16] = array(ERROR,ERROR_DUPLICATE_USER,'breadcrumbs'=>ERROR);
 
 $breadcrumbs = $errors[$_GET["eid"]]["breadcrumbs"];
 

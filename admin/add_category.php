@@ -80,7 +80,7 @@ $output .= '
 							</td>
 						</tr>
 						<tr>
-							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 						</tr>
 					</table>
 				</td>

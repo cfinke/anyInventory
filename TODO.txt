@@ -45,16 +45,16 @@ DONE - Customization of Name field
 
 BEFORE 1.9
 ===================
+DONE - Item associations ("Item" Field type)
+DONE - In-line editor for long text fields
 Stronger CSS support
-In-line editor for long text fields
 Multi-language support
-Item associations ("Item" Field type)
 Download inventory as XML file
 
 BEFORE 2.0
 ===================
-Multiple-condition alerts
 DREW - Remote image thumbnailing - backup in case of missing libcurl
+Multiple-condition alerts
 Upload inventory as XML file
 Required fields
 ? Label Sheets

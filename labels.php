@@ -16,11 +16,11 @@ if (!function_exists('imagecreate') ||
 	$output .= '
 		<table class="standardTable">
 			<tr class="tableHeader">
-				<td>Generate Labels</td>
+				<td>'.GENERATE_LABELS.'</td>
 			</tr>
 			<tr>
 				<td class="tableData" style="text-align: center;">
-					You do not have all of the PHP functions needed to create labels installed.  These functions are <a href="http://us3.php.net/manual/en/function.imagecreate.php">imagecreate</a>, <a href="http://us3.php.net/manual/en/function.imagecolorallocate.php">imagecolorallocate</a>, <a href="http://us3.php.net/manual/en/function.imagettftext.php">imagettftext</a>, <a href="http://us3.php.net/manual/en/function.imagestring.php">imagestring</a>, <a href="http://us3.php.net/manual/en/function.imagecopyresized.php">imagecopyresized</a>, <a href="http://us3.php.net/manual/en/function.imagedestroy.php">imagedestroy</a>, and <a href="http://us3.php.net/manual/en/function.imagepng.php">imagepng</a>.  One or more of these functions is not installed.
+					'.LABEL_ERROR.'
 				</td>
 			</tr>
 		</table>';
@@ -38,16 +38,16 @@ elseif (!isset($_POST["c"])){
 	$output .= '
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
-				<td>Generate Labels</td>
-				<td style="text-align: right;">[<a href="docs/labels.php">Help</a>]</td>
+				<td>'.GENERATE_LABELS.'</td>
+				<td style="text-align: right;">[<a href="docs/labels.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
 					<form action="labels.php" method="post">
 						<table>
-							<tr><td colspan="2" style="padding: 10px 0px 10px 0px;">Select the categories to which the items belong for which you want to produce labels.  All categories that you select must have at least one field in common.</td></tr>
+							<tr><td colspan="2" style="padding: 10px 0px 10px 0px;">'.LABEL_CAT_INSTRUCTIONS.'</td></tr>
 							<tr>
-								<td class="form_label">Categories:</td>
+								<td class="form_label">'.CATEGORIES.':</td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="10" style="width: 100%;">
 										'.$view_user->get_view_categories_options(null).'
@@ -55,7 +55,7 @@ elseif (!isset($_POST["c"])){
 								</td>
 							</tr>
 							<tr>
-								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Submit" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="'.SUBMIT.'" /></td>
 							</tr>
 						</table>
 					</form>
@@ -90,18 +90,18 @@ elseif (!isset($_POST["i"])){
 		$output .= '
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
-					<td>Generate Labels</td>
-					<td style="text-align: right;">[<a href="docs/labels.php">Help</a>]</td>
+					<td>'.GENERATE_LABELS.'</td>
+					<td style="text-align: right;">[<a href="docs/labels.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
 						<form action="labels.php" method="post">
 							<input type="hidden" name="action" value="generate" />
 							<table>
-								<tr><td colspan="2" style="padding: 10px 0px 10px 0px;"><p>Select the field from which you want to produce the barcode and the items for which you want to produce a label.</td></tr>
+								<tr><td colspan="2" style="padding: 10px 0px 10px 0px;"><p>'.LABEL_ITEM_INSTRUCTIONS.'</p></td></tr>
 								<tr>
 									<td class="form_label">
-										Generate from:
+										'.GENERATE_FROM.':
 									</td>
 									<td class="form_input">';
 		
@@ -116,7 +116,7 @@ elseif (!isset($_POST["i"])){
 								</tr>
 								<tr>
 									<td class="form_label">
-										Generate for:
+										'.GENERATE_FOR.':
 									</td>
 									<td class="form_input">';
 		
@@ -131,7 +131,7 @@ elseif (!isset($_POST["i"])){
 								</td>
 							</tr>
 							<tr>
-								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Submit" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="'.SUBMIT.'" /></td>
 							</tr>
 						</table>
 					</form>

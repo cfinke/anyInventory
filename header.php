@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title><?php echo $title; ?></title>
+		<title><?php echo APP_TITLE.': '.$title; ?></title>
 		<link rel="stylesheet" type="text/css" href="<?php echo $DIR_PREFIX; ?>style.css">
 		<?php echo $inHead; ?>
 	</head>
@@ -12,14 +12,14 @@
 					<table cellspacing="0">
 						<tr>
 							<td id="appTitle">
-								<?php echo $appTitle; ?>
+								<?php echo APP_TITLE; ?>
 							</td>
 							<td>
 								<?php
 								
 								if (isset($_SESSION["user"]["id"])){
 									echo '
-										<td style="width: 5%; text-align: center; vertical-align: middle; white-space: nowrap;">[ <a href="'.$DIR_PREFIX.'login_processor.php?action=log_out">Log Out</a> ]</td>';
+										<td style="width: 5%; text-align: center; vertical-align: middle; white-space: nowrap;">[ <a href="'.$DIR_PREFIX.'login_processor.php?action=log_out">'.LOG_OUT.'</a> ]</td>';
 								}
 								
 								?>
@@ -36,39 +36,39 @@
 							
 							if (isset($_SESSION["user"]["id"]) || !PP_VIEW){
 								echo '
-									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'index.php">Home</a></td>
-									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'labels.php">Labels</a></td>';
+									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'index.php">'.HOME.'</a></td>
+									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'labels.php">'.LABELS.'</a></td>';
 							}
 							else{
 								echo '
-									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'index.php">Home</a></td>';
+									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'index.php">'.HOME.'</a></td>';
 							}
 							?>
-							<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="<?php echo $DIR_PREFIX; ?>docs/">Help</a></td>
+							<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="<?php echo $DIR_PREFIX; ?>docs/"><?php echo HELP; ?></a></td>
 							<?php
 							
 							if (isset($_SESSION["user"]["id"]) || !PP_ADMIN){
 								if (PP_ADMIN || PP_VIEW){
 									echo '
-										<td style="width: 15%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">Administration</a>:</td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">Fields</a></td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">Categories</a></td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">Items</a></td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/alerts.php">Alerts</a></td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/users.php">Users</a></td>';
+										<td style="width: 15%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a>:</td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">'.FIELDS.'</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">'.CATEGORIES.'</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">'.ITEMS.'</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/alerts.php">'.ALERTS.'</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/users.php">'.USERS.'</a></td>';
 								}
 								else{
 									echo '
-										<td style="width: 20%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">Administration</a>:</td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">Fields</a></td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">Categories</a></td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">Items</a></td>
-										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/alerts.php">Alerts</a></td>';
+										<td style="width: 20%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a>:</td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/fields.php">'.FIELDS.'</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/categories.php">'.CATEGORIES.'</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/items.php">'.ITEMS.'</a></td>
+										<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/alerts.php">'.ALERTS.'</a></td>';
 								}
 							}
 							else{
 								echo '
-									<td style="width: 55%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">Administration</a></td>';
+									<td style="width: 55%; text-align: right; vertical-align: middle;"><a href="'.$DIR_PREFIX.'admin/index.php">'.ADMINISTRATION.'</a></td>';
 							}
 							
 							?>
@@ -80,12 +80,12 @@
 									if (isset($_SESSION["user"]["id"]) || !PP_VIEW){
 										echo '
 											<input type="text" name="q" id="q" />
-											<input type="submit" value="Search" />';
+											<input type="submit" value="'.SEARCH.'" />';
 									}
 									else{
 										echo '
 											<input type="text" name="q" id="q" disabled="disabled" />
-											<input type="submit" value="Search" disabled="disabled" />';
+											<input type="submit" value="'.SEARCH.'" disabled="disabled" />';
 									}
 									
 									?>

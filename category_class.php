@@ -62,7 +62,7 @@ class category {
 				foreach($this->breadcrumbs as $crumb){
 					if ($crumb == 0){
 						// The Top Level category
-						$this->breadcrumb_names .= "Top > ";
+						$this->breadcrumb_names .= TOP_LEVEL_CATEGORY.' > ';
 					}
 					else{
 						// Find the name of the current category
@@ -89,12 +89,12 @@ class category {
 		}
 		else{
 			// Top Level category
-			$this->name = "Top Level";
+			$this->name = TOP_LEVEL_CATEGORY;
 			$this->parent_id = 0;
 			
 			// Set the breadcrumbs and breadcrumbs names
 			$this->breadcrumbs[] = 0;
-			$this->breadcrumb_names = "Top";
+			$this->breadcrumb_names = TOP_LEVEL_CATEGORY;
 			
 			// Get the fields that the Top Level uses.
 			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' OR `input_type`='divider' ORDER BY `importance`";
@@ -190,7 +190,7 @@ class category {
 		if (is_array($this->breadcrumbs)){
 			foreach($this->breadcrumbs as $id){
 				if($id == 0){
-					$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c=0">Top</a> &gt; ';
+					$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c=0">'.TOP_LEVEL_CATEGORY.'</a> &gt; ';
 				}
 				else{
 					$crumb = new category($id);
@@ -214,7 +214,7 @@ class category {
 		if (is_array($this->breadcrumbs)){
 			foreach($this->breadcrumbs as $id){
 				if($id == 0){
-					$breadcrumbs .= 'Top &gt; ';
+					$breadcrumbs .=  TOP_LEVEL_CATEGORY .' &gt; ';
 				}
 				else{
 					$crumb = new category($id);

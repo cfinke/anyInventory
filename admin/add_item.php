@@ -3,6 +3,13 @@
 include("globals.php");
 
 $title = "anyInventory: Add Item";
+$inHead = '
+	<script type="text/javascript">
+	   _editor_url = "../htmlarea/";
+	   _editor_lang = "en";
+	</script>
+	<script type="text/javascript" src="../htmlarea/htmlarea.js"></script>';
+$inBodyTag = ' onload="HTMLArea.replaceAll();"';
 $breadcrumbs = 'Administration > <a href="items.php">Items</a> > Add Item';
 
 if (!isset($_GET["c"])){
@@ -25,7 +32,7 @@ if (!isset($_GET["c"])){
 								</td>
 							</tr>
 							<tr>
-								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 							</tr>
 						</table>
 					</td>
@@ -137,6 +144,25 @@ else{
 					case 'file':
 						$output .= '<input type="file" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" /> or <input type="text" name="'.str_replace(" ","_",$field->name).'remote" id="'.str_replace(" ","_",$field->name).'remote" value="http://" />';
 						break;
+					case 'item':
+						$output .= '<select name="'.str_replace(" ","_",$field->name).'[]" id="'.str_replace(" ","_",$field->name).'[]" style="width: 100%;" multiple="multiple" size="10">';
+						
+						if (is_array($view_user->categories_view)){
+							foreach($view_user->categories_view as $cat_id){
+								$category = new category($cat_id);
+								
+								$options = get_item_options($cat_id, 0);
+								
+								if ($options != ''){
+									$output .= '<optgroup label="'.$category->breadcrumb_names.'">';
+									$output .= $options;
+									$output .= '</optgroup>';
+								}
+							}
+						}
+						 
+						$output .= '</select>';
+						break;
 				}
 				
 				$output .= '</td>
@@ -147,7 +173,7 @@ else{
 	
 	$output .= '
 								<tr>
-									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 								</tr>
 							</table>
 						</td>

@@ -58,6 +58,14 @@ if ($_POST["action"] == "do_add"){
 				elseif($field->input_type == "file"){
 					continue;
 				}
+				elseif($field->input_type == 'item'){
+					if (is_array($_POST[str_replace(" ","_",$field->name)])){
+						$query .= "'".addslashes(serialize($_POST[str_replace(" ","_",$field->name)]))."', ";
+					}
+					else{
+						$query .= "'".addslashes(serialize(array()))."', ";
+					}
+				}
 				else{
 					$query .= "'".$_POST[str_replace(" ","_",$field->name)]."', ";
 				}
@@ -292,7 +300,6 @@ elseif($_POST["action"] == "do_edit"){
 								 '".$filename."',
 								 '".filesize(realpath($DIR_PREFIX."item_files/")."/".$filename)."',
 								 '".$remote_content_type."')";
-							//query($newquery);
 							mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 							$new_key = mysql_insert_id();
 							$query .= " `".$field->name."`='".$new_key."', ";
@@ -304,7 +311,6 @@ elseif($_POST["action"] == "do_edit"){
 									VALUES
 									('".$key."',
 									 '".$_POST[str_replace(" ","_",$field->name)."remote"]."')";
-						//query($newquery);
 						mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 						
 						$new_key = mysql_insert_id();
@@ -335,6 +341,14 @@ elseif($_POST["action"] == "do_edit"){
 						}
 						else{
 							$query .= "'', ";
+						}
+					}
+					elseif($field->input_type == 'item'){
+						if (is_array($_POST[str_replace(" ","_",$field->name)])){
+							$query .= "'".addslashes(serialize($_POST[str_replace(" ","_",$field->name)]))."', ";
+						}
+						else{
+							$query .= "'".addslashes(serialize(array()))."', ";
 						}
 					}
 					else{

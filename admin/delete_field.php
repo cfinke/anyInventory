@@ -37,7 +37,7 @@ $output .= '
 							<td>'.$field->input_type.'</td>
 						</tr>';
 
-if (($field->input_type != "text") && ($field->input_type != 'file')){
+if (($field->input_type != "text") && ($field->input_type != 'file') && ($field->input_type != 'item')){
 	$output .= '<tr>
 					<td class="form_label">Values:</td>
 					<td>';
@@ -59,7 +59,7 @@ if (($field->input_type == "text") || ($field->input_type == "multiple")){
 	$output .= '<tr><td class="form_label">Size:</td><td>'.$field->size.'</td></tr>';
 }
 
-if ($field->input_type != 'file'){
+if (($field->input_type != 'file') && ($field->input_type != 'item')){
 	$output .= '<tr><td class="form_label">Default value:</td><td>'.$field->default_value.'</td></tr>';
 }
 

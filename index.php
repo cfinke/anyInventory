@@ -71,21 +71,21 @@ else{
 				<td style="width: 100%;">
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
-							<td>Sub-categories in '.$category->get_breadcrumb_links();
+							<td>'.SUBCATS_IN.' '.$category->get_breadcrumb_links();
 	
 	if($admin_user->can_admin($category->id)){
 		if ($category->id != 0){
-			$output .= ' ( <a href="admin/edit_category.php?id='.$_GET["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_GET["c"].'">Delete</a> | ';
+			$output .= ' ( <a href="admin/edit_category.php?id='.$_GET["c"].'">'.EDIT.'t</a> | <a href="admin/delete_category.php?id='.$_GET["c"].'">'._DELETE.'</a> | ';
 		}
 		else{
 			$output .= ' (';
 		}
 		
-		$output .= ' <a href="admin/add_category.php?c='.$_GET["c"].'">Add a category here</a> )';
+		$output .= ' <a href="admin/add_category.php?c='.$_GET["c"].'">'.ADD_CAT_HERE.'</a> )';
 	}
 	
 	$output .= '			</td>
-							<td style="text-align: right;">[<a href="docs/categories.php">Help</a>]</td>
+							<td style="text-align: right;">[<a href="docs/categories.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -102,7 +102,7 @@ else{
 		}
 	}
 	else{
-		$output .= '<tr><td style="text-align: center;">There are no sub-categories in this category.</td></tr>';
+		$output .= '<tr><td style="text-align: center;">'.NO_SUBCATS.'</td></tr>';
 	}
 	
 	$output .= '</table>
@@ -116,14 +116,14 @@ else{
 	if (($_GET["c"] != 0) || (mysql_num_rows($result) > 0)){
 		$output .= '
 			<tr class="tableHeader">
-				<td>Items in this Category';
+				<td>'.ITEMS_IN_CAT;
 		
 		if($admin_user->can_admin($_GET["c"])){
-			if ($_GET["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_GET["c"].'">Add an item here</a> )';
+			if ($_GET["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_GET["c"].'">'.ADD_ITEM_HERE.'</a> )';
 		}
 		
 		$output .= '</td>
-					<td style="text-align: right;">[<a href="docs/items.php">Help</a>]</td>
+					<td style="text-align: right;">[<a href="docs/items.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
@@ -143,7 +143,7 @@ else{
 			}
 		}
 		else{
-			$output .= '<tr><td style="text-align: center;">There are no items in this category.</td></tr>';
+			$output .= '<tr><td style="text-align: center;">'.NO_ITEMS_HERE.'</td></tr>';
 		}
 		
 		$output .= '

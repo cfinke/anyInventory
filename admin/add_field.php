@@ -46,7 +46,7 @@ $output = '
 					</select>
 				</td>
 			</tr>
-			<tr id="values_row">
+			<tr>
 				<td class="form_label"><label for="values">Values:</label></td>
 				<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
 			</tr>

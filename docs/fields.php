@@ -9,7 +9,7 @@ $output .= '
 	<p>Fields are the basis of anyInventory.  They define the type of data that you want to track. Let\'s take a look at the different types of fields.
 	</p>
 	<h2><a name="types">Field Types</a></h2>
-	<p>There are five types of fields from which to choose when setting up anyInventory.  Each one
+	<p>There are six types of fields from which to choose when setting up anyInventory.  Each one
 	   is described below, with an example shown below it.</p>
 	<ul>
 		<li>
@@ -68,6 +68,12 @@ $output .= '
 				</select>
 			</form>
 		</li>
+		<li>
+			<b>File</b>, which allows you to upload a file from your computer or specify a file already located on the Internet.
+			<form style="padding-left: 50px; margin: 10px;">
+				<input type="file" name="file" id="file"/> or <input type="text" name="fileremote" value="http://" />
+			</form>
+		</li>
 	</ul>
 	<p>If this all seems confusing, don\'t worry.  It should become clearer with an example.</p>
 	<h4>An Example</h4>
@@ -83,7 +89,7 @@ $output .= '
 		<li>Total price: text field</li>
 		<li>Item purchased: text field</li>
 		<li>Business expense: radio buttons, with values "Yes" and "No"</li>
-		<li>Receipt and item image: files, handled by anyInventory\'s file upload functionality</li>
+		<li>Receipt and item image: files</li>
 	</ul>
 	<p>Now that we have a group of items we want to track, let\'s see how we would go about <a href="adding_fields.php">adding
 		the fields.</a>

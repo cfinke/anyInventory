@@ -67,7 +67,7 @@ $output = '
 						</select>
 					</td>
 				</tr>
-				<tr id="values_row">
+				<tr>
 					<td class="form_label"><label for="values">Values:</label></td>
 					<td class="form_input"><input type="text" name="values" id="values" value="';
 					if (is_array($field->values)){

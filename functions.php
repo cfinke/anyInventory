@@ -7,7 +7,7 @@ function connect_to_database(){
 	$db = DB::connect($dsn);
 	if (DB::isError($db)) {
 		die ($db->getMessage(  ));
-	}	
+	}
 	
 	return $db;
 }

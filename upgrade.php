@@ -1,18 +1,11 @@
 <?php
 
-// Upgrade file.
+error_reporting(E_ALL ^ E_NOTICE);
 
 require_once('DB.php');
 
-error_reporting(E_ALL ^ E_NOTICE);
-
-include("functions.php");
-include("category_class.php");
-include("field_class.php");
-include("item_class.php");
-include("file_class.php");
-include("alert_class.php");
-include("user_class.php");
+require_once("functions.php");
+require_once("item_class.php");
 
 $errors = array();
 
@@ -31,23 +24,6 @@ $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
 $db_type = "'.$_POST["db_type"].'";
 
-// check for Oracle 8 - data source name syntax is different
-
-if ($db_type != \'oci8\'){
-	$dsn = $db_type."://".$db_user.":".$db_pass."@".$db_host."/".$db_name;
-} else {
-	$net8name = \'www\';
-	$dsn = $db_type."://".$db_user.":".$db_pass."@".$net8name;
-}
-
-// establish the connection
-
-$db = DB::connect($dsn);
-
-if($DB::isError($db)){
-        die($db->getMessage( ));
-}
-				
 include($DIR_PREFIX."environment.php");
 
 ?>';

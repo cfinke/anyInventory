@@ -23,24 +23,6 @@ $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
 $db_type = "'.$_POST["db_type"].'";
 
-
-// check for Oracle 8 - data source name syntax is different
-
-if ($db_type != \'oci8\'){
-	$dsn = $db_type."://".$db_user.":".$db_pass."@".$db_host."/".$db_name;
-} else {
-        $net8name = \'www\';
-        $dsn = $db_type."://".$db_user.":".$db_pass."@".$net8name;
-}
-
-// establish the connection
-
-$db = DB::connect($dsn);
-
-if($DB::isError($db)){
-	die($db->getMessage( ));
-}
-
 include($DIR_PREFIX."environment.php");
 
 ?>';
@@ -171,6 +153,14 @@ if ($_POST["action"] == "install"){
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
+		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		
+		$query = "CREATE TABLE `anyInventory_values` (
+					`item_id` int( 11 ) NOT NULL default '0',
+					`field_id` int( 11 ) NOT NULL default '0',
+					`value` text NOT NULL ,
+					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
+					) TYPE = MYISAM";
 		$db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_files` (
@@ -403,11 +393,13 @@ elseif(!$set_config_error){
 						</tr>
 						<tr>
 							<td class="form_label"><label for="db_type">DB Type:</label></td>
-							<td class="form_input"><select name="db_type">
-								<option selected>mysql</option>
-								<option>pgsql</option>
-								<option>oci8</option>
-							</select></td>
+							<td class="form_input">
+								<select name="db_type">
+									<option value="mysql"';if($_REQUEST["db_type"] == 'mysql') $output .= ' selected="selected"'; $output .= '>MySQL</option>
+									<option value="pgsql"';if($_REQUEST["db_type"] == 'pgsql') $output .= ' selected="selected"'; $output .= '>PosgreSQL</option>
+									<option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
+								</select>
+							</td>
 						</tr>
 						<tr>
 							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_view" id="password_protect_view" value="yes"'.$pp_view_checked.' /></td>

@@ -14,7 +14,17 @@ if (is_array($_POST)){
 	}
 }
 
-include($DIR_PREFIX."functions.php");
+require_once("DB.php");
+require_once($DIR_PREFIX."functions.php");
+
+// Check for Oracle 8 - data source name syntax is different
+
+if ($phptype != 'oci8'){
+	$dsn = "$dbtype://$username:$password@$hostspec/$database";
+} else {
+	$net8name = 'www';
+	$dsn = "$phptype://$username:$password@$net8name";
+}
 
 $db = connect_to_database();
 
@@ -25,13 +35,13 @@ while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 	define($row["key"],$row["value"]);
 }
 
-include($DIR_PREFIX."lang/".LANG.".php");
-include($DIR_PREFIX."category_class.php");
-include($DIR_PREFIX."field_class.php");
-include($DIR_PREFIX."item_class.php");
-include($DIR_PREFIX."file_class.php");
-include($DIR_PREFIX."alert_class.php");
-include($DIR_PREFIX."user_class.php");
+require_once($DIR_PREFIX."lang/".LANG.".php");
+require_once($DIR_PREFIX."category_class.php");
+require_once($DIR_PREFIX."field_class.php");
+require_once($DIR_PREFIX."item_class.php");
+require_once($DIR_PREFIX."file_class.php");
+require_once($DIR_PREFIX."alert_class.php");
+require_once($DIR_PREFIX."user_class.php");
 
 if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "/docs")){
 	if ((($DIR_PREFIX == './') && PP_VIEW && !isset($_SESSION["user"]["id"])) || 

@@ -9,7 +9,7 @@ if ($_POST["action"] == "do_add"){
 	}
 	else{
 		// Add a category.
-		$query = "INSERT INTO `anyInventory_categories` (`id`,`name`,`parent`,`auto_inc_field`) VALUES (?, ?, ?, ?)";
+		$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_categories')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('parent').",".$db->quoteIdentifier('auto_inc_field').") VALUES (?, ?, ?, ?)";
 		$query_data = array(get_unique_id('anyInventory_categories'),stripslashes($_POST["name"]),$_POST["parent"],intval(($_POST["auto_inc"] == "yes")));
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -62,11 +62,11 @@ elseif($_POST["action"] == "do_edit"){
 	$old_category = new category($_POST["id"]);
 	
 	// Change the category information
-	$query = "UPDATE `anyInventory_categories` SET 
-				`name`='".$_POST["name"]."',
-				`parent`='".$_POST["parent"]."',
-				`auto_inc_field`='".((int) (($_POST["auto_inc"] == "yes") / 1))."'
-				WHERE `id`='".$_POST["id"]."'";
+	$query = "UPDATE ".$db->quoteIdentifier('anyInventory_categories')." SET 
+				".$db->quoteIdentifier('name')."='".$_POST["name"]."',
+				".$db->quoteIdentifier('parent')."='".$_POST["parent"]."',
+				".$db->quoteIdentifier('auto_inc_field')."='".((int) (($_POST["auto_inc"] == "yes") / 1))."'
+				WHERE ".$db->quoteIdentifier('id')."='".$_POST["id"]."'";
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
@@ -118,7 +118,7 @@ elseif($_POST["action"] == "do_edit"){
 		}
 	}
 	
-	$query = "SELECT `id` FROM `anyInventory_users` WHERE `usertype` != 'Administrator'";
+	$query = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_users')." WHERE ".$db->quoteIdentifier('usertype')." != 'Administrator'";
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
@@ -160,17 +160,17 @@ elseif($_POST["action"] == "do_delete"){
 			$category = new category($_POST["id"]);
 			
 			// Delete the category
-			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_POST["id"]."'"; 
+			$query = "DELETE FROM ".$db->quoteIdentifier('anyInventory_categories')." WHERE ".$db->quoteIdentifier('id')."='".$_POST["id"]."'"; 
 			$result = $db->query($query);
 			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			
 			if ($_POST["item_action"] == "delete"){
-				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+				$query = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."'";
 				$result = $db->query($query);
 				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				
 				while ($row = $result->fetchRow()){
-					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
+					$newquery = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_alerts')." WHERE ".$db->quoteIdentifier('item_ids')." LIKE '%\"".$row["id"]."\"%'";
 					$newresult = $db->query($newquery);
 					if (DB::isError($newresult)) die($newresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 					
@@ -180,31 +180,31 @@ elseif($_POST["action"] == "do_delete"){
 						$alert->remove_item($row["id"]);
 						
 						if (count($alert->item_ids) == 0){
-							$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
+							$newerquery = "DELETE FROM ".$db->quoteIdentifier('anyInventory_alerts')." WHERE ".$db->quoteIdentifier('id')."='".$alert->id."'";
 							$newerresult = $db->query($newerquery);
 							if (DB::isError($newerresult)) die($newerresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newerresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 						}
 					}
 					
-					$newquery = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$row["id"]."'";
+					$newquery = "DELETE FROM ".$db->quoteIdentifier('anyInventory_values')." WHERE ".$db->quoteIdentifier('item_id')."='".$row["id"]."'";
 					$newresult = $db->query($newquery);
 					if (DB::isError($newresult)) die($newresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				}
 				
 				// Delete all of the items in the category
-				$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+				$query = "DELETE FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."'";
 				$result = $db->query($query);
 				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
 			elseif($_POST["item_action"] == "move"){
 				$newcategory = new category($_POST["move_items_to"]);
 				
-				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+				$query = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."'";
 				$result = $db->query($query);
 				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				
 				while($row = $result->fetchRow()){
-					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
+					$newquery = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_alerts')." WHERE ".$db->quoteIdentifier('item_ids')." LIKE '%\"".$row["id"]."\"%'";
 					$newresult = $db->query($newquery);
 					if (DB::isError($newresult)) die($newresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 					
@@ -215,7 +215,7 @@ elseif($_POST["action"] == "do_delete"){
 							$alert->remove_item($row["id"]);
 							
 							if (count($alert->item_ids) == 0){
-								$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
+								$newerquery = "DELETE FROM ".$db->quoteIdentifier('anyInventory_alerts')." WHERE ".$db->quoteIdentifier('id')."='".$alert->id."'";
 								$newerresult = $db->query($newerquery);
 								if (DB::isError($newerresult)) die($newerresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newerresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 							}
@@ -225,7 +225,7 @@ elseif($_POST["action"] == "do_delete"){
 				
 				// Move the items to a different category
 				
-				$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
+				$query = "UPDATE ".$db->quoteIdentifier('anyInventory_items')." SET ".$db->quoteIdentifier('item_category')."='".$newcategory->id."' WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."'";
 				$result = $db->query($query);
 				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
@@ -236,7 +236,7 @@ elseif($_POST["action"] == "do_delete"){
 			}
 			elseif($_POST["subcat_action"] == "move"){
 				// Move the subcategories
-				$query = "UPDATE `anyInventory_categories` SET `parent`='".$_POST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
+				$query = "UPDATE ".$db->quoteIdentifier('anyInventory_categories')." SET ".$db->quoteIdentifier('parent')."='".$_POST["move_subcats_to"]."' WHERE ".$db->quoteIdentifier('parent')."='".$category->id."'";
 				$result = $db->query($query);
 				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}

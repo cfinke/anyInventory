@@ -9,7 +9,7 @@ if ($_POST["action"] == "do_add"){
 	}
 	
 	// Check for duplicate username
-	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."'";
+	$query = "SELECT ".$db->quoteIdentifier('username')." FROM ".$db->quoteIdentifier('anyInventory_users')." WHERE ".$db->quoteIdentifier('username')."='".$_POST["username"]."'";
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
@@ -18,7 +18,7 @@ if ($_POST["action"] == "do_add"){
 		exit;
 	}
 	else{
-		$query = "INSERT INTO `anyInventory_users` (`id`,`username`,`password`,`usertype`,`categories_admin`,`categories_view`) VALUES (?, ?, ?, ?, ?, ?)";
+		$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_users')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('username').",".$db->quoteIdentifier('password').",".$db->quoteIdentifier('usertype').",".$db->quoteIdentifier('categories_admin').",".$db->quoteIdentifier('categories_view').") VALUES (?, ?, ?, ?, ?, ?)";
 		$query_data = array(get_unique_id('anyInventory_users'),stripslashes($_POST["username"]),md5($_POST["password"]),$_POST["usertype"],serialize($_POST["c_view"]),serialize($_POST["c_admin"]));
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);
@@ -32,7 +32,7 @@ elseif($_POST["action"] == "do_edit"){
 	}
 	
 	// Check for duplicate username
-	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."' AND `id` != '".$_POST["id"]."'";
+	$query = "SELECT ".$db->quoteIdentifier('username')." FROM ".$db->quoteIdentifier('anyInventory_users')." WHERE ".$db->quoteIdentifier('username')."='".$_POST["username"]."' AND ".$db->quoteIdentifier('id')." != '".$_POST["id"]."'";
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
@@ -44,21 +44,21 @@ elseif($_POST["action"] == "do_edit"){
 		if (!is_array($_POST["c_view"])) $_POST["c_view"] = array();
 		if (!is_array($_POST["c_admin"])) $_POST["c_admin"] = array();
 		
-		$query = "UPDATE `anyInventory_users` SET 
-					`username`='".$_POST["username"]."'";
+		$query = "UPDATE ".$db->quoteIdentifier('anyInventory_users')." SET 
+					".$db->quoteIdentifier('username')."='".$_POST["username"]."'";
 		
 		if ($_POST["password"] != ''){
-			$query .= ", `password`='".md5($_POST["password"])."'";
+			$query .= ", ".$db->quoteIdentifier('password')."='".md5($_POST["password"])."'";
 		}
 		
 		if ($_POST["id"] != ADMIN_USER_ID){
 		
-			$query .= ", `usertype`='".$_POST["usertype"]."',
-						`categories_view`='".addslashes(serialize($_POST["c_view"]))."',
-						`categories_admin`='".addslashes(serialize($_POST["c_admin"]))."'";
+			$query .= ", ".$db->quoteIdentifier('usertype')."='".$_POST["usertype"]."',
+						".$db->quoteIdentifier('categories_view')."='".addslashes(serialize($_POST["c_view"]))."',
+						".$db->quoteIdentifier('categories_admin')."='".addslashes(serialize($_POST["c_admin"]))."'";
 		}
 		
-		$query .= " WHERE `id`='".$_POST["id"]."'";
+		$query .= " WHERE ".$db->quoteIdentifier('id')."='".$_POST["id"]."'";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
@@ -70,7 +70,7 @@ elseif($_POST["action"] == "do_edit_own"){
 	}
 	
 	if ($_POST["password"] != ''){
-		$query = "UPDATE `anyInventory_users` SET `password`='".md5($_POST["password"])."' WHERE `id`='".$_POST["id"]."'";
+		$query = "UPDATE ".$db->quoteIdentifier('anyInventory_users')." SET ".$db->quoteIdentifier('password')."='".md5($_POST["password"])."' WHERE ".$db->quoteIdentifier('id')."='".$_POST["id"]."'";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}
@@ -82,7 +82,7 @@ elseif($_POST["action"] == "do_delete"){
 	}
 	
 	if ($_POST["delete"] == "Delete"){
-		$query = "DELETE FROM `anyInventory_users` WHERE `id`='".$_POST["id"]."'";
+		$query = "DELETE FROM ".$db->quoteIdentifier('anyInventory_users')." WHERE ".$db->quoteIdentifier('id')."='".$_POST["id"]."'";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}

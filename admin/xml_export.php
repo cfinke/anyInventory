@@ -6,7 +6,7 @@ $cr = "\n";
 
 $output .= '<?xml version="1.0" ?>'.$cr.'<anyinventory>'.$cr;
 
-$query = "SELECT * FROM `anyInventory_fields` ORDER BY `importance` ASC";
+$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_fields')." ORDER BY ".$db->quoteIdentifier('importance')." ASC";
 $result = $db->query($query);
 if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 
@@ -61,7 +61,7 @@ if (is_array($cat_ids)){
 		
 		$output .= '		<category id="'.$category->id.'" name="'.$category->breadcrumb_names.'">'.$cr;
 		
-		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
+		$query = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."' ORDER BY ".$db->quoteIdentifier('name')."";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		

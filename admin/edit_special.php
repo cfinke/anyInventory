@@ -12,7 +12,7 @@ switch($_GET["id"]){
 		$title = EDIT_AUTOINC_FIELD;
 		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_AUTOINC_FIELD;
 		
-		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `auto_inc_field`='1'";
+		$query = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_categories')." WHERE ".$db->quoteIdentifier('auto_inc_field')."='1'";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		

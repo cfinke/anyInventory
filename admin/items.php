@@ -7,7 +7,7 @@ $breadcrumbs = ITEMS;
 
 $category = new category(0);
 
-$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
+$query = "SELECT ".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('item_category')." FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."' ORDER BY ".$db->quoteIdentifier('name')." ASC";
 $result = $db->query($query);
 if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 
@@ -46,7 +46,7 @@ if (is_array($cat_ids)){
 		if ($admin_user->can_admin($cat["id"])){
 			$category = new category($cat["id"]);
 			
-			$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
+			$query = "SELECT ".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('item_category')." FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."' ORDER BY ".$db->quoteIdentifier('name')." ASC";
 			$result = $db->query($query);
 			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			

@@ -5,7 +5,7 @@ include("globals.php");
 $title = ALERTS;
 $breadcrumbs = ADMINISTRATION.' > '.ALERTS;
 
-$query = "SELECT * FROM `anyInventory_alerts` ORDER BY `title` ASC";
+$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_alerts')." ORDER BY ".$db->quoteIdentifier('title')." ASC";
 $result = $db->query($query);
 if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 

@@ -19,7 +19,7 @@ if ($_POST["action"] == "do_add"){
 	$key = get_unique_id('anyInventory_items');
 	
 	// Put the query together
-	$query = "INSERT INTO `anyInventory_items` (`id`,`item_category`,`name`) VALUES (?, ?, ?)";
+	$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_items')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('item_category').",".$db->quoteIdentifier('name').") VALUES (?, ?, ?)";
 	$query_data = array($key,$_POST["c"],$_POST["name"]);
 	$pquery = $db->prepare($query);
 	$result = $db->execute($pquery, $query_data);
@@ -30,7 +30,7 @@ if ($_POST["action"] == "do_add"){
 			$field = new field($field_id);
 			
 			if (($field->input_type != 'file') && ($field->input_type != 'divider')){
-				$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES (?, ?, ?)";
+				$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_values')." (".$db->quoteIdentifier('item_id').",".$db->quoteIdentifier('field_id').",".$db->quoteIdentifier('value').") VALUES (?, ?, ?)";
 				
 				$query_data = array($key,$field->id);
 				
@@ -106,13 +106,13 @@ if ($_POST["action"] == "do_add"){
 						// Update DB
 						$new_key = get_unique_id('anyInventory_files');
 						
-						$query = "INSERT INTO `anyInventory_files` (`id`,`key_value`,`file_name`,`file_size`,`file_type`) VALUES (?, ?, ?, ?, ?)";
+						$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_files')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('key_value').",".$db->quoteIdentifier('file_name').",".$db->quoteIdentifier('file_size').",".$db->quoteIdentifier('file_type').") VALUES (?, ?, ?, ?, ?)";
 						$query_data = array($new_key,$key,$filename,filesize(realpath($DIR_PREFIX."item_files/")."/".$filename),$remote_content_type);
 						$pquery = $db->prepare($query);
 						$result = $db->execute($pquery, $query_data);
 						if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);						
 						
-						$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES (?, ?, ?)";
+						$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_values')." (".$db->quoteIdentifier('item_id').",".$db->quoteIdentifier('field_id').",".$db->quoteIdentifier('value').") VALUES (?, ?, ?)";
 						$query_data = array($key,$field->id,$new_key);
 						$pquery = $db->prepare($query);
 						$result = $db->execute($pquery, $query_data);
@@ -121,13 +121,13 @@ if ($_POST["action"] == "do_add"){
 						// Remote URL is not an image; add it as a remote file
 						$new_key = get_unique_id('anyInventory_files');
 						
-						$query = "INSERT INTO `anyInventory_files` (`id`,`key_value`,`offsite_link`) VALUES (?, ?, ?)";
+						$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_files')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('key_value').",".$db->quoteIdentifier('offsite_link').") VALUES (?, ?, ?)";
 						$query_data = array($new_key,$key,$_POST[str_replace(" ","_",$field->name)."remote"]);
 						$pquery = $db->prepare($query);
 						$result = $db->execute($pquery, $query_data);
 						if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);						
 						
-						$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES (?, ?, ?)";
+						$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_values')." (".$db->quoteIdentifier('item_id').",".$db->quoteIdentifier('field_id').",".$db->quoteIdentifier('value').") VALUES (?, ?, ?)";
 						$query_data = array($key,$field->id,$new_key);
 						$pquery = $db->prepare($query);
 						$result = $db->execute($pquery, $query_data);
@@ -153,13 +153,13 @@ if ($_POST["action"] == "do_add"){
 					
 					$new_key = get_unique_id('anyInventory_files');
 					
-					$query = "INSERT INTO `anyInventory_files` (`id`,`key_value`,`file_name`,`file_size`,`file_type`) VALUES (?, ?, ?, ?, ?)";
+					$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_files')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('key_value').",".$db->quoteIdentifier('file_name').",".$db->quoteIdentifier('file_size').",".$db->quoteIdentifier('file_type').") VALUES (?, ?, ?, ?, ?)";
 					$query_data = array($new_key,$key,$filename,$_FILES[str_replace(" ","_",$field->name)]["size"],$filetype);
 					$pquery = $db->prepare($query);
 					$result = $db->execute($pquery, $query_data);
 					if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 					
-					$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES (?, ?, ?)";
+					$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_values')." (".$db->quoteIdentifier('item_id').",".$db->quoteIdentifier('field_id').",".$db->quoteIdentifier('value').") VALUES (?, ?, ?)";
 					$query_data = array($key,$field->id,$new_key);
 					$pquery = $db->prepare($query);
 					$result = $db->execute($pquery, $query_data);
@@ -179,7 +179,7 @@ elseif($_POST["action"] == "do_edit"){
 	}
 	
 	// Put the query together
-	$query = "UPDATE `anyInventory_items` SET `name`='".$_REQUEST["name"]."' WHERE `id`='".$item->id."'";
+	$query = "UPDATE ".$db->quoteIdentifier('anyInventory_items')." SET ".$db->quoteIdentifier('name')."='".$_REQUEST["name"]."' WHERE ".$db->quoteIdentifier('id')."='".$item->id."'";
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
@@ -198,11 +198,11 @@ elseif($_POST["action"] == "do_edit"){
 							unlink($file->server_path);
 						}
 						
-						$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id["file_id"]."'";
+						$delquery = "DELETE FROM ".$db->quoteIdentifier('anyInventory_files')." WHERE ".$db->quoteIdentifier('id')."='".$file->id["file_id"]."'";
 						$delresult = $db->query($delquery);
 						if (DB::isError($delresult)) die($delresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$delresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 						
-						$remquery = "UPDATE `anyInventory_values` SET `value`='0' WHERE `field_id`='".$field->id."' AND `item_id`='".$item->id."'";
+						$remquery = "UPDATE ".$db->quoteIdentifier('anyInventory_values')." SET ".$db->quoteIdentifier('value')."='0' WHERE ".$db->quoteIdentifier('field_id')."='".$field->id."' AND ".$db->quoteIdentifier('item_id')."='".$item->id."'";
 						$remresult = $db->query($remquery);
 						if (DB::isError($remresult)) die($remresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$remresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 					}
@@ -215,7 +215,7 @@ elseif($_POST["action"] == "do_edit"){
 								unlink($file->server_path);
 							}
 							
-							$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+							$delquery = "DELETE FROM ".$db->quoteIdentifier('anyInventory_files')." WHERE ".$db->quoteIdentifier('id')."='".$file->id."'";
 							$delresult = $db->query($delquery);
 							if (DB::isError($delresult)) die($delresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$delresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 						}
@@ -239,13 +239,13 @@ elseif($_POST["action"] == "do_edit"){
 						
 						$new_key = get_unique_id('anyInventory_files');
 						
-						$query = "INSERT INTO `anyInventory_files` (`id`,`key_value`,`file_name`,`file_size`,`file_type`) VALUES (?, ?, ?, ?, ?)";
+						$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_files')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('key_value').",".$db->quoteIdentifier('file_name').",".$db->quoteIdentifier('file_size').",".$db->quoteIdentifier('file_type').") VALUES (?, ?, ?, ?, ?)";
 						$query_data = array($new_key,$item->id,$filename,$filesize,$filetype);
 						$pquery = $db->prepare($query);
 						$result = $db->execute($pquery, $query_data);
 						if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 						
-						$query = "UPDATE `anyInventory_values` SET `value` = ? WHERE `item_id` = ? AND `field_id` = ?";
+						$query = "UPDATE ".$db->quoteIdentifier('anyInventory_values')." SET ".$db->quoteIdentifier('value')." = ? WHERE ".$db->quoteIdentifier('item_id')." = ? AND ".$db->quoteIdentifier('field_id')." = ?";
 						$query_data = array($new_key, $item->id, $field->id);
 						$pquery = $db->prepare($query);
 						$result = $db->execute($pquery, $query_data);
@@ -258,7 +258,7 @@ elseif($_POST["action"] == "do_edit"){
 								unlink($file->server_path);
 							}
 							
-							$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+							$delquery = "DELETE FROM ".$db->quoteIdentifier('anyInventory_files')." WHERE ".$db->quoteIdentifier('id')."='".$file->id."'";
 							$delresult = $db->query($delquery);
 							if (DB::isError($delresult)) die($delresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$delresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 						}
@@ -289,13 +289,13 @@ elseif($_POST["action"] == "do_edit"){
 							
 							$new_key = get_unique_id('anyInventory_files');
 							
-							$query = "INSERT INTO `anyInventory_files` (`id`,`key_value`,`file_name`,`file_size`,`file_type`) VALUES (?, ?, ?, ?, ?)";
+							$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_files')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('key_value').",".$db->quoteIdentifier('file_name').",".$db->quoteIdentifier('file_size').",".$db->quoteIdentifier('file_type').") VALUES (?, ?, ?, ?, ?)";
 							$query_data = array($new_key,$key,$filename,filesize(realpath($DIR_PREFIX."item_files/")."/".$filename),$remote_content_type);
 							$pquery = $db->prepare($query);
 							$result = $db->execute($pquery, $query_data);
 							if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 							
-							$query = "UPDATE `anyInventory_values` SET `value` = ? WHERE `item_id` = ? AND `field_id` = ?";
+							$query = "UPDATE ".$db->quoteIdentifier('anyInventory_values')." SET ".$db->quoteIdentifier('value')." = ? WHERE ".$db->quoteIdentifier('item_id')." = ? AND ".$db->quoteIdentifier('field_id')." = ?";
 							$query_data = array($new_key, $item->id, $field->id);
 							$pquery = $db->prepare($query);
 							$result = $db->execute($pquery, $query_data);
@@ -305,13 +305,13 @@ elseif($_POST["action"] == "do_edit"){
 							
 							$new_key = get_unique_id('anyInventory_files');
 							
-							$query = "INSERT INTO `anyInventory_files` (`id`,`key_value`,`offsite_link`) VALUES (?, ?, ?)";
+							$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_files')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('key_value').",".$db->quoteIdentifier('offsite_link').") VALUES (?, ?, ?)";
 							$query_data = array($new_key,$key,$offsitelink);
 							$pquery = $db->prepare($query);
 							$result = $db->execute($pquery, $query_data);
 							if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 							
-							$query = "UPDATE `anyInventory_values` SET `value`= ? WHERE `item_id` = ? AND `field_id` = ?";
+							$query = "UPDATE ".$db->quoteIdentifier('anyInventory_values')." SET ".$db->quoteIdentifier('value')."= ? WHERE ".$db->quoteIdentifier('item_id')." = ? AND ".$db->quoteIdentifier('field_id')." = ?";
 							$query_data = array($new_key, $item->id, $field->id);
 							$pquery = $db->prepare($query);
 							$result = $db->execute($pquery, $query_data);
@@ -321,7 +321,7 @@ elseif($_POST["action"] == "do_edit"){
 					}
 				}
 				else{
-					$query = "UPDATE `anyInventory_values` SET `value`=";
+					$query = "UPDATE ".$db->quoteIdentifier('anyInventory_values')." SET ".$db->quoteIdentifier('value')."=";
 					
 					if ($field->input_type == "multiple"){
 						if ($_POST[str_replace(" ","_",$field->name)."_text"] == ""){
@@ -356,7 +356,7 @@ elseif($_POST["action"] == "do_edit"){
 						$query .= "'".$_POST[str_replace(" ","_",$field->name)]."'";
 					}
 					
-					$query .= " WHERE `item_id`='".$item->id."' AND `field_id`='".$field->id."'";
+					$query .= " WHERE ".$db->quoteIdentifier('item_id')."='".$item->id."' AND ".$db->quoteIdentifier('field_id')."='".$field->id."'";
 					$result = $db->query($query);
 					if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				}
@@ -375,7 +375,7 @@ elseif($_POST["action"] == "do_move"){
 	
 	// Move an item.
 	
-	$query = "UPDATE `anyInventory_items` SET `item_category`='".$_POST["c"]."' WHERE `id`='".$_POST["id"]."'";
+	$query = "UPDATE ".$db->quoteIdentifier('anyInventory_items')." SET ".$db->quoteIdentifier('item_category')."='".$_POST["c"]."' WHERE ".$db->quoteIdentifier('id')."='".$_POST["id"]."'";
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 }
@@ -394,7 +394,7 @@ elseif($_POST["action"] == "do_delete"){
 			foreach($item->files as $file){
 				if (!$file->is_remote){
 					if (unlink(realpath($DIR_PREFIX."item_files/")."/".$file->file_name)){
-						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+						$query = "DELETE FROM ".$db->quoteIdentifier('anyInventory_files')." WHERE ".$db->quoteIdentifier('id')."='".$file->id."'";
 						$result = $db->query($query);
 						if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 					}
@@ -404,7 +404,7 @@ elseif($_POST["action"] == "do_delete"){
 					}
 				}
 				else{
-					$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+					$query = "DELETE FROM ".$db->quoteIdentifier('anyInventory_files')." WHERE ".$db->quoteIdentifier('id')."='".$file->id."'";
 					$result = $db->query($query);
 					if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 				}
@@ -413,7 +413,7 @@ elseif($_POST["action"] == "do_delete"){
 		
 		// Remove this item from any alerts
 		
-		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
+		$query = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_alerts')." WHERE ".$db->quoteIdentifier('item_ids')." LIKE '%\"".$item->id."\"%'";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
@@ -423,17 +423,17 @@ elseif($_POST["action"] == "do_delete"){
 			$alert->remove_item($item->id);
 			
 			if (count($alert->item_ids) == 0){
-				$newquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
+				$newquery = "DELETE FROM ".$db->quoteIdentifier('anyInventory_alerts')." WHERE ".$db->quoteIdentifier('id')."='".$alert->id."'";
 				$newresult = $db->query($newquery);
 				if (DB::isError($newresult)) die($newresult->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$newresult->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			}
 		}
 		
-		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$item->id."'";
+		$query = "DELETE FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('id')."='".$item->id."'";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 		
-		$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$item->id."'";
+		$query = "DELETE FROM ".$db->quoteIdentifier('anyInventory_values')." WHERE ".$db->quoteIdentifier('item_id')."='".$item->id."'";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}

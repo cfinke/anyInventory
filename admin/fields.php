@@ -5,7 +5,7 @@ include("globals.php");
 $title = FIELDS;
 $breadcrumbs = ADMINISTRATION.' > '.FIELDS;
 
-$query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
+$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_fields')." WHERE ".$db->quoteIdentifier('id')." > 0 ORDER BY ".$db->quoteIdentifier('importance')."";
 $result = $db->query($query);
 if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 

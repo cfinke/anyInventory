@@ -5,7 +5,7 @@ include("globals.php");
 $title = USERS;
 $breadcrumbs = ADMINISTRATION.' > '.USERS;
 
-$query = "SELECT * FROM `anyInventory_users` ORDER BY `username` ASC";
+$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_users')." ORDER BY ".$db->quoteIdentifier('username')." ASC";
 $result = $db->query($query);
 if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 

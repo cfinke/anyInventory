@@ -54,9 +54,9 @@ if ($_POST["action"] == "do_add"){
 			$expire_timestamp = '00000000000000';
 		}
 		
-		$query = "INSERT INTO `anyInventory_alerts` (`id`,`title`,`item_ids`,`field_id`,`time`,`expire_time`,`timed`,`category_ids`";
-		if ($_POST["condition"] != '') $query .= ", `condition`";
-		if ($_POST["value"] != '') $query .= ", `value`";
+		$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_alerts')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('title').",".$db->quoteIdentifier('item_ids').",".$db->quoteIdentifier('field_id').",".$db->quoteIdentifier('time').",".$db->quoteIdentifier('expire_time').",".$db->quoteIdentifier('timed').",".$db->quoteIdentifier('category_ids')."";
+		if ($_POST["condition"] != '') $query .= ", ".$db->quoteIdentifier('condition')."";
+		if ($_POST["value"] != '') $query .= ", ".$db->quoteIdentifier('value')."";
 		$query .= ") VALUES (?, ?, ?, ?, ?, ?, ?, ?";
 		if ($_POST["condition"] != '') $query .= ", ?";
 		if ($_POST["value"] != '') $query .= ", ?";
@@ -82,10 +82,10 @@ elseif($_POST["action"] == "do_edit_cat_ids"){
 			}
 		}
 		
-		$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
+		$query = "SELECT ".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name')." FROM ".$db->quoteIdentifier('anyInventory_fields')." WHERE ";
 		
 		foreach($_POST["c"] as $cat_id){
-			$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
+			$query .= " ".$db->quoteIdentifier('categories')." LIKE '%\"".$cat_id."\"%' AND ";
 		}
 		
 		$query = substr($query, 0, strlen($query) - 4);
@@ -97,7 +97,7 @@ elseif($_POST["action"] == "do_edit_cat_ids"){
 			exit;
 		}
 		else{
-			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($_POST["c"])."'";
+			$query = "UPDATE ".$db->quoteIdentifier('anyInventory_alerts')." SET ".$db->quoteIdentifier('category_ids')."='".serialize($_POST["c"])."'";
 			$result = $db->query($query);
 			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 			
@@ -138,10 +138,10 @@ elseif($_POST["action"] == "do_edit"){
 			$expire_timestamp = '00000000000000';
 		}
 		
-		$query = "UPDATE `anyInventory_alerts` SET `title` = ?, `item_ids` = ?, `field_id` = ?, `time` = ?, `expire_time` = ?, `timed` = ?";
-		if ($_POST["condition"] != '') $query .= ", `condition` = ?";
-		if ($_POST["value"] != '') $query .= ", `value` = ?";
-		$query .= " WHERE `id` = ?";
+		$query = "UPDATE ".$db->quoteIdentifier('anyInventory_alerts')." SET ".$db->quoteIdentifier('title')." = ?, ".$db->quoteIdentifier('item_ids')." = ?, ".$db->quoteIdentifier('field_id')." = ?, ".$db->quoteIdentifier('time')." = ?, ".$db->quoteIdentifier('expire_time')." = ?, ".$db->quoteIdentifier('timed')." = ?";
+		if ($_POST["condition"] != '') $query .= ", ".$db->quoteIdentifier('condition')." = ?";
+		if ($_POST["value"] != '') $query .= ", ".$db->quoteIdentifier('value')." = ?";
+		$query .= " WHERE ".$db->quoteIdentifier('id')." = ?";
 		$query_data = array($_POST["title"],serialize($_POST["i"]),intval($_POST["field"]),$timestamp,$expire_timestamp,intval(($_POST["timed"] == "yes")));
 		if ($_POST["condition"] != '') $query_data[] = $_POST["value"];
 		if ($_POST["value"] != '') $query_data[] = $_POST["condition"];
@@ -164,7 +164,7 @@ elseif($_POST["action"] == "do_delete"){
 			}
 		}
 		
-		$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_POST["id"]."'";
+		$query = "DELETE FROM ".$db->quoteIdentifier('anyInventory_alerts')." WHERE ".$db->quoteIdentifier('id')."='".$_POST["id"]."'";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	}

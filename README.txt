@@ -12,6 +12,10 @@ To install anyInventory, uploade the included files to your Web server
 and then run the included install.php script from the Web browser of 
 your choice.  (We heartily recommend Mozilla: http://www.mozilla.org/.)
 
+If you do not wish to allow anyone who can view your inventory to add or
+edit it, you can password protect the admin directory to disallow access
+to these functions.
+
 Using anyInventory
 ==================
 The best place to start is with the "Instructions for Use," found in the

@@ -20,6 +20,13 @@
 			</tr>
 			<tr>
 				<td align="top" colspan="2">
+					<div id="searchbox">
+						<form method="get" action="<?php echo $DIR_PREFIX; ?>search.php">
+							<input type="hidden" name="action" value="search" />
+							<input type="text" name="name" value="" />
+							<input type="submit" name="submit" value="Search" />
+						</form>
+					</div>
 					<div id="mainmenu"style="">
 						<b>Main Menu: </b>
 						[ <a href="<?php echo $DIR_PREFIX; ?>index.php">home</a> ]
@@ -32,7 +39,7 @@
 			<tr height="100%">
 				<td class="row_head" width="150" align="left" valign="top" style="padding:5px">
 					<p><b><a href="<?php echo $DIR_PREFIX; ?>index.php">Inventory</a></b></p>
-					<p><b><a href="<?php echo $DIR_PREFIX; ?>search.php">Search</a></b></p>
+					<p><b><a href="<?php echo $DIR_PREFIX; ?>search.php">Advanced Search</a></b></p>
 					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">Fields</a></b><br />
 					<a href="<?php echo $DIR_PREFIX; ?>admin/add_field.php">Add a field</a></p>
 					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">Categories</a></b><br />

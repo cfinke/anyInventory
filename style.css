@@ -25,6 +25,7 @@ a { color: #554E48; }
 	font-weight: bold;
 	text-align: right;
 	vertical-align: top;
+	white-space: nowrap;
 }
 
 #maintable {
@@ -55,4 +56,14 @@ a { color: #554E48; }
 .thumbnail {
 	float: left;
 	padding: 10px;
+}
+
+#searchbox {
+	float: right;
+	white-space: nowrap;
+}
+
+#searchbox form{
+	margin: 0;
+	padding: 0;
 }

@@ -2,7 +2,7 @@
 
 error_reporting(E_ALL ^ E_NOTICE);
 
-$DIR_PREFIX .= "../";
+$DIR_PREFIX .= "../../";
 
 include($DIR_PREFIX."globals.php");
 

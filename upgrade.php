@@ -56,7 +56,7 @@ if ($_POST["action"] == "upgrade"){
 		}
 	}
 	
-	$files_to_read = array("./","./admin","./docs","./docs/images","./fonts","./item_files");
+	$files_to_read = array("./","./admin","./docs","./docs/en","./images","./fonts","./item_files");
 	
 	foreach($files_to_read as $file){
 		if (!is_readable(realpath($file))){
@@ -315,6 +315,9 @@ if ($_POST["action"] == "upgrade"){
 			case '1.8':
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider', 'item' ) DEFAULT 'text' NOT NULL ";
 				@mysql_query($query);
+				
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('LANG','".$_REQUEST["lang"]."')";
+				@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.
@@ -341,6 +344,7 @@ if ($_POST["action"] == "upgrade"){
 			
 			$output .= '
 				<input type="hidden" name="action" value="try_again" />
+				<input type="hidden" name="lang" value="'.$_REQUEST["lang"].'" />
 				<input type="hidden" name="db_host" value="'.stripslashes($_POST["db_host"]).'" />
 				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
@@ -393,6 +397,7 @@ if($_POST["action"] == "try_again"){
 	else{
 		$output .= '
 			<input type="hidden" name="action" value="try_again" />
+			<input type="hidden" name="lang" value="'.$_REQUEST["lang"].'" />
 			<input type="hidden" name="db_host" value="'.stripslashes($_POST["db_host"]).'" />
 			<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 			<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
@@ -432,19 +437,28 @@ elseif(!$globals_error){
 	$output .= '	<input type="hidden" name="action" value="upgrade" />
 					<table>
 						<tr>
+							<td class="form_label"><label for="db_host">Language:</label></td>
+							<td class="form_input">
+								<select name="lang" id="lang">
+									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
 							<td class="form_input">
 								<select name="old_version">
-									<option value="1.7.1">1.7.1</option>
-									<option value="1.7">1.7</option>
-									<option value="1.6">1.6</option>
-									<option value="1.5">1.5</option>
-									<option value="1.4">1.4.1</option>
-									<option value="1.4">1.4</option>
-									<option value="1.3">1.3</option>
-									<option value="1.2">1.2</option>
-									<option value="1.1">1.1</option>
-									<option value="1.0">1.0</option>
+									<option value="1.8"';if($_REQUEST["old_version"] == '1.8')$output .= ' selected="selected"'; $output .= '>1.8</option>
+									<option value="1.7.1"';if($_REQUEST["old_version"] == '1.7.1')$output .= ' selected="selected"'; $output .= '>1.7.1</option>
+									<option value="1.7"';if($_REQUEST["old_version"] == '1.7')$output .= ' selected="selected"'; $output .= '>1.7</option>
+									<option value="1.6"';if($_REQUEST["old_version"] == '1.6')$output .= ' selected="selected"'; $output .= '>1.6</option>
+									<option value="1.5"';if($_REQUEST["old_version"] == '1.5')$output .= ' selected="selected"'; $output .= '>1.5</option>
+									<option value="1.4.1"';if($_REQUEST["old_version"] == '1.4.1')$output .= ' selected="selected"'; $output .= '>1.4.1</option>
+									<option value="1.4"';if($_REQUEST["old_version"] == '1.4')$output .= ' selected="selected"'; $output .= '>1.4</option>
+									<option value="1.3"';if($_REQUEST["old_version"] == '1.3')$output .= ' selected="selected"'; $output .= '>1.3</option>
+									<option value="1.2"';if($_REQUEST["old_version"] == '1.2')$output .= ' selected="selected"'; $output .= '>1.2</option>
+									<option value="1.1"';if($_REQUEST["old_version"] == '1.1')$output .= ' selected="selected"'; $output .= '>1.1</option>
+									<option value="1.0"';if($_REQUEST["old_version"] == '1.0')$output .= ' selected="selected"'; $output .= '>1.0</option>
 								</select>
 							</td>
 						</tr>
@@ -489,7 +503,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Upgrade anyInventory 1.8</title>
+		<title>Upgrade to anyInventory 1.9</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">
@@ -505,7 +519,7 @@ echo '
 		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.8
+					anyInventory 1.9
 				</td>
 			</tr>
 			<tr>
@@ -522,7 +536,7 @@ echo '
 					<div style="min-height: 400px;">
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Upgrade anyInventory 1.8</td>
+								<td>Upgrade to anyInventory 1.9</td>
 							</tr>
 							<tr>
 								<td class="tableData">

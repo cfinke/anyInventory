@@ -14,6 +14,8 @@ if (is_array($_POST)){
 	}
 }
 
+include($DIR_PREFIX."functions.php");
+
 connect_to_database();
 
 $query = "SELECT * FROM `anyInventory_config`";
@@ -24,7 +26,6 @@ while ($row = mysql_fetch_array($result)){
 }
 
 include($DIR_PREFIX."lang/".LANG.".php");
-include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");
 include($DIR_PREFIX."item_class.php");

@@ -49,7 +49,7 @@ if ($_POST["action"] == "install"){
 		}
 	}
 	
-	$files_to_read = array("./","./admin","./docs","./docs/images","./fonts","./item_files");
+	$files_to_read = array("./","./admin","./docs","./docs/en","./images","./fonts","./item_files");
 	
 	foreach($files_to_read as $file){
 		if (!is_readable(realpath($file))){
@@ -191,6 +191,9 @@ if ($_POST["action"] == "install"){
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('LANG','".$_REQUEST["lang"]."')";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
@@ -235,6 +238,7 @@ if ($_POST["action"] == "install"){
 			
 			$output .= '
 				<input type="hidden" name="action" value="try_again" />
+				<input type="hidden" name="lang" value="'.$_REQUEST["lang"].'" />
 				<input type="hidden" name="db_host" value="'.stripslashes($_POST["db_host"]).'" />
 				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
@@ -288,6 +292,7 @@ if($_POST["action"] == "try_again"){
 	else{
 		$output .= '
 				<input type="hidden" name="action" value="try_again" />
+				<input type="hidden" name="lang" value="'.$_REQUEST["lang"].'" />
 				<input type="hidden" name="db_host" value="'.stripslashes($_POST["db_host"]).'" />
 				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
@@ -328,6 +333,14 @@ elseif(!$set_config_error){
 	
 	$output .= '	<input type="hidden" name="action" value="install" />
 					<table>
+						<tr>
+							<td class="form_label"><label for="db_host">Language:</label></td>
+							<td class="form_input">
+								<select name="lang" id="lang">
+									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
+								</select>
+							</td>
+						</tr>
 						<tr>
 							<td class="form_label"><label for="db_host">MySQL host:</label></td>
 							<td class="form_input"><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>

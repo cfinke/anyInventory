@@ -1,3 +1,6 @@
+FEATURES
+========================================
+
 BEFORE 1.1
 ===================
 DONE - Searching within a category
@@ -21,9 +24,10 @@ DONE - Labels
 
 BEFORE 1.6
 ===================
-Timed Alerts
-Thumbnails of remote images
-Better advanced search, like phpMyAdmin
+CHRIS - Timed Alerts
+Thumbnails of remote images (I'm not sure if this can actually be done.)
+
+DREW - Better advanced search, like phpMyAdmin's Search page
 
 BEFORE 1.7
 ===================
@@ -33,3 +37,7 @@ Internal password protection
 BEFORE 1.8
 ===================
 Label Sheets
+
+BUGS
+========================================
+Put any bugs you find here.

@@ -50,12 +50,13 @@ else{
 	}
 	
 	// If this category has subcategories, display them.
-	if (is_array($category->children) && (count($category->children) > 0)){
+	if (is_array($category->children_ids) && ($category->num_children > 0)){
 		$output .= '<table style="width: 90%; margin-left: 5%; margin-right: 5%;"><tr><td style="width: 50%;">';
 		
 		$i = 0;
 		
-		foreach($category->children as $child){
+		foreach($category->children_ids as $child_id){
+			$child = new category($child_id);
 			if ($i == $num_per_column) $output .= '</td><td style="width: 50%; vertical-align: top;">';
 			
 			$output .= '<p><a href="'.$_SERVER["PHP_SELF"].'?c='.$child->id.'"><b>'.$child->name.'</b></a></p>';
@@ -87,17 +88,16 @@ else{
 		$output .= '</table>';
 	}
 	
-	$query = "SELECT * FROM `anyInventory_alerts` WHERE `time` <= NOW()";
+	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW()";
 	$result = query($query);
 	
 	while ($row = mysql_fetch_array($result)){
-		$items = unserialize($row["item_ids"]);
 		$alert = new alert($row["id"]);
 		
-		if (is_array($items)){
-			foreach ($items as $item_id){
+		if (is_array($alert->item_ids)){
+			foreach ($alert->item_is as $item_id){
 				$item = new item($item_id);
-				$field = new field($row["field_id"]);
+				$field = new field($alert->field_id);
 				
 				if (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");')){
 					if (!$tripped){

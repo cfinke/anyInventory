@@ -35,9 +35,9 @@ if ($category->num_items() > 0){
 		</p>';
 }
 
-$output .= '<p><b>Number of subcategories:</b> '.count($category->children).'</p>';
+$output .= '<p><b>Number of subcategories:</b> '.$category->num_children.'</p>';
 
-if (count($category->children) > 0){
+if ($category->num_children > 0){
 	$output .= '
 		<p>
 			<input type="radio" name="subcat_action" value="delete" /> Delete all sub-categories<br />

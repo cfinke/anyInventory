@@ -145,7 +145,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 		// Delete any checked files
 		
 		foreach($_REQUEST["delete_files"] as $file_id){
-			$query = "SELECT * FROM `anyInventory_files` WHERE `id`='".$file_id."'";
+			$query = "SELECT `file_name`,`offsite_link` FROM `anyInventory_files` WHERE `id`='".$file_id."'";
 			$result = query($query);
 			$row = mysql_fetch_array($result);
 			
@@ -231,7 +231,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 		
 		// Remove this item from any alerts
 		
-		$query = "SELECT * FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
+		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
 		$result = query($query);
 		
 		while ($row = mysql_fetch_array($result)){

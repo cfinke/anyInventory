@@ -48,7 +48,7 @@ class item {
 		}
 		
 		// Get each of this item's files and add it to the array.
-		$query = "SELECT * FROM `anyInventory_files` WHERE `key`='".$this->id."'";
+		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key`='".$this->id."'";
 		$result = query($query);
 		
 		while ($row = mysql_fetch_array($result)){

@@ -87,9 +87,6 @@ if (is_array($item->category->field_ids)){
 	}
 }
 
-$query = "SELECT * FROM `anyInventory_files` WHERE `key`='".$_REQUEST["id"]."'";
-$result = query($query);
-
 if (is_array($item->files) && (count($item->files) > 0)){
 	$output .= '
 				<tr>

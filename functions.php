@@ -74,7 +74,7 @@ function get_options_children($id, $pre = "", $selected = 0, $nonempty = false){
 	// This function creates select box options for the children of a category
 	// with the id $id.
 	
-	$query = "SELECT * FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
+	$query = "SELECT `name` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
 	$result = query($query);
 	
 	if ($id != 0){
@@ -126,7 +126,7 @@ function get_fields_checkbox_area($checked = array()){
 	// This function returns the field checkboxes.
 	// Any field ids in the array $checked will be checked.
 	
-	$query = "SELECT * FROM `anyInventory_fields` WHERE 1 ORDER BY `name` ASC";
+	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `name` ASC";
 	$result = query($query);
 	
 	$output .= '<table>';
@@ -199,8 +199,9 @@ function get_array_children($id, &$array, $pre = ""){
 function delete_subcategories($category){
 	// This function deletes any subcategories of $category.
 	
-	if (is_array($category->children)){
-		foreach($category->children as $child){
+	if (is_array($category->children_ids)){
+		foreach($category->children_ids as $child_id){
+			$child = new category($child_id);
 			delete_subcategory($child);
 		}
 	}
@@ -211,8 +212,9 @@ function delete_subcategories($category){
 function delete_subcategory($category){
 	// This function deletes a subcategory $category and its children.
 	
-	if (is_array($category->children)){
-		foreach($category->children as $child){
+	if (is_array($category->children_ids)){
+		foreach($category->children_ids as $child_id){
+			$child = new category($child_id);
 			delete_subcategories($child);
 		}
 	}

@@ -5,19 +5,19 @@ error_reporting(E_ALL ^ E_NOTICE);
 // This class keeps track of all the information related to a category.
 
 class category {
-	var $id;					// The id in the database anyInventory_categories for this category
+	var $id;						// The id in the database anyInventory_categories for this category
 	
-	var $name;					// The name of this category
+	var $name;						// The name of this category
 	
-	var $parent_id;				// The id in the database anyInventory_categories for this category's parent
-	var $children = array();	// An array of category objects that are children of this category
-	var $num_children = 0;		// The number of children this category has.  (Counts children only throught the first generation.)
+	var $parent_id;					// The id in the database anyInventory_categories for this category's parent
+	var $children_ids = array();	// An array of category ids that are children of this category
+	var $num_children = 0;			// The number of children this category has.  (Counts children only throught the first generation.)
 	
-	var $breadcrumbs = array();	// An array of the parents of this category, starting at 0, the top level.
-	var $breadcrumb_names;		// A breadcrumb style string of $this->breadcrumbs, ie. Top > Books > Fiction
+	var $breadcrumbs = array();		// An array of the parents of this category, starting at 0, the top level.
+	var $breadcrumb_names;			// A breadcrumb style string of $this->breadcrumbs, ie. Top > Books > Fiction
 	
-	var $field_ids = array();	// An array of all of the ids (found in anyInventory_fields) of the fields that this category uses.
-	var $field_names = array();	// An array of the field names that matches up with the ids found in $this->field_ids.
+	var $field_ids = array();		// An array of all of the ids (found in anyInventory_fields) of the fields that this category uses.
+	var $field_names = array();		// An array of the field names that matches up with the ids found in $this->field_ids.
 	
 	function category($cat_id){
 		// Set the id of this category.
@@ -28,7 +28,7 @@ class category {
 			// Not the Top Level
 			
 			// Get all of the information about this category from the categories table.
-			$query = "SELECT * FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
+			$query = "SELECT `name`,`parent` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
 			$result = query($query);
 			$row = mysql_fetch_array($result);
 			
@@ -107,12 +107,11 @@ class category {
 		}
 		
 		// Find the children of the current category
-		$query = "SELECT * FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
+		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
 		$result = query($query);
 		
-		// Create a category object for each child and increment the number of children.
 		while($row = mysql_fetch_array($result)){
-			$this->children[] = new category($row["id"]);
+			$this->children_ids[] = $row["id"];
 			$this->num_children++;
 		}
 	}
@@ -132,9 +131,10 @@ class category {
 		// First, start with the number of items in this category.
 		$total = $this->num_items();
 		
-		if (is_array($this->children)){
+		if (is_array($this->children_ids)){
 			// For each child, call this function on it.
-			foreach($this->children as $child){
+			foreach($this->children_ids as $child_id){
+				$child = new category($child_id);
 				$total += $child->num_items_r();
 			}
 		}

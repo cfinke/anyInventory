@@ -8,7 +8,7 @@ $output .= '<table style="width: 100%;"><tr><td><a href="add_item.php">Add an it
 
 $table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td></tr>';
 
-$query = "SELECT * FROM `anyInventory_items` ORDER BY `name` ASC";
+$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` ORDER BY `name` ASC";
 $result = query($query);
 
 if (mysql_num_rows($result) > 0){

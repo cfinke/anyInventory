@@ -4,11 +4,12 @@ DONE - Searching within a category
 
 BEFORE 1.2
 ===================
-Remote files
-All files commented
+DONE - Remote files
+DONE - All files commented
 
 BEFORE 1.3
 ===================
+Get more information out of remote files
 Searching within multiple categories
 
 BEFORE 1.4

@@ -3,34 +3,51 @@
 include("globals.php");
 
 if ($_REQUEST["action"] == "do_add"){
-	// Add a category.
-	$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["parent"]."','".((int) (($_REQUEST["auto_inc"] == "yes") / 1))."')";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-	
-	// Get the id of the category
-	$this_id = mysql_insert_id();
-	
-	if ($_REQUEST["inherit_fields"] == "yes"){
-		// Add the fields from the parent category
-		$parent = new category($_REQUEST["parent"]);
+	if (!$admin_user->can_admin($_REQUEST["parent"])){
+		header("Location: ../error_handler.php?eid=13");
+		exit;
+	}
+	else{
+		// Add a category.
+		$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["parent"]."','".((int) (($_REQUEST["auto_inc"] == "yes") / 1))."')";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		if(is_array($parent->field_ids)){
-			foreach($parent->field_ids as $field_id){
-				$field = new field($field_id);
+		// Get the id of the category
+		$this_id = mysql_insert_id();
+		
+		if ($_REQUEST["inherit_fields"] == "yes"){
+			// Add the fields from the parent category
+			$parent = new category($_REQUEST["parent"]);
+			
+			if(is_array($parent->field_ids)){
+				foreach($parent->field_ids as $field_id){
+					$field = new field($field_id);
+					$field->add_category($this_id);
+				}
+			}
+		}
+		
+		// Add the checked fields
+		if (is_array($_REQUEST["fields"])){
+			foreach($_REQUEST["fields"] as $key => $value){
+				$field = new field($key);
 				$field->add_category($this_id);
 			}
 		}
-	}
-	
-	// Add the checked fields
-	if (is_array($_REQUEST["fields"])){
-		foreach($_REQUEST["fields"] as $key => $value){
-			$field = new field($key);
-			$field->add_category($this_id);
-		}
+		
+		$admin_user->add_category_admin($this_id);
+		$admin_user->add_category_view($this_id);
+		
+		$view_user->add_category_view($this_id);
+		$view_user->add_category_admin($this_id);
 	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
+	if (!$admin_user->can_admin($_REQUEST["parent"]) || (!$admin_user->can_admin($_REQUEST["id"]))){
+		header("Location: ../error_handler.php?eid=13");
+		exit;
+	}
+	
 	// Make an object from the unchanged category
 	$old_category = new category($_REQUEST["id"]);
 	
@@ -93,36 +110,42 @@ elseif($_REQUEST["action"] == "do_edit"){
 elseif($_REQUEST["action"] == "do_delete"){
 	// Make sure the user clicked "Delete" and not "Cancel"
 	if ($_REQUEST["delete"] == "Delete"){
-		// Create an object from the category
-		$category = new category($_REQUEST["id"]);
-		
-		// Delete the category
-		$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_REQUEST["id"]."'"; 
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		
-		if ($_REQUEST["item_action"] == "delete"){
-			// Delete all of the items in the category
-			$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+		if (!$admin_user->can_admin($_REQUEST["id"])){
+			header("Location: ../error_handler.php?eid=13");
+			exit;
+		}
+		else{
+			// Create an object from the category
+			$category = new category($_REQUEST["id"]);
+			
+			// Delete the category
+			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_REQUEST["id"]."'"; 
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			
+			if ($_REQUEST["item_action"] == "delete"){
+				// Delete all of the items in the category
+				$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			}
+			elseif($_REQUEST["item_action"] == "move"){
+				// Move the items to a different category
+				$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["move_items_to"]."' WHERE `item_category`='".$category->id."'";
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			}
+			
+			if ($_REQUEST["subcat_action"] == "delete"){
+				// Delete the subcategories
+				delete_subcategories($category);
+			}
+			elseif($_REQUEST["subcat_action"] == "move"){
+				// Move the subcategories
+				$query = "UPDATE `anyInventory_categories` SET `parent`='".$_REQUEST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			}
+			
+			// Remove all of the fields from this category.
+			remove_from_fields($category->id);
 		}
-		elseif($_REQUEST["item_action"] == "move"){
-			// Move the items to a different category
-			$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["move_items_to"]."' WHERE `item_category`='".$category->id."'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		}
-		
-		if ($_REQUEST["subcat_action"] == "delete"){
-			// Delete the subcategories
-			delete_subcategories($category);
-		}
-		elseif($_REQUEST["subcat_action"] == "move"){
-			// Move the subcategories
-			$query = "UPDATE `anyInventory_categories` SET `parent`='".$_REQUEST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		}
-		
-		// Remove all of the fields from this category.
-		remove_from_fields($category->id);
 	}
 }
 

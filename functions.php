@@ -4,11 +4,22 @@ function connect_to_database(){
 	// This function opens and returns the database connection.
 	global $dsn;
 	
-	$db = DB::connect($dsn);
+	$options = array('portability' => DB_PORTABILITY_ALL);
+	
+	$db = DB::connect($dsn, $options);
 	
 	if (DB::isError($db)) {
 		die($db->getMessage());
 	}
+	
+	$db->setFetchMode(DB_FETCHMODE_ASSOC);
+	
+	$db->createSequence('items');
+	$db->createSequence('fields');
+	$db->createSequence('categories');
+	$db->createSequence('users');
+	$db->createSequence('alerts');
+	$db->createSequence('files');
 	
 	return $db;
 }

@@ -9,12 +9,10 @@ if ($_POST["action"] == "do_add"){
 	}
 	else{
 		// Add a category.
-		$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_categories')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('parent').",".$db->quoteIdentifier('auto_inc_field').") VALUES ('".$db->nextId('categories')."', '".stripslashes($_POST['name'])."', '".$_POST['parent']."', '".intval(($_POST['auto_inc'] == 'yes'))."')";
+		$this_id = nextId("categories");
+		$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_categories')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('parent').",".$db->quoteIdentifier('auto_inc_field').") VALUES ('".$this_id."', '".stripslashes($_POST['name'])."', '".$_POST['parent']."', '".intval(($_POST['auto_inc'] == 'yes'))."')";
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		
-		// Get the id of the category
-        $this_id = $db->nextId('categories') - 1; 
 		
 		if ($_POST["inherit_fields"] == "yes"){
 			// Add the fields from the parent category

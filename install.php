@@ -43,7 +43,7 @@ if ($_POST["action"] == "install"){
 		$errors[] = 'Please enter the MySQL password.';
 	}
 	if (strlen(trim($_POST["db_type"])) == 0){
-		$errors[] = 'Please enter the Database Type.';
+		$errors[] = 'Please enter the database type.';
 	}
 	if ($_POST["password_protect_admin"] || $_POST["password_protect_view"]){
 		if (strlen(trim($_POST["username"])) == 0){
@@ -54,16 +54,12 @@ if ($_POST["action"] == "install"){
 		}
 	}
 	
-	$files_to_read = array("./","./admin","./docs","./docs/en","./images","./fonts","./item_files");
+	$files_to_read = array("./","./admin","./docs","./barcode","./images");
 	
 	foreach($files_to_read as $file){
 		if (!is_readable(realpath($file))){
 			$errors[] = "The path ".realpath($file)." (".$file.") is not readable.";
 		}
-	}
-	
-	if (!is_writable(realpath("./item_files/"))){
-		$errors[] = 'The path '.realpath("./item_files/").' is not writable by the Web server.';
 	}
 	
 	// Check for the correct database information.	
@@ -121,13 +117,13 @@ if ($_POST["action"] == "install"){
 		$db->query($query);
 		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_values') . "";
 		$db->query($query);
+		
 		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_categories') . " (
 		                  " . $db->quoteIdentifier('id') . " int ,
 		                  " . $db->quoteIdentifier('parent') . " int default '0',
 		                  " . $db->quoteIdentifier('name') . " varchar(32) default '',
 		                  " . $db->quoteIdentifier('auto_inc_field') . " int DEFAULT '0',
-		                  CONSTRAINT " . $db->quoteIdentifier('id1') . " UNIQUE (" . $db->quoteIdentifier('id') . "),
-		                  CONSTRAINT " . $db->quoteIdentifier('parent1') . " UNIQUE (" . $db->quoteIdentifier('parent') . ")
+		                  CONSTRAINT " . $db->quoteIdentifier('id1') . " UNIQUE (" . $db->quoteIdentifier('id') . ")
 		                )";
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
@@ -163,6 +159,23 @@ if ($_POST["action"] == "install"){
 				)";
 		}
 		
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		if($_POST['db_type'] == 'oci8'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
+				" . $db->quoteIdentifier('data_id') . " INT,
+				" . $db->quoteIdentifier('part_id') . " INT,
+				" . $db->quoteIdentifier('data') . " LONG,
+				CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . ")";
+		}
+		elseif($_POST["db_type"] == 'mysql'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
+				" . $db->quoteIdentifier('data_id') . " INT,
+				" . $db->quoteIdentifier('`part_id') . " INT,
+				" . $db->quoteIdentifier('data') . " LONGTEXT,
+				CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . ")";
+		}
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
@@ -275,19 +288,15 @@ if ($_POST["action"] == "install"){
 		
 		if($_POST['db_type'] == 'oci8'){
 			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_config') . " (
-				" . $db->quoteIdentifier('id') . " int  ,
 				" . $db->quoteIdentifier('key') . " varchar( 64 ) default '',
 				" . $db->quoteIdentifier('value') . " VARCHAR(2000) ,
-				CONSTRAINT " . $db->quoteIdentifier('id7') . " UNIQUE ( " . $db->quoteIdentifier('id') . " ),
 				CONSTRAINT " . $db->quoteIdentifier('key') . " UNIQUE ( " . $db->quoteIdentifier('key') . " )
 				)";
 		}
 		else if($_POST['db_type'] == 'mysql'){
 			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_config') . " (
-				" . $db->quoteIdentifier('id') . " int  ,
 				" . $db->quoteIdentifier('key') . " varchar( 64 ) default '',
 				" . $db->quoteIdentifier('value') . " text ,
-				CONSTRAINT " . $db->quoteIdentifier('id7') . " UNIQUE ( " . $db->quoteIdentifier('id') . " ),
 				CONSTRAINT " . $db->quoteIdentifier('key') . " UNIQUE ( " . $db->quoteIdentifier('key') . " )
 				)";
 		}
@@ -295,27 +304,43 @@ if ($_POST["action"] == "install"){
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'AUTO_INC_FIELD_NAME', 'anyInventory ID')";
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('AUTO_INC_FIELD_NAME', 'anyInventory ID')";
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'FRONT_PAGE_TEXT', 'This is the front page and top-level category of anyInventory.  You can <a href=\"docs/".$_POST["lang"]."\/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.anyInventory ID.')";	
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('FRONT_PAGE_TEXT', 'This is the front page and top-level category of anyInventory.  You can <a href=\"docs/".$_POST["lang"]."\/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.anyInventory ID.')";	
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'LANG', '". $_POST['lang'] ."')";	
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('LANG', '". $_POST['lang'] ."')";	
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'PP_VIEW', '".intval(($_POST['password_protect_view'] == 'yes'))."')";		
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('PP_VIEW', '".intval(($_POST['password_protect_view'] == 'yes'))."')";		
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'PP_ADMIN', '".intval(($_POST['password_protect_admin'] == 'yes'))."')";	
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('PP_ADMIN', '".intval(($_POST['password_protect_admin'] == 'yes'))."')";	
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'ITEM_VIEW', 'list')";
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('ITEM_VIEW', 'list')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('BAR_TEMPLATE', '6')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('LABEL_PADDING', '12')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('PAD_CHAR','0')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('BARCODE','C128C')";
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
@@ -323,17 +348,17 @@ if ($_POST["action"] == "install"){
 		
 		$_POST["username"] = ($_POST["username"] == '') ? 'username' : $_POST["username"];
 		$_POST["password"] = ($_POST["password"] == '') ? 'password' : $_POST["password"];
-		$admin_user_id = $db->nextId('users');
+		$admin_user_id = nextId('users');
 		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_users') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('username') . "," . $db->quoteIdentifier('password') . "," . $db->quoteIdentifier('usertype') . "," . $db->quoteIdentifier('categories_admin') . "," . $db->quoteIdentifier('categories_view') . ") VALUES ('" .$admin_user_id. "', '" . $_POST["username"] . "', '". md5($_POST["password"]). "' , 'Administrator', '". serialize($blank). "', '" .serialize($blank). "')";	
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery); 
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'ADMIN_USER_ID', '".$admin_user_id."')";
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('ADMIN_USER_ID', '".$admin_user_id."')";
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'NAME_FIELD_NAME', '".NAME."')";	
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES (''NAME_FIELD_NAME', '".NAME."')";	
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		

@@ -19,13 +19,15 @@ if ($_POST["action"] == "do_add"){
 	}
 	else{
 		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_users') . " 
-					(" . $db->quoteIdentifier('username') . ",
+					(" . $db->quoteIdentifier('id') . ",
+					 " . $db->quoteIdentifier('username') . ",
 					 " . $db->quoteIdentifier('password') . ",
 					 " . $db->quoteIdentifier('usertype') . ",
 					 " . $db->quoteIdentifier('categories_view') . ",
 					 " . $db->quoteIdentifier('categories_admin') . ")
 					VALUES
-					('".$_POST["username"]."',
+					('".nextId("users")."',
+					 '".$_POST["username"]."',
 					 '".md5($_POST["password"])."',
 					 '".$_POST["usertype"]."',
 					 '".addslashes(serialize($_POST["c_view"]))."',

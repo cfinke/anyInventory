@@ -6,6 +6,8 @@ function connect_to_database(){
 	global $dsn;
 	
 	$db = DB::connect($dsn);
+	if (DB::isError($db)) die($db->getMessage());
+	
 	$db->setOption('portability',  DB_PORTABILITY_ALL);
 	$db->setOption('debug',  2);
 	
@@ -16,21 +18,20 @@ function connect_to_database(){
 	return $db;
 }
 
-function get_unique_id($table){
+function nextId($table){
 	global $db;
 	
-	$query = "SELECT MAX(" . $db->quoteIdentifier('id') . ") AS " . $db->quoteIdentifier('seq_id') . " FROM " . $db->quoteIdentifier($table) . "";
+	$query = "SELECT MAX(" . $db->quoteIdentifier('id') . ") AS " . $db->quoteIdentifier('seq_id') . " FROM " . $db->quoteIdentifier("anyInventory_" . $table);
 	$result = $db->query($query);
 	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
 	
 	if ($result->numRows() == 0){
-		$row["seq_id"] = 0;
+		return 1;
 	}
 	else{
 		$row = $result->fetchRow();
+		return intval($row["seq_id"]) + 1;
 	}
-	
-	return intval($row["seq_id"]) + 1;
 }
 
 function display($output){
@@ -79,7 +80,7 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 		if (DB::isError($newresult)) die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 		
 		$row = $newresult->fetchRow();
-		$category_name = $row[0];
+		$category_name = $row["name"];
 		$pre .= $category_name . ' > ';
 	}
 	
@@ -204,7 +205,7 @@ function get_category_array($top = 0){
 		
 		if ($result->numCols() > 0){
 			$row = $result->fetchRow();
-			$array[] = array("name"=>$row[0],"id"=>$top);
+			$array[] = array("name"=>$row["name"],"id"=>$top);
 		}
 		else{
 			return $array;
@@ -226,11 +227,13 @@ function get_array_children($id, &$array, $pre = ""){
 	if ($id != 0){
 		$newquery = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$id."'";
 		$newresult = $db->query($newquery);
+		
     	if (DB::isError($newresult)){
         	die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
     	}
+		
 		$newrow = $newresult->fetchRow();
-		$pre .= $newrow[0] . ' > ';
+		$pre .= $newrow["name"] . ' > ';
 	}
 	
 	if ($result->numRows() > 0){
@@ -424,7 +427,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 				
 				$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . " IN (".implode(", ",$c).")";
 				$result = $db->query($query);
-    			if (DB::isError($result) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+    			if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				if ($result->numRows() == 0){
 					header("Location: ../error_handler.php?eid=2");

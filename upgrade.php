@@ -193,7 +193,7 @@ if ($_POST["action"] == "upgrade"){
 							$query = "ALTER TABLE `anyInventory_items` ADD `Generic File ".$i."` INT NOT NULL";
 							$db->query($query);
 							
-							$query = "INSERT INTO `anyInventory_fields` (`id`,`name`,`input_type`,`categories`,`values`) VALUES ('".get_unique_id('anyInventory_fields')."','Generic File ".$i."','file','".serialize($cat_ids)."','".serialize($values)."')";
+							$query = "INSERT INTO `anyInventory_fields` (`id`,`name`,`input_type`,`categories`,`values`) VALUES ('".nextId('anyInventory_fields')."','Generic File ".$i."','file','".serialize($cat_ids)."','".serialize($values)."')";
 							$db->query($query);
 						}
 						
@@ -263,13 +263,13 @@ if ($_POST["action"] == "upgrade"){
 					) TYPE = MYISAM";
 				$db->query($query);
 				
-				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".get_unique_id('anyInventory_config')."','AUTO_INC_FIELD_NAME','anyInventory ID')";
+				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".nextId('anyInventory_config')."','AUTO_INC_FIELD_NAME','anyInventory ID')";
 				$db->query($query);
 				
-				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".get_unique_id('anyInventory_config')."','FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
+				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".nextId('anyInventory_config')."','FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
 				$db->query($query);
 				
-				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".get_unique_id('anyInventory_config')."','NAME_FIELD_NAME','Name')";
+				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".nextId('anyInventory_config')."','NAME_FIELD_NAME','Name')";
 				$db->query($query);
 				
 				$query = "CREATE TABLE `anyInventory_users` (
@@ -288,10 +288,10 @@ if ($_POST["action"] == "upgrade"){
 				
 				$_POST["username"] = ($_POST["username"] == '') ? 'username' : $_POST["username"];
 				$_POST["password"] = ($_POST["password"] == '') ? 'password' : $_POST["password"];
-				$admin_user_id = get_unique_id('anyInventory_users');
+				$admin_user_id = nextId('anyInventory_users');
 				$query = "INSERT INTO `anyInventory_users`
 							(`id`,
-                                                         `username`,
+                             `username`,
 							 `password`,
 							 `usertype`,
 							 `categories_admin`,
@@ -305,13 +305,13 @@ if ($_POST["action"] == "upgrade"){
 							 '".addslashes(serialize($blank))."')";
 				$db->query($query);
 				
-				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".get_unique_id('anyInventory_config')."','ADMIN_USER_ID','$admin_user_id')";
+				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".nextId('anyInventory_config')."','ADMIN_USER_ID','$admin_user_id')";
 				$db->query($query);
 				
-				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".get_unique_id('anyInventory_config')."','PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
+				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".nextId('anyInventory_config')."','PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
 				$db->query($query); if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
-				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".get_unique_id('anyInventory_config')."','PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
+				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".nextId('anyInventory_config')."','PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
 				$db->query($query); if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider' ) DEFAULT 'text' NOT NULL ";
@@ -323,7 +323,7 @@ if ($_POST["action"] == "upgrade"){
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider', 'item' ) DEFAULT 'text' NOT NULL ";
 				$db->query($query);
 				
-				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".get_unique_id('anyInventory_config')."','LANG','".$_REQUEST["lang"]."')";
+				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".nextId('anyInventory_config')."','LANG','".$_REQUEST["lang"]."')";
 				$db->query($query);
 				
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `modified` TIMESTAMP NOT NULL AFTER `value`";
@@ -379,7 +379,7 @@ if ($_POST["action"] == "upgrade"){
 				}
 			case '1.9':
 				# Changes introduced in 1.9.1
-				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".get_unique_id('anyInventory_config')."','ITEM_VIEW','list')";
+				$query = "INSERT INTO `anyInventory_config` (`id`,`key`,`value`) VALUES ('".nextId('anyInventory_config')."','ITEM_VIEW','list')";
 				$db->query($query);
 			case '1.9.1':
 				# Changes introduced in 1.9.2
@@ -396,6 +396,50 @@ if ($_POST["action"] == "upgrade"){
 				}
 			case '1.9.2':
 				# Changes introduced in 2.0
+				
+				// Drop the `id` column from the config table.
+				
+				$query = "ALTER TABLE `anyInventory_config` DROP `id`";
+				$result = $db->query($query);
+				
+				// Set up the sequence tables.
+				
+				$sequences = array("alerts","categories","fields","items","files","users");
+				
+				foreach($sequences as $seq){
+					$query = "SELECT MAX(`id`) AS `old_id` FROM `anyInventory_" . $seq . "`";
+					$result = $db->query($query);
+					$row = $result->fetchRow();
+					$seqId = $row["old_id"];
+					
+					$query = "CREATE TABLE `".$seq."_seq` (
+					  `id` int(10) unsigned NOT NULL auto_increment,
+					  PRIMARY KEY  (`id`)
+						)";
+					$result = $db->query($query);
+					
+					$query = "INSERT INTO `".$seq."_seq` VALUES (".($seqId + 1).")";
+					$result = $db->query($query);
+				}
+				
+				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('BAR_TEMPLATE', '6')";
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+				
+				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('LABEL_PADDING', '12')";
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+				
+				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('PAD_CHAR','0')";
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+				
+				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('BARCODE','C128C')";
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+				
+				// Create the file_data table.
+				// Add all of the files to it.
 		}
 		
 		// Attempt to write the globals file.

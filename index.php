@@ -29,7 +29,7 @@ if ($_GET["id"]){
 	
 	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('field_id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('item_ids') . " LIKE '%\"".$item->id."\"%' AND " . $db->quoteIdentifier('time') . " <= NOW() AND (" . $db->quoteIdentifier('expire_time') . " >= NOW() OR " . $db->quoteIdentifier('expire_time') . "='00000000000000')";
 	$result = $db->query($query);
-	if(DB::isError($result) die($query->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	if(DB::isError($result)) die($query->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if ($result->numRows()> 0){
 		$output .= '
@@ -59,9 +59,9 @@ else{
 		$result = $db->query($query);
 		if(DB::isError($query)) die($query->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		if ($result->numRows()> 0){
+		if ($result->numRows() > 0){
 			$row = $result->fetchRow();
-			$output .= '<p style="padding: 0px 0px 15px 0px;">'.$row[0].'</p>';
+			$output .= '<p style="padding: 0px 0px 15px 0px;">'.$row["value"].'</p>';
 		}
 	}
 	

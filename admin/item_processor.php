@@ -13,7 +13,7 @@ if ($_POST["action"] == "do_add"){
 	
 	// Create an object of the current category
 	$category = new category($_POST["c"]);
-    $key = $db->nextId('items');
+    $key = nextId('items');
 	
 	// Put the query together
     $query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_items')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('item_category').",".$db->quoteIdentifier('name').") VALUES ('".$key."', '".$_POST["c"]."', '".$_POST["name"]."')";
@@ -74,23 +74,16 @@ if ($_POST["action"] == "do_add"){
 					// Determine what to do - is the remote file an image?
 					// $_POST[str_replace(" ","_",$field->name)."remote"]  = remote filename
 					$remote_url = $_POST[str_replace(" ","_",$field->name)."remote"];
-					if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
+					$parsed_url = parse_url($remote_url);
+					$extension = explode("/",$parsed_url["path"]);
+					if (in_array($extension,array("jpeg", "jpg", "png"))) {
 						// Remote URL is an image; download it and add it as a local image
 						
-						// Make the correct extension
-						$remote_headers = url_headers($remote_url);
-						$remote_content_type = $remote_headers["content-type"]; // image/xyz
-						$extension = explode("/",$remote_content_type);         // extension[1] = xyz
-						$parsed_url = parse_url($remote_url);
-						
-						// Find a filename
-						$i = 1;
-						do {
-							$filename = $key.".".$i++.".".$parsed_url["host"].str_replace(array("/"," "),"_",$parsed_url["path"]).".".$extension[1];
-						} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
+						$remote_content_type = "image/".$extension;
+						$filename = $parsed_url["path"];
 						
 						// Copy file
-						if(!curl_copy($remote_url, realpath($DIR_PREFIX."item_files/")."/".$filename)){
+						if(!($file_data = file_get_contents($remote_url))){
 							$has_file = true;
 							$filename = '';
 							$filesize = '';
@@ -99,9 +92,11 @@ if ($_POST["action"] == "do_add"){
 						}
 						else{
 							$has_file = true;
-							$filesize = filesize(realpath($DIR_PREFIX."item_files/")."/".$filename);
+							$filesize = strlen($file_data);
 							$filetype = $remote_content_type;
 							$offsite_link = '';
+							
+							write_file_to_db(nextId("files"), $file_data);
 						}
 					}
 					else {
@@ -115,18 +110,10 @@ if ($_POST["action"] == "do_add"){
 				}
 				elseif(is_uploaded_file($_FILES[str_replace(" ","_",$field->name)]["tmp_name"])){
 					// Copy the uploaded file
+					$filename = $_FILES[str_replace(" ","_",$field->name)]["name"];
+					$file_data = file_get_contents($_FILES[str_replace(" ","_",$field->name)]["tmp_name"]);
 					
-					$i = 1;
-					
-					// Find a filename
-					do {
-						$filename = $key.".".$i++.".".$_FILES[str_replace(" ","_",$field->name)]["name"];
-					} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
-					
-					if(!copy($_FILES[str_replace(" ","_",$field->name)]["tmp_name"], realpath($DIR_PREFIX."item_files/")."/".$filename)){
-						echo 'Could not copy uploaded file.';
-						exit;
-					}
+					write_file_to_db(nextId("files"), $file_data);
 					
 					$has_file = true;
 					$filetype = $_FILES[str_replace(" ","_",$field->name)]["type"];
@@ -135,18 +122,19 @@ if ($_POST["action"] == "do_add"){
 				}
 				
 				if ($has_file){
+					$new_key = nextId("files");
+					
 					$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_files') . "
-								(" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('file_name') . "," . $db->quoteIdentifier('file_size') . "," . $db->quoteIdentifier('file_type') . "," . $db->quoteIdentifier('offsite_link') . ")
+								(" . $db->quoteIdentifier("id") . ", " . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('file_name') . "," . $db->quoteIdentifier('file_size') . "," . $db->quoteIdentifier('file_type') . "," . $db->quoteIdentifier('offsite_link') . ")
 								VALUES
-								('".$key."',
+								('".$new_key."',
+								 '".$key."',
 								 '".$filename."',
 								 '".$filesize."',
 								 '".$filetype."',
 								 '".$offsite_link."')";
 					$result = $db->query($query);
 					if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-					
-					$new_key = $db->nextId("files") - 1;
 				}
 				else{
 					$new_key = 0;
@@ -187,18 +175,18 @@ elseif($_POST["action"] == "do_edit"){
 						
 						// Check if the delete file box was checked	
 						if (is_array($_POST["delete_files"]) && (in_array($file->id, $_POST["delete_files"]))){
-							// If so, delete the file first (and erase the value from the item entry).
-							if (!$file->is_remote){
-								@unlink($file->server_path);
-							}
-							
-							$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id["file_id"]."'";
-							$delresult = $db->query($delquery);
-							if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
-							
+							// If so, delete the file data and erase the value from the item entry.
 							$remquery = "UPDATE " . $db->quoteIdentifier('anyInventory_values') . " SET " . $db->quoteIdentifier('value') . "='0' WHERE " . $db->quoteIdentifier('field_id') . "='".$field->id."' AND " . $db->quoteIdentifier('item_id') . "='".$item->id."'";
 							$remresult = $db->query($remquery);
 							if (DB::isError($remresult)) die($remresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $remquery);
+							
+							$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
+							$delresult = $db->query($delquery);
+							if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
+							
+							$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_file_data') . " WHERE " . $db->quoteIdentifier('file_id') . "='".$file->id."'";
+							$delresult = $db->query($delquery);
+							if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
 						}
 						
 						// Check if a file was uploaded in its place
@@ -207,44 +195,34 @@ elseif($_POST["action"] == "do_edit"){
 							$file_query = true;
 							
 							if (!$file->is_remote){
-								if (is_file($file->server_path)){
-									@unlink($file->server_path);
-								}
-								
 								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
+								$delresult = $db->query($delquery);
+								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
+								
+								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_file_data') . " WHERE " . $db->quoteIdentifier('file_id') . "='".$file->id."'";
 								$delresult = $db->query($delquery);
 								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
 							}
 							
-							// Copy the uploaded file
+							$filename = $_FILES[str_replace(" ","_",$field->name)]["name"];
+							$file_data = file_get_contents($_FILES[str_replace(" ","_",$field->name)]["tmp_name"]);
 							
-							$i = 1;
+							write_file_to_db(nextId("files"), $file_data);
 							
-							// Find a filename
-							do {
-								$filename = $item->id.".".$i++.".".$_FILES[str_replace(" ","_",$field->name)]["name"];
-							} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
-							
-							if(!copy($_FILES[str_replace(" ","_",$field->name)]["tmp_name"], realpath($DIR_PREFIX."item_files/")."/".$filename)){
-								echo 'Could not copy uploaded file.';
-								exit;
-							}
-							else{
-								$filetype = $_FILES[str_replace(" ","_",$field->name)]["type"];
-								$filesize = $_FILES[str_replace(" ","_",$field->name)]["size"];
-								$offsite_link = '';
-							}
+							$filetype = $_FILES[str_replace(" ","_",$field->name)]["type"];
+							$filesize = $_FILES[str_replace(" ","_",$field->name)]["size"];
+							$offsite_link = '';
 						}
 						// If not, check for a remote file.
 						elseif($_POST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
 							$file_query = true;
 							
 							if (!$file->is_remote){
-								if (is_file($file->server_path)){
-									@unlink($file->server_path);
-								}
-								
 								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
+								$delresult = $db->query($delquery);
+								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
+								
+								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_file_data') . " WHERE " . $db->quoteIdentifier('file_id') . "='".$file->id."'";
 								$delresult = $db->query($delquery);
 								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
 							}
@@ -253,37 +231,34 @@ elseif($_POST["action"] == "do_edit"){
 							// Determine what to do - is the remote file an image?
 							// $_POST[str_replace(" ","_",$field->name)."remote"]  = remote filename
 							$remote_url = $_POST[str_replace(" ","_",$field->name)."remote"];
-							if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
+							$parsed_url = parse_url($remote_url);
+							$extension = explode("/",$parsed_url["path"]);
+							if (in_array($extension,array("jpeg", "jpg", "png"))) {
 								// Remote URL is an image; download it and add it as a local image
 								
-								// Make the correct extension
-								$remote_headers = url_headers($remote_url);
-								$remote_content_type = $remote_headers["content-type"]; // image/xyz
-								$extension = explode("/",$remote_content_type);         // extension[1] = xyz
-								$parsed_url = parse_url($remote_url);
-								
-								// Find a filename
-								$i = 1;
-								do {
-									$filename = $key.".".$i++.".".$parsed_url["host"].str_replace(array("/"," "),"_",$parsed_url["path"]).".".$extension[1];
-								} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
+								$remote_content_type = "image/".$extension;
+								$filename = $parsed_url["path"];
 								
 								// Copy file
-								if(!curl_copy($remote_url, realpath($DIR_PREFIX."item_files/")."/".$filename)){
-									die("Could not download/store remote file.");
-									
-									$filesize = filesize(realpath($DIR_PREFIX."item_files/")."/".$filename);
-									$filetype = $remote_content_type;
-									$offsite_link = '';
-								}
-								else{
+								if(!($file_data = file_get_contents($remote_url))){
+									$has_file = true;
 									$filename = '';
 									$filesize = '';
 									$filetype = '';
 									$offsite_link = addslashes($remote_url);
 								}
+								else{
+									$has_file = true;
+									$filesize = strlen($file_data);
+									$filetype = $remote_content_type;
+									$offsite_link = '';
+									
+									write_file_to_db(nextId("files"), $file_data);
+								}
 							}
 							else {
+								// Remote URL is not an image; add it as a remote file
+								$has_file = true;
 								$filename = '';
 								$filesize = '';
 								$filetype = '';
@@ -292,16 +267,19 @@ elseif($_POST["action"] == "do_edit"){
 						}
 						
 						if ($file_query){
+							$new_key = nextId("files");
+							
 							$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_files') . "
-										(" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('file_name') . "," . $db->quoteIdentifier('file_size') . "," . $db->quoteIdentifier('file_type') . "," . $db->quoteIdentifier('offsite_link') . ")
+										(".$db->quoteIdentifier('id').", " . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('file_name') . "," . $db->quoteIdentifier('file_size') . "," . $db->quoteIdentifier('file_type') . "," . $db->quoteIdentifier('offsite_link') . ")
 										VALUES
-										('".$key."',
+										('".$new_key."',
+										 '".$item->id."',
 										 '".$filename."',
 										 '".$filesize."',
 										 '".$filetype."',
 										 '".$offsite_link."')";
 							$result = $db->query($query);
-							if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);							$new_key = $db->nextId('seq_name');
+							if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 							
 							$query = "UPDATE " . $db->quoteIdentifier('anyInventory_values') . " SET " . $db->quoteIdentifier('value') . "= '".$new_key."' WHERE " . $db->quoteIdentifier('item_id') . " = '".$item->id."' AND " . $db->quoteIdentifier('field_id') . " = '".$field->id."'";
 							$result = $db->query($query);
@@ -394,5 +372,36 @@ elseif($_POST["action"] == "do_delete"){
 }
 
 header("Location: items.php");
+
+function write_file_to_db($file_id, $string){
+	global $db;
+	
+	$file_data = base64_encode($string);
+	
+	$bookmark = 0;
+	$part_id = 0;
+	
+	$length = strlen($file_data);
+	
+	// Write the data in chunks of 100000 to the database to avoid
+	// the max_packet_size error.
+	
+	while ($bookmark < $length){
+		$bodypart = substr($file_data,$bookmark,100000);
+		
+		if (strlen($bodypart) > 0){
+			$query = "INSERT INTO " . $db->quoteIdentifier("anyInventory_file_data") . "
+						(" . $db->quoteIdentifier("file_id") . "," . $db->quoteIdentifier("part_id") . "," . $db->quoteIdentifier("data") . ")
+						VALUES 
+						('".$file_id."',
+						 ".$part_id++.",
+						 '".$db->escapeSimple($bodypart)."')";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		}
+		
+		$bookmark += 100000;
+	}
+}
 
 ?>

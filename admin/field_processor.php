@@ -87,11 +87,12 @@ if ($_POST["action"] == "do_add"){
 		$importance=$row_importance['biggest']+1;
 		
 		// Add this field.
-        $query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_fields')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('input_type').",".$db->quoteIdentifier('values').",".$db->quoteIdentifier('default_value').",".$db->quoteIdentifier('size').",".$db->quoteIdentifier('categories').",".$db->quoteIdentifier('importance').",".$db->quoteIdentifier('highlight').") VALUES ('".$db->nextId('fields')."', '". $_POST["name"]."', '".$_POST["input_type"]."', '".$field_values."', '".$defval."', '".intval($_POST["size"])."', '".$categories."', '".intval($importance)."', '".intval(($_POST["highlight"] == "yes"))."')";
+		$field_id = nextId("fields");
+        $query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_fields')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('input_type').",".$db->quoteIdentifier('values').",".$db->quoteIdentifier('default_value').",".$db->quoteIdentifier('size').",".$db->quoteIdentifier('categories').",".$db->quoteIdentifier('importance').",".$db->quoteIdentifier('highlight').") VALUES ('".$field_id."', '". $_POST["name"]."', '".$_POST["input_type"]."', '".$field_values."', '".$defval."', '".intval($_POST["size"])."', '".$categories."', '".intval($importance)."', '".intval(($_POST["highlight"] == "yes"))."')";
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);		
 		
-		$field = new field($db->nextId('fields')-1);
+		$field = new field($field_id);
 		
 		// Add any categories that were selected.
 		if (is_array($_POST["add_to"])){
@@ -109,7 +110,7 @@ elseif($_GET["action"] == "do_add_divider"){
 	$row_importance=$result->fetchRow();
 	$importance=$row_importance['biggest']+1;
 	
-	$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_fields') . " (".$db->quoteIdentifier('id').",". $db->quoteIdentifier('name') . "," . $db->quoteIdentifier('input_type') . "," . $db->quoteIdentifier('importance') . ") VALUES ('".$db->nextId('fields')."','divider','divider','".$importance."')";
+	$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_fields') . " (".$db->quoteIdentifier('id').",". $db->quoteIdentifier('name') . "," . $db->quoteIdentifier('input_type') . "," . $db->quoteIdentifier('importance') . ") VALUES ('".nextId('fields')."','divider','divider','".$importance."')";
 	$result = $db->query($query);
 	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }

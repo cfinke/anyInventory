@@ -45,7 +45,7 @@ if ($_POST["action"] == "do_add"){
 		
 		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_alerts') . " 
 					(".$db->quoteIdentifier('id').",
-                                         " . $db->quoteIdentifier('title') . ",
+                     " . $db->quoteIdentifier('title') . ",
 					 " . $db->quoteIdentifier('item_ids') . ",
 					 " . $db->quoteIdentifier('field_id') . ",
 					 " . $db->quoteIdentifier('condition') . ",
@@ -56,7 +56,7 @@ if ($_POST["action"] == "do_add"){
 					 " . $db->quoteIdentifier('category_ids') . "
 					 )
 					VALUES
-					('".$db->nextId('alerts')."',
+					('".nextId('alerts')."',
                                          '".$_POST["title"]."',
 					 '".serialize($_POST["i"])."',
 					 '".$_POST["field"]."',

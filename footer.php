@@ -5,6 +5,8 @@
 				<td>
 					 <?php echo FOOTER_TEXT_PRE; ?> <b><?php
 					 
+					 global $db;
+					 
 					$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . "";
 					$result = $db->query($query);
 					if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);

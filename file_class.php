@@ -16,7 +16,7 @@ class file_object{
 	var $is_remote = false; // Whether or not this is a remote file
 	
 	function file_object($id){
-		global $DIR_PREFIX
+		global $DIR_PREFIX;
 		global $db;
 		
 		// Set the id of this file.
@@ -26,6 +26,8 @@ class file_object{
 		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$row = $result->fetchRow();
 		
 		// Set the id of the item that owns this file.
 		$this->item_id = $row["key"];
@@ -42,8 +44,8 @@ class file_object{
 			$this->file_name = $row["file_name"];
 			$this->file_size = $row["file_size"];
 			$this->file_type = $row["file_type"];
-			$this->web_path = $DIR_PREFIX."item_files/".$this->file_name;
-			$this->server_path = realpath($DIR_PREFIX."item_files/")."/".$this->file_name;
+			$this->web_path = $DIR_PREFIX."get_file.php?fid=".$this->id;
+			$this->server_path = realpath($DIR_PREFIX."get_file.php")."?fid=".$this->id;
 		}
 	}
 	
@@ -172,6 +174,7 @@ class file_object{
 	
 	function delete_self(){
 		global $DIR_PREFIX;
+		global $db;
 		
 		if ($this->is_remote){
 			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
@@ -179,13 +182,13 @@ class file_object{
             if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 		else{
-			if (is_file(realpath($DIR_PREFIX."item_files/")."/".$this->file_name)){
-				@unlink(realpath($DIR_PREFIX."item_files/")."/".$this->file_name);
-			}
+			$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+			$delresult = $db->query($delquery);
+			if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
 			
-			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
-			$result = $db->query($query);
-            if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_file_data') . " WHERE " . $db->quoteIdentifier('file_id') . "='".$this->id."'";
+			$delresult = $db->query($delquery);
+			if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
 		}
 	}
 }

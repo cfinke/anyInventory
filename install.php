@@ -257,7 +257,10 @@ if ($_POST["action"] == "install"){
 					 '".addslashes(serialize($blank))."')";
 		$db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
+		$maxidres = $db->query("select MAX('id') from anyInventory_users;");
+		$maxid = $maxidres->fetchRow();
+		
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".$maxid[0]."')";
 		$db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('NAME_FIELD_NAME','Name')";

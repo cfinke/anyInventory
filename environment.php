@@ -14,22 +14,15 @@ if (is_array($_POST)){
 	}
 }
 
-include("DB.php");
-
 include($DIR_PREFIX."functions.php");
 
-// Check for Oracle 8 - data source name syntax is different
+connect_to_database();
 
-$dsn = $db_type."://".$db_user.":".$db_pass."@".$db_host."/".$db_name;
+$query = "SELECT * FROM `anyInventory_config`";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 
-$db = connect_to_database();
-
-$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_config') . "";
-$result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
-
-while ($row = $result->fetchRow()){
-	define($row["key_value"],$row["value"]);
+while ($row = mysql_fetch_array($result)){
+	define($row["key"],$row["value"]);
 }
 
 include($DIR_PREFIX."lang/".LANG.".php");

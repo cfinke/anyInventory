@@ -5,7 +5,7 @@ class field {
 	
 	var $name;					// The name of this field.
 	var $input_type;			// The input type of this field, can be one of: text, select, radio, checkbox, multiple
-	var $field_values = array();// The possible values for this field, doesn't apply to input type text
+	var $values = array();		// The possible values for this field, doesn't apply to input type text
 	var $default_value = '';	// The default value for this field, doesn't apply to input type text when size is greater than 255
 	var $size = 0;				// The size (number of characters allowed) of this field, only entered by the user for input type text
 	var $categories = array();	// The ids of the categories that use this field
@@ -13,19 +13,13 @@ class field {
 	var $highlight = false;		// Whether or not the field is highlighted
 	
 	function field($field_id){
-		global $db;
-		
 		// Set the id of this field.
 		$this->id = $field_id;
 		
 		// Get the information about this field.
-		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('id') . "= ?";
-		$query_data = array($this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
-		
-		$row = $result->fetchRow();
+		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`='".$this->id."'";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$row = mysql_fetch_array($result);
 		
 		// Set the name and input type
 		$this->name = $row["name"];
@@ -33,7 +27,7 @@ class field {
 		
 		if ($this->input_type != 'divider'){
 			// Set the values; the values are stored separated by commas
-			$this->field_values = unserialize($row["field_values"]);
+			$this->values = unserialize($row["values"]);
 			
 			// Set the default value
 			$this->default_value = $row["default_value"];
@@ -86,15 +80,10 @@ class field {
 	// This function synchronizes the category list in the database with the category list in the object.
 	
 	function refresh_categories($cat_ids){
-		global $db;
-		
 		if ($this->input_type != 'divider'){
 			if (is_array($cat_ids)){
-				$query = "UPDATE " . $db->quoteIdentifier('anyInventory_fields') . " SET " . $db->quoteIdentifier('categories') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
-				$query_data = array(serialize($cat_ids),$this->id);
-				$pquery = $db->prepare($query);
-				$result = $db->execute($pquery, $query_data);
-				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+				$query = "UPDATE `anyInventory_fields` SET `categories`='".serialize($cat_ids)."' WHERE `id`='".$this->id."'";
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
 			
 			return;

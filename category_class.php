@@ -20,8 +20,6 @@ class category {
 	var $auto_inc_field = false;
 	
 	function category($cat_id){
-		global $db;
-		
 		// Set the id of this category.
 		$this->id = $cat_id;
 		
@@ -30,13 +28,9 @@ class category {
 			// Not the Top Level
 			
 			// Get all of the information about this category from the categories table.
-			$query = "SELECT " . $db->quoteIdentifier('name') . "," . $db->quoteIdentifier('parent') . "," . $db->quoteIdentifier('auto_inc_field') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "= ?";
-			$query_data = array($this->id);
-			$pquery = $db->prepare($query);
-			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
-			
-			$row = $result->fetchRow();
+			$query = "SELECT `name`,`parent`,`auto_inc_field` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$row = mysql_fetch_array($result);
 			
 			// Set the name and parent id
 			$this->name = $row["name"];
@@ -72,13 +66,9 @@ class category {
 					}
 					else{
 						// Find the name of the current category
-						$query  = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "= ?";
-						$query_data = array($crumb);
-						$pquery = $db->prepare($query);
-						$result = $db->execute($pquery, $query_data);
-						if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
-						
-						$row = $result->fetchRow();
+						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
+						$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						$row = mysql_fetch_array($result);
 						$this->breadcrumb_names .= $row["name"] . ' > ';
 					}
 				}
@@ -88,14 +78,11 @@ class category {
 			$this->breadcrumb_names = substr($this->breadcrumb_names, 0, strlen($this->breadcrumb_names) - 3);
 			
 			// Get all of the fields that this category uses.
-			$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('categories') . " LIKE ? OR " . $db->quoteIdentifier('input_type') . "= ? ORDER BY " . $db->quoteIdentifier('importance') . " ASC";
-			$query_data = array('%"'.$this->id.'"%', 'divider');
-			$pquery = $db->prepare($query);
-			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$this->id."\"%' OR `input_type`='divider'  ORDER BY `importance` ASC";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// Add each field's id and name to the appropriate arrays.
-			while ($row = $result->fetchRow()){
+			while ($row = mysql_fetch_array($result)){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -110,27 +97,21 @@ class category {
 			$this->breadcrumb_names = TOP_LEVEL_CATEGORY;
 			
 			// Get the fields that the Top Level uses.
-			$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('categories') . " LIKE ?  OR " . $db->quoteIdentifier('input_type') . "= ? ORDER BY " . $db->quoteIdentifier('importance') . "";
-			$query_data = array('%"0"%','divider');
-			$pquery = $db->prepare($query);
-			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' OR `input_type`='divider' ORDER BY `importance`";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// Add each field id and name to the arrays.
-			while ($row = $result->fetchRow()){
+			while ($row = mysql_fetch_array($result)){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
 		}
 		
 		// Find the children of the current category
-		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . " = ? ORDER BY " . $db->quoteIdentifier('name') . " ASC";
-		$query_data = array($this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data); 
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		while($row = $result->fetchRow()){
+		while($row = mysql_fetch_array($result)){
 			$this->children_ids[] = $row["id"];
 			$this->num_children++;
 		}
@@ -141,15 +122,10 @@ class category {
 	// This function returns the number of items that are inventoried in this category.
 	
 	function num_items(){
-		global $db;
+		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "= ?";
-		$query_data = array($this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
-		
-		return $result->numRows();
+		return mysql_num_rows($result);
 	}
 	
 	// This function returns the number of items that are inventoried in this category AND its subcategories.
@@ -186,27 +162,21 @@ class category {
 	// This function returns the parent id of a given category id.
 	
 	function find_parent_id($cat_id){
-		global $db;
-		
 		if ($cat_id == 0){
 			// The Top Level is its own category.
 			return 0;
 		}
 		else{
 			// Get the parent from the categories table.
-			$query = "SELECT " . $db->quoteIdentifier('parent') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
-			$query_data = array($cat_id);
-			$pquery = $db->prepare($query);
-			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id`='".$cat_id."'";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// If there is no parent, then, the parent is the Top Level.
-			if ($result->numRows() == 0){
+			if (mysql_num_rows($result) == 0){
 				return 0;
 			}
 			else{
-				$resultrows = $result->fetchRow();
-				return $resultrows['parent'];
+				return mysql_result($result, 0, 'parent');
 			}
 		}
 	}

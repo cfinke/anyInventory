@@ -2,15 +2,14 @@
 
 function connect_to_database(){
 	// This function opens and returns the database connection.
-	global $db_host;
-	global $db_name;
-	global $db_user;
-	global $db_pass;
+	global $dsn;
 	
-	$link = mysql_connect($db_host, $db_user, $db_pass);
-	mysql_select_db($db_name, $link);
+	$db = DB::connect($dsn);
+	if (DB::isError($db)) {
+		die ($db->getMessage(  ));
+	}	
 	
-	return $link;
+	return $db;
 }
 
 function display($output){
@@ -50,19 +49,20 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 	// with the id $id.
 	
 	$query = "SELECT `id`,`name` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-		$category_name = mysql_result($newresult, 0, 'name');
+		$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
+		$names = $newresult->fetchRow();
+		$category_name = $names[0];
 		$pre .= $category_name . ' > ';
 	}
 	
 	$list = '';
 	
-	if (mysql_num_rows($result) > 0){
-		while ($row = mysql_fetch_array($result)){
+	if ($result->numRows() > 0){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$category = $row["name"];
 			
 			if (!in_array($row["id"],$exclude)){
@@ -111,9 +111,9 @@ function get_item_options($cat_ids = 0, $selected = null){
 	$query = substr($query, 0, strlen($query) - 2);
 	
 	$query .= ")";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	while ($row = mysql_fetch_array($result)){
+	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$options .= '<option value="'.$row["id"].'"';
 		if (($selected[0] === null) || (in_array($row["id"],$selected))) $options .= ' selected="selected"';
 		$options .= '>'.$row["name"].'</option>';
@@ -127,9 +127,9 @@ function get_fields_checkbox_area($checked = array()){
 	// Any field ids in the array $checked will be checked.
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	while($row = mysql_fetch_array($result)){
+	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$field = new field($row["id"]);
 		
 		if ($field->input_type == 'divider'){
@@ -171,10 +171,11 @@ function get_category_array($top = 0){
 	
 	if ($top != 0){
 		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$top."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		if (mysql_num_rows($result) > 0){
-			$array[] = array("name"=>mysql_result($result, 0, 'name'),"id"=>$top);
+		if ($result->numRows() > 0){
+			$row = $result->fetchRow();
+			$array[] = array("name"=>$row(0),"id"=>$top);
 		}
 		else{
 			return $array;
@@ -190,16 +191,17 @@ function get_array_children($id, &$array, $pre = ""){
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	if ($id != 0){
 		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-		$pre .= mysql_result($newresult, 0, 'name') . ' > ';
+		$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
+		$names = $newresult->fetchRow();
+		$pre .= $names[0] . ' > ';
 	}
 	
-	if (mysql_num_rows($result) > 0){
-		while ($row = mysql_fetch_array($result)){
+	if ($result->numRows() > 0){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$array[] = array("name"=>$pre.$row["name"],"id"=>$row["id"]);
 			
 			get_array_children($row["id"], $array, $pre);
@@ -214,7 +216,7 @@ function get_category_id_array($top = 0){
 	$array = array();
 	
 	if ($top != 0){
-		if (mysql_num_rows($result) > 0){
+		if ($result->numRows() > 0){
 			$array[] = $top;
 		}
 		else{
@@ -231,10 +233,10 @@ function get_array_id_children($id, &$array){
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	if (mysql_num_rows($result) > 0){
-		while ($row = mysql_fetch_array($result)){
+	if ($result->numRows() > 0){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$array[] = $row["id"];
 			
 			get_array_id_children($row["id"], $array);
@@ -266,31 +268,31 @@ function delete_subcategory($category){
 	}
 	
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 				
-	while ($row = mysql_fetch_array($result)){
+	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
 		
-		while ($newrow = mysql_fetch_array($newresult)){
+		while ($newrow = $newresult->fetchRow(DB_FETCHMODE_ASSOC)){
 			$alert = new alert($newrow["id"]);
 			
 			$alert->remove_item($row["id"]);
 			
 			if (count($alert->item_ids) == 0){
 				$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-				mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+				$db->query($newerquery) or die($db->error() . '<br /><br />'. $newerquery);
 			}
 		}
 	}
 	
 	// Delete all of the items in the category
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	// Delete this category.
 	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	remove_from_fields($category->id);
 	
@@ -300,9 +302,9 @@ function delete_subcategory($category){
 function remove_from_fields($cat_id){
 	// This function removes all fields from a category.
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$cat_id."\"%'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	while($row = mysql_fetch_array($result)){
+	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$field = new field($row["id"]);
 		$field->remove_category($cat_id);
 	}

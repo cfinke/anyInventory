@@ -16,12 +16,12 @@ if (is_array($_POST)){
 
 include($DIR_PREFIX."functions.php");
 
-connect_to_database();
+$db = connect_to_database();
 
 $query = "SELECT * FROM `anyInventory_config`";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 
-while ($row = mysql_fetch_array($result)){
+while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 	define($row["key"],$row["value"]);
 }
 

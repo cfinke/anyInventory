@@ -1,7 +1,5 @@
 <?php
 
-// New Constants
-
 // English language file
 
 // Dates
@@ -17,6 +15,10 @@ define('MONTH_9','September');
 define('MONTH_10','October');
 define('MONTH_11','November');
 define('MONTH_12','December');
+
+// XML
+define('DOWNLOAD_LINK','download');
+define('DOWNLOAD_AS_XML','Download inventory as XML file');
 
 // General
 define('APP_TITLE','anyInventory');

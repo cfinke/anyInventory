@@ -14,7 +14,7 @@ $output = '
 				<td style="text-align: right;">[<a href="../docs/'.LANG.'/categories.php#adding">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
-				<td class="tableData">
+				<td class="tableData" colspan="2">
 					<table>
 						<tr>
 							<td class="form_label"><label for="name">'.NAME.':</label></td>

@@ -1,0 +1,17 @@
+TODO
+
+Fields
+======
+Editing
+
+Categories
+==========
+Editing
+Add "Inherit fields from parent" option for addition
+
+Items
+=====
+Inserting
+Editing
+Deleting
+Alerts

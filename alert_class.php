@@ -38,6 +38,25 @@ class alert {
 		return $this->title;
 	}
 	
+	// This function removes an item from the alert.
+	
+	function remove_item($item_id){
+		// Find the key of the category id in the array.
+		$key = array_search($item_id, $this->item_ids);
+		
+		// If the category id is in the array, remove it.
+		if ($key) unset($this->item_ids[$key]);
+		
+		if (count($this->item_ids) == 0){
+			$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
+		}
+		else{
+			$query = "UPDATE `anyInventory_alerts` SET `item_ids`='".serialize($this->item_ids)."' WHERE `id`='".$this->id."'";
+		}
+		
+		query($query);
+	}
+	
 	// This function returns a full description of the item.
 	
 	function export_description(){

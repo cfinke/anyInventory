@@ -62,9 +62,9 @@ if ($_REQUEST["action"] == "do_add"){
 		// Find a filename
 		do {
 			$filename = $key.".".$i++.".".$_FILES["file"]["name"];
-		} while (is_file(realpath($DIR_PREFIX."item_files/").$filename));
+		} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
 		
-		if(!copy($_FILES["file"]["tmp_name"], realpath($DIR_PREFIX."item_files/").$filename)){
+		if(!copy($_FILES["file"]["tmp_name"], realpath($DIR_PREFIX."item_files/")."/".$filename)){
 			echo 'Could not copy uploaded file.';
 			exit;
 		}
@@ -143,7 +143,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 			$result = query($query);
 			$row = mysql_fetch_array($result);
 			
-			if (($row["offsite_link"] == '') && (!unlink(realpath($DIR_PREFIX."item_files/").$row["file_name"]))){
+			if (($row["offsite_link"] == '') && (!unlink(realpath($DIR_PREFIX."item_files/")."/".$row["file_name"]))){
 				echo "Could not delete ".$row["file_name"].'<br />';
 				exit;
 			}
@@ -162,9 +162,9 @@ elseif($_REQUEST["action"] == "do_edit"){
 		
 		do {
 			$filename = $key.".".$i++.".".$_FILES["file"]["name"];
-		} while (is_file(realpath($DIR_PREFIX."item_files/").$filename));
+		} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
 		
-		if(!copy($_FILES["file"]["tmp_name"], realpath($DIR_PREFIX."item_files/").$filename)){
+		if(!copy($_FILES["file"]["tmp_name"], realpath($DIR_PREFIX."item_files/")."/".$filename)){
 			echo 'Could not copy uploaded file.';
 			exit;
 		}
@@ -207,7 +207,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 		if (is_array($item->files)){
 			foreach($item->files as $file){
 				if (!$file->is_remote){
-					if (unlink(realpath($DIR_PREFIX."item_files/").$file->file_name)){
+					if (unlink(realpath($DIR_PREFIX."item_files/")."/".$file->file_name)){
 						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
 						query($query);
 					}
@@ -217,10 +217,21 @@ elseif($_REQUEST["action"] == "do_delete"){
 					}
 				}
 				else{
-						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-						query($query);
+					$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+					query($query);
 				}
 			}
+		}
+		
+		// Remove this item from any alerts
+		
+		$query = "SELECT * FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
+		$result = query($query);
+		
+		while ($row = mysql_fetch_array($result)){
+			$alert = new alert($row["id"]);
+			
+			$alert->remove_item($item->id);
 		}
 		
 		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$item->id."'";

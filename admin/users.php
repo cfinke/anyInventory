@@ -5,14 +5,13 @@ include("globals.php");
 $title = USERS;
 $breadcrumbs = ADMINISTRATION.' > '.USERS;
 
-$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_users')." ORDER BY ".$db->quoteIdentifier('username')." ASC";
-$result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+$query = "SELECT * FROM `anyInventory_users` ORDER BY `username` ASC";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
-if ($result->numRows() > 0){
+if (mysql_num_rows($result) > 0){
 	$i = 0;
 	
-	while($row = $result->fetchRow()){
+	while($row = mysql_fetch_assoc($result)){
 		$table_rows .= '
 			<tr>
 				<td align="center" style="width: 15ex; white-space: nowrap;">

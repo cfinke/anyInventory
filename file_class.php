@@ -23,16 +23,12 @@ class file_object{
 		$this->id = $id;
 		
 		// Get the information about this file.
-		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
-		$query_data = array($this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
-		
-		$row = $result->fetchRow();
+		$query = "SELECT * FROM `anyInventory_files` WHERE `id`='".$this->id."'";
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
 		
 		// Set the id of the item that owns this file.
-		$this->item_id = $row["key_value"];
+		$this->item_id = $row["key"];
 		
 		if (trim($row["offsite_link"]) != ''){
 			$this->is_remote = true;
@@ -138,42 +134,16 @@ class file_object{
 			switch($image_info[2]){
 				case 2:
 					// JPG
-					if (function_exists('imagecreatetruecolor')){
-						$thumb = imagecreatetruecolor($new_image_width, $new_image_height);
-					}
-					else{
-						$thumb = imagecreate($new_image_width, $new_image_height);
-					}
-					
+					$thumb = imagecreate($new_image_width, $new_image_height);
 					$image = imagecreatefromjpeg($this->server_path);
-					
-					if (function_exists('imagecopyresampled')){
-						imagecopyresampled($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
-					}
-					else{
-						imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
-					}
-					
+					imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
 					imagedestroy($image);
 					break;
 				case 3:
 					// PNG
-					if (function_exists('imagecreatetruecolor')){
-						$thumb = imagecreatetruecolor($new_image_width, $new_image_height);
-					}
-					else{
-						$thumb = imagecreate($new_image_width, $new_image_height);
-					}
-					
+					$thumb = imagecreate($new_image_width, $new_image_height);
 					$image = imagecreatefrompng($this->server_path);
-					
-					if (function_exists('imagecopyresampled')){
-						imagecopyresampled($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
-					}
-					else{
-						imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
-					}
-					
+					imagecopyresized($thumb, $image, 0, 0, 0, 0, $new_image_width, $new_image_height, $image_width, $image_height);
 					imagedestroy($image);
 					break;
 			}

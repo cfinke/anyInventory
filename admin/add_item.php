@@ -5,10 +5,10 @@ include("globals.php");
 $title = ADD_ITEM;
 $inHead = '
 	<script type="text/javascript">
-	   _editor_url = "'.$DIR_PREFIX.'htmlarea/";
+	   _editor_url = "../htmlarea/";
 	   _editor_lang = "'.LANG.'";
 	</script>
-	<script type="text/javascript" src="'.$DIR_PREFIX.'htmlarea/htmlarea.js"></script>';
+	<script type="text/javascript" src="../htmlarea/htmlarea.js"></script>';
 $inBodyTag = ' onload="HTMLArea.replaceAll();"';
 $breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.ADD_ITEM;
 
@@ -86,13 +86,7 @@ else{
 				
 				$output .= '
 					<tr'.$extra.'>
-						<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label>';
-				
-				if ($field->input_type == 'item'){
-					$output .= '<br /><small><a href="javascript:void(0);" onclick="selectNone(\''.str_replace(" ","_",$field->name).'[]\');">'.SELECT_NONE.'</a></small>';
-				}
-				
-				$output .= '</td>
+						<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
 						<td class="form_input">';
 				
 				switch($field->input_type){
@@ -100,8 +94,8 @@ else{
 						$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="" style="width: 49%;" /> ';
 						$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select" style="width: 49%;">';
 						
-						if (is_array($field->field_values)){
-							foreach($field->field_values as $value){
+						if (is_array($field->values)){
+							foreach($field->values as $value){
 								$output .= '<option value="'.$value.'"';
 								if ($value == $field->default_value) $output .= ' selected="selected"';
 								$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
@@ -114,8 +108,8 @@ else{
 					case 'select':
 						$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">';
 						
-						if (is_array($field->field_values)){
-							foreach($field->field_values as $value){
+						if (is_array($field->values)){
+							foreach($field->values as $value){
 								$output .= '<option value="'.$value.'"';
 								if ($value == $field->default_value) $output .= ' selected="selected"';
 								$output .= '>'.$value.'</option>';
@@ -128,8 +122,8 @@ else{
 						else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">'.$field->default_value.'</textarea>';
 						break;
 					case 'radio':
-						if (is_array($field->field_values)){
-							foreach($field->field_values as $value){
+						if (is_array($field->values)){
+							foreach($field->values as $value){
 								$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
 								if ($value == $field->default_value) $output .= ' checked="checked"';
 								$output .= ' /> '.$value.'<br />';
@@ -138,8 +132,8 @@ else{
 						
 						break;
 					case 'checkbox':
-						if (is_array($field->field_values)){
-							foreach($field->field_values as $value){
+						if (is_array($field->values)){
+							foreach($field->values as $value){
 								$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
 								if ($value == $field->default_value) $output .= ' checked="checked"';
 								$output .= ' /> '.$value.'<br />';

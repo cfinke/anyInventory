@@ -4,80 +4,77 @@ include("globals.php");
 
 $cr = "\n";
 
-$output .= '<?xml version="1.0" ?>'.$cr.'<anyinventory>'.$cr;
+$output .= '<?xml version="1.0" ?>'.$cr.'<'.xmlize(APP_TITLE).'>'.$cr;
 
-$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_fields')." ORDER BY ".$db->quoteIdentifier('importance')." ASC";
-$result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+$query = "SELECT * FROM `anyInventory_fields` ORDER BY `importance` ASC";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 
-if ($result->numRows() > 0){
-	$output .= '	<fields>'.$cr;
+if (mysql_num_rows($result) > 0){
+	$output .= '	<'.xmlize(FIELDS).'>'.$cr;
 	
-	while ($row = $result->fetchRow()){
+	while ($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
-		$output .= '		<field id="'.$field->id.'">'.$cr;
+		$output .= '		<'.xmlize(FIELD).' id="'.$field->id.'">'.$cr;
 		
 		if ($field->input_type != 'divider'){
-			$output .= '			<name>'.$field->name.'</name>'.$cr;
-			$output .= '			<type>'.$field->input_type.'</type>'.$cr;
+			$output .= '			<'.xmlize(NAME).'>'.$field->name.'</'.xmlize(NAME).'>'.$cr;
+			$output .= '			<'.xmlize(TYPE).'>'.$field->input_type.'</'.xmlize(TYPE).'>'.$cr;
 			
 			if (($field->input_type == 'select') || ($field->input_type == 'multiple') || ($field->input_type == 'checkbox') || ($field->input_type == 'radio')){
-				if (is_array($field->field_values)){
-					$output .= '			<field_values>'.$cr;
+				if (is_array($field->values)){
+					$output .= '			<'.xmlize(VALUES).'>'.$cr;
 					
-					foreach($field->field_values as $value){
-						$output .= '				<value>'.$value.'</value>'.$cr;
+					foreach($field->values as $value){
+						$output .= '				<'.xmlize(VALUE).'>'.$value.'</'.xmlize(VALUE).'>'.$cr;
 					}
 					
-					$output .= '			</field_values>'.$cr;
+					$output .= '			</'.xmlize(VALUES).'>'.$cr;
 				}
 			}
 			
 			if (($field->input_type == 'select') || ($field->input_type == 'multiple') || ($field->input_type == 'text') || ($field->input_type == 'radio')){
-				$output .= '			<default_value>'.$field->default_value.'</default_value>'.$cr;
+				$output .= '			<'.xmlize(DEFAULT_VALUE).'>'.$field->default_value.'</'.xmlize(DEFAULT_VALUE).'>'.$cr;
 			}
 						
 			if ($field->input_type == 'text'){
-				$output .= '			<size>'.$field->size.'</size>'.$cr;
+				$output .= '			<'.xmlize(_SIZE).'>'.$field->size.'</'.xmlize(_SIZE).'>'.$cr;
 			}
 			
-			$output .= '				<highlight>'.$field->highlight.'</highlight>'.$cr;
+			$output .= '				<'.XMLIZE(HIGHLIGHT).'>'.$field->highlight.'</'.xmlize(HIGHLIGHT).'>'.$cr;
 		}
 		else{
-			$output .= '			<type>'.DIVIDER.'</type>'.$cr;
+			$output .= '			<'.xmlize(TYPE).'>'.DIVIDER.'</'.xmlize(TYPE).'>'.$cr;
 		}
-		$output .= '			</field>'.$cr;
+		$output .= '			</'.xmlize(FIELD).'>'.$cr;
 	}
 	
-	$output .= '	</fields>'.$cr;
+	$output .= '	</'.xmlize(FIELDS).'>'.$cr;
 }
 
 $cat_ids = get_category_array();
 
 if (is_array($cat_ids)){
-	$output .= '		<categories>'.$cr;
+	$output .= '		<'.xmlize(CATEGORIES).'>'.$cr;
 	foreach($cat_ids as $cat){
 		$category = new category($cat["id"]);
 		
-		$output .= '		<category id="'.$category->id.'" name="'.$category->breadcrumb_names.'">'.$cr;
+		$output .= '		<'.xmlize(CATEGORY).' id="'.$category->id.'" '.xmlize(NAME).'="'.$category->breadcrumb_names.'">'.$cr;
 		
-		$query = "SELECT ".$db->quoteIdentifier('id')." FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."' ORDER BY ".$db->quoteIdentifier('name')."";
-		$result = $db->query($query);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 		
-		while ($row = $result->fetchRow()){
+		while ($row = mysql_fetch_array($result)){
 			$item = new item($row["id"]);
-			$output .= '			<item id="'.$row["id"].'" category="'.htmlentities($item->name).'">'.$cr;
-			
+			$output .= '			<'.xmlize(ITEM).' id="'.$row["id"].'" '.xmlize(CATEGORY).'="'.htmlentities($item->name).'">'.$cr;
 			if (is_array($category->field_ids)){
 				foreach($category->field_ids as $field_id){
 					$field = new field($field_id);
 					
-					if (($field->input_type != 'divider') && ($field->input_type != 'file')){
+					if ($field->input_type != 'divider'){
 						$output .= '				<'.str_replace(" ","_",$field->name).'>';
 						
 						if ($field->input_type == 'item'){
-							$item_ids = unserialize($item->fields[$field->name]);
+							$item_ids = unserialize($row[$field->name]);
 							
 							if (is_array($item_ids)){
 								$output .= $cr;
@@ -85,17 +82,14 @@ if (is_array($cat_ids)){
 								foreach($item_ids as $item_id){
 									$item = new item($item_id);
 									
-									$output .= '					<item id="'.$item->id.'">'.$item->name.'</item>'.$cr;
+									$output .= '					<'.xmlize(ITEM).' id="'.$item->id.'">'.$item->name.'</'.xmlize(ITEM).'>'.$cr;
 								}
 								
 								$output .= '				';
 							}
 						}
-						elseif (is_array($item->fields[$field->name])){
-							$output .= implode(", ",$item->fields[$field->name]);
-						}
 						else{
-							$output .= $item->fields[$field->name];
+							$output .= $row[$field->name];
 						}
 						
 						$output .= '</'.str_replace(" ","_",$field->name).'>'.$cr;
@@ -103,16 +97,16 @@ if (is_array($cat_ids)){
 				}
 			}
 			
-			$output .= '			</item>'.$cr;
+			$output .= '			</'.xmlize(ITEM).'>'.$cr;
 		}
 		
-		$output .= '		</category>'.$cr;
+		$output .= '		</'.xmlize(CATEGORY).'>'.$cr;
 	}
 	
-	$output .= '	</categories>'.$cr;
+	$output .= '	</'.xmlize(CATEGORIES).'>'.$cr;
 }
 
-$output .= '</anyinventory>';
+$output .= '</'.xmlize(APP_TITLE).'>';
 
 header('Content-Type: text/xml');
 
@@ -122,5 +116,9 @@ if ($_GET["type"] == 'file'){
 }
 
 echo $output;
+
+function xmlize($string){
+	return str_replace(",","",str_replace(" ","_",strtolower($string)));
+}
 
 ?>   

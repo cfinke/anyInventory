@@ -5,9 +5,8 @@ include("globals.php");
 $title = FIELDS;
 $breadcrumbs = ADMINISTRATION.' > '.FIELDS;
 
-$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_fields')." WHERE ".$db->quoteIdentifier('id')." > 0 ORDER BY ".$db->quoteIdentifier('importance')."";
-$result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+$query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
 if ($admin_user->usertype == 'Administrator'){
 	$table_rows .= '
@@ -25,8 +24,8 @@ if ($admin_user->usertype == 'Administrator'){
 		</tr>';
 }
 
-if ($result->numRows() > 0){
-	while($row = $result->fetchRow()){
+if (mysql_num_rows($result) > 0){
+	while($row = mysql_fetch_assoc($result)){
 		if ($row["input_type"] != 'divider'){
 			$table_rows .= '
 				<tr>
@@ -86,7 +85,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
-				<p style="padding: 5px;"><a href="add_field.php">'.ADD_FIELD.'</a> | <a href="field_processor.php?action=do_add_divider">'.ADD_DIVIDER.'</a></p>
+				<p style="padding: 5px;"><a href="add_field.php">'.ADD_FIELD.'</a> | <a href="field_processor.php?action=do_add_divider">'.ADD_DIVIDER.'</a>.</p>
 				'.$table_rows.'
 			</td>
 		</tr>

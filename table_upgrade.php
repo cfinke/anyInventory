@@ -13,11 +13,11 @@ $query = "CREATE TABLE `anyInventory_values` (
 			`field_id` int( 11 ) NOT NULL default '0',
 			`value` text NOT NULL ,
 			UNIQUE KEY `item_id` ( `item_id` , `field_id` )
-			)";
+			) TYPE = MYISAM";
 @mysql_query($query);
 
 $query = "SELECT * FROM `anyInventory_categories`";
-$result = mysql_query($query);
+$result = mysql_query($query) or die(mysql_error() . '<br />' . $query);
 
 while ($row = mysql_fetch_array($result)){
 	$newquery = "SELECT * FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$row["id"]."\"%'";
@@ -42,7 +42,7 @@ while ($row = mysql_fetch_array($result)){
 }
 
 $query = "SHOW COLUMNS FROM `anyInventory_items`";
-$result = mysql_query($query);
+$result = mysql_query($query) or die(mysql_error() . '<br />' . $query);
 
 while ($row = mysql_fetch_array($result)){
 	if (($row["Field"] != 'id') && ($row["Field"] != 'name') && ($row["Field"] != 'item_category')){

@@ -18,13 +18,9 @@ class item {
 		$this->id = $item_id;
 		
 		// Get the information about this item.
-		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
-		$query_data = array($this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
-		
-		$row = $result->fetchRow();
+		$query = "SELECT * FROM `anyInventory_items` WHERE `id`='".$this->id."'";
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
 		
 		// Set the item name.
 		$this->name = $row["name"];
@@ -32,13 +28,10 @@ class item {
 		// Create the category object.
 		$this->category = new category($row["item_category"]);
 		
-		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('item_id') . " = ?";
-		$query_data = array($this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		while($row = $result->fetchRow()){
+		while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$field = new field($row["field_id"]);
 			
 			if ($field->input_type == 'file'){
@@ -66,13 +59,10 @@ class item {
 		}
 		
 		// Get each of this item's files and add it to the array.
-		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('key_value') . " = ?";
-		$query_data = array($this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key`='".$this->id."'";
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		while ($row = $result->fetchRow()){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$this->files[] = new file_object($row["id"]);
 		}
 	}
@@ -130,14 +120,19 @@ class item {
 						<table cellspacing="0" cellpadding="3">';
 		
 		if ($this->category->auto_inc_field){
-			$output .= '
-				<tr class="highlighted_field">
-					<td style="width: 5%;">
-						&nbsp;
-					</td>
-					<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.AUTO_INC_FIELD_NAME.':</b></nobr></td>
-					<td style="width: 85%;"></b> '.$this->id.'</td>
-				</tr>';
+			$query = "SELECT * FROM `anyInventory_config` WHERE `key`='AUTO_INC_FIELD_NAME'";
+			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+			
+			if ($result->numRows() > 0){
+				$output .= '
+					<tr class="highlighted_field">
+						<td style="width: 5%;">
+							&nbsp;
+						</td>
+						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.AUTO_INC_FIELD_NAME.':</b></nobr></td>
+						<td style="width: 85%;"></b> '.$this->id.'</td>
+					</tr>';
+			}
 		}
 		
 		// Output each field with its value.
@@ -236,7 +231,7 @@ class item {
 					
 					$output .= '>
 							<td style="width: 5%;">
-								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$field->id.'" style="color: #000000;">'.LABEL.'</a>
+								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;">'.LABEL.'</a>
 							</td>
 							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$field->name.'</b>:</nobr></td>
 							<td style="width: 85%;">'.$this->fields[$field->name].'</td>
@@ -246,27 +241,19 @@ class item {
 				}
 			}
 			
-			$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('input_type') . " = ?";
-			$query_data = array('item');
-			$pquery = $db->prepare($query);
-			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type`='item'";
+			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 			
-			while ($row = $result->fetchRow()){
-				$query2 = "SELECT " . $db->quoteIdentifier('item_id') . " FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('value') . " LIKE ? GROUP BY " . $db->quoteIdentifier('item_id') . "";
-				$query2_data = array('%"'.$this->id.'"%');
-				$pquery2 = $db->prepare($query2);
-				$result2 = $db->execute($pquery2, $query2_data);
-				if (DB::isError($result2)) die($result2->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result2->userinfo.'<br /><br />'.SUBMIT_REPORT);
+			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+				$new_query = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%'";
+				$new_result = $db->query($new_query) or die($db->error() . '<br /><br />' . $new_query);
 				
-				while ($row2 = $result2->fetchRow()){
-					$backlinks[] = $row2["item_id"];
+				while ($newrow = $new_result->fetchRow(DB_FETCHMODE_ASSOC)){
+					$backlinks[] = $newrow["id"];
 				}
 			}
 			
 			if (is_array($backlinks)){
-				$backlinks = array_unique($backlinks);
-				
 				if (!$last_divider){
 					$output .= '<tr><td colspan="3"><hr /></td></tr>';
 					$last_divider = true;

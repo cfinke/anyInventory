@@ -26,7 +26,7 @@ $output .= '
 					<p>'.DELETE_ITEM_CONFIRM.'</p>
 					'.$item->export_description().'
 					<p class="submitButtonRow">
-						<input type="submit" name="delete" value="'._DELETE.'" />
+						<input type="submit" name="delete" value="'.DELETE.'" />
 						<input type="submit" name="cancel" value="'.CANCEL.'" />
 					</p>
 				</td>

@@ -68,46 +68,39 @@ $output .= '
 									<option value="Administrator"';if($local_user->usertype == 'Administrator') $output .= ' selected="selected"'; $output .= '>'.ADMINISTRATOR.'</option>
 								</select>
 							</td>
-						</tr>';
-		
-		if (PP_VIEW){
-			$output .= '<tr>
-							<td class="form_label"><label for="c_view[]">'.GIVE_VIEW_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c_view[]\');">'.SELECT_NONE.'</a></small></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="c_view[]">'.GIVE_VIEW_TO.':</label></td>
 							<td class="form_input">
 								<select name="c_view[]" id="c_view[]" multiple="multiple" size="10" style="width: 100%;">';
-			
-			if ($local_user->usertype == 'Administrator'){
-				$output .= get_category_options(null);
-			}
-			else{
-				$output .= get_category_options($local_user->categories_view, false);
-			}
-			
-			$output .= '
-									</select>
-								</td>
-							</tr>';
+		
+		if ($local_user->usertype == 'Administrator'){
+			$output .= get_category_options(null);
+		}
+		else{
+			$output .= get_category_options($local_user->categories_view);
 		}
 		
-		if (PP_ADMIN){
-			$output .= '
-							<tr>
-								<td class="form_label"><label for="c_admin[]">'.GIVE_ADMIN_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c_admin[]\');">'.SELECT_NONE.'</a></small></td>
-								<td class="form_input">
-									<select name="c_admin[]" id="c_admin[]" multiple="multiple" size="10" style="width: 100%;">';
-			
-			if ($local_user->usertype == 'Administrator'){
-				$output .= get_category_options(null);
-			}
-			else{
-				$output .= get_category_options($local_user->categories_admin, false);
-			}
-			
-			$output .= '
+		$output .= '
 									</select>
 								</td>
-							</tr>';
+							</tr>
+							<tr>
+								<td class="form_label"><label for="c_admin[]">'.GIVE_ADMIN_TO.':</label></td>
+								<td class="form_input">
+									<select name="c_admin[]" id="c_admin[]" multiple="multiple" size="10" style="width: 100%;">';
+		
+		if ($local_user->usertype == 'Administrator'){
+			$output .= get_category_options(null);
 		}
+		else{
+			$output .= get_category_options($local_user->categories_admin);
+		}
+		
+		$output .= '
+								</select>
+							</td>
+						</tr>';
 	}
 	
 	$output .= '

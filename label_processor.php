@@ -17,7 +17,6 @@ if (!function_exists('imagecreate') ||
 
 // Create the item object
 $item = new item($_GET["i"]);
-$field = new field($_GET["f"]);
 
 if ($view_user->can_view($item->category->id)){
 	
@@ -31,7 +30,7 @@ if ($view_user->can_view($item->category->id)){
 	$black = imagecolorallocate($im, 0, 0, 0);
 	
 	// Write the barcode.
-	$boundaries = imagettftext($im, 12, 0, 0, 50, $black, realpath("fonts/IDAutomationHC39M.ttf"),"!".$item->fields[$field->name]."!");
+	$boundaries = imagettftext($im, 12, 0, 0, 50, $black, realpath("fonts/IDAutomationHC39M.ttf"),"!".$item->fields[$_GET["f"]]."!");
 	
 	// This is the width of one character in pixels.
 	$char_width = 5;

@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require("globals.php");
 
 $title = "Labels";
 $breadcrumbs = "Labels";
@@ -28,12 +28,10 @@ if (!function_exists('imagecreate') ||
 elseif ($_POST["action"] == "generate"){
 	if (!is_array($_POST["i"])) $_POST["i"] = array($_POST["i"]);
 	
-	$field = new field($_POST["f"]);
-	
 	foreach($_POST["i"] as $item_id){
 		$item = new item($item_id);
 		
-		if ($item->fields[$field->name] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_POST["f"].'" /><br />';
+		if ($item->fields[$_POST["f"]] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_POST["f"].'" style="height: 61px;" /><br />';
 	}
 }
 elseif (!isset($_POST["c"])){
@@ -49,7 +47,7 @@ elseif (!isset($_POST["c"])){
 						<table>
 							<tr><td colspan="2" style="padding: 10px 0px 10px 0px;">'.LABEL_CAT_INSTRUCTIONS.'</td></tr>
 							<tr>
-								<td class="form_label"><label for="c[]">'.CATEGORIES.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c[]\');">'.SELECT_NONE.'</a></small></td>
+								<td class="form_label">'.CATEGORIES.':</td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="10" style="width: 100%;">
 										'.$view_user->get_view_categories_options(null).'
@@ -70,7 +68,7 @@ elseif (!isset($_POST["i"])){
 		$_POST["c"] = array($_POST["c"]);
 	}
 	
-	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('id') . " > 0 AND ";
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `id` > 0 AND ";
 	
 	foreach($_POST["c"] as $cat_id){
 		if (!$view_user->can_view($cat_id)){
@@ -78,12 +76,11 @@ elseif (!isset($_POST["i"])){
 			exit;
 		}
 		
-		$query .= " " . $db->quoteIdentifier('categories') . " LIKE '%\"".$cat_id."\"%' AND ";
+		$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);
-	$result = $db->query($query);
-	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	if ($result->numRows() == 0){
 		header("Location: error_handler.php?eid=3");
@@ -108,10 +105,10 @@ elseif (!isset($_POST["i"])){
 									</td>
 									<td class="form_input">';
 		
-		while ($row = $result->fetchRow()){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$field = new field($row["id"]);
 			
-			$output .= '<input type="radio" name="f" value="'.$field->id.'" />'.$field->name.'<br />';
+			$output .= '<input type="radio" name="f" value="'.$field->name.'" />'.$field->name.'<br />';
 		}
 		
 		$output .= '
@@ -119,8 +116,7 @@ elseif (!isset($_POST["i"])){
 								</tr>
 								<tr>
 									<td class="form_label">
-										<label for="i[]">'.GENERATE_FOR.':</label>
-										<br /><small><a href="javascript:void(0);" onclick="selectNone(\'i[]\');">'.SELECT_NONE.'</a></small>
+										'.GENERATE_FOR.':
 									</td>
 									<td class="form_input">';
 		

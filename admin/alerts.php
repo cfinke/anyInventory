@@ -5,12 +5,11 @@ include("globals.php");
 $title = ALERTS;
 $breadcrumbs = ADMINISTRATION.' > '.ALERTS;
 
-$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_alerts')." ORDER BY ".$db->quoteIdentifier('title')." ASC";
-$result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` ORDER BY `title` ASC";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
-if ($result->numRows() > 0){
-	while($row = $result->fetchRow()){
+if (mysql_num_rows($result) > 0){
+	while($row = mysql_fetch_assoc($result)){
 		$alert = new alert($row["id"]);
 		$item = new item($alert->item_ids[0]);
 		

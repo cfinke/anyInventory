@@ -15,13 +15,9 @@ class user {
 		
 		$this->id = $user_id;
 		
-		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_users') . " WHERE " . $db->quoteIdentifier('id') . " = ?";
-		$query_data = array($this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
-		
-		$row = $result->fetchRow();
+		$query = "SELECT * FROM `anyInventory_users` WHERE `id`='".$this->id."'";
+		$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
 		
 		$this->username = $row["username"];
 		$this->usertype = $row["usertype"];
@@ -110,12 +106,8 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$this->categories_view[] = $category_id;
 			
-			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . " = ? WHERE " . $db->quoteIdentifier('id') . "= ?";
-			#$query_data = array(addslashes(serialize($this->categories_view)),$this->id);
-			$query_data = array(serialize($this->categories_view),$this->id);
-			$pquery = $db->prepare($query);
-			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+			$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
+			$db->query($query) or die($db->error() . '<br /><br />' . $query);
 		}
 	}
 	
@@ -125,12 +117,8 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$this->categories_admin[] = $category_id;
 			
-			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
-			#$query_data = array(addslashes(serialize($this->categories_admin)),$this->id);
-			$query_data = array(serialize($this->categories_admin),$this->id);
-			$pquery = $db->prepare($query);
-			$result = $db->execute($pquery, $query_data);
-			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+			$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
+			$db->query($query) or die($db->error() . '<br /><br />' . $query);
 		}
 	}
 	
@@ -140,17 +128,13 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$key = array_search($category_id, $this->categories_view);
 			
-			if ($key!==FALSE){
+			if ($key){
 				unset($this->categories_view[$key]);
 				
 				$this->categories_view = array_unique($this->categories_view);
 				
-				$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
-				#$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
-				$query_data = array(serialize($this->categories_view), $this->id);
-				$pquery = $db->prepare($query);
-				$result = $db->execute($pquery, $query_data);
-				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+				$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
+				$db->query($query) or die($db->error() . '<br /><br />' . $query);
 			}
 		}
 	}
@@ -161,17 +145,13 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$key = array_search($category_id, $this->categories_admin);
 			
-			if ($key!==FALSE){
+			if ($key){
 				unset($this->categories_admin[$key]);
 				
 				$this->categories_admin = array_unique($this->categories_admin);
 				
-				$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
-				#$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
-				$query_data = array(serialize($this->categories_admin), $this->id);
-				$pquery = $db->prepare($query);
-				$result = $db->execute($pquery, $query_data);
-				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+				$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
+				$db->query($query) or die($db->error() . '<br /><br />' . $query);
 			}
 		}
 	}
@@ -181,11 +161,8 @@ class user {
 		
 		$this->categories_view = $category_ids;
 		
-		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
-		$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+		$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
+		$db->query($query) or die($db->error() . '<br /><br />' . $query);
 	}
 	
 	function update_categories_admin($category_ids){
@@ -193,11 +170,8 @@ class user {
 		
 		$this->categories_admin = $category_ids;
 		
-		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . " = ? WHERE " . $db->quoteIdentifier('id') . " = ?";
-		$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
-		$pquery = $db->prepare($query);
-		$result = $db->execute($pquery, $query_data);
-		if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+		$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
+		$db->query($query) or die($db->error() . '<br /><br />' . $query);
 	}
 	
 	function export_description(){

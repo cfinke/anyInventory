@@ -7,11 +7,10 @@ $breadcrumbs = ITEMS;
 
 $category = new category(0);
 
-$query = "SELECT ".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('item_category')." FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."' ORDER BY ".$db->quoteIdentifier('name')." ASC";
-$result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
+$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
-if ($result->numRows() > 0){
+if (mysql_num_rows($result) > 0){
 	$table_rows .= '
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
@@ -21,7 +20,7 @@ if ($result->numRows() > 0){
 				<td class="tableData">
 					<table>';
 	
-	while($row = $result->fetchRow()){
+	while($row = mysql_fetch_assoc($result)){
 		$output .= '
 			<tr>
 				<td align="center" style="width: 18ex; white-space: nowrap;">
@@ -46,11 +45,10 @@ if (is_array($cat_ids)){
 		if ($admin_user->can_admin($cat["id"])){
 			$category = new category($cat["id"]);
 			
-			$query = "SELECT ".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('item_category')." FROM ".$db->quoteIdentifier('anyInventory_items')." WHERE ".$db->quoteIdentifier('item_category')."='".$category->id."' ORDER BY ".$db->quoteIdentifier('name')." ASC";
-			$result = $db->query($query);
-			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+			$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
-			if ($result->numRows() > 0){
+			if (mysql_num_rows($result) > 0){
 				$table_rows .= '
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
@@ -61,7 +59,7 @@ if (is_array($cat_ids)){
 							<td class="tableData" colspan="2">
 								<table>';
 				
-				while($row = $result->fetchRow()){
+				while($row = mysql_fetch_assoc($result)){
 					$table_rows .= '
 						<tr>
 							<td style="width: 18ex; text-align: center; white-space: nowrap;">

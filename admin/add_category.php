@@ -23,7 +23,7 @@ $output = '
 						<tr>
 							<td class="form_label"><label for="parent">'.PARENT_CATEGORY.':</label></td>
 							<td class="form_input">
-								<select name="parent" id="parent" style="width: 100%;">
+								<select name="parent" id="parent">
 									<option value="0">'.TOP_LEVEL_CATEGORY.'</option>
 									'.$admin_user->get_admin_categories_options($_GET["c"], false).'
 								</select>
@@ -33,15 +33,14 @@ $output = '
 if (PP_VIEW){
 	$output .= '
 						<tr>
-							<td class="form_label"><label for="parent">'.GIVE_VIEW_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'view_users[]\');">'.SELECT_NONE.'</a></small></td>
+							<td class="form_label"><label for="parent">'.GIVE_VIEW_TO.':</label></td>
 							<td class="form_input">
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
-$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_users')." WHERE ".$db->quoteIdentifier('usertype')." != 'Administrator' ORDER BY ".$db->quoteIdentifier('username')." ASC";
-$result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+$query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
+$result = $db->query($query) or die(db->error() . '<br /><br />' . $query);
 
-while($row = $result->fetchRow()){
+while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 	$output .= '<option value="'.$row["id"].'" selected="selected">'.$row["username"].'</option>';
 }
 
@@ -54,15 +53,14 @@ $output .= '
 if (PP_ADMIN){
 	$output .= '
 						<tr>
-							<td class="form_label"><label for="admin_users[]">'.GIVE_ADMIN_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'admin_users[]\');">'.SELECT_NONE.'</a></small></td>
+							<td class="form_label"><label for="parent">'.GIVE_ADMIN_TO.':</label></td>
 							<td class="form_input">
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
-$query = "SELECT * FROM ".$db->quoteIdentifier('anyInventory_users')." WHERE ".$db->quoteIdentifier('usertype')." != 'Administrator' ORDER BY ".$db->quoteIdentifier('username')." ASC";
-$result = $db->query($query);
-if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+$query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
+$result = $db->query($query) or die(db->error() . '<br /><br />' . $query);
 
-while($row = $result->fetchRow()){
+while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 	$output .= '<option value="'.$row["id"].'">'.$row["username"].'</option>';
 }
 
@@ -77,7 +75,7 @@ $output .= '
 							<td class="form_label">'.FIELDS.':</td>
 							<td class="form_input">
 								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" checked="checked" /> '.SHOW_AUTOINC_FIELD.'<br /><br />
-								<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" /> '.INHERIT_FIELDS.'<br /><br />
+								<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" checked="checked" /> '.INHERIT_FIELDS.'<br /><br />
 								'.get_fields_checkbox_area().'
 							</td>
 						</tr>

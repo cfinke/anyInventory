@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include("globals.php");
 
 // The default category is the top level.
@@ -28,18 +30,15 @@ if ($_GET["id"]){
 	
 	$output .= $item->export_description();
 	
-	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('field_id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('item_ids') . " LIKE ? AND " . $db->quoteIdentifier('time') . " <= ? AND (" . $db->quoteIdentifier('expire_time') . " >= ? OR " . $db->quoteIdentifier('expire_time') . " = ?)";
-	$query_data = array('%"'.$item->id.'"%',date("YmdHis"),date("YmdHis"),'00000000000000');
-	$pquery = $db->prepare($query);
-	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%' AND `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	if ($result->numRows() > 0){
 		$output .= '
 				</td>
 				<td style="padding-left: 5px;">';
 		
-		while ($row = $result->fetchRow()){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$alert = new alert($row["id"]);
 			$field = new field($row["field_id"]);
 			
@@ -58,8 +57,12 @@ if ($_GET["id"]){
 }
 else{
 	if ($_GET["c"] == 0){
-		if (trim(FRONT_PAGE_TEXT) != ''){
-			$output .= '<p style="padding: 0px 0px 15px 0px;">'.FRONT_PAGE_TEXT.'</p>';
+		$query = "SELECT * FROM `anyInventory_config` WHERE `key`='FRONT_PAGE_TEXT'";
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		
+		if ($result->numRows() > 0){
+			$resultrows = $result->fetchRow(DB_FETCHMODE_ASSOC);
+			$output .= '<p style="padding: 0px 0px 15px 0px;">'.$resultrows['value'].'</p>';
 		}
 	}
 	
@@ -108,11 +111,8 @@ else{
 			</tr>';
 	
 	// Display any items in this category.
-	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "= ? ORDER BY " . $db->quoteIdentifier('name') . " ASC";
-	$query_data = array($category->id);
-	$pquery = $db->prepare($query);
-	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	if (($_GET["c"] != 0) || ($result->numRows() > 0)){
 		$output .= '
@@ -131,7 +131,7 @@ else{
 						<table>';
 		
 		if ($result->numRows() > 0){
-			while ($row = $result->fetchRow()){
+			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 				$item = new item($row["id"]);
 				
 				$output .= '<tr>';
@@ -158,13 +158,10 @@ else{
 		</td>
 		<td style="padding-left: 5px;">';
 	
-	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('time') . " <= ? AND (" . $db->quoteIdentifier('expire_time') . " >= ? OR " . $db->quoteIdentifier('expire_time') . " = ?)";
-	$query_data = array(date("YmdHis"),date("YmdHis"),'00000000000000');
-	$pquery = $db->prepare($query);
-	$result = $db->execute($pquery, $query_data);
-	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	while ($row = $result->fetchRow()){
+	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$alert = new alert($row["id"]);
 		
 		if (is_array($alert->item_ids)){

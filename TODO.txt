@@ -51,10 +51,13 @@ DONE - Alert Expirations
 DONE - Multi-language support
 DONE - Download inventory as XML file
 
-BEFORE 2.0
+BEFORE 1.9.1
 ===================
 DONE - Table view
 DONE - Label Sheets
+
+BEFORE 2.0
+===================
 DREW - Stronger CSS support
 DREW - Remote image thumbnailing - backup in case of missing libcurl
 Fill values field with data in inventory

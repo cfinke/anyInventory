@@ -368,8 +368,7 @@ if ($_POST["action"] == "upgrade"){
 					}
 				}
 			case 1.9:
-				# Changes introduced in 2.0
-				
+				# Changes introduced in 1.9.1
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ITEM_VIEW','list')";
 				@mysql_query($query);
 				
@@ -491,6 +490,7 @@ elseif(!$globals_error){
 							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
 							<td class="form_input">
 								<select name="old_version">
+									<option value="1.8"';if($_REQUEST["old_version"] == '1.9')$output .= ' selected="selected"'; $output .= '>1.9</option>
 									<option value="1.8"';if($_REQUEST["old_version"] == '1.8')$output .= ' selected="selected"'; $output .= '>1.8</option>
 									<option value="1.7.1"';if($_REQUEST["old_version"] == '1.7.1')$output .= ' selected="selected"'; $output .= '>1.7.1</option>
 									<option value="1.7"';if($_REQUEST["old_version"] == '1.7')$output .= ' selected="selected"'; $output .= '>1.7</option>

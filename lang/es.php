@@ -9,7 +9,7 @@ define('LANGUAGE','Idioma');
 define('ID_MATCH',AUTO_INC_FIELD_NAME.' Match');
 define('NAME_MATCH',NAME_FIELD_NAME.' Match');
 define('SWITCH_TO_TABLE','Cambie a la Rejilla');
-define('SWITCH_TO_LIST','Cambie a la Lista");
+define('SWITCH_TO_LIST','Cambie a la Lista');
 
 // Dates (Fechas)
 define('MONTH_1','Enero');

@@ -51,10 +51,11 @@ if (is_array($cat_ids)){
 			$table_rows .= '
 				<table class="standardTable" cellspacing="0">
 					<tr class="tableHeader">
-						<td>'.$category->breadcrumb_names.' ( <a href="add_item.php?c='.$category->id.'">Add an item here</a> )</td>
+						<td>'.$category->get_breadcrumb_admin_links().'</td>
+						<td style="text-align: right;">[<a href="add_item.php?c='.$category->id.'">Add an item here</a>]</td>
 					</tr>
 					<tr>
-						<td class="tableData">
+						<td class="tableData" colspan="2">
 							<table>';
 			
 			while($row = mysql_fetch_assoc($result)){
@@ -84,7 +85,7 @@ $output .= '
 	<table class="standardTable" cellspacing="0" cellpadding="0">
 		<tr class="tableHeader">
 			<td>
-				Items (<a href="add_item.php">Add an item</a>)
+				Items
 			</td>
 			<td style="text-align: right;">
 				[ <a href="../docs/items.php">Help</a> ]
@@ -92,6 +93,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
+				<p style="padding-left: 5px;"><a href="add_item.php">Add an item</a></p>
 				'.$table_rows.'
 			</td>
 		</tr>

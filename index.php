@@ -42,17 +42,13 @@ else{
 	}
 	
 	$output .= '
-		<table>
+		<table cellspacing="0" cellpadding="0">
 			<tr>
 				<td style="width: 100%;">
-					<table class="standardTable" cellspacing="0" cellpadding="3">
+					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
-							<td>
-								Categories ( <a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php">Delete</a> | <a href="admin/add_category.php?c='.$_REQUEST["c"].'">Add a category here</a> )
-							</td>
-							<td style="text-align: right;">
-								[ <a href="../docs/categories.php">Help</a> ]
-							</td>
+							<td>Categories ( <a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php">Delete</a> | <a href="admin/add_category.php?c='.$_REQUEST["c"].'">Add a category here</a> )</td>
+							<td style="text-align: right;">[<a href="../docs/categories.php">Help</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -73,12 +69,8 @@ else{
 				</td>
 			</tr>
 			<tr class="tableHeader">
-				<td>
-					Items in this Category (<a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a>)
-				</td>
-				<td style="text-align: right;">
-					[ <a href="../docs/items.php">Help</a> ]
-				</td>
+				<td>Items in this Category ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )</td>
+				<td style="text-align: right;">[<a href="../docs/items.php">Help</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
@@ -105,7 +97,7 @@ else{
 				</tr>
 			</table>
 		</td>
-		<td>';
+		<td style="padding-left: 5px;">';
 	
 	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW()";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);

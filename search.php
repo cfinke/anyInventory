@@ -17,7 +17,7 @@ if (!$_REQUEST["action"]){
 				<td style="text-align: right;">[<a href="docs/searching.php">Help</a>]</a></td>
 			</tr>
 			<tr>
-				<td class="tableData">
+				<td class="tableData" colspan="2">
 					<table>
 						<form action="'.$_SERVER["PHP_SELF"].'" method="get">
 							<tr>

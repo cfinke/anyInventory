@@ -187,6 +187,30 @@ class category {
 		
 		return $breadcrumbs;
 	}
+	
+	function get_breadcrumb_admin_links(){
+		global $DIR_PREFIX;
+		
+		// For each id in the breadcrumbs, add the link and separator.
+		if (is_array($this->breadcrumbs)){
+			foreach($this->breadcrumbs as $id){
+				if($id == 0){
+					$breadcrumbs .= 'Top &gt; ';
+				}
+				else{
+					$crumb = new category($id);
+					
+					if ($crumb->id)
+					$breadcrumbs .= '<a href="'.$DIR_PREFIX.'admin/edit_category.php?id='.$crumb->id.'">'.$crumb->name.'</a> &gt; ';
+				}
+			}
+		}
+		
+		// Remove the last 6 characters from the string.
+		$breadcrumbs = substr($breadcrumbs, 0, strlen($breadcrumbs) - 6);
+		
+		return $breadcrumbs;
+	}
 }
 
 ?>

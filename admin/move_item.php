@@ -3,6 +3,7 @@
 include("globals.php");
 
 $title = 'anyInventory: Move Items';
+$breadcrumbs = 'Administration > <a href="items.php">Items</a> > Move Item';
 
 $item = new item($_REQUEST["id"]);
 
@@ -16,12 +17,12 @@ $output = '
 					<td style="text-align: right;">[<a href="../docs/moving_items.php">Help</a>]</td>
 				</tr>
 				<tr>
-					<td class="tableData">
+					<td class="tableData" colspan="2">
 						<table>
 							<tr>
 								<td class="form_label"><label for="c">Move to:</label></td>
 								<td class="form_input">
-									<select name="c" id="c">
+									<select name="c" id="c" style="width: 100%;">
 										'.get_category_options($item->category->id, false).'
 									</select>
 								</td>

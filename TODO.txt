@@ -29,7 +29,7 @@ BEFORE 1.7
 DREW - Thumbnails of remote images
 DONE - Internal password protection
 DONE - Alerts across multiple categories
-? New layout option
+DONE - New layout
 
 BEFORE 1.8
 ===================

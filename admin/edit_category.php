@@ -13,7 +13,7 @@ $output = '
 		<input type="hidden" name="id" value="'.$category->id.'" />
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
-				<td>Edit a Category</td>
+				<td>Edit a Category: '.$category->get_breadcrumb_admin_links().'</td>
 				<td style="text-align: right;">[<a href="../docs/editing_categories.php">Help</a>]</td>
 			</tr>
 			<tr>

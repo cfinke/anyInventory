@@ -75,7 +75,7 @@ function get_options_children($id, $pre = null, $selected = null){
 			$category = $row["name"];
 			
 			$list .= '<option value="'.$row["id"].'"';
-			if (in_array($row["id"],$selected)) $list .= ' selected="selected"';
+			if (($selected[0] == null) || (in_array($row["id"],$selected))) $list .= ' selected="selected"';
 			$list .= '>'.$pre . $category.'</option>';
 			
 			$list .= get_options_children($row["id"], $pre, $selected);
@@ -93,8 +93,7 @@ function get_item_options($cat = 0, $selected = null){
 	
 	while ($row = mysql_fetch_array($result)){
 		$options .= '<option value="'.$row["id"].'"';
-		if (!is_array($selected)) $options .= ' selected="selected"';
-		elseif (in_array($row["id"],$selected)) $options .= ' selected="selected"';
+		if (($selected[0] == null) || (in_array($row["id"],$selected))) $options .= ' selected="selected"';
 		$options .= '>'.$row["name"].'</option>';
 	}
 	

@@ -9,7 +9,7 @@ if ($_POST["action"] == "do_add"){
 	}
 	else{
 		// Add a category.
-		$query = "INSERT INTO `anyInventory_categories (`id`,`name`,`parent`,`auto_inc_field`) VALUES (?, ?, ?, ?)";
+		$query = "INSERT INTO `anyInventory_categories` (`id`,`name`,`parent`,`auto_inc_field`) VALUES (?, ?, ?, ?)";
 		$query_data = array(get_unique_id('anyInventory_categories'),stripslashes($_POST["name"]),$_POST["parent"],intval(($_POST["auto_inc"] == "yes")));
 		$pquery = $db->prepare($query);
 		$result = $db->execute($pquery, $query_data);

@@ -1,25 +1,43 @@
-2004/06/28
-Fixed bug when trying to move a category to its own subcategory
-Added if-extension-is-installed for curl
-
-2004/07/01
-Added admin hiding to header and links to category list
-Rewrote version features
-Added auto-increment field option
-Added error for empty value list
-Fixed empty default value bug
-Removed commented query() calls
-Added link back to item page on item admin
-Added admin hiding to header and links to category list
-Removed item id from add_item page
-Removed advanced search and brought back quick search
-Removed item listing from top level category if there are no items there
-Added field highlight column
-
 2004/07/02
-Added field highlighting
-Fixed alert display for individual items
-Made field name up to 64 characters
-Added error checking to alert processor
-Fixed alert submit button
-Added lots of error checking to field_processor
+Added customization of auto-increment field
+
+2004/07/05
+Added case for administrator in can_view() and can_admin()
+Made it so the admin user can't be deleted
+Added error codes for user system
+Moved some code to environment.php
+Removed old authentications in prep for new user system
+Added default admin user
+Changed install to allow for new user system
+
+2004/07/06
+Added notice about chmodding files to README
+Added more permission checking
+Added more permission checking
+Added field dividers
+Fixed a problem with admin_user
+Finished first wave of permission checks in admin pages
+Added can_admin_field
+Added smart hiding of users link in header
+Added more information to item teasers
+Added users documentation
+Added functions to add and remove admin and viewing categories
+Added can_admin_alert member function
+Added member functions that return dropdwon lists for admin and view categories
+Fixed category list in add_alert.php
+Added index page for administration with front page text editing and ability to turn on/off the password protection
+Added a function that returns dropdown options for an array of category ids
+
+2004/07/07
+Changed applicable REQUEST calls to GET or POST
+
+2004/07/08
+Fixed docs link to point to the correct directory.
+Fixed broken links
+Fixed logout routine.
+
+2004/07/09
+Working on fixing bugs with deleting and moving categories
+Removed get_config_value for pre-defined constants
+Fixed some mysql errors
+Added customization of the Name field

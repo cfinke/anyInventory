@@ -36,4 +36,4 @@
 			</tr>
 			<tr>
 				<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
-					<div style="height: 400px; padding: 5px; overflow: auto;">
+					<div style="min-height: 400px; padding: 5px;">

@@ -34,6 +34,24 @@ class user {
 		return (($cat_id == 0) || ($this->usertype == 'Administrator') || in_array($cat_id, $this->categories_admin));
 	}
 	
+	function get_admin_categories_options($selected = null){
+		if ($this->usertype == 'Administration'){
+			return get_category_options($selected);
+		}
+		else{
+			return category_array_to_options($this->categories_admin, $selected);
+		}
+	}
+	
+	function get_view_categories_options(){
+		if ($this->usertype == 'Administration'){
+			return get_category_options($selected);
+		}
+		else{
+			return category_array_to_options($this->categories_view, $selected);
+		}
+	}
+	
 	function add_category_view($category_id){
 		$this->categories_view[] = $category_id;
 		

@@ -44,7 +44,7 @@ $output .= '
 				<input type="hidden" name="action" value="do_edit" />
 				<tr>
 						<td class="form_label"><label for="username">'.USERNAME.':</label></td>
-						<td class="form_input"><input type="text" name="username" id="username" value="'.$local_user->username.'" /></td>
+						<td class="form_input"><input type="text" name="username" id="username" value="'.htmlspecialchars($local_user->username, ENT_QUOTES).'" /></td>
 					</tr>';
 	}
 	else{

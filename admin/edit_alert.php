@@ -78,7 +78,7 @@ else{
 						<table>
 						<tr>
 							<td class="form_label"><label for="name">'.ALERT_TITLE.':</label></td>
-							<td class="form_input"><input type="text" name="title" id="title" value="'.$alert->title.'" maxlength="255" />
+							<td class="form_input"><input type="text" name="title" id="title" value="'.htmlspecialchars($alert->title, ENT_QUOTES).'" maxlength="255" />
 						</tr>
 						<tr>
 							<td class="form_label"><label for="c">'.APPLIES_TO.':</label></td>
@@ -106,7 +106,7 @@ else{
 	foreach($fields as $field){
 		$output .= '<option value="'.$field["id"].'"';
 		if ($alert->field_id == $field["id"]) $output .= ' selected="selected"';
-		$output .= '> '.$field["name"].'</option>';
+		$output .= '> '.htmlspecialchars($field["name"], ENT_QUOTES).'</option>';
 	}
 	
 	$output .= '			</select>
@@ -127,7 +127,7 @@ else{
 							</tr>
 							<tr>
 								<td class="form_label"><label for="value">'.VALUE.':</label></td>
-								<td class="form_input"><input type="text" name="value" id="value" value="'.$alert->value.'" /></td>
+								<td class="form_input"><input type="text" name="value" id="value" value="'.htmlspecialchars($alert->value, ENT_QUOTES).'" /></td>
 							</tr>
 							<tr>
 								<td class="form_label"><label for="month">'.EFFECTIVE_DATE.':</label></td>

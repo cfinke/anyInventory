@@ -47,7 +47,7 @@ $output = '
 						<table>
 							<tr>
 								<td class="form_label"><label for="name">'.NAME.':</label></td>
-								<td class="form_input"><input type="text" name="name" id="name" value="'.str_replace('"','\"',$field->name).'" maxlength="64" /></td>
+								<td class="form_input"><input type="text" name="name" id="name" value="'.htmlspecialchars($field->name, ENT_QUOTES).'" maxlength="64" /></td>
 							</tr>
 							<tr>
 								<td class="form_label"><label for="name">'.DATA_TYPE.':</label></td>
@@ -68,7 +68,7 @@ $output = '
 								<td class="form_input"><input type="text" name="values" id="values" value="';
 								if (is_array($field->values)){
 									foreach($field->values as $value){
-										$output .= $value.', ';
+										$output .= htmlspecialchars($value, ENT_QUOTES).', ';
 									}
 									$output = substr($output,0,strlen($output) - 2);
 								}
@@ -76,7 +76,7 @@ $output = '
 							</tr>
 							<tr>
 								<td class="form_label"><label for="default_value">'.DEFAULT_VALUE.':</label></td>
-								<td class="form_input"><input type="text" name="default_value" id="default_value" value="'.$field->default_value.'" /><br /><small>'.DEFAULT_VALUE_INFO.'</small></td>
+								<td class="form_input"><input type="text" name="default_value" id="default_value" value="'.htmlspecialchars($field->default_value, ENT_QUOTES).'" /><br /><small>'.DEFAULT_VALUE_INFO.'</small></td>
 							</tr>
 							<tr>
 								<td class="form_label"><label for="size">'.SIZE.':</label></td>

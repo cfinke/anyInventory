@@ -33,7 +33,7 @@ $output = '
 						<table cellspacing="0" cellpadding="2">
 							<tr>
 								<td class="form_label"><label for="name">'.NAME_FIELD_NAME.':</label></td>
-								<td class="form_input"><input type="text" name="name" id="name" value="'.$item->name.'" maxlength="64" />
+								<td class="form_input"><input type="text" name="name" id="name" value="'.htmlspecialchars($item->name, ENT_QUOTES).'" maxlength="64" />
 							</tr>';
 
 if (is_array($item->category->field_ids)){
@@ -58,13 +58,13 @@ if (is_array($item->category->field_ids)){
 			
 			switch($field->input_type){
 				case 'multiple':
-					$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
-					$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select">';
+					$output .= '<input type="text" id="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
+					$output .= '<select name="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'_select" id="'.str_replace(" ","_",$field->name).'_select">';
 					$output .= '<option value="">Select One</option>';
 					
 					if (is_array($field->values)){
 						foreach($field->values as $value){
-							$output .= '<option value="'.$value.'"';
+							$output .= '<option value="'.htmlspecialchars($value, ENT_QUOTES).'"';
 							if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
 							$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
 						}
@@ -74,11 +74,11 @@ if (is_array($item->category->field_ids)){
 					
 					break;
 				case 'select':
-					$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">';
+					$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'">';
 					
 					if (is_array($field->values)){
 						foreach($field->values as $value){
-							$output .= '<option value="'.$value.'"';
+							$output .= '<option value="'.htmlspecialchars($value, ENT_QUOTES).'"';
 							if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
 							$output .= '>'.$value.'</option>';
 						}
@@ -86,13 +86,13 @@ if (is_array($item->category->field_ids)){
 					
 					break;
 				case 'text':
-					if ($field->size <= 255) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
-					else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">'.$item->fields[$field->name].'</textarea>';
+					if ($field->size <= 255) $output .= '<input type="text" name="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'" id="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'" maxlength="'.$field->size.'" value="'.htmlspecialchars($item->fields[$field->name], ENT_QUOTES).'" />';
+					else $output .= '<textarea rows="8" cols="40" name="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'" id="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'" style="width: 100%;">'.$item->fields[$field->name].'</textarea>';
 					break;
 				case 'radio':
 					if (is_array($field->values)){
 						foreach($field->values as $value){
-							$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
+							$output .= '<input type="radio" name="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'" value="'.htmlspecialchars(str_replace(" ","_",$value), ENT_QUOTES).'"';
 							if ($value == $item->fields[$field->name]) $output .= ' checked="checked"';
 							$output .= ' /> '.$value.'<br />';
 						}
@@ -102,7 +102,7 @@ if (is_array($item->category->field_ids)){
 				case 'checkbox':
 					if (is_array($field->values)){
 						foreach($field->values as $value){
-							$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
+							$output .= '<input type="checkbox" name="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'['.$value.']" value="yes"';
 							if ((is_array($item->fields[$field->name])) && in_array($value,$item->fields[$field->name])) $output .= ' checked="checked"';
 							$output .= ' /> '.$value.'<br />';
 						}
@@ -117,10 +117,10 @@ if (is_array($item->category->field_ids)){
 						$output .= '<br /><br />Replace file: ';
 					}
 					
-					$output .= '<input type="file" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" /> or <input type="text" name="'.str_replace(" ","_",$field->name).'remote" id="'.str_replace(" ","_",$field->name).'remote" value="http://" />';
+					$output .= '<input type="file" name="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'" id="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'" /> or <input type="text" name="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'remote" id="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'remote" value="http://" />';
 					break;
 				case 'item':
-					$output .= '<select name="'.str_replace(" ","_",$field->name).'[]" id="'.str_replace(" ","_",$field->name).'[]" style="width: 100%;" multiple="multiple" size="10">';
+					$output .= '<select name="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'[]" id="'.htmlspecialchars(str_replace(" ","_",$field->name), ENT_QUOTES).'[]" style="width: 100%;" multiple="multiple" size="10">';
 					
 					if (is_array($view_user->categories_view)){
 						foreach($view_user->categories_view as $cat_id){

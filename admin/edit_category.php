@@ -35,7 +35,7 @@ else{
 					<table>
 						<tr>
 							<td class="form_label"><label for="name">'.NAME.':</label></td>
-							<td class="form_input"><input type="text" name="name" id="name" value="'.$category->name.'" /></td>
+							<td class="form_input"><input type="text" name="name" id="name" value="'.htmlspecialchars($category->name, ENT_QUOTES).'" /></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="parent">'.PARENT_CATEGORY.':</label></td>

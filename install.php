@@ -58,14 +58,6 @@ if ($_REQUEST["action"] == "install"){
 		$errors[] = 'The path '.realpath("./item_files/").' is not writable by the Web server.';
 	}
 	
-	foreach($files_to_read as $file){
-		if (!is_executable(realpath($file))){
-			$errors[] = "The path ".realpath($file)." is not executable.";
-		}
-	}
-	
-	
-	
 	// Check for the correct database information.	
 	if (count($errors) == 0){
 		if(!@mysql_connect($_REQUEST["db_host"],$_REQUEST["db_user"],$_REQUEST["db_pass"])){

@@ -42,7 +42,7 @@ function display($output){
 	exit;
 }
 
-function get_category_options($selected = null, $nonempty = false){
+function get_category_options($selected = null, $nonempty = null){
 	// This function returns the options for a category dropdown.
 	// Any category id's in the array $selected will be selected in the 
 	// resulting list.
@@ -70,11 +70,11 @@ function get_category_options($selected = null, $nonempty = false){
 	return $output;
 }
 
-function get_options_children($id, $pre = "", $selected = 0, $nonempty = false){
+function get_options_children($id, $pre = null, $selected = null, $nonempty = null){
 	// This function creates select box options for the children of a category
 	// with the id $id.
 	
-	$query = "SELECT `name` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
+	$query = "SELECT `id`,`name` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
 	$result = query($query);
 	
 	if ($id != 0){
@@ -93,7 +93,7 @@ function get_options_children($id, $pre = "", $selected = 0, $nonempty = false){
 			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$row["id"]."'";
 			$item_result = query($query);
 			
-			if ((!$nonempty) || (mysql_num_rows($item_result) > 0)){
+			if ((mysql_num_rows($item_result) > 0) || ($nonempty === false)){
 				$list .= '<option value="'.$row["id"].'"';
 				if (in_array($row["id"],$selected)) $list .= ' selected="selected"';
 				$list .= '>'.$pre . $category.'</option>';
@@ -253,10 +253,12 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 	// This function returns the MySQL column type for a new field.
 	
 	switch($input_type){
-		case 'text':
+		case 'checkbox':
+			$type = " TEXT ";
+			break;
 		case 'multiple':
 			$size = 64;
-		case 'checkbox':
+		case 'text':
 			if ($size < 256){
 				$type = " VARCHAR(".$size.") DEFAULT '".$default_value."' ";
 			}

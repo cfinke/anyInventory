@@ -25,7 +25,7 @@ $output = '
 				<td class="form_label">Fields:</td>
 				<td class="form_input">
 					<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" checked="checked" /> Inherit fields from parent (in addition to fields checked below)<br /><br />
-					'.get_fields_checkbox_area($category->field_ids).'
+					'.get_fields_checkbox_area().'
 				</td>
 			</tr>
 			<tr>

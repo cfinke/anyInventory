@@ -27,7 +27,9 @@ if (mysql_num_rows($result) > 0){
 		$table_set .= '<td style="width: 10%; white-space: nowrap;">'.$row["name"].'</td>';
 		$table_set .= '<td>'.$row["input_type"].'</td>';
 		$table_set .= '<td>'.$row["default_value"].'</td>';
-		$table_set .= '<td>'.$row["size"].'</td>';
+		$table_set .= '<td>';
+		$table_set .= ($row["size"] > 0) ? $row["size"] : '&nbsp;';
+		$table_set .= '</td>';
 		$table_set .= '</tr>';
 		$i++;
 	}

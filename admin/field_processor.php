@@ -12,6 +12,13 @@ if ($_REQUEST["action"] == "do_add"){
 		exit;
 	}
 	else{
+		if (($_REQUEST["input_type"] == "select") || ($_REQUEST["input_type"] == "radio")){
+			if (!strstr($_REQUEST["default_value"],$_REQUEST["values"])){
+				header("Location: ../error_handler.php?eid=1");
+				exit;
+			}
+		}
+		
 		// Add a field
 		if (($_REQUEST["size"] == '') && ($_REQUEST["input_type"] == "text")){
 			// Set the default text size to 255
@@ -57,6 +64,14 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_REQUEST["name"]."'";
+	$result = query($query);
+	
+	if ((mysql_num_rows($result) > 0) && (mysql_result($result, 0, 'id') != $_REQUEST["id"])){
+		header("Location: ../error_handler.php?eid=0");
+		exit;
+	}
+	
 	// Make an object from the unchanged field.
 	$old_field = new field($_REQUEST["id"]);
 	
@@ -66,7 +81,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 			$_REQUEST["size"] = 255;
 		}
 	}
-	elseif(($_REQUEST["input_type"] == "multiple") || ($_REQUEST["input_type"] == "checkbox")){
+	elseif($_REQUEST["input_type"] == "multiple"){
 		$_REQUEST["size"] = 64;
 	}
 	else{

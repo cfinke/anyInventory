@@ -24,7 +24,16 @@ if (!isset($_REQUEST["c"])){
 		</form>';
 }
 else{
-	$item = new item($_REQUEST["i"][0]);
+	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$_REQUEST["c"]."'";
+	$result = query($query);
+	
+	if (mysql_num_rows($result) == 0){
+		header("Location: ../error_handler.php?eid=2");
+		exit;
+	}
+	else{
+		$item = new item(mysql_result($result, 0, 'id'));
+	}
 	
 	$output = '
 			<form method="post" action="alert_processor.php" enctype="multipart/form-data">

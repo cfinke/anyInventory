@@ -80,7 +80,7 @@ elseif (!isset($_POST["i"])){
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$result = $db->query($query);
 	
 	if ($result->numRows() == 0){
 		header("Location: error_handler.php?eid=3");
@@ -105,7 +105,7 @@ elseif (!isset($_POST["i"])){
 									</td>
 									<td class="form_input">';
 		
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while ($row = $result->fetchRow()){
 			$field = new field($row["id"]);
 			
 			$output .= '<input type="radio" name="f" value="'.$field->name.'" />'.$field->name.'<br />';

@@ -17,7 +17,7 @@ switch($_GET["id"]){
 		
 		$categories = array();
 		
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while ($row = $result->fetchRow()){
 			$categories[] = $row["id"];
 		}
 		

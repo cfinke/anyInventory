@@ -9,15 +9,13 @@ if ($_POST["action"] == "do_add"){
 	}
 	else{
 		// Add a category.
-		$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_POST["name"]."','".$_POST["parent"]."','".((int) (($_POST["auto_inc"] == "yes") / 1))."')";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_categories'),
+							"name"=>stripslashes($_POST["name"]),
+							"parent"=>$_POST["parent"],
+							"auto_inc_field"=>intval(($_POST["auto_inc"] == "yes")));
+		$db->autoExecute('anyInventory_categories',$query_data,DB_AUTOQUERY_INSERT);
 		
-		// Get the id of the category
-		$sql = "select 'id' from anyInventory_categories where `name`='"
-		.$_POST['name']."' AND `parent`='".$_POST['parent']."';";
-		$res = $db->query($sql);
-		$row = $res->fetchRow();
-		$this_id = $row[0]
+		$this_id = get_unique_id('anyInventory_categories') - 1;
 		
 		if ($_POST["inherit_fields"] == "yes"){
 			// Add the fields from the parent category
@@ -123,7 +121,7 @@ elseif($_POST["action"] == "do_edit"){
 	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	if (PP_ADMIN || PP_VIEW){
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while ($row = $result->fetchRow()){
 			$temp_user = new user($row["id"]);
 			if (PP_ADMIN) $temp_user->remove_category_admin($_POST["id"]);
 			if (PP_VIEW) $temp_user->remove_category_view($_POST["id"]);
@@ -167,11 +165,11 @@ elseif($_POST["action"] == "do_delete"){
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 				
-				while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+				while ($row = $result->fetchRow()){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
 					$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
 					
-					while ($newrow = $newresult->fetchRow(DB_FETCHMODE_ASSOC)){
+					while ($newrow = $newresult->fetchRow()){
 						$alert = new alert($newrow["id"]);
 						
 						$alert->remove_item($row["id"]);
@@ -196,11 +194,11 @@ elseif($_POST["action"] == "do_delete"){
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 				
-				while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+				while($row = $result->fetchRow()){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
 					$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
 					
-					while ($newrow = $newresult->fetchRow(DB_FETCHMODE_ASSOC)){
+					while ($newrow = $newresult->fetchRow()){
 						$alert = new alert($newrow["id"]);
 						
 						if (!in_array($alert->field_id, $newcategory->field_ids)){

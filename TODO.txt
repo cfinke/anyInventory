@@ -49,11 +49,11 @@ DONE - Item associations ("Item" Field type)
 DONE - In-line editor for long text fields
 DONE - Alert Expirations
 DONE - Multi-language support
-CHRIS - Download inventory as XML file
-? DREW - Stronger CSS support
+DONE - Download inventory as XML file
 
 BEFORE 2.0
 ===================
+? DREW - Stronger CSS support
 DREW - Remote image thumbnailing - backup in case of missing libcurl
 Multiple-condition alerts
 Upload inventory as XML file

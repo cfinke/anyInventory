@@ -17,19 +17,13 @@ if ($_POST["action"] == "do_add"){
 		exit;
 	}
 	else{
-		$query = "INSERT INTO `anyInventory_users` 
-					(`username`,
-					 `password`,
-					 `usertype`,
-					 `categories_view`,
-					 `categories_admin`)
-					VALUES
-					('".$_POST["username"]."',
-					 '".md5($_POST["password"])."',
-					 '".$_POST["usertype"]."',
-					 '".addslashes(serialize($_POST["c_view"]))."',
-					 '".addslashes(serialize($_POST["c_admin"]))."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_users'),
+							"username"=>stripslashes($_POST["username"]),
+							"password"=>md5($_POST["password"]),
+							"usertype"=>$_POST["usertype"],
+							"categories_view"=>serialize($_POST["c_view"]),
+							"categories_admin"=>serialize($_POST["c_admin"]));
+		$db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
 	}
 }
 elseif($_POST["action"] == "do_edit"){

@@ -25,7 +25,7 @@ if ($admin_user->usertype == 'Administrator'){
 }
 
 if ($result->numRows() > 0){
-	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	while($row = $result->fetchRow()){
 		if ($row["input_type"] != 'divider'){
 			$table_rows .= '
 				<tr>

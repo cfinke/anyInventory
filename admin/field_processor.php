@@ -80,24 +80,22 @@ if ($_POST["action"] == "do_add"){
 		// Get the field order for this field.
 		$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
 		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$row = $result->fetchRow();
 		$importance = $row['biggest'] + 1;
 		
 		// Add this field.
-		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`,`highlight`) VALUES ('".$_POST["name"]."','".$_POST["input_type"]."','".$values."','".$_POST["default_value"]."','".$_POST["size"]."','".$categories."','".$importance."','".((int) (($_POST["highlight"] == "yes") / 1))."')";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_fields'),
+							"name"=>$_POST["name"],
+							"input_type"=>$_POST["input_type"],
+							"values"=>$values,
+							"default_value"=>stripslashes($_POST["default_value"]),
+							"size"=>$_POST["size"],
+							"categories"=>$categories,
+							"importance"=>$importance,
+							"highlight"=>intval(($_POST["highlight"] == "yes")));
+		$db->autoExecute('anyInventory_fields',$query_data,DB_AUTOQUERY_INSERT);
 		
-		$sql = "SELECT 'id' from anyInventory_fields WHERE `name`='"
-			.$_POST['name']."' AND `input_type`='"
-			.$_POST['input_type']."' AND `values`='"
-			.$values."' AND `default_value`='"
-			.$_POST['default_value']."' AND `size`='"
-			.$_POST['size']."';";
-		
-		$result = $db->query($sql);
-		$row = $result->fetchRow();
-		
-		$field = new field($row[0]);
+		$field = new field(get_unique_id('anyInventory_fields') - 1);
 		
 		// Add any categories that were selected.
 		if (is_array($_POST["add_to"])){
@@ -110,11 +108,14 @@ if ($_POST["action"] == "do_add"){
 elseif($_GET["action"] == "do_add_divider"){
 	$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
 	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-	$row = $db->fetchRow(DB_FETCHMODE_ASSOC);
+	$row = $db->fetchRow();
 	$importance = $row['biggest'] + 1;
 	
-	$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`importance`) VALUES ('divider','divider','".$importance."')";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$query_data = array("id"=>get_unique_id('anyInventory_fields'),
+						"name"=>'divider',
+						"input_type"=>'divider',
+						"importance"=>$importance);
+	$db->autoExecute('anyInventory_fields',$query_data,DB_AUTOQUERY_INSERT);
 }
 elseif($_POST["action"] == "do_edit"){
 	if (is_array($_POST["add_to"])){
@@ -130,7 +131,7 @@ elseif($_POST["action"] == "do_edit"){
 	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	$numrows = $result->numRows();
-	$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+	$row = $result->fetchRow();
 	
 	if (($numrows > 0) && ($row['id'] != $_POST["id"])){
 		header("Location: ../error_handler.php?eid=0");
@@ -239,10 +240,10 @@ elseif($_REQUEST["action"] == "do_delete"){
 			$query = "SELECT `value` FROM `anyInventory_fields` WHERE `field_id`='".$field->id."' GROUP BY `value`";
 			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			
-			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+			while ($row = $result->fetchRow()){
 				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row["value"]."'";
 				$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
-				$newrow = $newresult->fetchRow(DB_FETCHMODE_ASSOC);
+				$newrow = $newresult->fetchRow();
 				
 				$file = new file_object($newrow["id"]);
 				

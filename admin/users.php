@@ -11,7 +11,7 @@ $result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 if ($result->numRows() > 0){
 	$i = 0;
 	
-	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	while($row = $result->fetchRow()){
 		$table_rows .= '
 			<tr>
 				<td align="center" style="width: 15ex; white-space: nowrap;">

@@ -15,9 +15,12 @@ class user {
 		
 		$this->id = $user_id;
 		
-		$query = "SELECT * FROM `anyInventory_users` WHERE `id`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$query = "SELECT * FROM `anyInventory_users` WHERE `id` = ?";
+		$query_data = array($this->id);
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
+		
+		$row = $result->fetchRow();
 		
 		$this->username = $row["username"];
 		$this->usertype = $row["usertype"];
@@ -106,8 +109,10 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$this->categories_view[] = $category_id;
 			
-			$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
-			$db->query($query) or die($db->error() . '<br /><br />' . $query);
+			$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id`= ?";
+			$query_data = array(addslashes(serialize($this->categories_view)),$this->id);
+			$pquery = $db->prepare($query);
+			$db->execute($pquery, $query_data);
 		}
 	}
 	
@@ -117,8 +122,10 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$this->categories_admin[] = $category_id;
 			
-			$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
-			$db->query($query) or die($db->error() . '<br /><br />' . $query);
+			$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
+			$query_data = array(addslashes(serialize($this->categories_admin)),$this->id);
+			$pquery = $db->prepare($query);
+			$db->execute($pquery, $query_data);
 		}
 	}
 	
@@ -133,8 +140,10 @@ class user {
 				
 				$this->categories_view = array_unique($this->categories_view);
 				
-				$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
-				$db->query($query) or die($db->error() . '<br /><br />' . $query);
+				$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id` = ?";
+				$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
+				$pquery = $db->prepare($query);
+				$db->execute($pquery, $query_data);
 			}
 		}
 	}
@@ -150,8 +159,10 @@ class user {
 				
 				$this->categories_admin = array_unique($this->categories_admin);
 				
-				$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
-				$db->query($query) or die($db->error() . '<br /><br />' . $query);
+				$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
+				$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
+				$pquery = $db->prepare($query);
+				$db->execute($pquery, $query_data);
 			}
 		}
 	}
@@ -161,8 +172,10 @@ class user {
 		
 		$this->categories_view = $category_ids;
 		
-		$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
-		$db->query($query) or die($db->error() . '<br /><br />' . $query);
+		$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id` = ?";
+		$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
+		$pquery = $db->prepare($query);
+		$db->execute($pquery, $query_data);
 	}
 	
 	function update_categories_admin($category_ids){
@@ -170,8 +183,10 @@ class user {
 		
 		$this->categories_admin = $category_ids;
 		
-		$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
-		$db->query($query) or die($db->error() . '<br /><br />' . $query);
+		$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
+		$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
+		$pquery = $db->prepare($query);
+		$db->execute($pquery, $query_data);
 	}
 	
 	function export_description(){

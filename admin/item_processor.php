@@ -15,14 +15,12 @@ if ($_POST["action"] == "do_add"){
 	$category = new category($_POST["c"]);
 	
 	// Put the query together
-	$query = "INSERT INTO `anyInventory_items` (`item_category`,`name`) VALUES ('".$_POST["c"]."','".$_POST["name"]."')";
-	$db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$query_data = array("id"=>get_unique_id('anyInventory_items'),
+						"item_category"=>$_POST["c"],
+						"name"=>stripslashes($_POST["name"]));
+	$db->autoExecute('anyInventory_items',$query_data, DB_AUTOQUERY_INSERT);
 	
-	$sql="SELECT 'id' from anyInventory_items WHERE `item_category`='"
-		.$_POST['c']."' AND `name`='".$_POST['name']."';";
-	$result = $db->query($sql);
-	$row = $result->fetchRow();
-	$key = $row[0];
+	$key = get_unique_id('anyInventory_items') - 1;
 	
 	if (is_array($category->field_ids)){
 		foreach($category->field_ids as $field_id){
@@ -446,7 +444,7 @@ elseif($_POST["action"] == "do_delete"){
 		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
 		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while ($row = $result->fetchRow()){
 			$alert = new alert($row["id"]);
 			
 			$alert->remove_item($item->id);

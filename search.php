@@ -27,12 +27,12 @@ if ($_GET["action"] == "quick_search"){
 		}
 		
 		$search_query = substr($search_query,0,strlen($search_query) - 6).")) GROUP BY `item_id` ORDER BY `item_category`";
-		$search_result = $db->query($search_query) or die($db->error() . '<br /><br />' . $search_query);
+		$search_result = $db->query($search_query);
 		
 		$cat_id = -1;
 		
 		if ($search_result->numRows() > 0){
-			while($row = $search_result->fetchRow(DB_FETCHMODE_ASSOC)){
+			while($row = $search_result->fetchRow()){
 				$item = new item($row["id"]);
 				
 				if ($view_user->can_view($item->category->id)){

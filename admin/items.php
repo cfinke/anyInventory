@@ -20,7 +20,7 @@ if ($result->numRows() > 0){
 				<td class="tableData">
 					<table>';
 	
-	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	while($row = $result->fetchRow()){
 		$output .= '
 			<tr>
 				<td align="center" style="width: 18ex; white-space: nowrap;">
@@ -59,7 +59,7 @@ if (is_array($cat_ids)){
 							<td class="tableData" colspan="2">
 								<table>';
 				
-				while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+				while($row = $result->fetchRow()){
 					$table_rows .= '
 						<tr>
 							<td style="width: 18ex; text-align: center; white-space: nowrap;">

@@ -18,9 +18,12 @@ class item {
 		$this->id = $item_id;
 		
 		// Get the information about this item.
-		$query = "SELECT * FROM `anyInventory_items` WHERE `id`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$query = "SELECT * FROM `anyInventory_items` WHERE `id` = ?";
+		$query_data = array($this->id);
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
+		
+		$row = $result->fetchRow();
 		
 		// Set the item name.
 		$this->name = $row["name"];
@@ -28,10 +31,12 @@ class item {
 		// Create the category object.
 		$this->category = new category($row["item_category"]);
 		
-		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id` = ?";
+		$query_data = array($this->id);
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
 		
-		while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while($row = $result->fetchRow()){
 			$field = new field($row["field_id"]);
 			
 			if ($field->input_type == 'file'){
@@ -59,10 +64,12 @@ class item {
 		}
 		
 		// Get each of this item's files and add it to the array.
-		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key` = ?";
+		$query_data = array($this->id);
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
 		
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while ($row = $result->fetchRow()){
 			$this->files[] = new file_object($row["id"]);
 		}
 	}
@@ -120,19 +127,14 @@ class item {
 						<table cellspacing="0" cellpadding="3">';
 		
 		if ($this->category->auto_inc_field){
-			$query = "SELECT * FROM `anyInventory_config` WHERE `key`='AUTO_INC_FIELD_NAME'";
-			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
-			
-			if ($result->numRows() > 0){
-				$output .= '
-					<tr class="highlighted_field">
-						<td style="width: 5%;">
-							&nbsp;
-						</td>
-						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.AUTO_INC_FIELD_NAME.':</b></nobr></td>
-						<td style="width: 85%;"></b> '.$this->id.'</td>
-					</tr>';
-			}
+			$output .= '
+				<tr class="highlighted_field">
+					<td style="width: 5%;">
+						&nbsp;
+					</td>
+					<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.AUTO_INC_FIELD_NAME.':</b></nobr></td>
+					<td style="width: 85%;"></b> '.$this->id.'</td>
+				</tr>';
 		}
 		
 		// Output each field with its value.
@@ -241,15 +243,19 @@ class item {
 				}
 			}
 			
-			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type`='item'";
-			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type` = ?";
+			$query_data = array('item');
+			$pquery = $db->prepare($query);
+			$result = $db->execute($pquery, $query_data);
 			
-			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
-				$new_query = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%'";
-				$new_result = $db->query($new_query) or die($db->error() . '<br /><br />' . $new_query);
+			while ($row = $result->fetchRow()){
+				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE ?";
+				$query2_data = array('%"'.$this->id.'"%');
+				$pquery2 = $db->prepare($query2);
+				$result2 = $db->execute($pquery2, $query2_data);
 				
-				while ($newrow = $new_result->fetchRow(DB_FETCHMODE_ASSOC)){
-					$backlinks[] = $newrow["id"];
+				while ($row2 = $result2->fetchRow()){
+					$backlinks[] = $row2["id"];
 				}
 			}
 			

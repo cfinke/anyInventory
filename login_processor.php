@@ -3,15 +3,17 @@
 include("globals.php");
 
 if ($_REQUEST["action"] == "log_in"){
-	$query = "SELECT * FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."'";
-	$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
+	$query = "SELECT * FROM `anyInventory_users` WHERE `username` = ?";
+	$query_data = array($_POST["username"]);
+	$pquery = $db->prepare($query);
+	$result = $db->execute($pquery, $query_data);
 	
 	if ($result->numRows() == 0){
 		header("Location: login.php?f=1&return_to=".$_POST["return_to"]);
 		exit;
 	}
 	else{
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$row = $result->fetchRow();
 		if (md5($_POST["password"]) == $row['password']){
 			unset($_SESSION["user"]);
 			

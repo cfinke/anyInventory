@@ -5,10 +5,10 @@ include("globals.php");
 $title = EDIT_ITEM;
 $inHead = '
 	<script type="text/javascript">
-	   _editor_url = "../htmlarea/";
+	   _editor_url = "'.$DIR_PREFIX.'htmlarea/";
 	   _editor_lang = "'.LANG.'";
 	</script>
-	<script type="text/javascript" src="../htmlarea/htmlarea.js"></script>';
+	<script type="text/javascript" src="'.$DIR_PREFIX.'htmlarea/htmlarea.js"></script>';
 $inBodyTag = ' onload="HTMLArea.replaceAll();"';
 $breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.EDIT_ITEM;
 

@@ -2,10 +2,9 @@
 
 // Installation file.
 
-require_once('DB.php');
-
 error_reporting(E_ALL ^ E_NOTICE);
 
+require_once("DB.php");
 include("functions.php");
 
 // Set the text of globals.php
@@ -69,20 +68,16 @@ if ($_POST["action"] == "install"){
 	
 	// Check for the correct database information.	
 	if (count($errors) == 0){
-		
-		// check for Oracle 8 - data source name syntax is different
-
-		if ($_POST["db_type"] != 'oci8'){
-			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
-		}
-		else {
+		if ($_POST["db_type"] == 'oci8'){
 			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@www";
 		}
-	
-		// establish the connection
-	
+		else {
+			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
+		}
+		
+		// Establish the connection
+		
 		$db = DB::connect($dsn);
-							
 		
 		if($DB::isError($db)){
 			$errors[] = 'anyInventory could not connect to the SQL server with the information you provided.';
@@ -113,6 +108,13 @@ if ($_POST["action"] == "install"){
 			}
 		}
 		
+		include("lang/".$_POST["lang"].".php");
+		
+		$blank = array();
+		
+		$_POST["username"] = ($_POST["username"] == '') ? 'username' : $_POST["username"];
+		$_POST["password"] = ($_POST["password"] == '') ? 'password' : $_POST["password"];
+		
 		// Begin writing the database information.
 		$query = "DROP TABLE `anyInventory_categories` ,
 			`anyInventory_fields` ,
@@ -127,11 +129,11 @@ if ($_POST["action"] == "install"){
 				  `id` int(11) NOT NULL auto_increment,
 				  `parent` int(11) NOT NULL default '0',
 				  `name` varchar(32) NOT NULL default '',
-			 	  `auto_inc_field` TINYINT( 1 ) DEFAULT '0' NOT NULL,
+			 	  `auto_inc_field` INT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`),
 				  KEY `parent` (`parent`)
 				) TYPE=MyISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$db->query($query);
 		
 		$query = "CREATE TABLE `anyInventory_fields` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -142,10 +144,10 @@ if ($_POST["action"] == "install"){
 				  `size` int(11) NOT NULL default '0',
 				  `categories` text NOT NULL,
 				  `importance` int(11) NOT NULL default '0',
-				  `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL,
+				  `highlight` INT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$db->query($query);
 		
 		$query = "CREATE TABLE `anyInventory_items` (
 				  `id` int(11) NOT NULL auto_increment,
@@ -153,7 +155,7 @@ if ($_POST["action"] == "install"){
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$db->query($query);
 		
 		$query = "CREATE TABLE `anyInventory_values` (
 					`item_id` int( 11 ) NOT NULL default '0',
@@ -161,7 +163,7 @@ if ($_POST["action"] == "install"){
 					`value` text NOT NULL ,
 					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
 					) TYPE = MYISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$db->query($query);
 		
 		$query = "CREATE TABLE `anyInventory_files` (
 					`id` INT NOT NULL AUTO_INCREMENT ,
@@ -174,7 +176,7 @@ if ($_POST["action"] == "install"){
 						`id`
 					)
 				)";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$db->query($query);
 		
 		$query = "CREATE TABLE `anyInventory_alerts` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -186,11 +188,11 @@ if ($_POST["action"] == "install"){
 					`modified` timestamp( 14 ) NOT NULL ,
 					`time` timestamp( 14 ) NOT NULL ,
 					`expire_time` timestamp( 14 ) NOT NULL ,
-				 	`timed` TINYINT( 1 ) DEFAULT '0' NOT NULL,
+				 	`timed` INT( 1 ) DEFAULT '0' NOT NULL,
 					`category_ids` TEXT NOT NULL,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$db->query($query);
 		
 		$query = "CREATE TABLE `anyInventory_users` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -202,7 +204,7 @@ if ($_POST["action"] == "install"){
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `username` (`username`)
 					) TYPE=MyISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$db->query($query);
 		
 		$query = "CREATE TABLE `anyInventory_config` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
@@ -211,50 +213,50 @@ if ($_POST["action"] == "install"){
 					UNIQUE KEY `id` ( `id` ),
 					UNIQUE KEY `key` ( `key` )
 					) TYPE = MYISAM";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$db->query($query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('AUTO_INC_FIELD_NAME','anyInventory ID')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_config'),
+							"key"=>'AUTO_INC_FIELD_NAME',
+							"value"=>'anyInventory ID');
+		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_config'),
+							"key"=>'FRONT_PAGE_TEXT',
+							"value"=>'This is the front page and top-level category of anyInventory.  You can <a href=\"docs/en/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.');
+		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('LANG','".$_REQUEST["lang"]."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_config'),
+							"key"=>'LANG',
+							"value"=>$_REQUEST["lang"]);
+		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_config'),
+							"key"=>'PP_VIEW',
+							"value"=>intval(($_POST["password_protect_view"] == "yes")));
+		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_config'),
+							"key"=>'PP_ADMIN',
+							"value"=>intval(($_POST["password_protect_admin"] == "yes")));
+		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
 		
-		$blank = array();
+		$query_data = array("id"=>get_unique_id('anyInventory_config'),
+							"key"=>'ADMIN_USER_ID',
+							"value"=>(get_unique_id('anyInventory_users') - 1));
+		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
 		
-		$_POST["username"] = ($_POST["username"] == '') ? 'username' : $_POST["username"];
-		$_POST["password"] = ($_POST["password"] == '') ? 'password' : $_POST["password"];
+		$query_data = array("id"=>get_unique_id('anyInventory_config'),
+							"key"=>'NAME_FIELD_NAME',
+							"value"=>NAME);
+		$db->autoExecute('anyInventory_config',$query_data,DB_AUTOQUERY_INSERT);
 		
-		$query = "INSERT INTO `anyInventory_users`
-					(`username`,
-					 `password`,
-					 `usertype`,
-					 `categories_admin`,
-					 `categories_view`)
-					VALUES
-					('".$_POST["username"]."',
-					 '".md5($_POST["password"])."',
-					 'Administrator',
-					 '".addslashes(serialize($blank))."',
-					 '".addslashes(serialize($blank))."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
-		
-		$maxidres = $db->query("select MAX('id') from anyInventory_users;");
-		$maxid = $maxidres->fetchRow();
-		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".$maxid[0]."')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
-		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('NAME_FIELD_NAME','Name')";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_users'),
+							"username"=>$_POST["username"],
+							"password"=>md5($_POST["password"]),
+							"usertype"=>'Administrator',
+							"categories_admin"=>serialize($blank),
+							"categories_view"=>serialize($blank));
+		$db->autoExecute('anyInventory_users',$query_data,DB_AUTOQUERY_INSERT);
 		
 		if (count($config_errors) == 0){
 			// Delete the install file.

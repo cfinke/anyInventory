@@ -19,9 +19,12 @@ class field {
 		$this->id = $field_id;
 		
 		// Get the information about this field.
-		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$query = "SELECT * FROM `anyInventory_fields` WHERE `id`= ?";
+		$query_data = array($this->id);
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
+		
+		$row = $result->fetchRow();
 		
 		// Set the name and input type
 		$this->name = $row["name"];
@@ -86,8 +89,10 @@ class field {
 		
 		if ($this->input_type != 'divider'){
 			if (is_array($cat_ids)){
-				$query = "UPDATE `anyInventory_fields` SET `categories`='".serialize($cat_ids)."' WHERE `id`='".$this->id."'";
-				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+				$query = "UPDATE `anyInventory_fields` SET `categories` = ? WHERE `id` = ?";
+				$query_data = array(serialize($cat_ids),$this->id);
+				$pquery = $db->process($query);
+				$db->execute($pquery, $query_data);
 			}
 			
 			return;

@@ -30,15 +30,17 @@ if ($_GET["id"]){
 	
 	$output .= $item->export_description();
 	
-	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%' AND `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE ? AND `time` <= ? AND (`expire_time` >= ? OR `expire_time` = ?)";
+	$query_data = array('%"'.$item->id.'"%','NOW()','NOW()','00000000000000');
+	$pquery = $db->prepare($query);
+	$result = $db->execute($pquery, $query_data);
 	
 	if ($result->numRows() > 0){
 		$output .= '
 				</td>
 				<td style="padding-left: 5px;">';
 		
-		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		while ($row = $result->fetchRow()){
 			$alert = new alert($row["id"]);
 			$field = new field($row["field_id"]);
 			
@@ -57,12 +59,8 @@ if ($_GET["id"]){
 }
 else{
 	if ($_GET["c"] == 0){
-		$query = "SELECT * FROM `anyInventory_config` WHERE `key`='FRONT_PAGE_TEXT'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-		
-		if ($result->numRows() > 0){
-			$resultrows = $result->fetchRow(DB_FETCHMODE_ASSOC);
-			$output .= '<p style="padding: 0px 0px 15px 0px;">'.$resultrows['value'].'</p>';
+		if (trim(FRONT_PAGE_TEXT) != ''){
+			$output .= '<p style="padding: 0px 0px 15px 0px;">'.FRONT_PAGE_TEXT.'</p>';
 		}
 	}
 	
@@ -111,8 +109,10 @@ else{
 			</tr>';
 	
 	// Display any items in this category.
-	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`= ? ORDER BY `name` ASC";
+	$query_data = array($category->id);
+	$pquery = $db->prepare($query);
+	$result = $db->execute($pquery, $query_data);
 	
 	if (($_GET["c"] != 0) || ($result->numRows() > 0)){
 		$output .= '
@@ -131,7 +131,7 @@ else{
 						<table>';
 		
 		if ($result->numRows() > 0){
-			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+			while ($row = $result->fetchRow()){
 				$item = new item($row["id"]);
 				
 				$output .= '<tr>';
@@ -158,10 +158,12 @@ else{
 		</td>
 		<td style="padding-left: 5px;">';
 	
-	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
-	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= ? AND (`expire_time` >= ? OR `expire_time` = ?)";
+	$query_data = array('NOW()','NOW()','00000000000000');
+	$pquery = $db->prepare($query);
+	$result = $db->execute($pquery, $query_data);
 	
-	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+	while ($row = $result->fetchRow()){
 		$alert = new alert($row["id"]);
 		
 		if (is_array($alert->item_ids)){

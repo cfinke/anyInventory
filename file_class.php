@@ -23,9 +23,12 @@ class file_object{
 		$this->id = $id;
 		
 		// Get the information about this file.
-		$query = "SELECT * FROM `anyInventory_files` WHERE `id`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$query = "SELECT * FROM `anyInventory_files` WHERE `id` = ?";
+		$query_data = array($this->id);
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
+		
+		$row = $result->fetchRow();
 		
 		// Set the id of the item that owns this file.
 		$this->item_id = $row["key"];

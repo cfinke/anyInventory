@@ -44,6 +44,19 @@ else{
 $output .= '			</td>
 						<td><b>'._NAME_FIELD_NAME.':</b> '.NAME_FIELD_NAME.'</td>
 					</tr>
+					<tr>
+						<td style="width: 10%; text-align: center;">';
+
+if ($admin_user->usertype == 'Administrator'){
+	$output .= '[<a href="xml_export.php">'.DOWNLOAD_LINK.'</a>]';
+}
+else{
+	$output .= '['.DOWNLOAD_LINK.']';
+}
+
+$output .= '			</td>
+						<td>'.DOWNLOAD_AS_XML.'</td>
+					</tr>
 				</table>
 			</td>
 		</tr>

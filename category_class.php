@@ -30,9 +30,11 @@ class category {
 			// Not the Top Level
 			
 			// Get all of the information about this category from the categories table.
-			$query = "SELECT `name`,`parent`,`auto_inc_field` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-			$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+			$query = "SELECT `name`,`parent`,`auto_inc_field` FROM `anyInventory_categories` WHERE `id`= ?";
+			$query_data = array($this->id);
+			$pquery = $db->prepare($query);
+			$result = $db->execute($pquery, $query_data);
+			$row = $result->fetchRow();
 			
 			// Set the name and parent id
 			$this->name = $row["name"];
@@ -68,9 +70,11 @@ class category {
 					}
 					else{
 						// Find the name of the current category
-						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
-						$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
-						$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`= ?";
+						$query_data = array($crumb);
+						$pquery = $db->prepare($query);
+						$result = $db->execute($pquery, $query_data);
+						$row = $result->fetchRow();
 						$this->breadcrumb_names .= $row["name"] . ' > ';
 					}
 				}
@@ -80,11 +84,13 @@ class category {
 			$this->breadcrumb_names = substr($this->breadcrumb_names, 0, strlen($this->breadcrumb_names) - 3);
 			
 			// Get all of the fields that this category uses.
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$this->id."\"%' OR `input_type`='divider'  ORDER BY `importance` ASC";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE ? OR `input_type`= ? ORDER BY `importance` ASC";
+			$query_data = array('%"'.$this->id.'"%', 'divider');
+			$pquery = $db->prepare($query);
+			$result = $db->execute($pquery, $query_data);
 			
 			// Add each field's id and name to the appropriate arrays.
-			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+			while ($row = $result->fetchRow()){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -99,21 +105,29 @@ class category {
 			$this->breadcrumb_names = TOP_LEVEL_CATEGORY;
 			
 			// Get the fields that the Top Level uses.
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' OR `input_type`='divider' ORDER BY `importance`";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE ?  OR `input_type`= ? ORDER BY `importance`";
+			$query_data = array('%"0"%','divider');
+			$pquery = $db->prepare($query);
+			$result = $db->execute($pquery, $query_data);
 			
 			// Add each field id and name to the arrays.
-			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+			while ($row = $result->fetchRow()){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
 		}
 		
 		// Find the children of the current category
-		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = ? ORDER BY `name` ASC";
+		$query_data = array($this->id);
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data); 
 		
-		while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+		if (DB::isError($result)) {
+		    die($result->getMessage());
+		}
+		
+		while($row = $result->fetchRow()){
 			$this->children_ids[] = $row["id"];
 			$this->num_children++;
 		}
@@ -126,8 +140,10 @@ class category {
 	function num_items(){
 		global $db;
 		
-		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
-		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`= ?";
+		$query_data = array($this->id);
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery, $query_data);
 		
 		return $result->numRows();
 	}
@@ -174,15 +190,17 @@ class category {
 		}
 		else{
 			// Get the parent from the categories table.
-			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id`='".$cat_id."'";
-			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id` = ?";
+			$query_data = array($cat_id);
+			$pquery = $db->prepare($query);
+			$result = $db->execute($pquery, $query_data);
 			
 			// If there is no parent, then, the parent is the Top Level.
 			if ($result->numRows() == 0){
 				return 0;
 			}
 			else{
-				$resultrows = $result->fetchRow(DB_FETCHMODE_ASSOC);
+				$resultrows = $result->fetchRow();
 				return $resultrows['parent'];
 			}
 		}

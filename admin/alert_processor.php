@@ -26,7 +26,7 @@ if ($_POST["action"] == "do_add"){
 		
 		$_POST["title"] = stripslashes($_POST["title"]);
 		$_POST["title"] = str_replace($replace,"",$_POST["title"]);
-		$_POST["title"] = trim(addslashes($_POST["title"]));
+		$_POST["title"] = trim($_POST["title"]);
 		
 		$timestamp = $_POST["year"];
 		$timestamp .= ($_POST["month"] < 10) ? '0' . $_POST["month"] : $_POST["month"];
@@ -43,29 +43,17 @@ if ($_POST["action"] == "do_add"){
 			$expire_timestamp = '00000000000000';
 		}
 		
-		$query = "INSERT INTO `anyInventory_alerts` 
-					(`title`,
-					 `item_ids`,
-					 `field_id`,
-					 `condition`,
-					 `value`,
-					 `time`,
- 					 `expire_time`,
-					 `timed`,
-					 `category_ids`
-					 )
-					VALUES
-					('".$_POST["title"]."',
-					 '".serialize($_POST["i"])."',
-					 '".$_POST["field"]."',
-					 '".$_POST["condition"]."',
-					 '".$_POST["value"]."',
-					 '".$timestamp."',
-					 '".$expire_timestamp."',
-					 '".(((bool) ($_POST["timed"] == "yes")) / 1)."',
-					 '".$_POST["c"]."'
-					 )";
-		$db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$query_data = array("id"=>get_unique_id('anyInventory_alerts'),
+							"title"=>$_POST["title"],
+							"item_ids"=>serialize($_POST["i"]),
+							"field_id"=>$_POST["field"],
+							"condition"=>$_POST["condition"],
+							"value"=>stripslashes($_POST["value"]),
+							"time"=>$timestamp,
+							"expire_time"=>$expire_timestamp,
+							"timed"=>intval(($_POST["timed"] == "yes")),
+							"category_ids"=>stripslashes($_POST["c"]))
+		$db->autoExecute('anyInventory_alerts',$query_data,DB_AUTOQUERY_INSERT);
 	}
 }
 elseif($_POST["action"] == "do_edit_cat_ids"){

@@ -57,7 +57,7 @@ if (PP_VIEW){
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
 $result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 
-while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+while($row = $result->fetchRow()){
 	$temp_user = new user($row["id"]);
 	
 	$output .= '<option value="'.$row["id"].'"';
@@ -81,7 +81,7 @@ if (PP_ADMIN){
 $query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
 $result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 
-while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
+while($row = $result->fetchRow()){
 	$temp_user = new user($row["id"]);
 	
 	$output .= '<option value="'.$row["id"].'"';

@@ -17,7 +17,7 @@ if (($_REQUEST["action"] == "add") || ($_REQUEST["action"] == "edit")){
 				<input type="hidden" name="action" value="do_'.$_REQUEST["action"].'" />
 				<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 				<table>
-					<tr>
+					<tr style="display: auto;">
 						<td class="form_label"><label for="name">Name:</label></td>
 						<td class="form_input"><input type="text" name="name" id="name" value="'.$field->name.'" /></td>
 					</tr>
@@ -25,15 +25,15 @@ if (($_REQUEST["action"] == "add") || ($_REQUEST["action"] == "edit")){
 						<td class="form_label"><label for="name">Data type:</label></td>
 						<td class="form_input">
 							<select name="input_type" id="input_type"">
-								<option value="text"';if($field->input_type == 'text') $output .= ' selected="selected"';$output.='>Text</option>
-								<option value="select"';if($field->input_type == 'select') $output .= ' selected="selected"';$output.='>Select Box</option>
-								<option value="multiple"';if($field->input_type == 'multiple') $output .= ' selected="selected"';$output.='>Multiple (Select + Text)</option>
-								<option value="checkbox"';if($field->input_type == 'checkbox') $output .= ' selected="selected"';$output.='>Checkboxes</option>
-								<option value="radio"';if($field->input_type == 'radio') $output .= ' selected="selected"';$output.='>Radio Buttons</option>
+								<option onclick="document.getElementById(\'values_row\').style.display = \'none\';document.getElementById(\'size_row\').style.display = \'\';" value="text"';if($field->input_type == 'text') $output .= ' selected="selected"';$output.='>Text</option>
+								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'none\';" value="select"';if($field->input_type == 'select') $output .= ' selected="selected"';$output.='>Select Box</option>
+								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'\';" value="multiple"';if($field->input_type == 'multiple') $output .= ' selected="selected"';$output.='>Multiple (Select + Text)</option>
+								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'none\';" value="checkbox"';if($field->input_type == 'checkbox') $output .= ' selected="selected"';$output.='>Checkboxes</option>
+								<option onclick="document.getElementById(\'values_row\').style.display = \'\';document.getElementById(\'size_row\').style.display = \'none\';" value="radio"';if($field->input_type == 'radio') $output .= ' selected="selected"';$output.='>Radio Buttons</option>
 							</select>
 						</td>
 					</tr>
-					<tr>
+					<tr id="values_row" style="display: none;">
 						<td class="form_label"><label for="values">Values:</label><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
 						<td class="form_input"><input type="text" name="values" id="values" value="';
 						if (is_array($field->values)){
@@ -44,15 +44,15 @@ if (($_REQUEST["action"] == "add") || ($_REQUEST["action"] == "edit")){
 						}
 					$output .= '" /></td>
 					</tr>
-					<tr>
+					<tr style="display: auto;">
 						<td class="form_label"><label for="default_value">Default value:</label></td>
 						<td class="form_input"><input type="text" name="default_value" id="default_value" value="'.$field->default_value.'" /></td>
 					</tr>
-					<tr>
+					<tr style="display: auto;" id="size_row">
 						<td class="form_label"><label for="size">Size, in characters:</label><br /><small>Only for data types \'Multiple\' and \'Text\'.</small></td>
 						<td class="form_input"><input type="text" name="size" id="size" value="'.$field->size.'" /></td>
 					</tr>
-					<tr>
+					<tr style="display: auto;">
 						<td class="form_label">&nbsp;</td>
 						<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 					</tr>
@@ -114,7 +114,7 @@ else{
 		}
 	}
 	else{
-		$table_set .= '<tr class="row_off"><td>There are no fields to display.</td></tr>';
+		$table_set .= '<tr class="row_off"><td colspan="6">There are no fields to display.</td></tr>';
 	}
 	
 	$table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();

@@ -2,7 +2,6 @@ TODO
 
 Fields
 ======
-Only have the values and size fields visible when the appropriate type is selected
 Nicer display on delete
 
 Categories

@@ -9,31 +9,27 @@ if (!isset($_REQUEST["c"])) $_REQUEST["c"] = array(0);
 
 if (!$_REQUEST["action"]){
 	$output .= '
-			<table>
+			<table style="width: 100%;">
 				<tr>
-					<td colspan="2" style="text-align: right;"><a href="docs/searching.php">Help with searching</a></td>
+					<td><h2>Limit search to:</h2></td><td style="text-align: right;"><a href="docs/searching.php">Help with searching</a></td>
 				</tr>
-				<tr>
-					<td valign="top" width="50%">
-						<form action="'.$_SERVER["PHP_SELF"].'" method="get">
-							<h2>Limit search to:</h2>
-							<select name="c[]" id="c[]" multiple="multiple">
-								'.get_category_options($_REQUEST["c"]).'
-							</select>
-							<p style="text-align: center;"><input type="submit" name="submit" value="Update" /></p>
-						</form>
-					</td>
-					<td width="50%">
-						<form action="'.$_SERVER["PHP_SELF"].'" method="get">
-							<input type="hidden" name="action" value="do_edit" />
-							<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
-							<input type="hidden" name="c" value="'.htmlentities(serialize($_REQUEST["c"])).'" />
-							<h2>Search</h2>
-							<table>
-								<tr>
-									<td class="form_label"><label for="name">Name:</label></td>
-									<td class="form_input"><input type="text" name="name" id="name" value="'.$item->name.'" maxlength="64" />
-								</tr>';
+			</table>
+			<form action="'.$_SERVER["PHP_SELF"].'" method="get">
+				<select name="c[]" id="c[]" multiple="multiple" size="10">
+					'.get_category_options($_REQUEST["c"]).'
+				</select>
+				<p style="text-align: center;"><input type="submit" name="submit" value="Update" /></p>
+			</form>
+			<form action="'.$_SERVER["PHP_SELF"].'" method="get">
+				<input type="hidden" name="action" value="do_edit" />
+				<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+				<input type="hidden" name="c" value="'.htmlentities(serialize($_REQUEST["c"])).'" />
+				<h2>Search</h2>
+				<table>
+					<tr>
+						<td class="form_label"><label for="name">Name:</label></td>
+						<td class="form_input"><input type="text" name="name" id="name" value="'.$item->name.'" maxlength="64" />
+					</tr>';
 	
 	// Get each field and output a search field for it.
 	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `name`";
@@ -90,15 +86,13 @@ if (!$_REQUEST["action"]){
 		}
 	}
 	
-	$output .= '		<tr>
-							<td class="form_label">&nbsp;</td>
-							<td class="form_input"><input type="submit" name="submit" id="submit" value="Search" /></td>
-						</tr>
-					</table>
-					</form>
-				</td>
-			</tr>
-		</table>';
+	$output .= '		
+				<tr>
+					<td class="form_label">&nbsp;</td>
+					<td class="form_input"><input type="submit" name="submit" id="submit" value="Search" /></td>
+				</tr>
+			</table>
+		</form>';
 }
 else{
 	$query = "SELECT `name` FROM `anyInventory_fields`";

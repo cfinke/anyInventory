@@ -139,9 +139,13 @@ elseif (!isset($_POST["i"])){
 						<td style="vertical-align: middle;">
 							<input type="radio" name="template" value="'.$key.'" />
 						</td>
-						<td>
-							<img src="images/labels/'.$key.'.gif" style="float: left; padding-right: 8px;" />
-							'.PAGE_DIMENSIONS.': '.$template["page_width"].'" x '.$template["page_height"].'" ('.($template["page_width"] * 2.54).' cm x '.($template["page_height"] * 2.54).' cm)<br />
+						<td>';
+				
+				if (is_file("images/labels/".$key.".gif")){
+					$output .= '<img src="images/labels/'.$key.'.gif" style="float: left; padding-right: 8px;" />';
+				}
+				
+				$output .= 	PAGE_DIMENSIONS.': '.$template["page_width"].'" x '.$template["page_height"].'" ('.($template["page_width"] * 2.54).' cm x '.($template["page_height"] * 2.54).' cm)<br />
 							'.LABEL_DIMENSIONS.': '.$template["label_width"].'" x '. $template["label_height"].'" ('.($template["label_width"] * 2.54) .' cm x '. ($template["label_height"] * 2.54).' cm)<br />
 							'.$template["num_cols"].' '.COLUMNS.', '.$template["num_rows"].' '.ROWS.' ('.($template["num_cols"] * $template["num_rows"]).' '.LABELS.')
 						</td>

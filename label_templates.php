@@ -55,6 +55,17 @@ $templates = array(
 			   "num_cols"=>2,
 			   "num_rows"=>6,
 			   "label_width"=>3.75,
-			   "label_height"=>1.25));
+			   "label_height"=>1.25),
+	// 3 columns of 7 labels
+	// 1.5" X 2.5"
+	// 			   
+	5 => array("page_width"=>8.5,
+			   "page_height"=>11,
+			   "left_margin"=>.28,
+			   "top_margin"=>0.59,
+			   "num_cols"=>3,
+			   "num_rows"=>7,
+			   "label_width"=>2.5,
+			   "label_height"=>1.5));
 
 ?>

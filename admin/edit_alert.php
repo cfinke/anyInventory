@@ -15,6 +15,10 @@ $inHead = '
 				document.getElementById(\'field\').disabled = document.getElementById(\'timed\').checked;
 				document.getElementById(\'condition\').disabled = document.getElementById(\'timed\').checked;
 				document.getElementById(\'value\').disabled = document.getElementById(\'timed\').checked;
+				
+				document.getElementById(\'expire_month\').disabled = !document.getElementById(\'expire\').checked;
+				document.getElementById(\'expire_day\').disabled = !document.getElementById(\'expire\').checked;
+				document.getElementById(\'expire_year\').disabled = !document.getElementById(\'expire\').checked;
 			}
 		// -->
 	</script>';
@@ -22,6 +26,8 @@ $inBodyTag = ' onload="toggle();"';
 $breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.EDIT_ALERT;
 
 $alert = new alert($_GET["id"]);
+$checked = ($alert->expiration_date == '99999999999999') ? '' : ' checked="checked"';
+
 $query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `input_type` != 'divider' ";
 
 if (is_array($alert->category_ids)){
@@ -160,6 +166,44 @@ else{
 	$output .= '			</select>
 									</td>
 							</tr>
+									<tr>
+										<td class="form_label"><label for="expire_month">'.EXPIRATION_DATE.':</label></td>
+										<td class="form_input">
+											<select name="expire_month" id="expire_month">
+												<option value="1"';if(substr($alert->expiration_date,4,2) == '01') $output .= ' selected="selected"'; $output .= '>'.MONTH_1.'</option>
+												<option value="2"';if(substr($alert->expiration_date,4,2) == '02') $output .= ' selected="selected"'; $output .= '>'.MONTH_2.'</option>
+												<option value="3"';if(substr($alert->expiration_date,4,2) == '03') $output .= ' selected="selected"'; $output .= '>'.MONTH_3.'</option>
+												<option value="4"';if(substr($alert->expiration_date,4,2) == '04') $output .= ' selected="selected"'; $output .= '>'.MONTH_4.'</option>
+												<option value="5"';if(substr($alert->expiration_date,4,2) == '05') $output .= ' selected="selected"'; $output .= '>'.MONTH_5.'</option>
+												<option value="6"';if(substr($alert->expiration_date,4,2) == '06') $output .= ' selected="selected"'; $output .= '>'.MONTH_6.'</option>
+												<option value="7"';if(substr($alert->expiration_date,4,2) == '07') $output .= ' selected="selected"'; $output .= '>'.MONTH_7.'</option>
+												<option value="8"';if(substr($alert->expiration_date,4,2) == '08') $output .= ' selected="selected"'; $output .= '>'.MONTH_8.'</option>
+												<option value="9"';if(substr($alert->expiration_date,4,2) == '09') $output .= ' selected="selected"'; $output .= '>'.MONTH_9.'</option>
+												<option value="10"';if(substr($alert->expiration_date,4,2) == '10') $output .= ' selected="selected"'; $output .= '>'.MONTH_10.'</option>
+												<option value="11"';if(substr($alert->expiration_date,4,2) == '11') $output .= ' selected="selected"'; $output .= '>'.MONTH_11.'</option>
+												<option value="12"';if(substr($alert->expiration_date,4,2) == '12') $output .= ' selected="selected"'; $output .= '>'.MONTH_12.'</option>
+											</select>
+											<select name="expire_day" id="expire_day">';
+					
+			for ($i = 1; $i <= 31; $i++){
+				$output .= '<option value="'.$i.'"';if((substr($alert->expiration_date,6,2) / 1) == $i) $output .= ' selected="selected"'; $output .= '>'.$i.'</option>';
+			}
+			
+			
+			$output .= '			</select>,
+									<select name="expire_year" id="expire_year">';
+				
+			$year = date("Y");
+			
+			for ($i = 0; $i < 20; $i++){
+				$output .= '<option value="'.($i + $year).'"';if(substr($alert->expiration_date,0,4) == ($i + $year)) $output .= ' selected="selected"'; $output .= '>'.($i + $year).'</option>';
+			}
+			
+			
+			$output .= '					</select>
+											<input type="checkbox" name="expire" id="expire" value="yes" onclick="toggle();"'.$checked.' /> '.ALLOW_EXPIRATION.'
+										</td>
+									</tr>
 							<tr>
 								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 							</tr>

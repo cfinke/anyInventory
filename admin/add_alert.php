@@ -3,15 +3,6 @@
 include("globals.php");
 
 $title = ADD_ALERT;
-$inHead = '
-	<script type="text/javascript">
-		function toggle(){
-			alert(document.getElementById(\'expire_month\').disabled);// = true;//!document.getElementById(\'expire\').checked;
-			document.getElementById(\'expire_day\').disabled = !document.getElementById(\'expire\').checked;
-			document.getElementById(\'expire_year\').disabled = !document.getElementById(\'expire\').checked;
-		}
-	</script>';
-$inBodyTag = ' onload="toggle();"';
 $breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.ADD_ALERT;
 
 if (!is_array($_GET["c"])){
@@ -74,9 +65,14 @@ else{
 						document.getElementById(\'field\').disabled = document.getElementById(\'timed\').checked;
 						document.getElementById(\'condition\').disabled = document.getElementById(\'timed\').checked;
 						document.getElementById(\'value\').disabled = document.getElementById(\'timed\').checked;
+						
+						document.getElementById(\'expire_month\').disabled = !document.getElementById(\'expire\').checked;
+						document.getElementById(\'expire_day\').disabled = !document.getElementById(\'expire\').checked;
+						document.getElementById(\'expire_year\').disabled = !document.getElementById(\'expire\').checked;
 					}
 				// -->
 			</script>';
+		$inBodyTag = ' onload="toggle();"';
 		
 		$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (";
 		
@@ -107,8 +103,8 @@ else{
 								<td class="tableData">
 									<table>
 										<tr>
-											<td class="form_label"><label for="name">'.ALERT_TITLE.':</label></td>
-											<td class="form_input"><input type="text" name="title" id="title" value="" maxlength="255" />
+											<td class="form_label"><label for="title">'.ALERT_TITLE.':</label></td>
+											<td class="form_input"><input type="text" name="title" id="title" value="" maxlength="255" style="width: 100%;" />
 										</tr>
 										<tr>
 											<td class="form_label"><label for="c">'.APPLIES_TO.':</label></td>
@@ -131,7 +127,7 @@ else{
 									<tr>
 										<td class="form_label"><label for="field">'.FIELD.':</label></td>
 										<td class="form_input">
-											<select name="field" id="field">';
+											<select name="field" id="field" style="width: 100%;">';
 			
 			foreach($fields as $field){
 				$output .= '<option value="'.$field["id"].'"> '.$field["name"].'</option>';
@@ -143,7 +139,7 @@ else{
 									<tr>
 										<td class="form_label"><label for="condition">'.CONDITION.':</label></td>
 										<td class="form_input">
-											<select name="condition" id="condition">
+											<select name="condition" id="condition" style="width: 100%;">
 												<option value="==">=</option>
 												<option value="!=">!=</option>
 												<option value="<">&lt;</option>
@@ -155,7 +151,7 @@ else{
 									</tr>
 									<tr>
 										<td class="form_label"><label for="value">'.VALUE.':</label></td>
-										<td class="form_input"><input type="text" name="value" id="value" value="" /></td>
+										<td class="form_input"><input type="text" name="value" id="value" value="" style="width: 100%;" /></td>
 									</tr>
 									<tr>
 										<td class="form_label"><label for="month">'.EFFECTIVE_DATE.':</label></td>
@@ -228,8 +224,8 @@ else{
 			}
 			
 			
-			$output .= '			</select>
-									<input type="checkbox" name="expire" id="expire" value="yes" checked="checked" onclick="toggle();" /> '.ALLOW_EXPIRATION.'
+			$output .= '					</select>
+											<input type="checkbox" name="expire" id="expire" value="yes" onclick="toggle();" /> '.ALLOW_EXPIRATION.'
 										</td>
 									</tr>
 									<tr>

@@ -33,6 +33,16 @@ if ($_POST["action"] == "do_add"){
 		$timestamp .= ($_POST["day"] < 10) ? '0' . $_POST["day"] : $_POST["day"];
 		$timestamp .= '000000';
 		
+		if ($_POST["expire"] == "yes"){
+			$expire_timestamp = $_POST["expire_year"];
+			$expire_timestamp .= ($_POST["expire_month"] < 10) ? '0' . $_POST["expire_month"] : $_POST["expire_month"];
+			$expire_timestamp .= ($_POST["expire_day"] < 10) ? '0' . $_POST["expire_day"] : $_POST["expire_day"];
+			$expire_timestamp .= '235959';
+		}
+		else{
+			$expire_timestamp = '00000000000000';
+		}
+		
 		$query = "INSERT INTO `anyInventory_alerts` 
 					(`title`,
 					 `item_ids`,
@@ -41,7 +51,9 @@ if ($_POST["action"] == "do_add"){
 					 `value`,
 					 `time`,
 					 `timed`,
-					 `category_ids`)
+					 `category_ids`,
+					 `expire`
+					 )
 					VALUES
 					('".$_POST["title"]."',
 					 '".serialize($_POST["i"])."',
@@ -50,7 +62,8 @@ if ($_POST["action"] == "do_add"){
 					 '".$_POST["value"]."',
 					 '".$timestamp."',
 					 '".(((bool) ($_POST["timed"] == "yes")) / 1)."',
-					 '".$_POST["c"]."')";
+					 '".$_POST["c"]."',
+					 '".$expire_timestamp."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
@@ -111,6 +124,16 @@ elseif($_POST["action"] == "do_edit"){
 		$timestamp .= ($_POST["day"] < 10) ? '0' . $_POST["day"] : $_POST["day"];
 		$timestamp .= '000000';
 		
+		if ($_POST["expire"] == "yes"){
+			$expire_timestamp = $_POST["expire_year"];
+			$expire_timestamp .= ($_POST["expire_month"] < 10) ? '0' . $_POST["expire_month"] : $_POST["expire_month"];
+			$expire_timestamp .= ($_POST["expire_day"] < 10) ? '0' . $_POST["expire_day"] : $_POST["expire_day"];
+			$expire_timestamp .= '235959';
+		}
+		else{
+			$expire_timestamp = '00000000000000';
+		}
+		
 		$query = "UPDATE `anyInventory_alerts` SET 
 					`title`='".$_POST["title"]."',
 					`item_ids`='".serialize($_POST["i"])."',
@@ -118,7 +141,8 @@ elseif($_POST["action"] == "do_edit"){
 					`condition`='".$_POST["condition"]."',
 					`value`='".$_POST["value"]."',
 					`time`='".$timestamp."',
-					`timed`='".(((bool) ($_POST["timed"] == "yes")) / 1)."'
+					`timed`='".(((bool) ($_POST["timed"] == "yes")) / 1)."',
+					`expire`='".$expire_timestamp."'
 					 WHERE `id`='".$_POST["id"]."'";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}

@@ -30,7 +30,7 @@ if ($_GET["id"]){
 	
 	$output .= $item->export_description();
 	
-	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%' AND `time` <= NOW()";
+	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%' AND `time` <= NOW() AND (`expire` >= NOW() OR `expire`='00000000000000')";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
@@ -157,7 +157,7 @@ else{
 		</td>
 		<td style="padding-left: 5px;">';
 	
-	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW()";
+	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW() AND (`expire` >= NOW() OR `expire`='00000000000000')";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	while ($row = mysql_fetch_array($result)){

@@ -81,9 +81,9 @@ if ($_POST["action"] == "install"){
 		
 		if(DB::isError($db)){
 			$errors[] = 'anyInventory could not connect to the SQL server with the information you provided.';
+		} else {
+			$db->setFetchMode(DB_FETCHMODE_ASSOC);
 		}
-		
-		$db->setFetchMode(DB_FETCHMODE_ASSOC);
 	}
 	
 	// Try to write the globals.php file.

@@ -13,7 +13,7 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 	else{
 		if (($_REQUEST["input_type"] == "select") || ($_REQUEST["input_type"] == "radio")){
-			if (!strstr($_REQUEST["default_value"],$_REQUEST["values"])){
+			if (stristr($_REQUEST["values"],$_REQUEST["default_value"]) === false){
 				header("Location: ../error_handler.php?eid=1");
 				exit;
 			}

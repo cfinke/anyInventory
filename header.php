@@ -26,9 +26,10 @@
 						<b>Main Menu: </b>
 						[ <a href="<?php echo $DIR_PREFIX; ?>index.php">home</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>search.php">advanced search</a> ]
-						[ <a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">categories</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">fields</a> ]
+						[ <a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">categories</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>admin/items.php">items</a> ]
+						[ <a href="<?php echo $DIR_PREFIX; ?>admin/alerts.php">alerts</a> ]						
 						[ <a href="<?php echo $DIR_PREFIX; ?>docs/">help</a> ]
 					</div>	
 				</td>

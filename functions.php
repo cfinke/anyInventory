@@ -1,7 +1,9 @@
 <?php
 
 // Remove the whitespace from the ends of each $_REQUEST value
-foreach($_REQUEST as $key => $value) $_REQUEST[$key] = trim($value);
+foreach($_REQUEST as $key => $value){
+	if (!is_array($_REQUEST[$key])) $_REQUEST[$key] = trim($value);
+}
 
 function connect_to_database(){
 	// This function opens and returns the database connection.

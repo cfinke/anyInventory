@@ -76,7 +76,7 @@ $output .= '
 							<td class="form_label">Apply field to:</td>
 							<td class="form_input">
 								<select name="add_to[]" id="add_to[]" multiple="multiple" size="10" style="width: 100%;">
-									'.get_category_options().'
+									'.$admin_user->get_admin_categories_options(null).'
 								</select>
 							</td>
 						</tr>

@@ -20,6 +20,8 @@ class category {
 	var $auto_inc_field = false;
 	
 	function category($cat_id){
+		global $db;
+		
 		// Set the id of this category.
 		$this->id = $cat_id;
 		
@@ -122,6 +124,8 @@ class category {
 	// This function returns the number of items that are inventoried in this category.
 	
 	function num_items(){
+		global $db;
+		
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
 		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
@@ -162,6 +166,8 @@ class category {
 	// This function returns the parent id of a given category id.
 	
 	function find_parent_id($cat_id){
+		global $db;
+		
 		if ($cat_id == 0){
 			// The Top Level is its own category.
 			return 0;

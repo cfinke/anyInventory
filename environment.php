@@ -15,15 +15,15 @@ if (is_array($_POST)){
 }
 
 require_once("DB.php");
+
 require_once($DIR_PREFIX."functions.php");
 
 // Check for Oracle 8 - data source name syntax is different
 
-if ($phptype != 'oci8'){
-	$dsn = "$dbtype://$username:$password@$hostspec/$database";
+if ($db_type != 'oci8'){
+	$dsn = $db_type."://".$db_user.":".$db_pass."@".$db_host."/".$db_name;
 } else {
-	$net8name = 'www';
-	$dsn = "$phptype://$username:$password@$net8name";
+	$dsn = $db_type."://".$db_user.":".$db_pass."@www";
 }
 
 $db = connect_to_database();

@@ -5,8 +5,9 @@ function connect_to_database(){
 	global $dsn;
 	
 	$db = DB::connect($dsn);
+	
 	if (DB::isError($db)) {
-		die ($db->getMessage(  ));
+		die($db->getMessage());
 	}
 	
 	return $db;
@@ -21,6 +22,7 @@ function display($output){
 	global $inBodyTag;
 	global $breadcrumbs;
 	global $sectionTitle;
+	global $db;
 	
 	global $DIR_PREFIX;
 	
@@ -45,6 +47,8 @@ function get_category_options($selected = null, $multiple = true, $exclude = nul
 }
 
 function get_options_children($id, $pre = null, $selected = null, $multiple = true, $exclude){
+	global $db;
+	
 	// This function creates select box options for the children of a category
 	// with the id $id.
 	
@@ -98,6 +102,8 @@ function category_array_to_options($array, $selected = null, $exclude = null){
 }
 
 function get_item_options($cat_ids = 0, $selected = null){
+	global $db;
+	
 	// This function creates select box options for the items in the category $cat.
 	if (!is_array($selected)) $selected = array($selected);
 	if (!is_array($cat_ids)) $cat_ids = array($cat_ids);
@@ -123,6 +129,8 @@ function get_item_options($cat_ids = 0, $selected = null){
 }
 
 function get_fields_checkbox_area($checked = array()){
+	global $db;
+	
 	// This function returns the field checkboxes.
 	// Any field ids in the array $checked will be checked.
 	
@@ -164,6 +172,8 @@ function get_fields_checkbox_area($checked = array()){
 }
 
 function get_category_array($top = 0){
+	global $db;
+	
 	// This function returns an array of categories, starting with
 	// the category id'd by $top and working down.
 	
@@ -188,6 +198,8 @@ function get_category_array($top = 0){
 }
 
 function get_array_children($id, &$array, $pre = ""){
+	global $db;
+	
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
@@ -230,6 +242,8 @@ function get_category_id_array($top = 0){
 }
 
 function get_array_id_children($id, &$array){
+	global $db;
+	
 	// This function creates array entries for any child of $id.
 	
 	$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
@@ -258,6 +272,8 @@ function delete_subcategories($category){
 }
 
 function delete_subcategory($category){
+	global $db;
+	
 	// This function deletes a subcategory $category and its children.
 	
 	if (is_array($category->children_ids)){
@@ -303,6 +319,8 @@ function delete_subcategory($category){
 }
 
 function remove_from_fields($cat_id){
+	global $db;
+	
 	// This function removes all fields from a category.
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$cat_id."\"%'";
 	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);

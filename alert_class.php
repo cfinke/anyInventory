@@ -22,6 +22,8 @@ class alert {
 	var $expires = false;
 	
 	function alert($alert_id){
+		global $db;
+		
 		$this->id = $alert_id;
 		
 		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time`, UNIX_TIMESTAMP(`expire_time`) AS `unix_expire_time` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
@@ -59,6 +61,8 @@ class alert {
 	// This function removes an item from the alert.
 	
 	function remove_item($item_id){
+		global $db;
+		
 		// Find the key of the category id in the array.
 		$key = array_search($item_id, $this->item_ids);
 		

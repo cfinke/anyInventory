@@ -12,6 +12,8 @@ class item {
 	var $files = array();		// An array of file objects that belong to this item.
 	
 	function item($item_id){
+		global $db;
+		
 		// Set the item id.
 		$this->id = $item_id;
 		
@@ -96,6 +98,7 @@ class item {
 	// This function returns a full description of the item.
 	
 	function export_description(){
+		global $db;
 		global $DIR_PREFIX;
 		global $admin_user;
 		
@@ -242,7 +245,7 @@ class item {
 			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 			
 			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
-				$new_query = "SELECT `id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%'";
+				$new_query = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%'";
 				$new_result = $db->query($new_query) or die($db->error() . '<br /><br />' . $new_query);
 				
 				while ($newrow = $new_result->fetchRow(DB_FETCHMODE_ASSOC)){

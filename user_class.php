@@ -11,6 +11,8 @@ class user {
 	var $categories_admin = array();	// The category ids of the categories that this user can administrate
 	
 	function user($user_id){
+		global $db;
+		
 		$this->id = $user_id;
 		
 		$query = "SELECT * FROM `anyInventory_users` WHERE `id`='".$this->id."'";
@@ -99,6 +101,8 @@ class user {
 	}
 	
 	function add_category_view($category_id){
+		global $db;
+		
 		if ($this->usertype != 'Administrator'){
 			$this->categories_view[] = $category_id;
 			
@@ -108,6 +112,8 @@ class user {
 	}
 	
 	function add_category_admin($category_id){
+		global $db;
+		
 		if ($this->usertype != 'Administrator'){
 			$this->categories_admin[] = $category_id;
 			
@@ -117,6 +123,8 @@ class user {
 	}
 	
 	function remove_category_view($category_id){
+		global $db;
+		
 		if ($this->usertype != 'Administrator'){
 			$key = array_search($category_id, $this->categories_view);
 			
@@ -132,6 +140,8 @@ class user {
 	}
 	
 	function remove_category_admin($category_id){
+		global $db;
+		
 		if ($this->usertype != 'Administrator'){
 			$key = array_search($category_id, $this->categories_admin);
 			
@@ -147,6 +157,8 @@ class user {
 	}
 	
 	function update_categories_view($category_ids){
+		global $db;
+		
 		$this->categories_view = $category_ids;
 		
 		$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
@@ -154,6 +166,8 @@ class user {
 	}
 	
 	function update_categories_admin($category_ids){
+		global $db;
+		
 		$this->categories_admin = $category_ids;
 		
 		$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";

@@ -16,6 +16,7 @@ class file_object{
 	var $is_remote = false; // Whether or not this is a remote file
 	
 	function file_object($id){
+		global $db;
 		global $DIR_PREFIX;
 		
 		// Set the id of this file.

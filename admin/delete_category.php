@@ -2,6 +2,11 @@
 
 include("globals.php");
 
+if (!$admin_user->can_admin($_REQUEST["id"])){
+	header("Location: ../error_handler.php?eid=13");
+	exit;
+}
+
 if ($_REQUEST["id"] == 0){
 	header("Location: ../error_handler.php?eid=7");
 	exit;

@@ -272,7 +272,7 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 			
 			if (is_array($enums)){
 				foreach($enums as $enum){
-					$type .= "'".trim(str_replace("'","",str_replace('"','',stripslashes($enum))))."',";
+					$type .= "'".trim($enum)."',";
 				}
 				
 				$type = substr($type, 0, strlen($type) - 1);

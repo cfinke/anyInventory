@@ -6,7 +6,7 @@
 		<?php echo $inHead; ?>
 	</head>
 	<body<?php echo $inBodyTag; ?>>
-		<table style="width: 97%; min-height: 400px; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">
+		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
 					anyInventory 1.7

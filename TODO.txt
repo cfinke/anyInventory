@@ -35,13 +35,12 @@ BEFORE 1.8
 ===================
 Remote image thumbnailing - backup in case of missing libcurl
 Better advanced search, like phpMyAdmin's Search page
-CHRIS - ("Item" Field type) Item associations
+CHRIS - Item associations ("Item" Field type) 
 
 BEFORE 1.9
 ===================
 Label Sheets
 
-
 BUGS
 ========================================
-When you try to move a category to one of its subcategories, the page times out, probably due to some infinite loop.  The fix should be: A category cannot be moved to a subcategory of itself, unless you can think of a better fix.
+CHRIS - When you try to move a category to one of its subcategories, the page times out, probably due to some infinite loop.  The fix should be: A category cannot be moved to a subcategory of itself, unless you can think of a better fix.

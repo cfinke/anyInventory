@@ -94,7 +94,7 @@ for ($i = 0; $i < count($files); $i++){
 		$pdf->SetX($xpos);
 	}
 	
-	unlink($files[$i]);
+	@unlink($files[$i]);
 }
 
 $pdf->Output("label_sheets.pdf","D");

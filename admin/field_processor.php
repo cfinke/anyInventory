@@ -234,7 +234,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 				$file = new file_object($newrow["id"]);
 				
 				if (!$file->is_remote && is_file($file->server_path)){
-					unlink($file->server_path);
+					@unlink($file->server_path);
 				}
 				
 				$newestquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";

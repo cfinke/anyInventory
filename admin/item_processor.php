@@ -89,12 +89,14 @@ if ($_POST["action"] == "do_add"){
 						
 						// Copy file
 						if(!curl_copy($remote_url, realpath($DIR_PREFIX."item_files/")."/".$filename)){
+							$has_file = true;
 							$filename = '';
 							$filesize = '';
 							$filetype = '';
 							$offsite_link = addslashes($remote_url);
 						}
 						else{
+							$has_file = true;
 							$filesize = filesize(realpath($DIR_PREFIX."item_files/")."/".$filename);
 							$filetype = $remote_content_type;
 							$offsite_link = '';
@@ -102,7 +104,7 @@ if ($_POST["action"] == "do_add"){
 					}
 					else {
 						// Remote URL is not an image; add it as a remote file
-						
+						$has_file = true;
 						$filename = '';
 						$filesize = '';
 						$filetype = '';
@@ -124,25 +126,33 @@ if ($_POST["action"] == "do_add"){
 						exit;
 					}
 					
+					$has_file = true;
 					$filetype = $_FILES[str_replace(" ","_",$field->name)]["type"];
 					$filesize = $_FILES[str_replace(" ","_",$field->name)]["size"];
 					$offsite_link = '';
 				}
 				
-				$query = "INSERT INTO `anyInventory_files`
-							(`key`,`file_name`,`file_size`,`file_type`,`offsite_link`)
-							VALUES
-							('".$key."',
-							 '".$filename."',
-							 '".$filesize."',
-							 '".$filetype."',
-							 '".$offsite_link."')";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);					
-				
-				$new_key = mysql_insert_id();
+				if ($has_file){
+					$query = "INSERT INTO `anyInventory_files`
+								(`key`,`file_name`,`file_size`,`file_type`,`offsite_link`)
+								VALUES
+								('".$key."',
+								 '".$filename."',
+								 '".$filesize."',
+								 '".$filetype."',
+								 '".$offsite_link."')";
+					$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);					
+					
+					$new_key = mysql_insert_id();
+				}
+				else{
+					$new_key = 0;
+				}
 				
 				$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$key."','".$field->id."','".$new_key."')";
 				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+				
+				$has_file = false;
 			}
 		}
 	}
@@ -173,7 +183,7 @@ elseif($_POST["action"] == "do_edit"){
 						if (is_array($_POST["delete_files"]) && (in_array($file->id, $_POST["delete_files"]))){
 							// If so, delete the file first (and erase the value from the item entry).
 							if (!$file->is_remote){
-								unlink($file->server_path);
+								@unlink($file->server_path);
 							}
 							
 							$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id["file_id"]."'";
@@ -190,7 +200,7 @@ elseif($_POST["action"] == "do_edit"){
 							
 							if (!$file->is_remote){
 								if (is_file($file->server_path)){
-									unlink($file->server_path);
+									@unlink($file->server_path);
 								}
 								
 								$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
@@ -222,7 +232,7 @@ elseif($_POST["action"] == "do_edit"){
 							
 							if (!$file->is_remote){
 								if (is_file($file->server_path)){
-									unlink($file->server_path);
+									@unlink($file->server_path);
 								}
 								
 								$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";

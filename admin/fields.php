@@ -28,19 +28,46 @@ if (mysql_num_rows($result) > 0){
 	}
 	
 	while($row = mysql_fetch_assoc($result)){
-		if ($admin_user->can_admin_field($row["id"])){
+		if ($row["input_type"] != 'divider'){
+			$table_rows .= '
+				<tr>
+					<td align="center" style="width: 15ex; white-space: nowrap;">
+						<nobr>';
+			
+			if ($admin_user->can_admin_field($row["id"])){
+				$table_rows .= '
+					[<a href="edit_field.php?id='.$row["id"].'">edit</a>]
+					[<a href="delete_field.php?id='.$row["id"].'">delete</a>]
+					[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">up</a>]
+					[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">down</a>]';
+			}
+			else{
+				$table_rows .= '
+					[edit]
+					[delete]
+					[up]
+					[down]';
+			}
+			
+			$table_rows .= '
+							</nobr>
+						</td>
+						<td style="white-space: nowrap;">'.$row["name"].'</td>
+						<td>'.$row["input_type"].'</td>
+					</tr>';
+		}
+		else{
 			$table_rows .= '
 				<tr>
 					<td align="center" style="width: 15ex; white-space: nowrap;">
 						<nobr>
-							[<a href="edit_field.php?id='.$row["id"].'">edit</a>]
-							[<a href="delete_field.php?id='.$row["id"].'">delete</a>]
+							[edit]
+							[<a href="field_processor.php?action=do_delete&amp;id='.$row["id"].'">delete</a>]
 							[<a href="field_processor.php?action=moveup&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">up</a>]
 							[<a href="field_processor.php?action=movedown&amp;id='.$row["id"].'&amp;i='.$row["importance"].'">down</a>]
 						</nobr>
 					</td>
-					<td style="white-space: nowrap;">'.$row["name"].'</td>
-					<td>'.$row["input_type"].'</td>
+					<td style="white-space: nowrap;" colspan="2"><hr /></td>
 				</tr>';
 		}
 	}
@@ -60,7 +87,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData" colspan="2">
-				<p style="padding: 5px;"><a href="add_field.php">Add a field</a></p>
+				<p style="padding: 5px;"><a href="add_field.php">Add a field</a> or <a href="field_processor.php?action=do_add_divider">add a divider</a>.</p>
 				'.$table_rows.'
 			</td>
 		</tr>

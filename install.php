@@ -125,8 +125,7 @@ if ($_REQUEST["action"] == "install"){
 				  `categories` text NOT NULL,
 				  `importance` int(11) NOT NULL default '0',
 				  `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL,
-				  UNIQUE KEY `id` (`id`),
-				  UNIQUE KEY `name` (`name`)
+				  UNIQUE KEY `id` (`id`)
 				) TYPE=MyISAM";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		

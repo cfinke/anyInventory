@@ -98,6 +98,14 @@ if ($_REQUEST["action"] == "do_add"){
 		}
 	}
 }
+elseif($_REQUEST["action"] == "do_add_divider"){
+	$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$importance = mysql_result($result, 0, 'biggest') + 1;
+	
+	$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`importance`) VALUES ('divider','divider','".$importance."')";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+}
 elseif($_REQUEST["action"] == "do_edit"){
 	if (is_array($_REQUEST["add_to"])){
 		foreach($_REQUEST["add_to"] as $cat_id){
@@ -208,14 +216,14 @@ elseif($_REQUEST["action"] == "do_edit"){
 elseif($_REQUEST["action"] == "do_delete"){
 	// Delete a field.
 	
-	if ($_REQUEST["delete"] == "Delete"){
+	// Create an object of the field.
+	$field = new field($_REQUEST["id"]);
+	
+	if (($_REQUEST["delete"] == "Delete") || ($field->input_type == 'divider')){
 		if (!$admin_user->can_admin_field($_REQUEST["id"])){
 			header("Location: ../error_handler.php?eid=13");
 			exit;
 		}
-		
-		// Create an object of the field.
-		$field = new field($_REQUEST["id"]);
 		
 		if ($field->input_type == 'file'){
 			$query = "SELECT `".$field->name."` FROM `anyInventory_items` GROUP BY `".$field->name."`";
@@ -241,9 +249,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` + 1) WHERE `importance` < '".$field->importance."'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		// Remove the field from the items table
-		$query = "ALTER TABLE `anyInventory_items` DROP `".$field->name."`";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		if ($field->input_type != 'divider'){
+			// Remove the field from the items table
+			$query = "ALTER TABLE `anyInventory_items` DROP `".$field->name."`";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		}
 		
 		// Delete the field 
 		$query = "DELETE FROM `anyInventory_fields` WHERE `id`='".$field->id."'";

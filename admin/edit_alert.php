@@ -22,7 +22,7 @@ $inBodyTag = ' onload="toggle();"';
 $breadcrumbs = 'Administration > <a href="alerts.php">Alerts</a> > Edit Alert';
 
 $alert = new alert($_REQUEST["id"]);
-$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE 1 ";
+$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `input_type` != 'divider' ";
 
 if (is_array($alert->category_ids)){
 	foreach($alert->category_ids as $cat_id){

@@ -42,7 +42,7 @@ else{
 			exit;
 		}
 		else{
-			$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
+			$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND `input_type` != 'divider' AND ";
 		}
 	}
 	

@@ -63,73 +63,78 @@ else{
 			
 			$field = new field($field_id);
 			
-			if ($field->highlight) $extra = ' class="highlighted_field"';
-			else $extra = '';
-			
-			$output .= '
-				<tr'.$extra.'>
-					<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
-					<td class="form_input">';
-			
-			switch($field->input_type){
-				case 'multiple':
-					$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="" style="width: 49%;" /> ';
-					$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select" style="width: 49%;">';
-					
-					if (is_array($field->values)){
-						foreach($field->values as $value){
-							$output .= '<option value="'.$value.'"';
-							if ($value == $field->default_value) $output .= ' selected="selected"';
-							$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
-						}
-					}
-					
-					$output .= '</select>';
-					
-					break;
-				case 'select':
-					$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">';
-					
-					if (is_array($field->values)){
-						foreach($field->values as $value){
-							$output .= '<option value="'.$value.'"';
-							if ($value == $field->default_value) $output .= ' selected="selected"';
-							$output .= '>'.$value.'</option>';
-						}
-					}
-					
-					break;
-				case 'text':
-					if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$field->default_value.'" style="width: 100%;" />';
-					else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">'.$field->default_value.'</textarea>';
-					break;
-				case 'radio':
-					if (is_array($field->values)){
-						foreach($field->values as $value){
-							$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
-							if ($value == $field->default_value) $output .= ' checked="checked"';
-							$output .= ' /> '.$value.'<br />';
-						}
-					}
-					
-					break;
-				case 'checkbox':
-					if (is_array($field->values)){
-						foreach($field->values as $value){
-							$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
-							if ($value == $field->default_value) $output .= ' checked="checked"';
-							$output .= ' /> '.$value.'<br />';
-						}
-					}
-					
-					break;
-				case 'file':
-					$output .= '<input type="file" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" /> or <input type="text" name="'.str_replace(" ","_",$field->name).'remote" id="'.str_replace(" ","_",$field->name).'remote" value="http://" />';
-					break;
+			if ($field->input_type == 'divider'){
+				$output .= '<tr><td colspan="2"><hr /></td></tr>';
 			}
-			
-			$output .= '</td>
-				</tr>';
+			else{
+				if ($field->highlight) $extra = ' class="highlighted_field"';
+				else $extra = '';
+				
+				$output .= '
+					<tr'.$extra.'>
+						<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
+						<td class="form_input">';
+				
+				switch($field->input_type){
+					case 'multiple':
+						$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="" style="width: 49%;" /> ';
+						$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select" style="width: 49%;">';
+						
+						if (is_array($field->values)){
+							foreach($field->values as $value){
+								$output .= '<option value="'.$value.'"';
+								if ($value == $field->default_value) $output .= ' selected="selected"';
+								$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
+							}
+						}
+						
+						$output .= '</select>';
+						
+						break;
+					case 'select':
+						$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">';
+						
+						if (is_array($field->values)){
+							foreach($field->values as $value){
+								$output .= '<option value="'.$value.'"';
+								if ($value == $field->default_value) $output .= ' selected="selected"';
+								$output .= '>'.$value.'</option>';
+							}
+						}
+						
+						break;
+					case 'text':
+						if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$field->default_value.'" style="width: 100%;" />';
+						else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" style="width: 100%;">'.$field->default_value.'</textarea>';
+						break;
+					case 'radio':
+						if (is_array($field->values)){
+							foreach($field->values as $value){
+								$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
+								if ($value == $field->default_value) $output .= ' checked="checked"';
+								$output .= ' /> '.$value.'<br />';
+							}
+						}
+						
+						break;
+					case 'checkbox':
+						if (is_array($field->values)){
+							foreach($field->values as $value){
+								$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
+								if ($value == $field->default_value) $output .= ' checked="checked"';
+								$output .= ' /> '.$value.'<br />';
+							}
+						}
+						
+						break;
+					case 'file':
+						$output .= '<input type="file" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" /> or <input type="text" name="'.str_replace(" ","_",$field->name).'remote" id="'.str_replace(" ","_",$field->name).'remote" value="http://" />';
+						break;
+				}
+				
+				$output .= '</td>
+					</tr>';
+			}
 		}
 	}
 	

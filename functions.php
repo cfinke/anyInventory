@@ -140,26 +140,31 @@ function get_fields_checkbox_area($checked = array()){
 	while($row = mysql_fetch_array($result)){
 		$field = new field($row["id"]);
 		
-		$output .= '
-			<input type="checkbox" name="fields['.$field->id.']" value="yes" ';
-				if ((is_array($checked)) && (in_array($field->id, $checked))) $output .= ' checked="checked"';
-				$output .= ' />
-				'.$field->name.' ('.$field->input_type.'; ';
-				if ($field->input_type == "text"){
-					$output .= ' '.$field->size.' characters';
-				}
-				else{
-					$output .= ' values: ';
-					
-					if (is_array($field->values)){
-						foreach($field->values as $val){
-							$output .= $val .', ';
-						}
-						$output = substr($output, 0, strlen($output) - 2);
+		if ($field->input_type == 'divider'){
+			$output .= '<hr />';
+		}
+		else{
+			$output .= '
+				<input type="checkbox" name="fields['.$field->id.']" value="yes" ';
+					if ((is_array($checked)) && (in_array($field->id, $checked))) $output .= ' checked="checked"';
+					$output .= ' />
+					'.$field->name.' ('.$field->input_type.'; ';
+					if ($field->input_type == "text"){
+						$output .= ' '.$field->size.' characters';
 					}
-				}
-				
-				$output .= ')<br />';
+					else{
+						$output .= ' values: ';
+						
+						if (is_array($field->values)){
+							foreach($field->values as $val){
+								$output .= $val .', ';
+							}
+							$output = substr($output, 0, strlen($output) - 2);
+						}
+					}
+					
+			$output .= ')<br />';
+		}
 	}
 	
 	return $output;

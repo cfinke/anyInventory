@@ -82,7 +82,7 @@ class category {
 			$this->breadcrumb_names = substr($this->breadcrumb_names, 0, strlen($this->breadcrumb_names) - 3);
 			
 			// Get all of the fields that this category uses.
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$this->id."\"%' ORDER BY `importance` ASC";
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$this->id."\"%' OR `input_type`='divider'  ORDER BY `importance` ASC";
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// Add each field's id and name to the appropriate arrays.
@@ -101,7 +101,7 @@ class category {
 			$this->breadcrumb_names = "Top";
 			
 			// Get the fields that the Top Level uses.
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' ORDER BY `importance`";
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' OR `input_type`='divider' ORDER BY `importance`";
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			// Add each field id and name to the arrays.

@@ -12,15 +12,16 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData">
-	<p>Fields are the basis of anyInventory.  They define the type of data that you want to track. Let\'s take a look at the different types of fields.
-	</p>
-	</td>		</tr>	<tr class="tableHeader">
+				<p>Fields are the basis of anyInventory.  They define the type of data that you want to track. Let\'s take a look at the different types of fields.</p>
+			</td>
+		</tr>
+		<tr class="tableHeader">
 			<td><a name="types">Field Types</a></td>
 		</tr>
 		<tr>
 			<td class="tableData">
 	<p>There are six types of fields from which to choose when setting up anyInventory.  Each one
-	   is described below, with an example shown below it.</p>
+	   is described below, with an example shown below it. Additionally, you can create field dividers to separate the fields into logical groups.</p>
 	<ul>
 		<li>
 			<b>Text field</b>, which holds a word or phrase that is usually different for each item.  An example
@@ -82,6 +83,12 @@ $output .= '
 			<b>File</b>, which allows you to upload a file from your computer or specify a file already located on the Internet.
 			<form style="padding-left: 50px; margin: 10px;">
 				<input type="file" name="file" id="file"/> or <input type="text" name="fileremote" value="http://" />
+			</form>
+		</li>
+		<li>
+			<b>Field divider</b>, which allows you to separate fields into groups.
+			<form style="padding-left: 50px; margin: 10px;">
+				<hr />
 			</form>
 		</li>
 	</ul>

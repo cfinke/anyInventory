@@ -296,6 +296,12 @@ if ($_REQUEST["action"] == "upgrade"){
 				
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
 				@mysql_query($query);
+				
+				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'divider' ) DEFAULT 'text' NOT NULL ";
+				@mysql_query($query);
+				
+				$query = "ALTER TABLE `anyInventory_fields` DROP INDEX `name`";
+				@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.

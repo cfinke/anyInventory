@@ -21,7 +21,7 @@ if ($_REQUEST["action"] == "do_add"){
 		foreach($category->field_ids as $field_id){
 			$field = new field($field_id);
 			
-			if ($field->input_type != 'file'){
+			if (($field->input_type != 'file') && ($field->input_type != 'divider')){
 				$query .= "`".str_replace("_"," ",$field->name)."`, ";
 			}
 		}
@@ -33,32 +33,34 @@ if ($_REQUEST["action"] == "do_add"){
 		foreach($category->field_ids as $field_id){
 			$field = new field($field_id);
 			
-			if ($field->input_type == "multiple"){
-				if ($_REQUEST[str_replace(" ","_",$field->name)."_text"] == ""){
-					$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_select"]."', ";
+			if ($field->input_type != 'divider'){
+				if ($field->input_type == "multiple"){
+					if ($_REQUEST[str_replace(" ","_",$field->name)."_text"] == ""){
+						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_select"]."', ";
+					}
+					else{
+						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_text"]."', ";
+					}
+				}
+				elseif($field->input_type == "checkbox"){
+					if (is_array($_REQUEST[str_replace(" ","_",$field->name)])){
+						foreach($_REQUEST[str_replace(" ","_",$field->name)] as $key => $val){
+							$string .= $key.", ";
+						}
+						
+						$_REQUEST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
+						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
+					}
+					else{
+						$query .= "'', ";
+					}
+				}
+				elseif($field->input_type == "file"){
+					continue;
 				}
 				else{
-					$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_text"]."', ";
-				}
-			}
-			elseif($field->input_type == "checkbox"){
-				if (is_array($_REQUEST[str_replace(" ","_",$field->name)])){
-					foreach($_REQUEST[str_replace(" ","_",$field->name)] as $key => $val){
-						$string .= $key.", ";
-					}
-					
-					$_REQUEST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
 					$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
 				}
-				else{
-					$query .= "'', ";
-				}
-			}
-			elseif($field->input_type == "file"){
-				continue;
-			}
-			else{
-				$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
 			}
 		}
 	}
@@ -183,159 +185,161 @@ elseif($_REQUEST["action"] == "do_edit"){
 		foreach($item->category->field_ids as $field_id){
 			$field = new field($field_id);
 			
-			if ($field->input_type == 'file'){
-				$file = new file_object($item->fields[$field->name]["file_id"]);
-				
-				// Check if the delete file box was checked	
-				if (is_array($_REQUEST["delete_files"]) && (in_array($file->id, $_REQUEST["delete_files"]))){
-					// If so, delete the file first (and erase the value from the item entry).
-					if (!$file->is_remote){
-						unlink($file->server_path);
-					}
+			if ($field->input_type != 'divider'){
+				if ($field->input_type == 'file'){
+					$file = new file_object($item->fields[$field->name]["file_id"]);
 					
-					$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id["file_id"]."'";
-					mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
-					
-					$remquery = "UPDATE `anyInventory_items` SET `".$field->name."`='0' WHERE `id`='".$item->id."'";
-					mysql_query($remquery) or die(mysql_error() . '<br /><br />'. $remquery);
-				}
-				
-				// Check if a file was uploaded in its place
-				
-				if (is_uploaded_file($_FILES[str_replace(" ","_",$field->name)]["tmp_name"])){
-					if (!$file->is_remote){
-						if (is_file($file->server_path)){
+					// Check if the delete file box was checked	
+					if (is_array($_REQUEST["delete_files"]) && (in_array($file->id, $_REQUEST["delete_files"]))){
+						// If so, delete the file first (and erase the value from the item entry).
+						if (!$file->is_remote){
 							unlink($file->server_path);
 						}
 						
-						$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+						$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id["file_id"]."'";
 						mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
+						
+						$remquery = "UPDATE `anyInventory_items` SET `".$field->name."`='0' WHERE `id`='".$item->id."'";
+						mysql_query($remquery) or die(mysql_error() . '<br /><br />'. $remquery);
 					}
 					
-					// Copy the uploaded file
+					// Check if a file was uploaded in its place
 					
-					$i = 1;
-					
-					// Find a filename
-					do {
-						$filename = $item->id.".".$i++.".".$_FILES[str_replace(" ","_",$field->name)]["name"];
-					} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
-					
-					if(!copy($_FILES[str_replace(" ","_",$field->name)]["tmp_name"], realpath($DIR_PREFIX."item_files/")."/".$filename)){
-						echo 'Could not copy uploaded file.';
-						exit;
-					}
-					
-					$newquery = "INSERT INTO `anyInventory_files` 
-							(`key`,
-							 `file_name`,
-							 `file_size`,
-							 `file_type`)
-							VALUES
-							('".$item->id."',
-							 '".$filename."',
-							 '".$_FILES[str_replace(" ","_",$field->name)]["size"]."',
-							 '".$_FILES[str_replace(" ","_",$field->name)]["type"]."')";
-					mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-					
-					$new_key = mysql_insert_id();
-					
-					$query .= " `".$field->name."`='".$new_key."', ";
-				}
-				// If not, check for a remote file.
-				elseif($_REQUEST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
-					if (!$file->is_remote){
-						if (is_file($file->server_path)){
-							unlink($file->server_path);
+					if (is_uploaded_file($_FILES[str_replace(" ","_",$field->name)]["tmp_name"])){
+						if (!$file->is_remote){
+							if (is_file($file->server_path)){
+								unlink($file->server_path);
+							}
+							
+							$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+							mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
 						}
 						
-						$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-						//query($delquery);
-						mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
-					}
-					
-					// START new remote file upload ///////////////////////////////////////////////
-					// Determine what to do - is the remote file an image?
-					// $_REQUEST[str_replace(" ","_",$field->name)."remote"]  = remote filename
-					$remote_url = $_REQUEST[str_replace(" ","_",$field->name)."remote"];
-					if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
-						// Remote URL is an image; download it and add it as a local image
+						// Copy the uploaded file
 						
-						// Make the correct extension
-						$remote_headers = url_headers($remote_url);
-						$remote_content_type = $remote_headers["content-type"]; // image/xyz
-						$extension = explode("/",$remote_content_type);         // extension[1] = xyz
-						$parsed_url = parse_url($remote_url);
+						$i = 1;
 						
 						// Find a filename
-						$i = 1;
 						do {
-							$filename = $key.".".$i++.".".$parsed_url["host"].str_replace(array("/"," "),"_",$parsed_url["path"]).".".$extension[1];
+							$filename = $item->id.".".$i++.".".$_FILES[str_replace(" ","_",$field->name)]["name"];
 						} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
 						
-						// Copy file
-						if(!curl_copy($remote_url, realpath($DIR_PREFIX."item_files/")."/".$filename)){
-							die("Could not download/store remote file.");
+						if(!copy($_FILES[str_replace(" ","_",$field->name)]["tmp_name"], realpath($DIR_PREFIX."item_files/")."/".$filename)){
+							echo 'Could not copy uploaded file.';
+							exit;
 						}
 						
-						// Update DB
 						$newquery = "INSERT INTO `anyInventory_files` 
-							(`key`,
-							 `file_name`,
-							 `file_size`,
-							 `file_type`)
-							VALUES
-							('".$key."',
-							 '".$filename."',
-							 '".filesize(realpath($DIR_PREFIX."item_files/")."/".$filename)."',
-							 '".$remote_content_type."')";
-						//query($newquery);
-						mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-						$new_key = mysql_insert_id();
-						$query .= " `".$field->name."`='".$new_key."', ";
-					} else {
-					// Remote URL is not an image; add it as a remote file
-					$newquery = "INSERT INTO `anyInventory_files` 
 								(`key`,
-								 `offsite_link`)
+								 `file_name`,
+								 `file_size`,
+								 `file_type`)
+								VALUES
+								('".$item->id."',
+								 '".$filename."',
+								 '".$_FILES[str_replace(" ","_",$field->name)]["size"]."',
+								 '".$_FILES[str_replace(" ","_",$field->name)]["type"]."')";
+						mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+						
+						$new_key = mysql_insert_id();
+						
+						$query .= " `".$field->name."`='".$new_key."', ";
+					}
+					// If not, check for a remote file.
+					elseif($_REQUEST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
+						if (!$file->is_remote){
+							if (is_file($file->server_path)){
+								unlink($file->server_path);
+							}
+							
+							$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
+							//query($delquery);
+							mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
+						}
+						
+						// START new remote file upload ///////////////////////////////////////////////
+						// Determine what to do - is the remote file an image?
+						// $_REQUEST[str_replace(" ","_",$field->name)."remote"]  = remote filename
+						$remote_url = $_REQUEST[str_replace(" ","_",$field->name)."remote"];
+						if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
+							// Remote URL is an image; download it and add it as a local image
+							
+							// Make the correct extension
+							$remote_headers = url_headers($remote_url);
+							$remote_content_type = $remote_headers["content-type"]; // image/xyz
+							$extension = explode("/",$remote_content_type);         // extension[1] = xyz
+							$parsed_url = parse_url($remote_url);
+							
+							// Find a filename
+							$i = 1;
+							do {
+								$filename = $key.".".$i++.".".$parsed_url["host"].str_replace(array("/"," "),"_",$parsed_url["path"]).".".$extension[1];
+							} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
+							
+							// Copy file
+							if(!curl_copy($remote_url, realpath($DIR_PREFIX."item_files/")."/".$filename)){
+								die("Could not download/store remote file.");
+							}
+							
+							// Update DB
+							$newquery = "INSERT INTO `anyInventory_files` 
+								(`key`,
+								 `file_name`,
+								 `file_size`,
+								 `file_type`)
 								VALUES
 								('".$key."',
-								 '".$_REQUEST[str_replace(" ","_",$field->name)."remote"]."')";
-					//query($newquery);
-					mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-					
-					$new_key = mysql_insert_id();
-					$query .= " `".$field->name."`='".$new_key."', ";
-					}
-					// END new remote file upload /////////////////////////////////////////////////
-				}
-			}
-			else{
-				$query .= "`".str_replace("_"," ",$field->name)."`= ";
-				
-				if ($field->input_type == "multiple"){
-					if ($_REQUEST[str_replace(" ","_",$field->name)."_text"] == ""){
-						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_select"]."', ";
-					}
-					else{
-						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_text"]."', ";
-					}
-				}
-				elseif($field->input_type == "checkbox"){
-					if (is_array($_REQUEST[str_replace(" ","_",$field->name)])){
-						foreach($_REQUEST[str_replace(" ","_",$field->name)] as $key => $val){
-							$string .= $key.", ";
-						}
+								 '".$filename."',
+								 '".filesize(realpath($DIR_PREFIX."item_files/")."/".$filename)."',
+								 '".$remote_content_type."')";
+							//query($newquery);
+							mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+							$new_key = mysql_insert_id();
+							$query .= " `".$field->name."`='".$new_key."', ";
+						} else {
+						// Remote URL is not an image; add it as a remote file
+						$newquery = "INSERT INTO `anyInventory_files` 
+									(`key`,
+									 `offsite_link`)
+									VALUES
+									('".$key."',
+									 '".$_REQUEST[str_replace(" ","_",$field->name)."remote"]."')";
+						//query($newquery);
+						mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 						
-						$_REQUEST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
-						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
-					}
-					else{
-						$query .= "'', ";
+						$new_key = mysql_insert_id();
+						$query .= " `".$field->name."`='".$new_key."', ";
+						}
+						// END new remote file upload /////////////////////////////////////////////////
 					}
 				}
 				else{
-					$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
+					$query .= "`".str_replace("_"," ",$field->name)."`= ";
+					
+					if ($field->input_type == "multiple"){
+						if ($_REQUEST[str_replace(" ","_",$field->name)."_text"] == ""){
+							$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_select"]."', ";
+						}
+						else{
+							$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_text"]."', ";
+						}
+					}
+					elseif($field->input_type == "checkbox"){
+						if (is_array($_REQUEST[str_replace(" ","_",$field->name)])){
+							foreach($_REQUEST[str_replace(" ","_",$field->name)] as $key => $val){
+								$string .= $key.", ";
+							}
+							
+							$_REQUEST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
+							$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
+						}
+						else{
+							$query .= "'', ";
+						}
+					}
+					else{
+						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
+					}
 				}
 			}
 		}

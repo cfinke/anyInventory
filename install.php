@@ -415,7 +415,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Install anyInventory 1.9</title>
+		<title>Install anyInventory 1.9.1</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">
@@ -435,7 +435,7 @@ echo '
 		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.9
+					anyInventory 1.9.1
 				</td>
 			</tr>
 			<tr>
@@ -452,7 +452,7 @@ echo '
 					<div style="min-height: 400px;">
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Install anyInventory 1.9</td>
+								<td>Install anyInventory 1.9.1</td>
 							</tr>
 							<tr>
 								<td class="tableData">

@@ -471,6 +471,7 @@ elseif(!$globals_error){
 	$pp_view_checked = ($_POST["password_protect_view"]) ? ' checked="true"' : '';
 	$pp_admin_checked = ($_POST["password_protect_admin"]) ? ' checked="true"' : '';
 	$inBodyTag = ' onload="toggle();"';
+	if (!isset($_REQUEST["lang"])) $_REQUEST["lang"] = "en";
 	
 	if (count($errors) > 0){
 		$output .= '
@@ -573,7 +574,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Upgrade to anyInventory 1.9</title>
+		<title>Upgrade to anyInventory 1.9.1</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">

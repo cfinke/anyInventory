@@ -10,7 +10,7 @@ Installation
 ============
 To install anyInventory, upload the included files to your Web server 
 and then run the included install.php script from the Web browser of 
-your choice.  (We heartily recommend Mozilla: http://www.mozilla.org/.)
+your choice.  (We heartily recommend Firefox: http://www.mozilla.org/.)
 You should also make sure that all files and directories are readable
 and executable by the Web server, as well as making sure that the item_files/ 
 subdirectory is writable, readable, and executable by the Web server.  
@@ -22,7 +22,7 @@ executable by PHP, or it may not be able to access them.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.9.1, simply overwrite the files from 
+To upgrade to anyInventory 1.9.2, simply overwrite the files from 
 your current version, and then run the included upgrade.php script from 
 the Web browser of your choice.
 

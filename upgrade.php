@@ -372,7 +372,7 @@ if ($_POST["action"] == "upgrade"){
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ITEM_VIEW','list')";
 				@mysql_query($query);
 			case 1.9.1:
-				# Changes introduced in 2.0
+				# Changes introduced in 1.9.2
 				
 				// Fix field order
 				$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
@@ -586,7 +586,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Upgrade to anyInventory 1.9.1</title>
+		<title>Upgrade to anyInventory 1.9.2</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">

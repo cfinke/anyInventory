@@ -97,6 +97,10 @@ else{
 						<td class="form_input"><input type="file" name="file" id="file" /></td>
 					</tr>
 					<tr>
+						<td class="form_label">Remote file:<br /><small><a href="../docs/remote_files.php">What is this?</a></small></td>
+						<td class="form_input"><input type="text" name="remote_file" id="remote_file" /></td>
+					</tr>
+					<tr>
 						<td class="form_label">&nbsp;</td>
 						<td class="form_input"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 					</tr>

@@ -13,6 +13,8 @@ class file_object{
 	var $web_path;		// The path to this file on the Web.
 	var $server_path;	// The path to this file on the server.
 	
+	var $is_remote = false; // Whether or not this is a remote file
+	
 	function file_object($id){
 		global $files_dir;		// The absolute path to the directory where files are stored
 		global $DIR_PREFIX;		// The depth of the current directory we are in.
@@ -28,20 +30,35 @@ class file_object{
 		// Set the id of the item that owns this file.
 		$this->item_id = $row["key"];
 		
-		// Set the file information.
-		$this->file_name = $row["file_name"];
-		$this->file_size = $row["file_size"];
-		$this->file_type = $row["file_type"];
+		if (trim($row["offsite_link"]) != ''){
+			$this->is_remote = true;
+		}
 		
-		// Set the Web and server path.
-		$this->web_path = $DIR_PREFIX."item_files/".$this->file_name;
-		$this->server_path = $files_dir.$this->file_name;
+		if ($this->is_remote){
+			$this->web_path = $row["offsite_link"];
+		}
+		else{
+			// Set the file information.
+			$this->file_name = $row["file_name"];
+			$this->file_size = $row["file_size"];
+			$this->file_type = $row["file_type"];
+			$this->web_path = $DIR_PREFIX."item_files/".$this->file_name;
+			$this->server_path = $files_dir.$this->file_name;
+		}
 	}
 	
 	// This function returns a link to the file that contains the file name, file type, and file size.
 	
 	function get_download_link(){
-		$link = '<a href="'.$this->web_path.'">'.$this->file_name.' ('.$this->file_type.', '.round($this->file_size / 1000).' KB)</a>';
+		$link = '<a href="'.$this->web_path.'">';
+		if ($this->is_remote){
+			$link .= $this->web_path;
+		}
+		else{
+			$link .= $this->file_name.' ('.$this->file_type.', '.round($this->file_size / 1000).' KB)';
+		}
+		
+		$link .= '</a>';
 		
 		return $link;
 	}

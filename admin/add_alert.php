@@ -20,7 +20,7 @@ if (!is_array($_REQUEST["c"])){
 								<td class="form_label"><label for="c">Add alert in:</label></td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="20" style="width: 100%;">
-										'.get_category_options(null).'
+										'.$admin_user->get_admin_categories_options(null).'
 									</select>
 								</td>
 							</tr>
@@ -37,7 +37,13 @@ else{
 	$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
 	
 	foreach($_REQUEST["c"] as $cat_id){
-		$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
+		if (!$admin_user->can_admin($cat_id)){
+			header("Location: ../error_handler.php?eid=13");
+			exit;
+		}
+		else{
+			$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
+		}
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);

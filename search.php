@@ -146,7 +146,7 @@ else{
 		while($row = mysql_fetch_array($result)){
 			$item = new item($row["id"]);
 			
-			if (in_array($row["item_category"], $_REQUEST["c"])){
+			if (($_REQUEST["action"] == "search") || in_array($row["item_category"], $_REQUEST["c"])){
 				if ($cat_id != $row["item_category"]){
 					if ($cat_id != -1){
 						$output .= '<hr />';
@@ -156,7 +156,7 @@ else{
 					$output .= '<p><b>In '.$item->category->get_breadcrumb_links().'</b></p>';
 				}
 				
-				$output .= $item->export_teaser();
+				$output .= $item->export_teaser().'<br />';
 			}
 		}
 	}

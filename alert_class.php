@@ -14,8 +14,8 @@ class alert {
 	var $time;
 	var $unix_time;
 	
-	var $expiration_date;
-	var $unix_expiration_date;
+	var $expire_time;
+	var $unix_expire_time;
 	
 	var $timed = false;
 	
@@ -24,7 +24,7 @@ class alert {
 	function alert($alert_id){
 		$this->id = $alert_id;
 		
-		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time`, UNIX_TIMESTAMP(`expire`) AS `unix_expire` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
+		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time`, UNIX_TIMESTAMP(`expire_time`) AS `unix_expire_time` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		$row = mysql_fetch_array($result);
 		
@@ -40,10 +40,10 @@ class alert {
 		$this->time = $row["time"];
 		$this->unix_time = $row["unix_time"];
 		
-		$this->expiration_date = $row["expire"];
-		$this->unix_expiration_date = $row["unix_expire"];
+		$this->expire_time = $row["expire_time"];
+		$this->unix_expire_time = $row["unix_expire_time"];
 		
-		if ($this->expiration_date != '00000000000000'){
+		if ($this->expire_time != '00000000000000'){
 			$this->expires = true;
 		}
 		
@@ -123,7 +123,7 @@ class alert {
 			$output .= '
 				<tr>
 					<td class="form_label">'.EXPIRATION_DATE.':</td>
-					<td>'.date("Y m d",$this->unix_expiration_date).'</td>
+					<td>'.date("Y m d",$this->unix_expire_time).'</td>
 				</tr>';
 		}
 		

@@ -322,13 +322,7 @@ if ($_POST["action"] == "upgrade"){
 				$query = "ALTER TABLE `anyInventory_alerts` ADD `modified` TIMESTAMP NOT NULL AFTER `value`";
 				@mysql_query($query);
 				
-				$query = "ALTER TABLE `anyInventory_alerts` ADD `expire` TIMESTAMP NOT NULL AFTER `time`";
-				@mysql_query($query);
-				
-				$query = "ALTER TABLE `anyInventory_alerts` ADD `email` VARCHAR(128) DEFAULT '' NOT NULL";
-				@mysql_query($query);
-				
-				$query = "ALTER TABLE `anyInventory_alerts` ADD `tripped` TINYINT( 1 ) DEFAULT '0' NOT NULL";
+				$query = "ALTER TABLE `anyInventory_alerts` ADD `expire_time` TIMESTAMP NOT NULL AFTER `time`";
 				@mysql_query($query);
 		}
 		

@@ -50,9 +50,9 @@ if ($_POST["action"] == "do_add"){
 					 `condition`,
 					 `value`,
 					 `time`,
+ 					 `expire_time`,
 					 `timed`,
-					 `category_ids`,
-					 `expire`
+					 `category_ids`
 					 )
 					VALUES
 					('".$_POST["title"]."',
@@ -61,9 +61,10 @@ if ($_POST["action"] == "do_add"){
 					 '".$_POST["condition"]."',
 					 '".$_POST["value"]."',
 					 '".$timestamp."',
+					 '".$expire_timestamp."',
 					 '".(((bool) ($_POST["timed"] == "yes")) / 1)."',
-					 '".$_POST["c"]."',
-					 '".$expire_timestamp."')";
+					 '".$_POST["c"]."'
+					 )";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
@@ -141,8 +142,8 @@ elseif($_POST["action"] == "do_edit"){
 					`condition`='".$_POST["condition"]."',
 					`value`='".$_POST["value"]."',
 					`time`='".$timestamp."',
-					`timed`='".(((bool) ($_POST["timed"] == "yes")) / 1)."',
-					`expire`='".$expire_timestamp."'
+					`expire_time`='".$expire_timestamp."',
+					`timed`='".(((bool) ($_POST["timed"] == "yes")) / 1)."'
 					 WHERE `id`='".$_POST["id"]."'";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}

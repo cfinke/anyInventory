@@ -159,11 +159,9 @@ if ($_POST["action"] == "install"){
 					`value` varchar( 255 ) NOT NULL default '',
 					`modified` timestamp( 14 ) NOT NULL ,
 					`time` timestamp( 14 ) NOT NULL ,
-					`expire` timestamp( 14 ) NOT NULL ,
+					`expire_time` timestamp( 14 ) NOT NULL ,
 				 	`timed` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 					`category_ids` TEXT NOT NULL,
-					`email` VARCHAR(128) DEFAULT '' NOT NULL,
-					`tripped` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 					UNIQUE KEY `id` ( `id` )
 					) TYPE = MYISAM ;";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);

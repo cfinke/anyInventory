@@ -1,16 +1,10 @@
-2004/06/04
-Commented the functions.php file.
-Commented the index.php file.
-Commented the install.php file.
-Commented the item_class.php file.
-Commented the search.php file.
-
-2004/06/03
-Updated TODO with specific features and release numbers.
-Commented entire category_class file.
-Commented the field_class.php file.
-Commented the file_class.php file.
-Introductory text shows up only on top-level category now.
-Added function in_or_under() to item class.
-Added the ability to limit the search to a category.
-Updated documentation for searching.
+2004/06/07
+Added support for remote files
+Added trimming of all REQUEST variables to functions
+Updated introductory text to have a link to the documentation
+Improved search ability for quick search
+Added remote files to the documentation
+Commented the categories.php file
+Commented the category_processor.php file
+Commented the field_processor.php file
+Commented the item_processor.php file

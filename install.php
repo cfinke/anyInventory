@@ -45,17 +45,26 @@ if ($_REQUEST["action"] == "install"){
 	if (strlen(trim($_REQUEST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
 	}
-	if (!is_writable(realpath("./item_files/"))){
-		$errors[] = 'The path '.realpath("./item_files/").' is not writable by the Web server.';
-	}
 	
 	$files_to_read = array("./","./admin","./images","./docs","./item_files");
 	
 	foreach($files_to_read as $file){
 		if (!is_readable(realpath($file))){
-			$errors[] = "The path ".realpath($file)." is not readable.  Please change the permissions.";
+			$errors[] = "The path ".realpath($file)." is not readable.";
 		}
 	}
+	
+	if (!is_writable(realpath("./item_files/"))){
+		$errors[] = 'The path '.realpath("./item_files/").' is not writable by the Web server.';
+	}
+	
+	foreach($files_to_read as $file){
+		if (!is_executable(realpath($file))){
+			$errors[] = "The path ".realpath($file)." is not executable.";
+		}
+	}
+	
+	
 	
 	// Check for the correct database information.	
 	if (count($errors) == 0){
@@ -302,14 +311,14 @@ echo '
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 	<html>
 		<head>
-			<title>anyInventory 1.4 Install</title>
+			<title>anyInventory 1.4.1 Install</title>
 			<link rel="stylesheet" type="text/css" href="style.css">
 		</head>
 		<body>
 			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
 				<tr>
 					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-						<h1 class="title">anyInventory 1.4</h1>
+						<h1 class="title">anyInventory 1.4.1</h1>
 					</td>
 				</tr>
 				<tr>
@@ -319,7 +328,9 @@ echo '
 				</tr>
 				<tr>
 					<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
-						<div style="height: 400px; padding: 5px; overflow: auto;">
+						<div style="min-height: 400px; padding: 5px;">
+						<h2>Install anyInventory 1.4.1</h2>
+						<p>Welcome to the installation page of anyInventory.  To install, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the installation will continue.  After the installation has finished, you will be redirected to the home page of you anyInventory installation.  If you need any help, feel free to contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
 						'.$output.'
 						</div>
 					</td>

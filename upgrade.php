@@ -34,14 +34,14 @@ connect_to_database();
 $output = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 	<html>
 		<head>
-			<title>anyInventory 1.4 Upgrade</title>
+			<title>anyInventory 1.4.1 Upgrade</title>
 			<link rel="stylesheet" type="text/css" href="style.css">
 		</head>
 		<body>
 			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
 				<tr>
 					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-						<h1 class="title">anyInventory 1.4</h1>
+						<h1 class="title">anyInventory 1.4.1</h1>
 					</td>
 				</tr>
 				<tr>
@@ -51,7 +51,7 @@ $output = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/
 				</tr>
 				<tr>
 					<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
-						<div style="height: 400px; padding: 5px; overflow: auto;">
+						<div style="min-height: 400px; padding: 5px;">
 							<h2>Upgrade anyInventory</h2>
 							<form action="upgrade.php" method="post">';
 
@@ -77,8 +77,8 @@ if ($_REQUEST["action"] == "upgrade"){
 	$files_to_read = array("./","./admin","./images","./docs","./item_files");
 	
 	foreach($files_to_read as $file){
-		if (!is_readable(realpath($file))){
-			$errors[] = "The path ".realpath($file)." is not readable.  Please change the permissions.";
+		if (!is_executable(realpath($file))){
+			$errors[] = "The path ".realpath($file)." is not executable.";
 		}
 	}
 	

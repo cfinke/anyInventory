@@ -1,9 +1,6 @@
 <?php
 
 // New Constants
-define('EXPIRATION_DATE','Expiration date');
-define('EMAIL_ALERT','E-mail alert to');
-define('ALLOW_EXPIRATION','Allow this alert to expire');
 
 // English language file
 
@@ -159,6 +156,11 @@ define('TIMED_ONLY_EXPLANATION','For time-based alerts, you do not need to fill 
 define('DELETE_ALERT','Delete Alert');
 define('DELETE_ALERT_CONFIRM','Are you sure you want to delete this alert?');
 define('EDIT_ALERT','Edit Alert');
+define('EXPIRATION_DATE','Expiration date');
+define('ALLOW_EXPIRATION','Allow this alert to expire');
+define('EMAIL_ALERT_TO','E-mail alert to');
+define('EMAIL_ALERT_INFO','If you do not want to be notified by e-mail when this alert is activated, leave this field blank.');
+define('ALERT_ACTIVATED_BY','This alert was initially activated by this item');
 
 // Users
 define('USERS','Users');

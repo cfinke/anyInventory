@@ -154,6 +154,11 @@ define('TIMED_ONLY_EXPLANATION','Para alertas basadas en fecha, no es necesario 
 define('DELETE_ALERT','Eliminar Alarma');
 define('DELETE_ALERT_CONFIRM','¿Realmente deseas eliminar esta alerta?');
 define('EDIT_ALERT','Editar Alerta');
+define('EXPIRATION_DATE','Fecha de expiración');
+define('ALLOW_EXPIRATION','Permitir que expire la alerta');
+define('EMAIL_ALERT_TO','Enviar correo de alerta a');
+define('EMAIL_ALERT_INFO','Deja vacío este campo si no deseas ser avisado por correo cuando esta alerta se active.');
+define('ALERT_ACTIVATED_BY','Esta alerta fue activida inicialmente por este artículo');
 
 // Usuarios (Users)
 define('USERS','Usuarios');

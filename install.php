@@ -146,6 +146,7 @@ if ($_REQUEST["action"] == "install"){
 					`file_name` VARCHAR( 255 ) NOT NULL ,
 					`file_size` INT NOT NULL ,
 					`file_type` VARCHAR( 32 ) NOT NULL ,
+					`offsite_link` VARCHAR( 255 ) NOT NULL,
 					UNIQUE (
 						`id`
 					)

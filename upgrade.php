@@ -106,6 +106,9 @@ if ($_REQUEST["action"] == "upgrade"){
 					) TYPE = MYISAM ;";
 				query($query);
 				
+				$query = "ALTER TABLE `anyInventory_files` ADD `offsite_link` VARCHAR(255) NOT NULL";
+				@mysql_query($query);
+				
 				// Fix field values data type
 				
 				$query = "SELECT `id`,`values` FROM `anyInventory_fields`";

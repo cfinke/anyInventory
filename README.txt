@@ -20,8 +20,8 @@ to these functions.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.1, simply overwrite the files from version
-1.0.
+To upgrade to anyInventory 1.2, simply overwrite the files from your current
+version.
 
 Using anyInventory
 ==================
@@ -29,7 +29,7 @@ The best place to start is with the "Instructions for Use," found in the
 docs subdirectory and linked from the main menu of anyInventory.  If all
 of your questions are not answered there, you can view the project page
 at http://www.sourceforge.net/projects/anyinventory/.  Also, you can
-contact chris@efinke.com for help with anything related to anyInventory;
+contact me at chris@efinke.com for help with anything related to anyInventory;
 all comments and questions are welcomed.
 
 Other

@@ -6,7 +6,13 @@ if (is_array($_GET)) foreach($_GET as $key => $value) if (!is_array($_GET[$key])
 
 if (is_array($_POST)) foreach($_POST as $key => $value) if (!is_array($_POST[$key])) $_POST[$key] = trim($value);
 
-require_once("DB.php");
+$i = 0;
+
+do {
+	$found = require_once("DB.php");
+	$i++;
+} while ((!$found) && ($i < 10));
+
 require_once($DIR_PREFIX."functions.php");
 
 // $db_type comes from globals.php

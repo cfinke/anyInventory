@@ -60,7 +60,7 @@ if ($_POST["action"] == "upgrade"){
 		}
 	}
 	
-	$files_to_read = array("./","./admin","./docs","./docs/en","./images","./fonts","./item_files");
+	$files_to_read = array("./","./admin","./docs","./barcode","./images");
 	
 	foreach($files_to_read as $file){
 		if (!is_readable(realpath($file))){

@@ -12,17 +12,18 @@ To install anyInventory, upload the included files to your Web server
 and then run the included install.php script from the Web browser of 
 your choice.  (We heartily recommend Firefox: http://www.mozilla.org/.)
 You should also make sure that all files and directories are readable
-and executable by the Web server.
-
-In order for the label system to work, PHP needs write access to the folder
-in which you install anyInventory.  Also, make sure that all file are readbale/
-executable by PHP, or it may not be able to access them.
+and executable by the Web server. Also, make sure that all file are 
+readable/executable by PHP, or it may not be able to access them.
 
 Upgrading
 =========
 To upgrade to anyInventory 2.0, simply overwrite the files from 
 your current version, and then run the included upgrade.php script from 
 the Web browser of your choice.
+
+anyInventory 2.0 requires the PEAR:DB (http://pear.php.net/) abstraction
+layer.  If you do not have this and cannot obtain it, anyInventory 1.9.2
+is the most recent version that does not use PEAR.
 
 Using anyInventory
 ==================

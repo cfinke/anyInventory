@@ -30,6 +30,12 @@ $output .= '
 			<li><a href="moving_items.php">Moving</a></li>
 			<li><a href="deleting_items.php">Deleting</a></li>
 		</ol>
+		<li><a href="alerts.php">Alerts</a></li>
+		<ol>
+			<li><a href="alerts.php#adding">Adding</a></li>
+			<li><a href="editing_alerts.php">Editing</a></li>
+			<li><a href="deleting_alerts.php">Deleting</a></li>
+		</ol>
 		<li><a href="searching.php">Searching</a></li>
 		<li><a href="whats_next.php">What\'s Next?</a></li>
 	</ol>

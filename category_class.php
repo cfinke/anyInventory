@@ -188,6 +188,8 @@ class category {
 	// This function returns the breadcrumbs_names string with links for each category.
 	
 	function get_breadcrumb_links(){
+		global $DIR_PREFIX;
+		
 		// For each id in the breadcrumbs, add the link and separator.
 		if (is_array($this->breadcrumbs)){
 			foreach($this->breadcrumbs as $id){
@@ -198,7 +200,7 @@ class category {
 					$crumb = new category($id);
 					
 					if ($crumb->id)
-					$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c='.$crumb->id.'">'.$crumb->name.'</a> &gt; ';
+					$breadcrumbs .= '<a href="'.$DIR_PREFIX.'index.php?c='.$crumb->id.'">'.$crumb->name.'</a> &gt; ';
 				}
 			}
 		}

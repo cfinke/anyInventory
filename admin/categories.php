@@ -19,7 +19,7 @@ if (count($rows) > 0){
 						[<a href="delete_category.php?id='.$row["id"].'">delete</a>]
 					</nobr>
 				</td>
-				<td style="white-space: nowrap;">'.$row["name"].' ('.$temp->num_items_r().')</td>
+				<td style="white-space: nowrap;">'.$temp->get_breadcrumb_links().' ('.$temp->num_items_r().')</td>
 			</tr>';
 	}
 	

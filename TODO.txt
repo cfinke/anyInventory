@@ -34,23 +34,23 @@ DONE - New layout
 BEFORE 1.8
 ===================
 DONE - Bring back quick search
+DONE - Ability to have auto-increment field
+DONE - Administration Hiding
+Item associations ("Item" Field type)
 Field Dividers
-Ability to have auto-increment field
 Required fields
-CHRIS - Item associations ("Item" Field type) 
 
 BEFORE 1.9
 ===================
 Remote image thumbnailing - backup in case of missing libcurl
 Better advanced search, like phpMyAdmin's Search page
 Multiple-condition alerts
-Download inventory as XML file
 
 BEFORE 2.0
 ===================
+Download inventory as XML file
 Upload inventory as XML file
 Label Sheets
 
 BUGS
 ========================================
-FIXED - When you try to move a category to one of its subcategories, the page times out, probably due to some infinite loop.  The fix should be: A category cannot be moved to a subcategory of itself, unless you can think of a better fix.

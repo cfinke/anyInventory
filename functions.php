@@ -29,6 +29,7 @@ function display($output){
 	global $inBodyTag;
 	global $breadcrumbs;
 	global $sectionTitle;
+	global $admin_pass;
 	
 	global $DIR_PREFIX;
 	

@@ -97,11 +97,12 @@ function category_array_to_options($array, $selected = null, $exclude = null){
 	return $output;
 }
 
-function get_item_options($cat_ids = 0, $selected = null){
+function get_item_options($cat_ids = 0, $selected = null, $exclude = null, $select_all = true){
 	// This function creates select box options for the items in the category $cat.
 	if (!is_array($selected)) $selected = array($selected);
 	if (!is_array($cat_ids)) $cat_ids = array($cat_ids);
-	
+	if (!is_array($exclude)) $exclude = array($exclude);
+		
 	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (";
 	
 	foreach($cat_ids as $cat_id){
@@ -110,13 +111,19 @@ function get_item_options($cat_ids = 0, $selected = null){
 	
 	$query = substr($query, 0, strlen($query) - 2);
 	
-	$query .= ")";
+	$query .= ") ORDER BY `name`";
 	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	while ($row = mysql_fetch_array($result)){
-		$options .= '<option value="'.$row["id"].'"';
-		if (($selected[0] === null) || (in_array($row["id"],$selected))) $options .= ' selected="selected"';
-		$options .= '>'.$row["name"].'</option>';
+		if (!in_array($row["id"], $exclude)){
+			$options .= '<option value="'.$row["id"].'"';
+
+			if (in_array($row["id"],$selected) || (($selected[0] === null) && ($select_all))){
+				$options .= ' selected="selected"';
+			}
+		
+			$options .= '>'.$row["name"].'</option>';
+		}
 	}
 	
 	return $options;

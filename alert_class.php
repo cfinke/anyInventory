@@ -59,17 +59,40 @@ class alert {
 	// This function removes an item from the alert.
 	
 	function remove_item($item_id){
+		$this->item_ids = array_unique($this->item_ids);
+		
 		// Find the key of the category id in the array.
 		$key = array_search($item_id, $this->item_ids);
 		
 		// If the category id is in the array, remove it.
-		if ($key) unset($this->item_ids[$key]);
+		if ($key !== false) unset($this->item_ids[$key]);
 		
-		if (count($this->item_ids) == 0){
+		$query = "UPDATE `anyInventory_alerts` SET `item_ids`='".serialize($this->item_ids)."' WHERE `id`='".$this->id."'";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	}
+	
+	function remove_category($category_id){
+		// Make a copy of the $item_ids array because remove_item modifies it
+		$temp_item_ids = $this->item_ids;
+		
+		foreach($temp_item_ids as $item_id){
+			$item = new item($item_id);
+			
+			if ($item->category->id == $category_id){
+				$this->remove_item($item->id);
+			}
+		}
+		
+		// Find the key of the category id in the array.		$key = array_search($category_id, $this->category_ids);
+		
+		// If the category id is in the array, remove it.		if ($key !== false) unset($this->category_ids[$key]);
+		
+		// Update the database
+		if (count($this->category_ids) == 0){
 			$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
 		}
 		else{
-			$query = "UPDATE `anyInventory_alerts` SET `item_ids`='".serialize($this->item_ids)."' WHERE `id`='".$this->id."'";
+			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($this->category_ids)."' WHERE `id`='".$this->id."'";
 		}
 		
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);

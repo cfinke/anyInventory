@@ -120,7 +120,7 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$key = array_search($category_id, $this->categories_view);
 			
-			if ($key){
+			if ($key !== false){
 				unset($this->categories_view[$key]);
 				
 				$this->categories_view = array_unique($this->categories_view);
@@ -135,7 +135,7 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$key = array_search($category_id, $this->categories_admin);
 			
-			if ($key){
+			if ($key !== false){
 				unset($this->categories_admin[$key]);
 				
 				$this->categories_admin = array_unique($this->categories_admin);

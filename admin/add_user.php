@@ -51,7 +51,10 @@ $output .= '
 									<option value="Administrator">Administrator</option>
 								</select>
 							</td>
-						</tr>
+						</tr>';
+
+if (PP_VIEW){
+	$output .= '
 						<tr>
 							<td class="form_label"><label for="c_view[]">'.GIVE_VIEW_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c_view[]\');">'.SELECT_NONE.'</a></small></td>
 							<td class="form_input">
@@ -59,7 +62,11 @@ $output .= '
 									'.get_category_options(null).'
 								</select>
 							</td>
-						</tr>
+						</tr>';
+}
+
+if (PP_ADMIN){
+	$output .= '
 						<tr>
 							<td class="form_label"><label for="c_admin[]">'.GIVE_ADMIN_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'c_admin[]\');">'.SELECT_NONE.'</a></small></td>
 							<td class="form_input">
@@ -67,8 +74,10 @@ $output .= '
 									'.get_category_options(null).'
 								</select>
 							</td>
-						</tr>
-						<tr>
+						</tr>';
+}
+
+$output .= '			<tr>
 							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 						</tr>
 					</table>

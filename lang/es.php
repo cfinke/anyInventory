@@ -76,7 +76,7 @@ define('GENERATE_FOR','Generar para');
 
 // Campos (Fields)
 define('FIELD','Campo');
-define('FIELDS','campos');
+define('FIELDS','Campos');
 define('ADD_FIELD','Agregar campo');
 define('DATA_TYPE','Tipo de dato');
 define('TEXT','Campo de texto');

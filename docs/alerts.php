@@ -7,6 +7,7 @@ $title = "anyInventory: Help > Alerts and Adding Alerts";
 $output .= '
 	<h2>Alerts</h2>
 	<p>Alerts allow you to have anyInventory notify you when certain conditions arise. For example, say that you are using anyInventory to keep track of the office supplies at your workplace, and you need to know when there is only one printer cartridge left.  anyInventory alerts allow you to do just that.</p>
+	<p><a name="time_based">You</a> can also create an alert that is time-based.  For example, if you know that you need to buy printer ink once a month, you could create an alert that will appear in one month, with no other conditions.</p>
 	<h2><a name="adding">Adding Alerts</a></h2>
 	<p>To <a href="../admin/add_alert.php">add an alert</a>, you must first choose the category to which the item or items belong.  Note that only the categories which contain one or more items will be shown in the list.</p>
 	<p>Once you have chosen a category, you can begin specifying the conditions of the alert.  Here is a what an alert addition page might look like:</p>

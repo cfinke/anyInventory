@@ -20,8 +20,8 @@ to these functions.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.6, simply overwrite the files from 
-your current version, except for the globals.php file. You should then run 
+To upgrade to anyInventory 1.7, simply overwrite the files from 
+your current version. You should then run 
 the included upgrade.php script from the Web browser of your choice.
 
 Using anyInventory

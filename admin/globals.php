@@ -6,4 +6,23 @@ $DIR_PREFIX .= "../";
 
 include($DIR_PREFIX."globals.php");
 
+if ($admin_pass != ''){
+	session_start();
+	
+	if ($_REQUEST["action"] == "log_in"){
+		if ($_REQUEST["password"] != $admin_pass){
+			header("Location: ".$DIR_PREFIX."error_handler.php?eid=4&return_to=".$_SERVER["PHP_SELF"]);
+			exit;
+		}
+		else{
+			$_SESSION["anyInventory"]["signed_in"] = true;
+		}
+	}
+	
+	if ($_SESSION["anyInventory"]["signed_in"] != true){ 
+		header("Location: ".$DIR_PREFIX."error_handler.php?eid=4&return_to=".$_SERVER["PHP_SELF"]);
+		exit;
+	}
+}
+
 ?>

@@ -18,7 +18,15 @@ $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
 $db_pass = "'.$_REQUEST["db_pass"].'";
 
-include($DIR_PREFIX."functions.php");
+';
+
+if ($_REQUEST["password_protect"] == "yes"){
+	$writetoglobals .= '$admin_pass = "'.$_REQUEST["admin_password"].'";
+
+';
+}
+
+$writetoglobals .= 'include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");
 include($DIR_PREFIX."item_class.php");
@@ -87,7 +95,7 @@ if ($_REQUEST["action"] == "install"){
 	// Try to write the globals.php file.
 	if (count($errors) == 0){
 		// Open the file for writing.
-		$handle = @fopen($path . "globals.php","w");
+		$handle = @fopen(realpath("./globals.php"),"w");
 		
 		if ($handle){
 			fwrite($handle, $writetoglobals);
@@ -95,9 +103,9 @@ if ($_REQUEST["action"] == "install"){
 		}
 		else{
 			// Try chmodding the file.
-			@chmod($path . "globals.php", 0666);
+			@chmod(realpath("./globals.php"), 0666);
 			
-			$handle = @fopen($path . "globals.php","w");
+			$handle = @fopen(realpath("./globals.php"),"w");
 			
 			if ($handle){
 				fwrite($handle, $writetoglobals);
@@ -107,9 +115,7 @@ if ($_REQUEST["action"] == "install"){
 				$config_errors[] = "anyInventory could not write the globals.php file.  Either make this file writable by the Web server and click 'Try Again', or replace the contents of the current globals.php file with the following code:<br /><pre>" . htmlentities($writetoglobals) . "</pre>If you choose to overwrite the file manually, do so, and then delete the install.php file.  Don't forget to change the permissions back on globals.php after you overwrite it.";
 			}
 		}
-	}
-	
-	if (count($errors) == 0){
+		
 		// Begin writing the database information.
 		$query = "DROP TABLE `anyInventory_categories` ,
 			`anyInventory_fields` ,
@@ -179,7 +185,7 @@ if ($_REQUEST["action"] == "install"){
 			// Delete the install file.
 			if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);
 			
-			header("Location: index.php");
+			header("Location: ./index.php");
 		}
 		else{
 			$set_config_error = true;
@@ -192,6 +198,8 @@ if ($_REQUEST["action"] == "install"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
+				<input type="hidden" name="password_protect" value="'.stripslashes($_REQUEST["password_protect"]).'" />
+				<input type="hidden" name="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" />
 				<p>The following errors occurred:</p><ul class="error">';
 			
 			foreach($config_errors as $error){
@@ -210,15 +218,15 @@ if ($_REQUEST["action"] == "install"){
 
 if($_REQUEST["action"] == "try_again"){
 	// The user has done the database setup, but the globals.php file has not been written.
-	$handle = @fopen($path . "globals.php","w");
+	$handle = @fopen(realpath("./globals.php"),"w");
 	if ($handle){
 		fwrite($handle, $writetoglobals);
 		fclose($handle);
 	}
 	else{
-		@chmod($path . "globals.php", 0666);
+		@chmod(realpath("./globals.php"), 0666);
 		
-		$handle = @fopen($path . "globals.php","w");
+		$handle = @fopen(realpath("./globals.php"),"w");
 		
 		if ($handle){
 			fwrite($handle, $writetoglobals);
@@ -241,6 +249,8 @@ if($_REQUEST["action"] == "try_again"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
+				<input type="hidden" name="password_protect" value="'.stripslashes($_REQUEST["password_protect"]).'" />
+				<input type="hidden" name="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" />
 				<p>The following errors occurred:</p><ul class="error">';
 		
 		foreach($config_errors as $error){
@@ -258,6 +268,8 @@ if($_REQUEST["action"] == "try_again"){
 elseif(!$set_config_error){
 	$db_host = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["db_host"]) : 'localhost';
 	$checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
+	$ppchecked = ($_REQUEST["password_protect"]) ? ' checked="true"' : '';
+	$inBodyTag = ($_REQUEST["password_protect"]) ? '' : ' onload="document.getElementById(\'admin_password\').disabled = true;"';
 	
 	if (count($errors) > 0){
 		$output .= '<p>The following errors occurred:</p><ul class="error">';
@@ -292,7 +304,15 @@ elseif(!$set_config_error){
 							<td><input type="checkbox" name="overwrite_tables" id="overwrite_tables" value="1"'.$checked.' /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"></td>
+							<td class="formlabel"><label for="password_protect">Password protect admin directory:</label></td>
+							<td><input onclick="document.getElementById(\'admin_password\').disabled = !this.checked;" type="checkbox" name="password_protect" id="password_protect" value="yes"'.$ppchecked.' /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="admin_password">Admin Password:</label></td>
+							<td><input type="text" name="admin_password" id="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel">&nbsp;</td>
 							<td><input type="submit" name="submit" id="submit" value="Install" /></td>
 						</tr>
 					</table>';
@@ -304,14 +324,14 @@ echo '
 	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 	<html>
 		<head>
-			<title>anyInventory 1.6 Install</title>
+			<title>anyInventory 1.7 Install</title>
 			<link rel="stylesheet" type="text/css" href="style.css">
 		</head>
-		<body>
+		<body'.$inBodyTag.'>
 			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
 				<tr>
 					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-						<h1 class="title">anyInventory 1.6</h1>
+						<h1 class="title">anyInventory 1.7</h1>
 					</td>
 				</tr>
 				<tr>
@@ -322,7 +342,7 @@ echo '
 				<tr>
 					<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
 						<div style="min-height: 400px; padding: 5px;">
-						<h2>Install anyInventory 1.6</h2>
+						<h2>Install anyInventory 1.7</h2>
 						<p>Welcome to the installation page of anyInventory.  To install, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the installation will continue.  After the installation has finished, you will be redirected to the home page of you anyInventory installation.  If you need any help, feel free to contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
 						'.$output.'
 						</div>

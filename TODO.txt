@@ -27,7 +27,7 @@ DONE - Add input type of "File" to replace generic file uploads and remote files
 BEFORE 1.7
 ===================
 DREW - Thumbnails of remote images
-Internal password protection
+CHRIS - Internal password protection
 
 BEFORE 1.8
 ===================

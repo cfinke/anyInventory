@@ -20,7 +20,15 @@ $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
 $db_pass = "'.$_REQUEST["db_pass"].'";
 
-include($DIR_PREFIX."functions.php");
+';
+
+if ($_REQUEST["password_protect"] == "yes"){
+	$writetoglobals .= '$admin_pass = "'.$_REQUEST["admin_password"].'";
+
+';
+}
+
+$writetoglobals .= 'include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");
 include($DIR_PREFIX."item_class.php");
@@ -30,30 +38,6 @@ include($DIR_PREFIX."alert_class.php");
 connect_to_database();
 
 ?>';
-
-$output = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-	<html>
-		<head>
-			<title>anyInventory 1.6 Upgrade</title>
-			<link rel="stylesheet" type="text/css" href="style.css">
-		</head>
-		<body>
-			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
-				<tr>
-					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
-						<h1 class="title">anyInventory 1.6</h1>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						&nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
-						<div style="min-height: 400px; padding: 5px;">
-							<h2>Upgrade anyInventory</h2>
-							<form action="upgrade.php" method="post">';
 
 if (is_array($_REQUEST)) foreach($_REQUEST as $key => $value) $_REQUEST[$key] = stripslashes($value);
 
@@ -226,8 +210,8 @@ if ($_REQUEST["action"] == "upgrade"){
 						}
 					}
 				}
-				
-				break;
+			case '1.6':
+				# Changes introduced in 1.7
 		}
 		
 		// Attempt to write the globals file.
@@ -258,6 +242,8 @@ if ($_REQUEST["action"] == "upgrade"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
+				<input type="hidden" name="password_protect" value="'.stripslashes($_REQUEST["password_protect"]).'" />
+				<input type="hidden" name="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" />
 				<p>The following error occurred:</p>
 				<ul class="error">
 					<li>anyInventory could not write the globals.php file.  Either make this file writable by the Web server and click "Try Again", or replace the contents of the current globals.php file with the following code:<br /><pre>' . htmlentities($writetoglobals) . '</pre>If you choose to overwrite the file manually, do so, and then delete the install.php file.  Don\'t forget to change the permissions back on globals.php after you overwrite it.</li>
@@ -306,6 +292,8 @@ if($_REQUEST["action"] == "try_again"){
 			<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 			<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 			<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
+			<input type="hidden" name="password_protect" value="'.stripslashes($_REQUEST["password_protect"]).'" />
+			<input type="hidden" name="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" />
 			<p>The following error occurred:</p>
 			<ul class="error">
 				<li>anyInventory could not write the globals.php file.  Either make this file writable by the Web server and click "Try Again", or replace the contents of the current globals.php file with the following code:<br /><pre>' . htmlentities($writetoglobals) . '</pre>If you choose to overwrite the file manually, do so, and then delete the install.php file.  Don\'t forget to change the permissions back on globals.php after you overwrite it.</li>
@@ -319,6 +307,8 @@ if($_REQUEST["action"] == "try_again"){
 }
 elseif(!$globals_error){
 	$db_host = ($_REQUEST["action"] != "") ? $_REQUEST["db_host"] : 'localhost';
+	$ppchecked = ($_REQUEST["password_protect"]) ? ' checked="true"' : '';
+	$inBodyTag = ($_REQUEST["password_protect"]) ? '' : ' onload="document.getElementById(\'admin_password\').disabled = true;"';
 	
 	if (count($errors) > 0){
 		$output .= '
@@ -365,13 +355,44 @@ elseif(!$globals_error){
 							<td><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"></td>
+							<td class="formlabel"><label for="password_protect">Password protect admin directory:</label></td>
+							<td><input onclick="document.getElementById(\'admin_password\').disabled = !this.checked;" type="checkbox" name="password_protect" id="password_protect" value="yes"'.$ppchecked.' /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="admin_password">Admin Password:</label></td>
+							<td><input type="text" name="admin_password" id="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel">&nbsp;</td>
 							<td><input type="submit" name="submit" id="submit" value="Upgrade" /></td>
 						</tr>
 					</table>';
 }
 
-$output .= '
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+	<html>
+		<head>
+			<title>anyInventory 1.7 Upgrade</title>
+			<link rel="stylesheet" type="text/css" href="style.css">
+		</head>
+		<body'.$inBodyTag.'>
+			<table id="maintable" cellspacing="1" cellpadding="0" border="0">
+				<tr>
+					<td id="header_cell" style="background-image: url(images/header_bg.jpg); background-color: #000000; background-position: top right; background-repeat: no-repeat;">
+						<h1 class="title">anyInventory 1.7</h1>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td style="background: #ffffff; width: 100%; padding: 5px; height: 400px;">
+						<div style="min-height: 400px; padding: 5px;">
+							<h2>Upgrade anyInventory</h2>
+							<form action="upgrade.php" method="post">
+								'.$output.'
 							</form>
 						</div>
 					</td>
@@ -387,7 +408,6 @@ $output .= '
 		</body>
 	</html>';
 
-echo $output;
 exit;
 
 ?>

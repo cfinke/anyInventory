@@ -16,6 +16,10 @@ and executable by the Web server, as well as making sure that the item_files/
 subdirectory is writable, readable, and executable by the Web server.  
 (The install script will alert you if it is not writable.)
 
+In order for the label system to work, PHP needs write access to the folder
+in which you install anyInventory.  Also, make sure that all file are readbale/
+executable by PHP, or it may not be able to access them.
+
 Upgrading
 =========
 To upgrade to anyInventory 1.9.1, simply overwrite the files from 

@@ -10,6 +10,8 @@ $writetoglobals = '<?php
 
 error_reporting(E_ALL ^ E_NOTICE);
 
+$DIR_PREFIX .= "./";
+
 $db_host = "'.$_REQUEST["db_host"].'";
 $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
@@ -17,12 +19,12 @@ $db_pass = "'.$_REQUEST["db_pass"].'";
 
 $files_dir = "'.$_REQUEST["files_dir"].'";
 
-include("functions.php");
-include("category_class.php");
-include("field_class.php");
-include("item_class.php");
-include("file_class.php");
-include("dataset_library.php");
+include($DIR_PREFIX."functions.php");
+include($DIR_PREFIX."category_class.php");
+include($DIR_PREFIX."field_class.php");
+include($DIR_PREFIX."item_class.php");
+include($DIR_PREFIX."file_class.php");
+include($DIR_PREFIX."dataset_library.php");
 
 connect_to_database();
 

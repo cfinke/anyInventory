@@ -22,21 +22,22 @@
 				<td align="top" colspan="2">
 					<div id="mainmenu"style="">
 						<b>Main Menu: </b>
-						[ <a href="index.php">home</a> ]
-						[ <a href="categories.php">categories</a> ]
-						[ <a href="fields.php">fields</a> ]
-						[ <a href="items.php">items</a> ]
+						[ <a href="<?php echo $DIR_PREFIX; ?>index.php">home</a> ]
+						[ <a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">categories</a> ]
+						[ <a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">fields</a> ]
+						[ <a href="<?php echo $DIR_PREFIX; ?>admin/items.php">items</a> ]
 					</div>	
 				</td>
 			</tr>
 			<tr height="100%">
 				<td class="row_head" width="150" align="left" valign="top" style="padding:5px">
-					<p><b><a href="index.php">Inventory</a></b></p>
-					<p><b><a href="fields.php">Fields</a></b><br />
-					<a href="add_field.php">Add a field</a></p>
-					<p><b><a href="categories.php">Categories</a></b><br />
-					<a href="add_category.php">Add a category</a></p>
-					<p><b><a href="items.php">Items</a></b><br />
-					<a href="add_item.php">Add an item</a></p>
+					<p><b><a href="<?php echo $DIR_PREFIX; ?>index.php">Inventory</a></b></p>
+					<p><b><a href="<?php echo $DIR_PREFIX; ?>search.php">Search</a></b></p>
+					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">Fields</a></b><br />
+					<a href="<?php echo $DIR_PREFIX; ?>admin/add_field.php">Add a field</a></p>
+					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">Categories</a></b><br />
+					<a href="<?php echo $DIR_PREFIX; ?>admin/add_category.php">Add a category</a></p>
+					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/items.php">Items</a></b><br />
+					<a href="<?php echo $DIR_PREFIX; ?>admin/add_item.php">Add an item</a></p>
 				</td>
 				<td bgcolor="#ffffff" width="650" align="left" valign="top" style="padding:5px">

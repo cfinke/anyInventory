@@ -12,5 +12,6 @@ Alerts
 
 BEFORE NEXT RELEASE
 ===================
+Search function
 Instructions for use
 

@@ -1,21 +1,13 @@
-2004/06/09
-Added get_items_options function.
-Fixed problem where field order would not affect field table
-
-2004/06/10
-Began work on alerts
-Changed categories and values to be serialized arrays in the database
-Added a selected option to get_item_options
-Added the option of getting a category dropdown of the non-empty categories
-Made header image right-aligned
-Moved some code to alert_box function
-Fixed a few small bugs in install file
-Added help links to all pages.
-Fixed bug when searching from menu bar
-Added upgrade file
-Finished alert administration
-Added documentation for alerts.
-
 2004/06/11
-Finished alerts
-Added alert table to install file.
+Removed the scrollbars from the DIV
+Fixed missing offsite_link column
+Reorganized search page
+
+2004/06/15
+Added check to make sure all necessary files are readable.
+Moved alert box functionality to alert class.
+Error-checked all foreaches
+Changed category class to only remember the ids of its children rather than children objects.  Also evaluated all 'SELECT *' statements
+Added error handling file
+Added some introductory text
+Fixed bug where choosing Cancel would delete a field.

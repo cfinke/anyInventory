@@ -1,6 +1,7 @@
 <?php
 
 function connect_to_database(){
+	// This function opens and returns the database connection.
 	global $db_host;
 	global $db_name;
 	global $db_user;
@@ -13,12 +14,17 @@ function connect_to_database(){
 }
 
 function query($query){
+	// This function executes a query and returns the resulting resource.
+	
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	return $result;
 }
 
 function display($output){
+	// This function displays a page with the content in $output.
+	// $title should be declared before calling display()
+	
 	global $title;
 	global $DIR_PREFIX;
 	
@@ -29,17 +35,25 @@ function display($output){
 }
 
 function get_category_options($selected = null){
+	// This function returns the options for a category dropdown.
+	// Any category id's in the array $selected will be selected in the 
+	// resulting list.
+	
 	if (!is_array($selected)) $selected = array($selected);
 	
 	$output = '<option value="0"';
 	if (in_array(0,$selected)) $output .= ' selected="selected"';
 	$output .= '>Top Level</option>';
+	
 	$output .= get_options_children(0, '', $selected);
 	
 	return $output;
 }
 
 function get_options_children($id, $pre = "", $selected = 0){
+	// This function creates select box options for the children of a category
+	// with the id $id.
+	
 	$query = "SELECT * FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
 	$result = query($query);
 	
@@ -68,6 +82,9 @@ function get_options_children($id, $pre = "", $selected = 0){
 }
 
 function get_fields_checkbox_area($checked = array()){
+	// This function returns the field checkboxes.
+	// Any field ids in the array $checked will be checked.
+	
 	$query = "SELECT * FROM `anyInventory_fields` WHERE 1 ORDER BY `name` ASC";
 	$result = query($query);
 	
@@ -100,6 +117,9 @@ function get_fields_checkbox_area($checked = array()){
 }
 
 function get_category_array($top = 0){
+	// This function returns an array of categories, starting with
+	// the category id'd by $top and working down.
+	
 	$array = array();
 	
 	get_array_children($top, $array);
@@ -108,6 +128,8 @@ function get_category_array($top = 0){
 }
 
 function get_array_children($id, &$array, $pre = ""){
+	// This function creates array entries for any child of $id.
+	
 	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
 	$result = query($query);
 	
@@ -127,6 +149,8 @@ function get_array_children($id, &$array, $pre = ""){
 }
 
 function delete_subcategories($category){
+	// This function deletes any subcategories of $category.
+	
 	if (is_array($category->children)){
 		foreach($category->children as $child){
 			delete_subcategory($child);
@@ -137,20 +161,25 @@ function delete_subcategories($category){
 }
 
 function delete_subcategory($category){
+	// This function deletes a subcategory $category and its children.
+	
 	if (is_array($category->children)){
 		foreach($category->children as $child){
 			delete_subcategories($child);
 		}
 	}
 	
+	// Delete all items in the current category.
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	$result = query($query);
+	query($query);
 	
+	// Reset the parent of this categories subcategories
 	$query = "UPDATE `anyInventory_categories` SET `parent`='".$category->parent_id."' WHERE `parent`='".$category->id."'";
-	$result = query($query);
+	query($query);
 	
+	// Delete this caegory.
 	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
-	$result = query($query);
+	query($query);
 	
 	remove_from_fields($category->id);
 	
@@ -158,6 +187,7 @@ function delete_subcategory($category){
 }
 
 function remove_from_fields($cat_id){
+	// This function removes all fields from a category.
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%".$cat_id.",%'";
 	$result = query($query);
 	
@@ -170,6 +200,8 @@ function remove_from_fields($cat_id){
 }
 
 function get_mysql_column_type($input_type, $size, $values, $default_value){
+	// This function returns the MySQL column type for a new field.
+	
 	switch($input_type){
 		case 'text':
 		case 'multiple':
@@ -178,6 +210,7 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 				$type = " VARCHAR(".$size.") DEFAULT '".$default_value."' ";
 			}
 			else{
+				// Text fields cannot have a default value.
 				$type = " TEXT ";
 			}
 			break;

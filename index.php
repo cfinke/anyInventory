@@ -125,7 +125,7 @@ else{
 		
 		$output .= (ITEM_VIEW == 'list') ? SWITCH_TO_TABLE : SWITCH_TO_LIST;
 		
-		$output .= '</a>] [<a href="docs/'.LANG.'/items.php">'.HELP.'</a>]</td>
+		$output .= '</a>]&nbsp;[<a href="docs/'.LANG.'/items.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
@@ -201,12 +201,14 @@ else{
 				$item = new item($item_id);
 				$field = new field($alert->field_id);
 				
-				if (($alert->timed) || (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");'))){
-					if (!$tripped){
-						$tripped = true;
+				if ($view_user->can_view($item->category->id)){
+					if (($alert->timed) || (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");'))){
+						if (!$tripped){
+							$tripped = true;
+						}
+						
+						$output .= $alert->export_box($item_id);
 					}
-					
-					$output .= $alert->export_box($item_id);
 				}
 			}
 		}

@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 error_reporting(E_ALL ^ E_NOTICE);
 
 // This is a blank template.  If you are reading this, you should run
@@ -12,8 +14,6 @@ $db_host = '';
 $db_name = '';
 $db_user = '';
 $db_pass = '';
-
-$admin_pass = '';
 
 include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");

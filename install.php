@@ -18,14 +18,6 @@ $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
 $db_pass = "'.$_REQUEST["db_pass"].'";
 
-$admin_pass = "';
-
-if ($_REQUEST["password_protect"] == "yes"){
-	$writetoglobals .= $_REQUEST["admin_password"];
-}
-
-$writetoglobals .= '";
-
 include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");

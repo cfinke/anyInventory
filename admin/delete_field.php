@@ -2,6 +2,11 @@
 
 include("globals.php");
 
+if ($admin_user->can_admin_field($_REQUEST["id"])){
+	header("Location: ../error_handler.php?eid=13");
+	exit;
+}
+
 $title = "anyInventory: Delete Field";
 $breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Delete Field';
 

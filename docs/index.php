@@ -15,6 +15,13 @@ $output .= '
 	<p>Welcome to the help section for anyInventory.  You can read through the pages in order, or use the table of contents below to help you find what you\'re looking for.</p>
 	<ol style="margin-left: 5%;">
 		<li><a href="introduction.php">Introduction</a></li>
+		<li><a href="users.php">Users</a></li>
+		<ol>
+			<li><a href="users.php#types">User Types</a></li>
+			<li><a href="adding_users.php">Adding Users</a></li>
+			<li><a href="editing_users.php">Editing Users</a></li>
+			<li><a href="deleting_users.php">Deleting Users</a></li>
+		</ol>
 		<li><a href="fields.php">Fields</a></li>
 		<ol>
 			<li><a href="fields.php#types">Field Types</a></li>

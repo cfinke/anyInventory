@@ -107,7 +107,7 @@ $output .= '
 	</p>
 		</td>
 	</tr>
-	</table><div style="float: left;"><a href="introduction.php">&lt;&lt; Previous: Introduction</a></div>
+	</table><div style="float: left;"><a href="delete_users.php">&lt;&lt; Previous: Deleting Users</a></div>
 	<div style="text-align: right;"><a href="adding_fields.php">Next: Adding Fields &gt;&gt;</a></div>';
 
 display($output);

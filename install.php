@@ -45,6 +45,14 @@ if ($_REQUEST["action"] == "install"){
 	if (strlen(trim($_REQUEST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
 	}
+	if ($_REQUEST["password_protect_admin"] || $_REQUEST["password_protect_view"]){
+		if (strlen(trim($_REQUEST["username"])) == 0){
+			$errors[] = 'Please enter a username.';
+		}
+		if (strlen(trim($_REQUEST["password"])) == 0){
+			$errors[] = 'Please enter a password.';
+		}
+	}
 	
 	$files_to_read = array("./","./admin","./docs","./docs/images","./fonts","./item_files");
 	
@@ -65,22 +73,6 @@ if ($_REQUEST["action"] == "install"){
 		}
 		elseif(!mysql_select_db($_REQUEST["db_name"])){
 			$errors[] = 'anyInventory connected to the MySQL host, but could not find the database '.$_REQUEST["db_name"].'.';
-		}
-	}
-	
-	// Check for current tables with the same names as those we are creating.
-	if (count($errors) == 0){
-		if (!$_REQUEST["overwrite_tables"]){
-			$tables = array("anyInventory_items","anyInventory_categories","anyInventory_fields","anyInventory_files","anyInventory_alerts","anyInventory_config");
-			
-			foreach ($tables as $table){
-				$query = "SHOW TABLES LIKE '".$table."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-				
-				if (mysql_num_rows($result) > 0){
-					$errors[] = "The table `".$table."` already exists in the MySQL database ".$_REQUEST["db_name"].".";
-				}
-			}
 		}
 	}
 	
@@ -177,6 +169,16 @@ if ($_REQUEST["action"] == "install"){
 					) TYPE = MYISAM ;";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
+		$query = "CREATE TABLE `anyInventory_users` (
+					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
+					`username` varchar(32) NOT NULL default '',
+					`password` varchar(32) NOT NULL default '',
+					`type` int(11) NOT NULL default '0',
+					`object` text not null,
+					UNIQUE KEY `username` (`username`)
+					) TYPE=MyISAM";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
 		$query = "CREATE TABLE `anyInventory_config` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
 					`key` varchar( 64 ) NOT NULL default '',
@@ -189,8 +191,26 @@ if ($_REQUEST["action"] == "install"){
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('AUTO_INC_FIELD_NAME','anyInventory ID')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) $_REQUEST["password_protect_view"]) / 1)."')";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) $_REQUEST["password_protect_admin"]) / 1)."')";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
+		if ($_REQUEST["password_protect_admin"] || $_REQUEST["password_protect_view"]){
+			$query = "INSERT INTO `anyInventory_users`
+						(`username`,
+						 `password`,
+						 `type`)
+						VALUES
+						('".$_REQUEST["username"]."',
+						 '".md5($_REQUEST["password"]."',
+						 '0')";
+			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		}
 		
 		if (count($config_errors) == 0){
 			// Delete the install file.
@@ -209,8 +229,10 @@ if ($_REQUEST["action"] == "install"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
-				<input type="hidden" name="password_protect" value="'.stripslashes($_REQUEST["password_protect"]).'" />
-				<input type="hidden" name="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" />
+				<input type="hidden" name="password_protect_view" value="'.stripslashes($_REQUEST["password_protect_view"]).'" />
+				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_REQUEST["password_protect_admin"]).'" />
+				<input type="hidden" name="username" value="'.stripslashes($_REQUEST["username"]).'" />
+				<input type="hidden" name="password" value="'.stripslashes($_REQUEST["password"]).'" />
 				<p>The following errors occurred:</p><ul class="error">';
 			
 			foreach($config_errors as $error){
@@ -260,8 +282,10 @@ if($_REQUEST["action"] == "try_again"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
-				<input type="hidden" name="password_protect" value="'.stripslashes($_REQUEST["password_protect"]).'" />
-				<input type="hidden" name="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" />
+				<input type="hidden" name="password_protect_view" value="'.stripslashes($_REQUEST["password_protect_view"]).'" />
+				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_REQUEST["password_protect_admin"]).'" />
+				<input type="hidden" name="username" value="'.stripslashes($_REQUEST["username"]).'" />
+				<input type="hidden" name="password" value="'.stripslashes($_REQUEST["password"]).'" />
 				<p>The following errors occurred:</p><ul class="error">';
 		
 		foreach($config_errors as $error){
@@ -278,9 +302,9 @@ if($_REQUEST["action"] == "try_again"){
 }
 elseif(!$set_config_error){
 	$db_host = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["db_host"]) : 'localhost';
-	$checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
-	$ppchecked = ($_REQUEST["password_protect"]) ? ' checked="true"' : '';
-	$inBodyTag = ($_REQUEST["password_protect"]) ? '' : ' onload="document.getElementById(\'admin_password\').disabled = true;"';
+	$pp_view_checked = ($_REQUEST["password_protect_view"]) ? ' checked="true"' : '';
+	$pp_admin_checked = ($_REQUEST["password_protect_admin"]) ? ' checked="true"' : '';
+	$inBodyTag = ' onload="toggle();"';
 	
 	if (count($errors) > 0){
 		$output .= '<p>The following errors occurred:</p><ul class="error">';
@@ -311,16 +335,20 @@ elseif(!$set_config_error){
 							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><input type="checkbox" name="overwrite_tables" id="overwrite_tables" value="1"'.$checked.' /></td>
-							<td class="form_input"><label for="overwrite_tables">Overwrite tables of the same name</label></td>
+							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_view" id="password_protect_view" value="yes"'.$pp_view_checked.' /></td>
+							<td class="form_input"><label for="password_protect">Password protect entire inventory</label></td>
 						</tr>
 						<tr>
-							<td class="form_label"><input onclick="document.getElementById(\'admin_password\').disabled = !this.checked;" type="checkbox" name="password_protect" id="password_protect" value="yes"'.$ppchecked.' /></td>
+							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_admin" id="password_protect_admin" value="yes"'.$pp_admin_checked.' /></td>
 							<td class="form_input"><label for="password_protect">Password protect admin directory</label></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="admin_password">Admin Password:</label></td>
-							<td class="form_input"><input type="text" name="admin_password" id="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" /></td>
+							<td class="form_label"><label for="username">Username:</label></td>
+							<td class="form_input"><input type="text" name="username" id="username" value="'.stripslashes($_REQUEST["username"]).'" /></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="password">Password:</label></td>
+							<td class="form_input"><input type="text" name="password" id="password" value="'.stripslashes($_REQUEST["password"]).'" /></td>
 						</tr>
 						<tr>
 							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Install" /></td>
@@ -337,6 +365,14 @@ echo '
 		<title>Install anyInventory 1.7.1</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
+		<script type="text/javascript">
+			function toggle(){
+				document.getElementById(\'username\').disabled = !(document.getElementById(\'password_protect_view\').checked || document.getElementById(\'password_protect_admin\').checked);
+				document.getElementById(\'password\').disabled = !(document.getElementById(\'password_protect_view\').checked || document.getElementById(\'password_protect_admin\').checked);
+				
+				document.getElementById(\'password_protect_admin\').checked = (document.getElementById(\'password_protect_view\').checked || document.getElementById(\'password_protect_admin\').checked);
+			}
+		</script>
 	</head>
 	<body'.$inBodyTag.'>
 		<table style="width: 97%; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">

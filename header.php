@@ -1,8 +1,4 @@
-<?php
-
-session_start();
-
-?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
 		<title><?php echo $title; ?></title>
@@ -13,7 +9,7 @@ session_start();
 		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.7.1
+					anyInventory 1.8
 				</td>
 			</tr>
 			<tr>
@@ -25,7 +21,7 @@ session_start();
 							<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="<?php echo $DIR_PREFIX; ?>docs/">Help</a></td>
 							<?php 
 							
-							if(($admin_pass == '') || $_SESSION["anyInventory"]["signed_in"]){
+							if(($_SESSION["usertype"] > 0) || !get_config_value('PP_ADMIN')){
 								?>
 								<td style="width: 25%; text-align: right; vertical-align: middle;">Administration:</td>
 								<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">Fields</a></td>

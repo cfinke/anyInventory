@@ -33,23 +33,11 @@ if ($_REQUEST["id"]){
 			
 			if (eval('return ("'.addslashes($item->fields[$field->name]).'" '.$alert->condition.' "'.addslashes($alert->value).'");')){
 				if (!$tripped){
-					$output .= '</td><td style="width: 30ex;"><h3>Alerts for this item</h3>';
+					$output .= '</td><td style="width: 30ex;">';
 					$tripped = true;
 				}
 				
-				$output .= '
-					<table cellspacing="1" cellpadding="2" style="background: #000000; width: 25ex; margin-bottom: 10px;" border="0">
-						<tr style="background: #000000; color: #D3D3A6;">
-							<td>
-								Alert
-							</td>
-						</tr>
-						<tr style="background: #D3D3A6;">
-							<td style="text-align: center;">
-								<b>'.$alert->title.'</b>
-							</td>
-						</tr>
-					</table>';
+				$output .= alert_box($alert->title);
 			}
 		}
 	}
@@ -116,19 +104,7 @@ else{
 					$tripped = true;
 				}
 				
-				$output .= '
-					<table cellspacing="1" cellpadding="2" style="background: #000000; width: 25ex; margin-bottom: 10px;" border="0">
-						<tr style="background: #000000; color: #D3D3A6;">
-							<td>
-								Alert
-							</td>
-						</tr>
-						<tr style="background: #D3D3A6;">
-							<td style="text-align: center;">
-								<b>'.$row["title"].'</b><br /><a href="'.$_SERVER["PHP_SELF"].'?id='.$item->id.'">'.$item->name.'</a>
-							</td>
-						</tr>
-					</table>';
+				$output .= alert_box($row["title"],$item_id);
 			}
 		}
 	}

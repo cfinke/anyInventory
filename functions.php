@@ -275,4 +275,36 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 	return $type;
 }
 
+function alert_box($title, $item_id = null){
+	// This function creates an alert box for an activated alert.
+	
+	global $DIR_PREFIX;
+	
+	if ($item_id != null){
+		$item = new item($item_id);
+		$item_link = '<br /><a href="'.$DIR_PREFIX.'index.php?id='.$item->id.'">'.$item->name.'</a>';
+	}
+	else{
+		$item_link = '';
+	}
+	
+	$output = '<table cellspacing="1" cellpadding="2" style="background: #000000; width: 25ex; margin-bottom: 10px;" border="0">
+					<tr style="background: #000000; color: #D3D3A6;">
+							<td>
+								Alert
+							</td>
+							<td style="text-align: right;">
+								<a style="color: #D3D3A6;" href="'.$DIR_PREFIX.'docs/alerts.php">?</a>
+							</td>
+						</tr>
+						<tr style="background: #D3D3A6;">
+							<td style="text-align: center;" colspan="2">
+								<b>'.$title.'</b>'.$item_link.'
+							</td>
+						</tr>
+					</table>';
+	
+	return $output;
+}
+
 ?>

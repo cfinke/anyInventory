@@ -20,7 +20,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData">
-				<p>Para agregar un art&iacute;culo, primeramente debes seleccionar una <a href="categories.php">categor&iacute;a</a>.  Esto determina los <a href="fields.php">campos</a> que necesitar&aacute;s capturar.</p>
+				<p>Para <a href="'.$DIR_PREFIX.'admin/add_item.php">agregar un art&iacute;culo</a>, primeramente debes seleccionar una <a href="categories.php">categor&iacute;a</a>.  Esto determina los <a href="fields.php">campos</a> que necesitar&aacute;s capturar.</p>
 				<p>Ya que hallas seleccionado una categor&iacute;a, se te mostrar&aacute; una forma con los campos previamente definidos para esta categor&iacute;a.  No hay mucho mas que decir al respecto; debes ya saber como llenar estos campos, ya que t&uacute; los creaste.</p>
 				<p>Si el archivo enviado para un campo de tipo archivo es una imagen, esta ser&aacute; mostrada como una pequeña vista previa al ver el art&iacute;culo en el invetario.  Si no es as&iacute;, ser&aacute; listada como un enlace al archivo, permitiendo descargarlo.
 			</td>

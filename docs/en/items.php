@@ -20,7 +20,7 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData">
-				<p>To add an item, you must first choose a <a href="categories.php">category</a>.  This determines what <a href="fields.php">fields</a> you will need to fill in.</p>
+				<p>To <a href="'.$DIR_PREFIX.'admin/add_item.php">add an item</a>, you must first choose a <a href="categories.php">category</a>.  This determines what <a href="fields.php">fields</a> you will need to fill in.</p>
 				<p>After you have chosen a category, you will be presented with a form that consists of the fields that you have defined for this category.  There is not much more to say on this subject; you should know how to fill in the fields, because you created them.</p>
 				<p>If the file you upload for a file-type field is an image, it will appear as a thumbnail (a small preview of the image) when you view the item in your inventory.  Otherwise, it will be listed as a link to the file, allowing it to be downloaded.</p>
 			</td>

@@ -42,7 +42,7 @@ $output .= '
 
 			<td class="tableData">
 
-				<p>Pour ajouter un article, vous devez choisir en premier une <a href="categories.php">catégorie</a>.  Cela déterminera quels <a href="fields.php">champs</a> vous devrez remplir.</p>
+				<p>Pour <a href="'.$DIR_PREFIX.'admin/add_item.php">ajouter un article</a>, vous devez choisir en premier une <a href="categories.php">catégorie</a>.  Cela déterminera quels <a href="fields.php">champs</a> vous devrez remplir.</p>
 
 				<p>Aprés avoir choisi une catégorie, vous obtiendrez un formulaire qui comprend les champs que vous avez définis pour cette catégorie.  Il n\'y a rien de plus à dire sur ce sujet; vous devriez savoir compléter les champs, puisque vous les avez crées.</p>
 

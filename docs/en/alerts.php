@@ -51,7 +51,7 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="form_label"><input onclick="toggle(1);" type="checkbox" id="timed1" name="timed" value="yes" /></td>
-				<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+				<td class="form_input">Make this alert time-based only.
 				<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
 			</tr>
 			<tr>
@@ -124,7 +124,7 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="form_label"><input onclick="toggle(2);" type="checkbox" id="timed2" name="timed" value="yes" /></td>
-				<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+				<td class="form_input">Make this alert time-based only.
 				<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
 			</tr>
 			<tr>
@@ -196,7 +196,7 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="form_label"><input onclick="toggle(3);" type="checkbox" id="timed3" name="timed" value="yes" /></td>
-				<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+				<td class="form_input">Make this alert time-based only.
 				<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
 			</tr>
 			<tr>

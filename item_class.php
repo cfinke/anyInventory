@@ -130,44 +130,6 @@ class item {
 				</table>';
 		}
 		
-		/*
-		// Output a preview of each file.
-		if (is_array($this->files) && (count($this->files) > 0)){
-			foreach($this->files as $file){
-				if ($file->is_image()){
-					$images[] = $file;
-				}
-				else{
-					$files[] = $file;
-				}
-			}
-			
-			$i = 1;
-			
-			if (is_array($images) && (count($images) > 0)){
-				$output .= '<h2>Images</h2>';
-				foreach($images as $image){
-					$output .= '<a href="'.$image->web_path.'"><img src="';
-					if ($image->has_thumbnail()) $output .= $DIR_PREFIX.'thumbnail.php?id='.$image->id;
-					else $output .= "item_files/no_thumb.gif";
-					
-					$output .= '" class="thumbnail" /></a>';
-					if ($i++ % 4 == 0)$output .= '<br style="clear: both;" />';
-				}
-			}
-			
-			if (is_array($files) && (count($files) > 0)){
-				$output .= '<br style="clear: both;" />
-				<h2>Related Files</h2>';
-				
-				foreach($files as $file){
-					$output .= $file->get_download_link().'<br />';
-				}
-			}
-			
-		}
-		*/
-		
 		return $output;
 	}
 	

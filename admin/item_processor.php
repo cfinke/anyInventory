@@ -75,7 +75,7 @@ if ($_REQUEST["action"] == "do_add"){
 					$remote_url = $_REQUEST[str_replace(" ","_",$field->name)."remote"];
 					if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
 						// Remote URL is an image; download it and add it as a local image
-
+						
 						// Make the correct extension
 						$remote_headers = url_headers($remote_url);
 						$remote_content_type = $remote_headers["content-type"]; // image/xyz
@@ -87,12 +87,12 @@ if ($_REQUEST["action"] == "do_add"){
 						do {
 							$filename = $key.".".$i++.".".$parsed_url["host"].str_replace(array("/"," "),"_",$parsed_url["path"]).".".$extension[1];
 						} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
-
+						
 						// Copy file
 						if(!curl_copy($remote_url, realpath($DIR_PREFIX."item_files/")."/".$filename)){
 							die("Could not download/store remote file.");
 						}
-
+						
 						// Update DB
 						$query = "INSERT INTO `anyInventory_files` 
 							(`key`,
@@ -111,19 +111,19 @@ if ($_REQUEST["action"] == "do_add"){
 						//query($query);
 						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 					} else {
-					// Remote URL is not an image; add it as a remote file
-					$query = "INSERT INTO `anyInventory_files` 
-								(`key`,
-								 `offsite_link`)
-								VALUES
-								('".$key."',
-								 '".$_REQUEST[str_replace(" ","_",$field->name)."remote"]."')";
-					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-					
-					$new_key = mysql_insert_id();
-					
-					$query = "UPDATE `anyInventory_items` SET `".str_replace("_"," ",$field->name)."`='".$new_key."' WHERE `id`='".$key."'";
-					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						// Remote URL is not an image; add it as a remote file
+						$query = "INSERT INTO `anyInventory_files` 
+									(`key`,
+									 `offsite_link`)
+									VALUES
+									('".$key."',
+									 '".$_REQUEST[str_replace(" ","_",$field->name)."remote"]."')";
+						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						
+						$new_key = mysql_insert_id();
+						
+						$query = "UPDATE `anyInventory_items` SET `".str_replace("_"," ",$field->name)."`='".$new_key."' WHERE `id`='".$key."'";
+						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 					}
 				}
 				elseif(is_uploaded_file($_FILES[str_replace(" ","_",$field->name)]["tmp_name"])){
@@ -151,13 +151,11 @@ if ($_REQUEST["action"] == "do_add"){
 							 '".$filename."',
 							 '".$_FILES[str_replace(" ","_",$field->name)]["size"]."',
 							 '".$_FILES[str_replace(" ","_",$field->name)]["type"]."')";
-					//query($query);
 					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 					
 					$new_key = mysql_insert_id();
 					
 					$query = "UPDATE `anyInventory_items` SET `".str_replace("_"," ",$field->name)."`='".$new_key."' WHERE `id`='".$key."'";
-					//query($query);
 					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				}
 			}

@@ -71,25 +71,7 @@ class item {
 	function export_teaser(){
 		global $DIR_PREFIX;
 		
-		$output .= '<b>'.$this->name.'</b> ';
-		
-		if(is_array($this->fields)){
-			$output .= '<span class="snippet">';
-			foreach($this->fields as $key => $value){
-				if (!is_array($value) && (trim($value) != '')){
-					$output .= '<b>'.$key.':</b> '.$value.', ';
-				}
-			}
-			$output = rtrim($output, ", ");
-			$output .= '</span>';
-		}
-		
-		// Limit the "teaser" to 135 chars; if it's larger, truncate it with "..."
-		if(strlen($output) > 135) {
-			$output = substr($output,0,132)."...";
-		}
-		
-		$output = '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'" style="text-decoration: none;">'.$output.'</a>';
+		$output = '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'" style="text-decoration: none;"><b>'.$this->name.'</b></a>';
 		
 		return $output;
 	}
@@ -277,6 +259,30 @@ class item {
 					</tr>
 				</table>';
 		}
+		
+		return $output;
+	}
+	
+	function export_table_row(){
+		$output .= '<tr>';
+		
+		if ($this->category->auto_inc_field){
+			$output .= '<td style="white-space: nowrap; border-width: 0px 1px 0px 0px; border-color: #aaaaaa; border-style: solid;"><nobr>'.$this->id.'</nobr></td>';
+		}
+		
+		$output .= '<td style="white-space: nowrap; border-width: 0px 1px 0px 0px; border-color: #aaaaaa; border-style: solid;"><nobr><a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'">'.$this->name.'</a></nobr></td>';
+		
+		if (is_array($this->category->field_ids)){
+			foreach($this->category->field_ids as $fid){
+				$field = new field($fid);
+				
+				if (($field->input_type != 'divider') && ($field->input_type != 'file') && ($field->input_type != 'item')){
+					$output .= '<td style="white-space: nowrap; border-width: 0px 1px 0px 0px; border-color: #aaaaaa; border-style: solid;"><nobr>'.$this->fields[$field->name].'</nobr></td>';
+				}
+			}
+		}
+		
+		$output .= '</tr>';
 		
 		return $output;
 	}

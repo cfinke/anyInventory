@@ -230,6 +230,30 @@ class category {
 		
 		return $breadcrumbs;
 	}
+	
+	function export_table_header(){
+		$output .= '<tr class="tableHeader">';
+		
+		if ($this->auto_inc_field){
+			$output .= '<td>&nbsp;</td>';
+		}
+		
+		$output .= '<td style="white-space: nowrap;"><nobr>'.NAME_FIELD_NAME.'</td>';
+		
+		if (is_array($this->field_ids)){
+			foreach($this->field_ids as $fid){
+				$field = new field($fid);
+				
+				if (($field->input_type != 'divider') && ($field->input_type != 'file') && ($field->input_type != 'item')){
+					$output .= '<td style="white-space: nowrap;"><nobr>'.$field->name.'</nobr></td>';
+				}
+			}
+		}
+		
+		$output .= '</tr>';
+		
+		return $output;
+	}
 }
 
 ?>

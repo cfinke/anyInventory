@@ -2,6 +2,16 @@
 
 include("globals.php");
 
+if ($_GET["action"] == 'switch_view'){
+	$query = "UPDATE `anyInventory_config` SET `value` = '";
+	$query .= (ITEM_VIEW == 'list') ? 'table' : 'list';
+	$query .= "' WHERE `key`='ITEM_VIEW'";
+	mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	
+	header("Location: ../index.php?c=".$_GET["c"]);
+	exit;
+}
+
 if ($admin_user->usertype != 'Administrator'){
 	header("Location: ../error_handler.php?eid=15");
 	exit;

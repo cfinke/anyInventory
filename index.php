@@ -123,27 +123,43 @@ else{
 		}
 		
 		$output .= '</td>
-					<td style="text-align: right;">[<a href="docs/'.LANG.'/items.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="'.$DIR_PREFIX.'admin/special_processor.php?action=switch_view&amp;c='.$_GET["c"].'">'.SWITCH_TO.' ';
+		
+		$output .= (ITEM_VIEW == 'list') ? TABLE : _LIST;
+		
+		$output .= ' '.VIEW.'</a>] [<a href="docs/'.LANG.'/items.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
-						<table>';
+						';
 		
 		if (mysql_num_rows($result) > 0){
-			while ($row = mysql_fetch_array($result)){
-				$item = new item($row["id"]);
-				
-				$output .= '<tr>';
-				
-				if ($item->category->auto_inc_field){
-					$output .= '<td style="width: 8%;">'.$item->id.'</td>';
+			if (ITEM_VIEW == 'list'){
+				$output .= '<table>';
+				while ($row = mysql_fetch_array($result)){
+					$item = new item($row["id"]);
+					
+					$output .= '<tr>';
+					
+					if ($item->category->auto_inc_field){
+						$output .= '<td style="width: 8%;">'.$item->id.'</td>';
+					}
+					
+					$output .= '<td>'.$item->export_teaser().'</td></tr>';
 				}
+			}
+			else{
+				$output .= '<table cellspacing="0" cellpadding="3">';
+				$output .= $category->export_table_header();
 				
-				$output .= '<td>'.$item->export_teaser().'</td></tr>';
+				while ($row = mysql_fetch_array($result)){
+					$item = new item($row["id"]);
+					$output .= $item->export_table_row();
+				}
 			}
 		}
 		else{
-			$output .= '<tr><td style="text-align: center;">'.NO_ITEMS_HERE.'</td></tr>';
+			$output .= '<table><tr><td style="text-align: center;">'.NO_ITEMS_HERE.'</td></tr>';
 		}
 		
 		$output .= '

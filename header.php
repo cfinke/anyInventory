@@ -4,28 +4,19 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo $DIR_PREFIX; ?>style.css" />
 	</head>
 	<body>
-		<table align="center" id="maintable" cellspacing="1" cellpadding="0" border="0" width="80%">
+		<table align="center" id="maintable" cellspacing="1" cellpadding="0" border="0" width="90%">
 			<tr>
 				<td colspan="2">
-					<div align="right" style="width: 100%;height: 100%;color: #cccccc; background: #000000;">
-						you have inventoried <b><?php
-						
-						$query = "SELECT `id` FROM `anyInventory_items`";
-						$result = query($query);
-						
-						echo (mysql_num_rows($result) / 1);
-						
-						?></b> items with anyInventory, the web's most flexible and powerful inventory system
-					</div>
+					&nbsp;
 				</td>
 			</tr>
 			<tr>
-				<td valign="top" class="row_head" style="background: rgb(213,175,112);" colspan="2">
+				<td valign="top" class="row_head" style="background: rgb(213,175,112);">
 					<h1 style="padding: 6px; font-size: 36pt;">anyInventory 1.2</h1>		
 				</td>
 			</tr>
 			<tr>
-				<td align="top" colspan="2">
+				<td align="top">
 					<div id="searchbox">
 						<form method="get" action="<?php echo $DIR_PREFIX; ?>search.php">
 							<input type="hidden" name="action" value="search" />
@@ -36,6 +27,7 @@
 					<div id="mainmenu"style="">
 						<b>Main Menu: </b>
 						[ <a href="<?php echo $DIR_PREFIX; ?>index.php">home</a> ]
+						[ <a href="<?php echo $DIR_PREFIX; ?>search.php">advanced search</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">categories</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">fields</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>admin/items.php">items</a> ]
@@ -44,15 +36,4 @@
 				</td>
 			</tr>
 			<tr height="100%">
-				<td class="row_head" width="20%" align="left" valign="top" style="padding:5px">
-					<p><b><a href="<?php echo $DIR_PREFIX; ?>index.php">Inventory</a></b></p>
-					<p><b><a href="<?php echo $DIR_PREFIX; ?>search.php">Advanced Search</a></b></p>
-					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">Fields</a></b><br />
-					<a href="<?php echo $DIR_PREFIX; ?>admin/add_field.php">Add a field</a></p>
-					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">Categories</a></b><br />
-					<a href="<?php echo $DIR_PREFIX; ?>admin/add_category.php">Add a category</a></p>
-					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/items.php">Items</a></b><br />
-					<a href="<?php echo $DIR_PREFIX; ?>admin/add_item.php">Add an item</a></p>
-					<p><b><a href="<?php echo $DIR_PREFIX; ?>docs/">Help</a></b></p>
-				</td>
-				<td bgcolor="#ffffff" width="80%" align="left" valign="top" style="padding:5px">
+				<td bgcolor="#ffffff" width="100%" align="left" valign="top" style="padding:5px">

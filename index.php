@@ -10,6 +10,11 @@ if (!$_REQUEST["c"]) $_REQUEST["c"] = 0;
 // Create a category object for the current category.
 $category = new category($_REQUEST["c"]);
 
+if (!$view_user->can_view($category->id)){
+	header("Location: error_handler.php?eid=12");
+	exit;
+}
+
 $title = "anyInventory: ".$category->breadcrumb_names;
 $breadcrumbs = $category->get_breadcrumb_links();
 
@@ -68,14 +73,14 @@ else{
 						<tr class="tableHeader">
 							<td>Sub-categories in '.$category->get_breadcrumb_links();
 	
-	if(($admin_pass == '') || $_SESSION["anyInventory"]["signed_in"]){
+	if((isset($_SESSION["user"]["id"])) && $admin_user->can_admin($category->id)){
 		if ($category->id != 0){
 			$output .= ' ( <a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_REQUEST["c"].'">Delete</a> | ';
 		}
 		else{
 			$output .= ' (';
 		}
-	
+		
 		$output .= ' <a href="admin/add_category.php?c='.$_REQUEST["c"].'">Add a category here</a> )';
 	}
 	
@@ -90,7 +95,10 @@ else{
 	if (is_array($category->children_ids) && ($category->num_children > 0)){
 		foreach($category->children_ids as $child_id){
 			$child = new category($child_id);
-			$output .= '<tr><td><a href="'.$_SERVER["PHP_SELF"].'?c='.$child->id.'"><b>'.$child->name.'</b> ('.$child->num_items_r().')</a></td></tr>';
+			
+			if ($view_user->can_view($child->id)){
+				$output .= '<tr><td><a href="'.$_SERVER["PHP_SELF"].'?c='.$child->id.'"><b>'.$child->name.'</b> ('.$child->num_items_r().')</a></td></tr>';
+			}
 		}
 	}
 	else{
@@ -110,7 +118,7 @@ else{
 			<tr class="tableHeader">
 				<td>Items in this Category';
 		
-		if(($admin_pass == '') || $_SESSION["anyInventory"]["signed_in"]){				
+		if((isset($_SESSION["user"]["id"])) && $view_user->can_admin($_REQUEST["c"])){
 			if ($_REQUEST["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )';
 		}
 		

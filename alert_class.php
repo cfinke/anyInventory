@@ -61,6 +61,7 @@ class alert {
 	// This function removes an item from the alert.
 	
 	function remove_item($item_id){
+		global $db;
 		$this->item_ids = array_unique($this->item_ids);
 		
 		// Find the key of the category id in the array.
@@ -75,12 +76,13 @@ class alert {
 	}
 	
 	function remove_category($category_id){
-		$query = "SELECT " . $db->quoteIdentifier("id") . ", " . $db->quoteIdentifier("category_id") . " FROM " . $db->quoteIdentifier("anyInventory_items") . " WHERE " . $db->quoteIdentifier("id") . " IN ('".implode("','", $this->item_ids)."')";
+		global $db;
+		$query = "SELECT " . $db->quoteIdentifier("id") . ", " . $db->quoteIdentifier("item_category") . " FROM " . $db->quoteIdentifier("anyInventory_items") . " WHERE " . $db->quoteIdentifier("id") . " IN ('".implode("','", $this->item_ids)."')";
 		$result = $db->query($query);
 		if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		while ($row = $result->fetchRow()){
-			if ($row["category_id"] == $category_id){
+			if ($row["item_category"] == $category_id){
 				$this->remove_item($row["id"]);
 			}
 		}
@@ -106,6 +108,7 @@ class alert {
 	// This function returns a full description of the item.
 	
 	function export_description(){
+		global $db;
 		global $DIR_PREFIX;
 		
 		// Create the header with the name.
@@ -122,12 +125,12 @@ class alert {
 								<td>';
 		
 		if (is_array($this->item_ids)){
-			$query = "SELECT " . $db->quoteIdentifier("id") . ", " . $db->quoteIdentifier("category_id") . ", " . $db->quoteIdentifier("name") . " FROM " . $db->quoteIdentifier("anyInventory_items") . " WHERE " . $db->quoteIdentifier("id") . " IN ('".implode("','", $this->item_ids)."')";
+			$query = "SELECT " . $db->quoteIdentifier("id") . ", " . $db->quoteIdentifier("item_category") . ", " . $db->quoteIdentifier("name") . " FROM " . $db->quoteIdentifier("anyInventory_items") . " WHERE " . $db->quoteIdentifier("id") . " IN ('".implode("','", $this->item_ids)."')";
 			$result = $db->query($query);
 			if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			while ($row = $result->fetchRow()){
-				$output .= '<a href="'.$DIR_PREFIX.'index.php?c='.$row["category_id"].'&amp;id='.$row["id"].'" style="text-decoration: none;"><b>'.$row["name"].'</b></a>';
+				$output .= '<a href="'.$DIR_PREFIX.'index.php?c='.$row["item_category"].'&amp;id='.$row["id"].'" style="text-decoration: none;"><b>'.$row["name"].'</b></a>';
 			}
 		}
 		
@@ -181,6 +184,7 @@ class alert {
 	function export_box($item_id = null){
 		// This function creates an alert box for an activated alert.
 		global $DIR_PREFIX;
+		global $db;
 		
 		if ($item_id != null){
 			$query = "SELECT " . $db->quoteIdentifier("name") . " FROM " . $db->quoteIdentifier("anyInventory_items") . " WHERE " . $db->quoteIdentifier("id") . " ='".$item_id."'";

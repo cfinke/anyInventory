@@ -3,46 +3,56 @@
 include("globals.php");
 
 if ($_REQUEST["action"] == "do_add"){
-	// Add a field
-	if (($_REQUEST["size"] == '') && ($_REQUEST["input_type"] == "text")){
-		// Set the default text size to 255
-		$_REQUEST["size"] = 255;
-	}
-	
-	// Add the field to the items table
-	$query = "ALTER TABLE `anyInventory_items` ADD `".$_REQUEST["name"]."` ".get_mysql_column_type($_REQUEST["input_type"],$_REQUEST["size"],$_REQUEST["values"],$_REQUEST["default_value"]);
+	// Check for duplicate fields
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_REQUEST["name"]."'";
 	$result = query($query);
 	
-	$values = explode(",",$_REQUEST["values"]);
-	
-	if (is_array($values)){
-		foreach($values as $key => $value){
-			$values[$key] = trim($value);
-		}
+	if (mysql_num_rows($result) > 0){
+		header("Location: ../error_handler.php?eid=0");
+		exit;
 	}
 	else{
-		$values = array();
-	}
-	
-	$values = serialize($values);
-	$categories = array(0);
-	$categories = serialize($categories);
-	
-	// Get the field order for this field.
-	$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
-	$result = query($query);
-	$importance = mysql_result($result, 0, 'biggest') + 1;
-	
-	// Add this field.
-	$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["input_type"]."','".$values."','".$_REQUEST["default_value"]."','".$_REQUEST["size"]."','".$categories."','".$importance."')";
-	$result = query($query);
-	
-	$field = new field(mysql_insert_id());
-	
-	// Add any categories that were selected.
-	if (is_array($_REQUEST["add_to"])){
-		foreach($_REQUEST["add_to"] as $cat_id){
-			$field->add_category($cat_id);
+		// Add a field
+		if (($_REQUEST["size"] == '') && ($_REQUEST["input_type"] == "text")){
+			// Set the default text size to 255
+			$_REQUEST["size"] = 255;
+		}
+		
+		// Add the field to the items table
+		$query = "ALTER TABLE `anyInventory_items` ADD `".$_REQUEST["name"]."` ".get_mysql_column_type($_REQUEST["input_type"],$_REQUEST["size"],$_REQUEST["values"],$_REQUEST["default_value"]);
+		$result = query($query);
+		
+		$values = explode(",",$_REQUEST["values"]);
+		
+		if (is_array($values)){
+			foreach($values as $key => $value){
+				$values[$key] = trim($value);
+			}
+		}
+		else{
+			$values = array();
+		}
+		
+		$values = serialize($values);
+		$categories = array(0);
+		$categories = serialize($categories);
+		
+		// Get the field order for this field.
+		$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
+		$result = query($query);
+		$importance = mysql_result($result, 0, 'biggest') + 1;
+		
+		// Add this field.
+		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["input_type"]."','".$values."','".$_REQUEST["default_value"]."','".$_REQUEST["size"]."','".$categories."','".$importance."')";
+		$result = query($query);
+		
+		$field = new field(mysql_insert_id());
+		
+		// Add any categories that were selected.
+		if (is_array($_REQUEST["add_to"])){
+			foreach($_REQUEST["add_to"] as $cat_id){
+				$field->add_category($cat_id);
+			}
 		}
 	}
 }

@@ -55,7 +55,7 @@ $output = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/
 							<h2>Upgrade anyInventory</h2>
 							<form action="upgrade.php" method="post">';
 
-foreach($_REQUEST as $key => $value) $_REQUEST[$key] = stripslashes($value);
+if (is_array($_REQUEST)) foreach($_REQUEST as $key => $value) $_REQUEST[$key] = stripslashes($value);
 
 if ($_REQUEST["action"] == "upgrade"){
 	if (strlen(trim($_REQUEST["db_host"])) == 0){

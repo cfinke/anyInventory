@@ -17,57 +17,74 @@ $output = '
 					<td class="form_input"><input type="text" name="name" id="name" value="'.$item->name.'" maxlength="64" />
 				</tr>';
 
-foreach($item->category->field_ids as $field_id){
-	
-	$field = new field($field_id);
-	
-	$output .= '
-		<tr>
-			<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
-			<td class="form_input">';
-	
-	switch($field->input_type){
-		case 'multiple':
-			$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
-			$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select">';
-			$output .= '<option value="">Select One</option>';
-			foreach($field->values as $value){
-				$output .= '<option value="'.$value.'"';
-				if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
-				$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
-			}
-			$output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
-			break;
-		case 'select':
-			$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">';
-			foreach($field->values as $value){
-				$output .= '<option value="'.$value.'"';
-				if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
-				$output .= '>'.$value.'</option>';
-			}
-			break;
-		case 'text':
-			if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
-			else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">'.$item->fields[$field->name].'</textarea>';
-			break;
-		case 'radio':
-			foreach($field->values as $value){
-				$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
-				if ($value == $item->fields[$field->name]) $output .= ' checked="checked"';
-				$output .= ' /> '.$value.'<br />';
-			}
-			break;
-		case 'checkbox':
-			foreach($field->values as $value){
-				$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
-				if ((is_array($item->fields[$field->name])) && in_array($value,$item->fields[$field->name])) $output .= ' checked="checked"';
-				$output .= ' /> '.$value.'<br />';
-			}
-			break;
+if (is_array($item->category->field_ids)){
+	foreach($item->category->field_ids as $field_id){
+		
+		$field = new field($field_id);
+		
+		$output .= '
+			<tr>
+				<td class="form_label"><label for="'.str_replace(" ","_",$field->name).'">'.$field->name.':</label></td>
+				<td class="form_input">';
+		
+		switch($field->input_type){
+			case 'multiple':
+				$output .= '<input type="text" id="'.str_replace(" ","_",$field->name).'_text" name="'.str_replace(" ","_",$field->name).'_text" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
+				$output .= '<select name="'.str_replace(" ","_",$field->name).'_select" id="'.str_replace(" ","_",$field->name).'_select">';
+				$output .= '<option value="">Select One</option>';
+				
+				if (is_array($field->values)){
+					foreach($field->values as $value){
+						$output .= '<option value="'.$value.'"';
+						if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
+						$output .= ' onclick="document.getElementById(\''.str_replace(" ","_",$field->name).'_text\').value = \''.$value.'\';">'.$value.'</option>';
+					}
+				}
+				
+				$output .= '</select>';
+				
+				break;
+			case 'select':
+				$output .= '<select name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">';
+				
+				if (is_array($field->values)){
+					foreach($field->values as $value){
+						$output .= '<option value="'.$value.'"';
+						if ($value == $item->fields[$field->name]) $output .= ' selected="selected"';
+						$output .= '>'.$value.'</option>';
+					}
+				}
+				
+				break;
+			case 'text':
+				if ($field->size <= 64) $output .= '<input type="text" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'" maxlength="'.$field->size.'" value="'.$item->fields[$field->name].'" />';
+				else $output .= '<textarea rows="8" cols="40" name="'.str_replace(" ","_",$field->name).'" id="'.str_replace(" ","_",$field->name).'">'.$item->fields[$field->name].'</textarea>';
+				break;
+			case 'radio':
+				if (is_array($field->values)){
+					foreach($field->values as $value){
+						$output .= '<input type="radio" name="'.str_replace(" ","_",$field->name).'" value="'.str_replace(" ","_",$value).'"';
+						if ($value == $item->fields[$field->name]) $output .= ' checked="checked"';
+						$output .= ' /> '.$value.'<br />';
+					}
+				}
+				
+				break;
+			case 'checkbox':
+				if (is_array($field->values)){
+					foreach($field->values as $value){
+						$output .= '<input type="checkbox" name="'.str_replace(" ","_",$field->name).'['.$value.']" value="yes"';
+						if ((is_array($item->fields[$field->name])) && in_array($value,$item->fields[$field->name])) $output .= ' checked="checked"';
+						$output .= ' /> '.$value.'<br />';
+					}
+				}
+				
+				break;
+		}
+		
+		$output .= '</td>
+			</tr>';
 	}
-	
-	$output .= '</td>
-		</tr>';
 }
 
 $query = "SELECT * FROM `anyInventory_files` WHERE `key`='".$_REQUEST["id"]."'";

@@ -65,9 +65,12 @@ class alert {
 		// Create the header with the name.
 		$output .= '<h2>'.$this->title.'</h2>';
 		$output .= '<p><b>Applies to:</b>';
-		foreach($this->item_ids as $item_id){
-			$item = new item($item_id);
-			$output .= '<br />'.$item->export_teaser();
+		
+		if (is_array($this->item_ids)){
+			foreach($this->item_ids as $item_id){
+				$item = new item($item_id);
+				$output .= '<br />'.$item->export_teaser();
+			}
 		}
 		
 		$output .= '</p><p><b>Active when: </b>';

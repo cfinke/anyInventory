@@ -37,8 +37,10 @@ class item {
 				else{
 					if (strstr($row[$field->name],",") !== false){
 						$this->fields[$field->name] = explode(",",$row[$field->name]);
-						foreach($this->fields[$field->name] as $key => $value){
-							$this->fields[$field->name][$key] = trim($value);
+						if (is_array($this->fields[$field->name])){
+							foreach($this->fields[$field->name] as $key => $value){
+								$this->fields[$field->name][$key] = trim($value);
+							}
 						}
 					}
 				}
@@ -79,7 +81,7 @@ class item {
 			$output .= '<table style="width: 100%;"><tr><td style="width: 50%; vertical-align: top;">';
 			$i = 0;
 			foreach($this->fields as $key => $value){
-			if (is_array($value)){
+				if (is_array($value)){
 					if (count($value) > 0){
 						$output .= '<p><b>'.$key.':</b> ';
 						
@@ -141,9 +143,11 @@ class item {
 	// This function returns the number of fields that have empty values.
 	
 	function count_empty_fields(){
-		foreach($this->fields as $key => $value){
-			if (trim($value) == ''){
-				$count++;
+		if (is_array($this->fields)){
+			foreach($this->fields as $key => $value){
+				if (trim($value) == ''){
+					$count++;
+				}
 			}
 		}
 		

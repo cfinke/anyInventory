@@ -1,8 +1,10 @@
 <?php
 
 // Remove the whitespace from the ends of each $_REQUEST value
-foreach($_REQUEST as $key => $value){
-	if (!is_array($_REQUEST[$key])) $_REQUEST[$key] = trim($value);
+if (is_array($_REQUEST)){
+	foreach($_REQUEST as $key => $value){
+		if (!is_array($_REQUEST[$key])) $_REQUEST[$key] = trim($value);
+	}
 }
 
 function connect_to_database(){
@@ -267,11 +269,16 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 			
 			$enums = explode(",",$values);
 			
-			foreach($enums as $enum){
-				$type .= "'".trim(str_replace("'","",str_replace('"','',$enum)))."',";
+			if (is_array($enums)){
+				foreach($enums as $enum){
+					$type .= "'".trim(str_replace("'","",str_replace('"','',$enum)))."',";
+				}
+				
+				$type = substr($type, 0, strlen($type) - 1);
 			}
-			
-			$type = substr($type, 0, strlen($type) - 1);
+			else{
+				$type .= "''";
+			}
 			
 			$type .= ") DEFAULT '".$default_value."' ";
 			break;

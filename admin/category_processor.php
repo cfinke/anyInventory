@@ -72,12 +72,16 @@ elseif($_REQUEST["action"] == "do_edit"){
 		
 		$children = get_category_array($category->id);
 		
-		foreach($children as $child){
-			remove_from_fields($child["id"]);
-			
-			foreach($category->field_ids as $field_id){
-				$field = new field($field_id);
-				$field->add_category($child["id"]);
+		if (is_array($children)){
+			foreach($children as $child){
+				remove_from_fields($child["id"]);
+				
+				if (is_array($category->field_ids)){
+					foreach($category->field_ids as $field_id){
+						$field = new field($field_id);
+						$field->add_category($child["id"]);
+					}
+				}
 			}
 		}
 	}

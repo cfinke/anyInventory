@@ -57,17 +57,19 @@ class category {
 			$this->breadcrumbs = array_reverse($this->breadcrumbs);
 			
 			// Set the breadcrumb names from $this->breadcrumbs
-			foreach($this->breadcrumbs as $crumb){
-				if ($crumb == 0){
-					// The Top Level category
-					$this->breadcrumb_names .= "Top > ";
-				}
-				else{
-					// Find the name of the current category
-					$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
-					$result = query($query);
-					
-					$this->breadcrumb_names .= mysql_result($result, 0, 'name') . ' > ';
+			if (is_array($this->breadcrumbs)){
+				foreach($this->breadcrumbs as $crumb){
+					if ($crumb == 0){
+						// The Top Level category
+						$this->breadcrumb_names .= "Top > ";
+					}
+					else{
+						// Find the name of the current category
+						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
+						$result = query($query);
+						
+						$this->breadcrumb_names .= mysql_result($result, 0, 'name') . ' > ';
+					}
 				}
 			}
 			
@@ -166,20 +168,21 @@ class category {
 	
 	function get_breadcrumb_links(){
 		// For each id in the breadcrumbs, add the link and separator.
-		foreach($this->breadcrumbs as $id){
-			if($id == 0){
-				$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c=0">Top</a> &gt; ';
-			}
-			else{
-				$crumb = new category($id);
-				
-				if ($crumb->id)
-				$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c='.$crumb->id.'">'.$crumb->name.'</a> &gt; ';
+		if (is_array($this->breadcrumbs)){
+			foreach($this->breadcrumbs as $id){
+				if($id == 0){
+					$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c=0">Top</a> &gt; ';
+				}
+				else{
+					$crumb = new category($id);
+					
+					if ($crumb->id)
+					$breadcrumbs .= '<a href="'.$_SERVER["PHP_SELF"].'?c='.$crumb->id.'">'.$crumb->name.'</a> &gt; ';
+				}
 			}
 		}
 		
 		// Remove the last 6 characters from the string.
-		
 		$breadcrumbs = substr($breadcrumbs, 0, strlen($breadcrumbs) - 6);
 		
 		return $breadcrumbs;

@@ -48,10 +48,12 @@ else{
 						<td class="form_input">
 							<select name="field" id="field">';
 	
-	foreach($item->category->field_ids as $field_id){
-		$field = new field($field_id);
-		
-		$output .= '<option value="'.$field_id.'"> '.$field->name.'</option>';
+	if (is_array($item->category->field_ids)){
+		foreach($item->category->field_ids as $field_id){
+			$field = new field($field_id);
+			
+			$output .= '<option value="'.$field_id.'"> '.$field->name.'</option>';
+		}
 	}
 	
 	$output .= '			</select>

@@ -174,6 +174,7 @@ elseif($_POST["action"] == "do_edit"){
 		
 		if (is_array($item->category->field_ids)){
 			foreach($item->category->field_ids as $field_id){
+				$file_query = false;
 				$field = new field($field_id);
 				
 				if ($field->input_type != 'divider'){
@@ -292,11 +293,17 @@ elseif($_POST["action"] == "do_edit"){
 										 '".$filetype."',
 										 '".$offsite_link."')";
 							$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);					
-	
+							
 							$new_key = mysql_insert_id();
-					
+							
 							$query = "UPDATE `anyInventory_values` SET `value`= '".$new_key."' WHERE `item_id` = '".$item->id."' AND `field_id` = '".$field->id."'";
 							$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+							
+							if(mysql_affected_rows() == 0) // If a file did not exist previously, make sure the new file gets referenced
+							{
+								$query = "INSERT INTO `anyInventory_values` (`item_id`, `field_id`, `value`) VALUES('".$item->id."', '".$field->id."', '".$new_key."')";
+								$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+							}
 						}
 						
 						// END new remote file upload /////////////////////////////////////////////////

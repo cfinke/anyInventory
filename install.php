@@ -9,6 +9,8 @@ include("functions.php");
 // Set the text of globals.php
 $writetoglobals = '<?php
 
+session_start();
+
 error_reporting(E_ALL ^ E_NOTICE);
 
 $DIR_PREFIX .= "./";
@@ -18,15 +20,7 @@ $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
 $db_pass = "'.$_REQUEST["db_pass"].'";
 
-include($DIR_PREFIX."functions.php");
-include($DIR_PREFIX."category_class.php");
-include($DIR_PREFIX."field_class.php");
-include($DIR_PREFIX."item_class.php");
-include($DIR_PREFIX."file_class.php");
-include($DIR_PREFIX."alert_class.php");
-include($DIR_PREFIX."user_class.php");
-
-connect_to_database();
+include($DIR_PREFIX."environment.php");
 
 ?>';
 
@@ -107,7 +101,8 @@ if ($_REQUEST["action"] == "install"){
 			`anyInventory_items` ,
 			`anyInventory_files`,
 			`anyInventory_alerts`,
-			`anyInventory_config`";
+			`anyInventory_config`,
+			`anyInventory_users`";
 		@mysql_query($query);
 		
 		$query = "CREATE TABLE `anyInventory_categories` (
@@ -197,10 +192,10 @@ if ($_REQUEST["action"] == "install"){
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) $_REQUEST["password_protect_view"]) / 1)."')";
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_REQUEST["password_protect_view"] == "yes")) / 1)."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) $_REQUEST["password_protect_admin"]) / 1)."')";
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_REQUEST["password_protect_admin"] == "yes")) / 1)."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$blank = array();
@@ -216,7 +211,7 @@ if ($_REQUEST["action"] == "install"){
 					 `categories_view`)
 					VALUES
 					('".$_REQUEST["username"]."',
-					 '".md5($_REQUEST["password"]."',
+					 '".md5($_REQUEST["password"])."',
 					 'Administrator',
 					 '".addslashes(serialize($blank))."',
 					 '".addslashes(serialize($blank))."')";
@@ -375,7 +370,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Install anyInventory 1.7.1</title>
+		<title>Install anyInventory 1.8</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">
@@ -391,7 +386,7 @@ echo '
 		<table style="width: 97%; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.7.1
+					anyInventory 1.8
 				</td>
 			</tr>
 			<tr>
@@ -408,7 +403,7 @@ echo '
 					<div style="min-height: 400px;">
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Install anyInventory 1.7.1</td>
+								<td>Install anyInventory 1.8</td>
 							</tr>
 							<tr>
 								<td class="tableData">

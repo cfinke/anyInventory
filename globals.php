@@ -21,6 +21,7 @@ include($DIR_PREFIX."field_class.php");
 include($DIR_PREFIX."item_class.php");
 include($DIR_PREFIX."file_class.php");
 include($DIR_PREFIX."alert_class.php");
+include($DIR_PREFIX."user_class.php");
 
 connect_to_database();
 

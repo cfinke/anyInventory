@@ -102,7 +102,8 @@ if ($_POST["action"] == "install"){
 			`anyInventory_files`,
 			`anyInventory_alerts`,
 			`anyInventory_config`,
-			`anyInventory_users`";
+			`anyInventory_users`,
+			`anyInventory_values`";
 		@mysql_query($query);
 		
 		$query = "CREATE TABLE `anyInventory_categories` (
@@ -135,6 +136,14 @@ if ($_POST["action"] == "install"){
 				  `name` varchar(64) NOT NULL default '',
 				  UNIQUE KEY `id` (`id`)
 				)";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "CREATE TABLE `anyInventory_values` (
+					`item_id` int( 11 ) NOT NULL default '0',
+					`field_id` int( 11 ) NOT NULL default '0',
+					`value` text NOT NULL ,
+					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
+					)";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$query = "CREATE TABLE `anyInventory_files` (

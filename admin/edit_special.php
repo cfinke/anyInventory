@@ -13,11 +13,11 @@ switch($_GET["id"]){
 		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_AUTOINC_FIELD;
 		
 		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `auto_inc_field`='1'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 		
 		$categories = array();
 		
-		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$categories[] = $row["id"];
 		}
 		

@@ -6,10 +6,10 @@ $title = ALERTS;
 $breadcrumbs = ADMINISTRATION.' > '.ALERTS;
 
 $query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` ORDER BY `title` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 
-if (mysql_num_rows($result) > 0){
-	while($row = mysql_fetch_assoc($result)){
+if ($result->numRows() > 0){
+	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$alert = new alert($row["id"]);
 		$item = new item($alert->item_ids[0]);
 		

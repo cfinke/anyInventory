@@ -22,9 +22,9 @@ if ($_POST["action"] == "do_add"){
 	$_POST["name"] = trim(addslashes($_POST["name"]));
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	if (mysql_num_rows($result) > 0){
+	if ($result->numRows() > 0){
 		header("Location: ../error_handler.php?eid=0");
 		exit;
 	}
@@ -79,14 +79,25 @@ if ($_POST["action"] == "do_add"){
 		
 		// Get the field order for this field.
 		$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		$importance = mysql_result($result, 0, 'biggest') + 1;
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+		$importance = $row['biggest'] + 1;
 		
 		// Add this field.
 		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`,`highlight`) VALUES ('".$_POST["name"]."','".$_POST["input_type"]."','".$values."','".$_POST["default_value"]."','".$_POST["size"]."','".$categories."','".$importance."','".((int) (($_POST["highlight"] == "yes") / 1))."')";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		$field = new field(mysql_insert_id());
+		$sql = "SELECT 'id' from anyInventory_fields WHERE `name`='"
+			.$_POST['name']."' AND `input_type`='"
+			.$_POST['input_type']."' AND `values`='"
+			.$values."' AND `default_value`='"
+			.$_POST['default_value']."' AND `size`='"
+			.$_POST['size']."';";
+		
+		$result = $db->query($sql);
+		$row = $result->fetchRow();
+		
+		$field = new field($row[0]);
 		
 		// Add any categories that were selected.
 		if (is_array($_POST["add_to"])){
@@ -98,11 +109,12 @@ if ($_POST["action"] == "do_add"){
 }
 elseif($_GET["action"] == "do_add_divider"){
 	$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-	$importance = mysql_result($result, 0, 'biggest') + 1;
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+	$row = $db->fetchRow(DB_FETCHMODE_ASSOC);
+	$importance = $row['biggest'] + 1;
 	
 	$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`importance`) VALUES ('divider','divider','".$importance."')";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 }
 elseif($_POST["action"] == "do_edit"){
 	if (is_array($_POST["add_to"])){
@@ -115,9 +127,12 @@ elseif($_POST["action"] == "do_edit"){
 	}
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	if ((mysql_num_rows($result) > 0) && (mysql_result($result, 0, 'id') != $_POST["id"])){
+	$numrows = $result->numRows();
+	$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
+	
+	if (($numrows > 0) && ($row['id'] != $_POST["id"])){
 		header("Location: ../error_handler.php?eid=0");
 		exit;
 	}
@@ -189,7 +204,7 @@ elseif($_POST["action"] == "do_edit"){
 				`size`='".$_POST["size"]."',
 				`highlight`='".((int) (($_POST["highlight"] == "yes") / 1))."'
 				WHERE `id`='".$_POST["id"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	// Make an object from the new field.
 	$new_field = new field($_POST["id"]);
@@ -222,12 +237,12 @@ elseif($_REQUEST["action"] == "do_delete"){
 		
 		if ($field->input_type == 'file'){
 			$query = "SELECT `value` FROM `anyInventory_fields` WHERE `field_id`='".$field->id."' GROUP BY `value`";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			
-			while ($row = mysql_fetch_array($result)){
+			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row["value"]."'";
-				$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-				$newrow = mysql_fetch_array($newresult);
+				$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
+				$newrow = $newresult->fetchRow(DB_FETCHMODE_ASSOC);
 				
 				$file = new file_object($newrow["id"]);
 				
@@ -236,23 +251,23 @@ elseif($_REQUEST["action"] == "do_delete"){
 				}
 				
 				$newestquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-				mysql_query($newestquery) or die(mysql_error() . '<br /><br />'. $newestquery);
+				$db->query($newestquery) or die($db->error() . '<br /><br />'. $newestquery);
 			}
 		}
 		
 		// Change the importance of the fields below it.
 		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` - 1) WHERE `importance` >= '".$field->importance."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
 		if ($field->input_type != 'divider'){
 			// Remove the field from the items table
 			$query = "DELETE FROM `anyInventory_values` WHERE `field_id`='".$field->id."'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		}
 		
 		// Delete the field 
 		$query = "DELETE FROM `anyInventory_fields` WHERE `id`='".$field->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	}
 }
 elseif($_GET["action"] == "moveup"){
@@ -263,10 +278,10 @@ elseif($_GET["action"] == "moveup"){
 	
 	// Move a field up
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_GET["i"]." WHERE `importance`='".($_GET["i"] - 1)."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_GET["i"] - 1)." WHERE `id`='".$_GET["id"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 }
 elseif($_GET["action"] == "movedown"){
 	if (!$admin_user->can_admin_field($_GET["id"])){
@@ -276,10 +291,10 @@ elseif($_GET["action"] == "movedown"){
 	
 	// Move a field down
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_GET["i"]." WHERE `importance`='".($_GET["i"] + 1)."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_GET["i"] + 1)." WHERE `id`='".$_GET["id"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 }
 
 header("Location: fields.php");

@@ -6,7 +6,7 @@ $title = FIELDS;
 $breadcrumbs = ADMINISTRATION.' > '.FIELDS;
 
 $query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 
 if ($admin_user->usertype == 'Administrator'){
 	$table_rows .= '
@@ -24,8 +24,8 @@ if ($admin_user->usertype == 'Administrator'){
 		</tr>';
 }
 
-if (mysql_num_rows($result) > 0){
-	while($row = mysql_fetch_assoc($result)){
+if ($result->numRows() > 0){
+	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		if ($row["input_type"] != 'divider'){
 			$table_rows .= '
 				<tr>

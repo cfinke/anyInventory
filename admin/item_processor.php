@@ -16,9 +16,13 @@ if ($_POST["action"] == "do_add"){
 	
 	// Put the query together
 	$query = "INSERT INTO `anyInventory_items` (`item_category`,`name`) VALUES ('".$_POST["c"]."','".$_POST["name"]."')";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	$key = mysql_insert_id();
+	$sql="SELECT 'id' from anyInventory_items WHERE `item_category`='"
+		.$_POST['c']."' AND `name`='".$_POST['name']."';";
+	$result = $db->query($sql);
+	$row = $result->fetchRow();
+	$key = $row[0];
 	
 	if (is_array($category->field_ids)){
 		foreach($category->field_ids as $field_id){
@@ -62,7 +66,7 @@ if ($_POST["action"] == "do_add"){
 				}
 				
 				$query .= ")";
-				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$db->query($query) or die($db->error() . '<br /><br />'. $query);
 			}
 		}
 	}
@@ -107,12 +111,18 @@ if ($_POST["action"] == "do_add"){
 							 '".$filename."',
 							 '".filesize(realpath($DIR_PREFIX."item_files/")."/".$filename)."',
 							 '".$remote_content_type."')";
-						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						$db->query($query) or die($db->error() . '<br /><br />'. $query);
 						
-						$new_key = mysql_insert_id();
+						$sql = "SELECT 'id' from anyInventory_files WHERE `key`='"
+							.$key."' AND `file_name`='".$filename."' AND `file_type`='"
+							.$remote_content_type."';";
+						
+						$keyresult = $db->query($sql);
+						$keyrow = $keyresult->fetchRow();
+						$new_key = $keyrow(0);
 						
 						$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$key."','".$field->id."','".$new_key."')";
-						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						$db->query($query) or die($db->error() . '<br /><br />'. $query);
 					} else {
 						// Remote URL is not an image; add it as a remote file
 						$query = "INSERT INTO `anyInventory_files` 
@@ -121,12 +131,17 @@ if ($_POST["action"] == "do_add"){
 									VALUES
 									('".$key."',
 									 '".$_POST[str_replace(" ","_",$field->name)."remote"]."')";
-						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-						
-						$new_key = mysql_insert_id();
+						$db->query($query) or die($db->error() . '<br /><br />'. $query);
+
+						$sql = "SELECT 'id' from anyInventory_files WHERE `key`='"
+							.$key."' AND `offsite_link`='".$offsite_link."';";
+
+						$keyresult = $db->query($sql);
+						$keyrow = $keyresult->fetchRow();
+						$new_key = $keyrow(0);
 						
 						$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$key."','".$field->id."','".$new_key."')";
-						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						$db->query($query) or die($db->error() . '<br /><br />'. $query);
 					}
 				}
 				elseif(is_uploaded_file($_FILES[str_replace(" ","_",$field->name)]["tmp_name"])){
@@ -144,6 +159,8 @@ if ($_POST["action"] == "do_add"){
 						exit;
 					}
 					
+					$filetype = $_FILES[str_replace(" ","_",$field->name)]["type"];
+					
 					$query = "INSERT INTO `anyInventory_files` 
 							(`key`,
 							 `file_name`,
@@ -153,13 +170,18 @@ if ($_POST["action"] == "do_add"){
 							('".$key."',
 							 '".$filename."',
 							 '".$_FILES[str_replace(" ","_",$field->name)]["size"]."',
-							 '".$_FILES[str_replace(" ","_",$field->name)]["type"]."')";
-					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-					
-					$new_key = mysql_insert_id();
+							 '".$filetype."')";
+					$db->query($query) or die($db->error() . '<br /><br />'. $query);
+
+					$sql = "SELECT 'id' from anyInventory_files WHERE `key`='"
+						.$key."' AND `file_name`='".$filename."' AND `file_type`='"
+						.$filetype."';";
+					$keyresult = $db->query($sql);
+					$keyrow = $keyresult->fetchRow();
+					$new_key = $keyrow[0];
 					
 					$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$key."','".$field->id."','".$new_key."')";
-					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+					$db->query($query) or die($db->error() . '<br /><br />'. $query);
 				}
 			}
 		}
@@ -176,7 +198,7 @@ elseif($_POST["action"] == "do_edit"){
 	
 	// Put the query together
 	$query = "UPDATE `anyInventory_items` SET `name`='".$_REQUEST["name"]."' WHERE `id`='".$item->id."'";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	if (is_array($item->category->field_ids)){
 		foreach($item->category->field_ids as $field_id){
@@ -194,10 +216,10 @@ elseif($_POST["action"] == "do_edit"){
 						}
 						
 						$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id["file_id"]."'";
-						mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
+						$db->query($delquery) or die($db->error() . '<br /><br />'. $delquery);
 						
 						$remquery = "UPDATE `anyInventory_values` SET `value`='0' WHERE `field_id`='".$field->id."' AND `item_id`='".$item->id."'";
-						mysql_query($remquery) or die(mysql_error() . '<br /><br />'. $remquery);
+						$db->query($remquery) or die($db->error() . '<br /><br />'. $remquery);
 					}
 					
 					// Check if a file was uploaded in its place
@@ -209,7 +231,7 @@ elseif($_POST["action"] == "do_edit"){
 							}
 							
 							$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-							mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
+							$db->query($delquery) or die($db->error() . '<br /><br />'. $delquery);
 						}
 						
 						// Copy the uploaded file
@@ -226,6 +248,9 @@ elseif($_POST["action"] == "do_edit"){
 							exit;
 						}
 						
+						$filetype = $_FILES[str_replace(" ","_",$field->name)]["type"];
+						$filesize = $_FILES[str_replace(" ","_",$field->name)]["size"];
+						
 						$newquery = "INSERT INTO `anyInventory_files` 
 								(`key`,
 								 `file_name`,
@@ -234,14 +259,19 @@ elseif($_POST["action"] == "do_edit"){
 								VALUES
 								('".$item->id."',
 								 '".$filename."',
-								 '".$_FILES[str_replace(" ","_",$field->name)]["size"]."',
-								 '".$_FILES[str_replace(" ","_",$field->name)]["type"]."')";
-						mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-						
-						$new_key = mysql_insert_id();
-						
+								 '".$filesize."',
+								 '".$filetype."')";
+						$db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
+
+						$sql = "SELECT 'id' from anyInventory_files WHERE `key`='"
+							.$item->id."' AND `file_name`='".$filename."' AND `file_type`='"
+							.$filetype."' AND `file_size`='".$filesize."';";
+						$keyresult = $db->query($sql);
+						$keyrow = $keyresult->fetchRow();
+						$new_key = $keyrow[0];
+					
 						$query = "UPDATE `anyInventory_values` SET `value`='".$new_key."' WHERE `item_id`='".$item_id."' AND `field_id`='".$field->id."'";
-						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						$db->query($query) or die($db->error() . '<br /><br />'. $query);
 					}
 					// If not, check for a remote file.
 					elseif($_POST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
@@ -251,7 +281,7 @@ elseif($_POST["action"] == "do_edit"){
 							}
 							
 							$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-							mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
+							$db->query($delquery) or die($db->error() . '<br /><br />'. $delquery);
 						}
 						
 						// START new remote file upload ///////////////////////////////////////////////
@@ -289,26 +319,37 @@ elseif($_POST["action"] == "do_edit"){
 								 '".$filename."',
 								 '".filesize(realpath($DIR_PREFIX."item_files/")."/".$filename)."',
 								 '".$remote_content_type."')";
-							mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+							$db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
 							
-							$new_key = mysql_insert_id();
-							
+							$sql = "SELECT 'id' from anyInventory_files WHERE `key`='"
+								.$key."' AND `file_name`='".$filename."';";
+							$keyresult = $db->query($sql);
+							$keyrow = $keyresult->fetchRow();
+							$new_key = $keyrow[0];
+
 							$query = "UPDATE `anyInventory_values` SET `value`='".$new_key."' WHERE `item_id`='".$item_id."' AND `field_id`='".$field->id."'";
-							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+							$db->query($query) or die($db->error() . '<br /><br />'. $query);
 						} else {
+
+							$offsitelink = $_POST[str_replace(" ","_",$field->name)."remote"];
+							
 							// Remote URL is not an image; add it as a remote file
 							$newquery = "INSERT INTO `anyInventory_files` 
 										(`key`,
 										 `offsite_link`)
 										VALUES
 										('".$key."',
-										 '".$_POST[str_replace(" ","_",$field->name)."remote"]."')";
-							mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
-							
-							$new_key = mysql_insert_id();
+										 '".$offsitelink."')";
+							$db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
+
+							$sql = "SELECT 'id' from anyInventory_files WHERE `key`='"
+								.$key."' AND `offsite_link`='".$offsitelink."';";
+							$keyresult = $db->query($sql);
+							$keyrow = $keyresult->fetchRow();
+							$new_key = $keyrow[0];
 							
 							$query = "UPDATE `anyInventory_values` SET `value`='".$new_key."' WHERE `item_id`='".$item_id."' AND `field_id`='".$field->id."'";
-							mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+							$db->query($query) or die($db->error() . '<br /><br />'. $query);
 						}
 						// END new remote file upload /////////////////////////////////////////////////
 					}
@@ -350,7 +391,7 @@ elseif($_POST["action"] == "do_edit"){
 					}
 					
 					$query .= " WHERE `item_id`='".$item_id."' AND `field_id`='".$field->id."'";
-					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+					$db->query($query) or die($db->error() . '<br /><br />'. $query);
 				}
 			}
 		}
@@ -368,7 +409,7 @@ elseif($_POST["action"] == "do_move"){
 	// Move an item.
 	
 	$query = "UPDATE `anyInventory_items` SET `item_category`='".$_POST["c"]."' WHERE `id`='".$_POST["id"]."'";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$db->query($query) or die($db->error() . '<br /><br />'. $query);
 }
 elseif($_POST["action"] == "do_delete"){
 	// Delete an item
@@ -386,7 +427,7 @@ elseif($_POST["action"] == "do_delete"){
 				if (!$file->is_remote){
 					if (unlink(realpath($DIR_PREFIX."item_files/")."/".$file->file_name)){
 						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+						$db->query($query) or die($db->error() . '<br /><br />'. $query);
 					}
 					else{
 						echo "Could not delete ".$file->file_name.'<br />';
@@ -395,7 +436,7 @@ elseif($_POST["action"] == "do_delete"){
 				}
 				else{
 					$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+					$db->query($query) or die($db->error() . '<br /><br />'. $query);
 				}
 			}
 		}
@@ -403,24 +444,24 @@ elseif($_POST["action"] == "do_delete"){
 		// Remove this item from any alerts
 		
 		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$alert = new alert($row["id"]);
 			
 			$alert->remove_item($item->id);
 			
 			if (count($alert->item_ids) == 0){
 				$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$db->query($query) or die($db->error() . '<br /><br />'. $query);
 			}
 		}
 		
 		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$item->id."'";
-		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
 		$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$item->id."'";
-		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$db->query($query) or die($db->error() . '<br /><br />'. $query);
 	}
 }
 

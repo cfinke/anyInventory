@@ -10,10 +10,14 @@ if ($_POST["action"] == "do_add"){
 	else{
 		// Add a category.
 		$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_POST["name"]."','".$_POST["parent"]."','".((int) (($_POST["auto_inc"] == "yes") / 1))."')";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
 		// Get the id of the category
-		$this_id = mysql_insert_id();
+		$sql = "select 'id' from anyInventory_categories where `name`='"
+		.$_POST['name']."' AND `parent`='".$_POST['parent']."';";
+		$res = $db->query($sql);
+		$row = $res->fetchRow();
+		$this_id = $row[0]
 		
 		if ($_POST["inherit_fields"] == "yes"){
 			// Add the fields from the parent category
@@ -65,7 +69,7 @@ elseif($_POST["action"] == "do_edit"){
 				`parent`='".$_POST["parent"]."',
 				`auto_inc_field`='".((int) (($_POST["auto_inc"] == "yes") / 1))."'
 				WHERE `id`='".$_POST["id"]."'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	// Remove the category from all of the fields
 	if (is_array($old_category->field_ids)){
@@ -116,10 +120,10 @@ elseif($_POST["action"] == "do_edit"){
 	}
 	
 	$query = "SELECT `id` FROM `anyInventory_users` WHERE `usertype` != 'Administrator'";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
 	if (PP_ADMIN || PP_VIEW){
-		while ($row = mysql_fetch_array($result)){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$temp_user = new user($row["id"]);
 			if (PP_ADMIN) $temp_user->remove_category_admin($_POST["id"]);
 			if (PP_VIEW) $temp_user->remove_category_view($_POST["id"]);
@@ -157,46 +161,46 @@ elseif($_POST["action"] == "do_delete"){
 			
 			// Delete the category
 			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_POST["id"]."'"; 
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			
 			if ($_POST["item_action"] == "delete"){
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 				
-				while ($row = mysql_fetch_array($result)){
+				while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+					$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
 					
-					while ($newrow = mysql_fetch_array($newresult)){
+					while ($newrow = $newresult->fetchRow(DB_FETCHMODE_ASSOC)){
 						$alert = new alert($newrow["id"]);
 						
 						$alert->remove_item($row["id"]);
 						
 						if (count($alert->item_ids) == 0){
 							$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-							mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+							$db->query($newerquery) or die($db->error() . '<br /><br />'. $newerquery);
 						}
 					}
 					
 					$newquery = "DELETE FROM `anyInventory_fields` WHERE `item_id`='".$row["id"]."'";
-					mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+					$db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
 				}
 				
 				// Delete all of the items in the category
 				$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			}
 			elseif($_POST["item_action"] == "move"){
 				$newcategory = new category($_POST["move_items_to"]);
 				
 				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 				
-				while($row = mysql_fetch_array($result)){
+				while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+					$newresult = $db->query($newquery) or die($db->error() . '<br /><br />'. $newquery);
 					
-					while ($newrow = mysql_fetch_array($newresult)){
+					while ($newrow = $newresult->fetchRow(DB_FETCHMODE_ASSOC)){
 						$alert = new alert($newrow["id"]);
 						
 						if (!in_array($alert->field_id, $newcategory->field_ids)){
@@ -204,7 +208,7 @@ elseif($_POST["action"] == "do_delete"){
 							
 							if (count($alert->item_ids) == 0){
 								$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-								mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+								$db->query($newerquery) or die($db->error() . '<br /><br />'. $newerquery);
 							}
 						}
 					}
@@ -213,7 +217,7 @@ elseif($_POST["action"] == "do_delete"){
 				// Move the items to a different category
 				
 				$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			}
 			
 			if ($_POST["subcat_action"] == "delete"){
@@ -223,7 +227,7 @@ elseif($_POST["action"] == "do_delete"){
 			elseif($_POST["subcat_action"] == "move"){
 				// Move the subcategories
 				$query = "UPDATE `anyInventory_categories` SET `parent`='".$_POST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
-				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			}
 			
 			// Remove all of the fields from this category.

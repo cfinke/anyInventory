@@ -23,7 +23,7 @@ BEFORE 1.6
 ===================
 DONE - Timed Alerts
 DREW - Thumbnails of remote images
-CHRIS - Add input type of "File" to replace generic file uploads and remote files
+DONE - Add input type of "File" to replace generic file uploads and remote files
 
 BEFORE 1.7
 ===================

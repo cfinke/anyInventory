@@ -101,8 +101,8 @@ class item {
 		if ($this->category->auto_inc_field){
 			$output .= '
 				<tr class="highlighted_field">
-					<td style="width: 5%;">
-						&nbsp;
+					<td style="width: 8%;">
+						<a href="./label_processor.php?i='.$this->id.'&amp;bar='.BARCODE.'&amp;f=0" style="color: #000000;">PNG</a>&nbsp;<a href="./pdf.php?i='.$this->id.'&amp;bar='.BARCODE.'&amp;template='.BAR_TEMPLATE.'&amp;f=0" style="color: #000000;">PDF</a>
 					</td>
 					<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.AUTO_INC_FIELD_NAME.':</b></nobr></td>
 					<td style="width: 85%;"></b> '.$this->id.'</td>
@@ -204,8 +204,8 @@ class item {
 					}
 					
 					$output .= '>
-							<td style="width: 5%;">
-								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$field->id.'" style="color: #000000;">'.LABEL.'</a>
+							<td style="width: 8%;">
+								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;bar='.BARCODE.'&amp;f='.$field->id.'" style="color: #000000;">PNG</a>&nbsp;<a href="'.$DIR_PREFIX.'pdf.php?i='.$this->id.'&amp;bar='.BARCODE.'&amp;template=6&amp;f='.$field->id.'" style="color: #000000;">PDF</a>
 							</td>
 							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$field->name.'</b>:</nobr></td>
 							<td style="width: 85%;">'.$this->fields[$field->name].'</td>

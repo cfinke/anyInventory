@@ -1,12 +1,4 @@
-2004/08/25
-Added log in button and sorting by field
-
-2004/08/26
-Fixed field ordering problem
-
-2004/09/01
-Added code to hide alerts from people who don't have viewing rights to that item
-
-2004/09/20
-Added fixquote patch, submitted by Dale Osowski
-Added two other patches submitted by Dale Osowski.
+2005-01-26
+==========
+Fixed bug in delete_user.php that would log out the current user.
+Added barcode upgrades submitted by Steven Ball. Thanks Steven!

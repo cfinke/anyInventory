@@ -21,6 +21,7 @@ $errors[13] = array(ACCESS_DENIED,ERROR_PRIVELEGES,'breadcrumbs'=>ACCESS_DENIED)
 $errors[14] = array(ACCESS_DENIED,ERROR_DELETE_OWN_ACCOUNT.'breadcrumbs'=>ACCESS_DENIED);
 $errors[15] = array(ACCESS_DENIED,ERROR_PRIVELEGES,'breadcrumbs'=>ACCESS_DENIED);
 $errors[16] = array(ERROR,ERROR_DUPLICATE_USER,'breadcrumbs'=>ERROR);
+$errors[17] = array(ERROR,ERROR_BARCODE,"breadcrumbs"=>ERROR);
 
 $breadcrumbs = $errors[$_GET["eid"]]["breadcrumbs"];
 

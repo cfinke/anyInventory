@@ -423,4 +423,54 @@ define('ADMINISTRATOR','Administrateur');
 
 define('EDIT_USER','Editer l&#146;utilisateur');
 
+// Barcodes
+define('BARCODE_I25', '<p>Interleaved 2 of 5 (Code 25)</p>
+							<p>Interleaved 2 of 5 is a high density variable length numeric only symbology
+							  that encodes digit pairs in an interleaved manner. The odd position digits
+							  are encoded in the bars and the even position digits are encoded in the
+							  spaces. Because of this, I 2 of 5 bar codes must consist of an even number
+							  of digits. Also, because partial scans of I 2 of 5 bar codes have a slight
+							  chance of being decoded as a valid (but shorter) bar code, readers are
+							  usually set to read a fixed (even) number of digits when reading I 2 of
+							  5 symbols. The number of digits are usually pre-defined for a particular
+							  application and all readers used in the application are programmed to only
+							  accept I 2 of 5 bar codes of the chosen length. Shorter data can be left
+							  padded with zeros to fit the proper length. Interleaved 2 of 5 optionally
+							  allows for a weighted modulo 10 check character for special situations
+							  where data security is important. <br>
+							  anyInventory will pad out your number
+							  to even length using the pad char, but it will not add the check character
+							automatically. </p> ');
+define('BARCODE_C39', '<p>Code 39</p>
+							<p>Code 39 is a variable length symbology that can encode the
+							  following 44 characters: 1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ-. *$/+%.
+							  Each Code 39 bar code is framed by a start/stop character represented by an asterisk
+							  (*). The asterisk is reserved for this purpose and may not be used in the
+							body of a message. <br>
+							anyInventory will automatically add the asterisk to
+							the start and stop. </p> ');
+define('BARCODE_C128', '<p>Code 128 has 106 different printed barcode patterns. Each
+								printed barcode can have one of three different meanings depending on
+								which of the three character sets are used. Three different Code 128
+								start characters are available to tell the scanner which character set
+								is initially being used. Use Code 128 when you need alphanumeric or very
+								compact numeric only barcodes.</p>');
+define('BARCODE_C128A', '<p>Code 128A</p>
+							<p>Character set A allows for uppercase characters, punctuation, numbers
+							  and several special functions such as a return or tab.</p>');
+define('BARCODE_C128B', '<p>Code 128B</p>
+							<p>Character set B is the most common because it encodes everything from
+							  ASCII 32 to ASCII 126. It allows for upper and lower case letters, punctuation,
+							numbers and a few select functions.</p>');
+define('BARCODE_C128C', '<p>Code 128C</p>
+							<p> Character set C encodes only numbers and the FNC1 function. Because
+							  the numbers are &quot;interleaved&quot; into pairs, two numbers are encoded
+							  into every barcode character which makes it a very high density barcode.
+							  If your number is not even, anyInventory will add the pad character to
+							  even it out. </p>');
+define('BARCODE_FOOTER', 'Check Digit Requirement - in Code 128, The modulo 103 Symbol Check Character
+						is required and it is only encoded in the bar code. The check digit should never
+						appear in human the readable interpretation below the bar code. anyInventory
+							  will automatically add a check digit to your Code 128 barcodes.');
+
 ?>

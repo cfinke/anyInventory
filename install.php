@@ -239,6 +239,18 @@ if ($_POST["action"] == "install"){
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('NAME_FIELD_NAME','Name')";
 		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
+		$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('BAR_TEMPLATE', '6')";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+
+		$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('LABEL_PADDING', '12')";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+
+		$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('PAD_CHAR','0')";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+
+		$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('BARCODE','C128C')";
+		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
 		if (count($config_errors) == 0){
 			header("Location: ./index.php");
 			exit;
@@ -415,7 +427,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Install anyInventory 1.9.2</title>
+		<title>Install anyInventory 1.9.3</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">
@@ -435,7 +447,7 @@ echo '
 		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.9.2
+					anyInventory 1.9.3
 				</td>
 			</tr>
 			<tr>
@@ -452,7 +464,7 @@ echo '
 					<div style="min-height: 400px;">
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Install anyInventory 1.9.2</td>
+								<td>Install anyInventory 1.9.3</td>
 							</tr>
 							<tr>
 								<td class="tableData">

@@ -73,6 +73,32 @@ elseif($_POST["action"] == "change_lang"){
 	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["lang"]."' WHERE `key`='LANG'";
 	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
+elseif($_POST["action"] == "do_edit_label_template"){
+	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["template"]."' WHERE `key`='BAR_TEMPLATE'";
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+}
+elseif($_POST["action"] == "do_edit_label_padding"){
+	if(ctype_digit($_POST["padding"])){ 
+		$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["padding"]."' WHERE `key`='LABEL_PADDING'";
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	}
+	else header("Location: admin/edit_special.php?id=label_padding");
+}
+elseif($_POST["action"] == "do_edit_pad_char"){
+	$char = $_POST["char"];
+	if(!ctype_alnum($char)) header("Location: admin/edit_special.php?id=pad_char");
+	else{	
+		$query = "UPDATE `anyInventory_config` SET `value`='".$char."' WHERE `key`='PAD_CHAR'";
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	}
+}
+elseif($_POST["action"] == "do_edit_barcode"){
+	$_POST["type"] = stripslashes($_POST["type"]);
+	$_POST["type"] = str_replace($replace,"",$_POST["type"]);
+	$_POST["type"] = trim(addslashes($_POST["type"]));
+	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["type"]."' WHERE `key`='BARCODE'";
+	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+}
 
 header("Location: index.php");
 exit;

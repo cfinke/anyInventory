@@ -21,7 +21,8 @@ include("fpdf/fpdf.php");
 include("label_templates.php");
 
 // Set the template key
-$tk = intval($_REQUEST["template"]);
+if(isset($GET["template"])) $tk = intval($_GET["template"]);
+else $tk = intval($_REQUEST["template"]);
 
 $page_width = $templates[$tk]["page_width"];
 $page_height = $templates[$tk]["page_height"];
@@ -39,8 +40,8 @@ $label_height = $templates[$tk]["label_height"];
 
 $num_labels = $num_cols * $num_rows;
 
-$col_margin = ($page_width - ($num_cols * $label_width) - (2 * $left_margin)) / ($num_cols - 1);
-$row_margin = ($page_height - ($num_rows * $label_height) - (2 * $top_margin)) / ($num_rows - 1);
+$col_margin = ($page_width - ($num_cols * $label_width) - (2 * $left_margin)) / ($num_cols );
+$row_margin = ($page_height - ($num_rows * $label_height) - (2 * $top_margin)) / ($num_rows );
 
 $pdf = new FPDF("P","in",array($page_width, $page_height));
 $pdf->AddPage();
@@ -54,7 +55,8 @@ $xpos = $left_margin;
 $pdf->SetX($xpos);
 $pdf->SetY($ypos);
 
-foreach ($_REQUEST["i"] as $item_id){
+if(isset($_GET["i"])){
+ 	$item_id = $_GET["i"]; 
 	do {
 		$filename = rand() .'.png';
 	} while (is_file($filename));
@@ -62,6 +64,15 @@ foreach ($_REQUEST["i"] as $item_id){
 	$files[] = $filename;
 	
 	create_label($item_id,$_REQUEST["f"], $filename, ($label_width * 60));
+}
+else {
+ foreach ($_REQUEST["i"] as $item_id){
+        do {
+                $filename = rand() .'.png';
+        } while (is_file($filename));
+        $files[] = $filename;
+        create_label($item_id,$_REQUEST["f"], $filename, ($label_width * 60));
+ }
 }
 
 for ($i = 0; $i < count($files); $i++){
@@ -97,7 +108,7 @@ for ($i = 0; $i < count($files); $i++){
 	@unlink($files[$i]);
 }
 
-$pdf->Output("label_sheets.pdf","D");
+$pdf->Output("label_sheets.pdf","I");
 
 exit;
 

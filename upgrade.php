@@ -384,6 +384,20 @@ if ($_POST["action"] == "upgrade"){
 					$newquery = "UPDATE `anyInventory_fields` SET `importance`='".$i++."' WHERE `id`='".$row["id"]."'";
 					$newresult = mysql_query($newquery);
 				}
+				
+			case 1.9.2:
+				# Changes introduced in 1.9.3
+				$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('BAR_TEMPLATE', '6')";
+				$result = @mysql_query($query);
+
+				$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('LABEL_PADDING', '12')";
+				$result = @mysql_query($query);
+
+				$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('PAD_CHAR','0')";
+				$result = @mysql_query($query);
+
+				$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('BARCODE','C128C')";
+				$result = @mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.
@@ -503,7 +517,9 @@ elseif(!$globals_error){
 							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
 							<td class="form_input">
 								<select name="old_version">
-									<option value="1.8"';if($_REQUEST["old_version"] == '1.9')$output .= ' selected="selected"'; $output .= '>1.9</option>
+									<option value="1.9.2"';if($_REQUEST["old_version"] == '1.9.2')$output .= ' selected="selected"'; $output .= '>1.9.2</option>
+									<option value="1.9.1"';if($_REQUEST["old_version"] == '1.9.1')$output .= ' selected="selected"'; $output .= '>1.9.1</option>
+									<option value="1.9"';if($_REQUEST["old_version"] == '1.9')$output .= ' selected="selected"'; $output .= '>1.9</option>
 									<option value="1.8"';if($_REQUEST["old_version"] == '1.8')$output .= ' selected="selected"'; $output .= '>1.8</option>
 									<option value="1.7.1"';if($_REQUEST["old_version"] == '1.7.1')$output .= ' selected="selected"'; $output .= '>1.7.1</option>
 									<option value="1.7"';if($_REQUEST["old_version"] == '1.7')$output .= ' selected="selected"'; $output .= '>1.7</option>
@@ -586,7 +602,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Upgrade to anyInventory 1.9.2</title>
+		<title>Upgrade to anyInventory 1.9.3</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">
@@ -602,7 +618,7 @@ echo '
 		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.9
+					anyInventory 1.9.3
 				</td>
 			</tr>
 			<tr>
@@ -619,7 +635,7 @@ echo '
 					<div style="min-height: 400px;">
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Upgrade to anyInventory 1.9</td>
+								<td>Upgrade to anyInventory 1.9.3</td>
 							</tr>
 							<tr>
 								<td class="tableData">

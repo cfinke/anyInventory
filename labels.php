@@ -87,7 +87,7 @@ elseif (!isset($_POST["i"])){
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
-						<form action="pdf.php" method="post">
+						<form action="pdf.php?bar='.BARCODE.'" method="post">
 							<table>
 								<tr><td colspan="2" style="padding: 10px 0px 10px 0px;"><p>'.LABEL_ITEM_INSTRUCTIONS.'</p></td></tr>
 								<tr>
@@ -103,6 +103,7 @@ elseif (!isset($_POST["i"])){
 			
 			$output .= '<option value="'.$field->id.'" />'.$field->name.'</option>';
 		}
+		$output .= '<option value="0"/>AutoIncrement</option>';
 		
 		$output .= '
 										</select>

@@ -592,8 +592,18 @@ function display_field_form($c_options = null, $name = null, $input_type = null,
 }
 
 function create_label($item_id, $field_id, $as_file = null, $max_width = null){
+	require_once("barcode/barcode.php");
+	require_once("barcode/c39object.php");
+	require_once("barcode/c128aobject.php");
+	require_once("barcode/c128bobject.php");	
+	require_once("barcode/c128cobject.php");
+	require_once("barcode/i25object.php");
+
+
 	$item = new item($item_id);
-	$field = new field($field_id);
+	if($field_id != 0){
+		$field = new field($field_id);
+	}
 	
 	// This is the width of one character in pixels.
 	$char_width = 5;
@@ -606,43 +616,86 @@ function create_label($item_id, $field_id, $as_file = null, $max_width = null){
 		}
 	}
 	
-	// Create the image.
-	$im = imagecreate(600, 70);
-	
-	// Color the background white
-	$white = imagecolorallocate($im, 255, 255, 255);
-	
-	// Set the color for the text.
-	$black = imagecolorallocate($im, 0, 0, 0);
-	
-	// Write the barcode.
-	$boundaries = imagettftext($im, 12, 0, 0, 50, $white, realpath("fonts/IDAutomationHC39M.ttf"),"!".$item->fields[$field->name]."!");
-	
-	$width = $boundaries[2] - $boundaries[0];
-	
-	$offset = round((600 - $width) / 2);
-	
-	$boundaries = imagettftext($im, 12, 0, $offset, 50, $black, realpath("fonts/IDAutomationHC39M.ttf"),"!".$item->fields[$field->name]."!");
-	
 
+	settype($string, "string");
+
+	// Create a barcode 120 by 25
+	if($field_id == 0){
+		// We want the autoincrement field.  Pad out the number if needed
+		if(strlen($item->id) < LABEL_PADDING){
+			$i = LABEL_PADDING - strlen($item->id);
+		}
+		while($i > 0){
+			$string .= PAD_CHAR;
+			$i--;
+		}
+		if(!strlen($item->id) % 2 && (BARCODE == I25 || BARCODE == C128C)){
+			// Pad a zero to make it even
+			$string = PAD_CHAR;
+		}
+		(string) $value = (string) $string . $item->id;
+	}
+	else{
+                if(strlen($item->fields[$field->name]) < LABEL_PADDING){
+                        $i = LABEL_PADDING - strlen($item->id);
+                }
+                while($i > 0){
+                        $string .= PAD_CHAR;
+                        $i--;
+                }
+                if(!strlen($item->fields[$field->name]) % 2  && (BARCODE == I25 || BARCODE == C128C)){
+                        // Pad a zero to make it even
+                        $string = PAD_CHAR;
+                }
+		(string) $value = (string) $string . $item->fields[$field->name];
+	}
 	
-	// Figure the offset for centering the text
-	$offset = (600 - (strlen($item->name) * $char_width)) / 2;
+	switch ($_GET["bar"]){
+    	case "I25":
+                          $barcode = new I25Object(110, 26, 452, (string) $value);
+                          break;
+   		case "C39":
+                          $barcode = new C39Object(110, 26, 452, (string) $value);
+                          break;
+    	case "C128A":
+                          $barcode = new C128AObject(110, 26, 452, (string) $value);
+                          break;
+    	case "C128B":
+                          $barcode = new C128BObject(110, 26, 452, (string) $value);
+                          break;
+    	case "C128C":
+              			  $barcode = new C128CObject(110, 26, 452, (string) $value);
+                          break;
+        default:
+                        $obj = false;
+  	}
 	
-	$widest = ($width > ($char_width * strlen($item->name))) ? $width : ($char_width * strlen($item->name));
-	
+	if($barcode){
+		$barcode->SetFont(1);
+		$barcode->DrawObject(1);
+		$bar = $barcode->GetImage();
+	}
+	else{
+		header("Location: error_handler.php?eid=17&mess=Bar+barcode+type");
+	}
+	if(isset($barcode->mError)){
+		header("Location: error_handler.php?eid=17&mess=".$barcode->GetError());
+	}
+
+	// Create the image.
 	// Write the item name to the label.
-	imagestring($im, 1, $offset, 0, $item->name, $black);
-	
-	$width = $widest;
-	$left_x = (600 - $width) / 2;
-	
-	// Crop the image
-	$new_image = imagecreate($widest, $boundaries[1] + 10);
-	imagecopyresized($new_image, $im, 0, 0, $left_x, 0, $width, $boundaries[1], $width, $boundaries[1]);
+	$new_image = ImageCreate(120,35);
+	// Color the background white
+	$white = imagecolorallocate($new_image, 255, 255, 255);
+	// Set the color for the text.
+	$black = imagecolorallocate($new_image, 0, 0, 0);
+	ImageString($new_image, 1, 60 - (ImageFontWidth(1) * strlen($item->name)) /2,0, $item->name, $black);
+	//ImageString($new_image, 1, 60 - (ImageFontWidth(1) * strlen($item->fields["Snurkle Part"])) /2,0, $item->fields["Snurkle Part"], $black);
+	imagecopy($new_image, $bar, 0, 7, 0, 0, 120, 26);
+	//imagecopyresized($new_image, $bar, 0, 10, 0, 0, 120, 22, 110, 22);
 	
 	// Delete the old image.
-	imagedestroy($im);
+	imagedestroy($bar);
 	
 	if ($as_file != null){
 		imagepng($new_image,$as_file);

@@ -1016,7 +1016,8 @@ function Output($name='',$dest='')
 	{
 		case 'I':
 			//Send to standard output
-			if(isset($HTTP_SERVER_VARS['SERVER_NAME']))
+			if(isset($_SERVER['SERVER_NAME']))
+			//if(isset($HTTP_SERVER_VARS['SERVER_NAME']))
 			{
 				//We send to a browser
 				Header('Content-Type: application/pdf');

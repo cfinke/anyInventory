@@ -1,7 +1,5 @@
 <?php
 
-// Spanish language file
-
 // Dates (Fechas)
 define('MONTH_1','Enero');
 define('MONTH_2','Febrero');
@@ -35,6 +33,8 @@ define('NAME','Nombre');
 define('EDIT_LINK','editar');
 define('DELETE_LINK','eliminar');
 define('TYPE','Tipo');
+define('DOWNLOAD_LINK','descagar');
+define('DOWNLOAD_AS_XML','Descargar el inventario en un archivo XML');
 
 // Buscar(Search)
 define('SEARCH','Buscar');

@@ -26,7 +26,7 @@ $output = '
 					</td>
 				</tr>
 				<tr id="values_row" style="display: none;">
-					<td class="form_label"><label for="values">Values:</label><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
+					<td class="form_label"><label for="values">Values:</label><br /></td>
 					<td class="form_input"><input type="text" name="values" id="values" value="" /></td>
 				</tr>
 				<tr style="display: auto;">
@@ -34,7 +34,7 @@ $output = '
 					<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
 				</tr>
 				<tr style="display: auto;" id="size_row">
-					<td class="form_label"><label for="size">Size, in characters:</label><br /><small>Only for \'text\' data type.</small></td>
+					<td class="form_label"><label for="size">Size, in characters:</label></td>
 					<td class="form_input"><input type="text" name="size" id="size" value="" /></td>
 				</tr>
 				<tr style="display: auto;">

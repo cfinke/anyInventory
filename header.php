@@ -33,6 +33,7 @@
 						[ <a href="<?php echo $DIR_PREFIX; ?>admin/categories.php">categories</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>admin/fields.php">fields</a> ]
 						[ <a href="<?php echo $DIR_PREFIX; ?>admin/items.php">items</a> ]
+						[ <a href="<?php echo $DIR_PREFIX; ?>docs/">help</a> ]
 					</div>	
 				</td>
 			</tr>
@@ -46,5 +47,6 @@
 					<a href="<?php echo $DIR_PREFIX; ?>admin/add_category.php">Add a category</a></p>
 					<p><b><a href="<?php echo $DIR_PREFIX; ?>admin/items.php">Items</a></b><br />
 					<a href="<?php echo $DIR_PREFIX; ?>admin/add_item.php">Add an item</a></p>
+					<p><b><a href="<?php echo $DIR_PREFIX; ?>docs/">Help</a></b></p>
 				</td>
 				<td bgcolor="#ffffff" width="650" align="left" valign="top" style="padding:5px">

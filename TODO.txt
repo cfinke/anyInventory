@@ -2,14 +2,15 @@ TODO
 
 Fields
 ======
+Add "Apply field to" categories select field
 
 Categories
 ==========
 Add "Inherit fields from parent" option for addition
+Add "Add field to all subfolders"
 
 Items
 =====
-Inserting
 Editing
 Deleting
 Alerts

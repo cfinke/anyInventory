@@ -113,7 +113,13 @@ class file_object{
 		$thumb_height = 120;
 		
 		// Get the information about the image.
-		$image_info = getimagesize($this->server_path);
+		if (is_file(realpath("get_file.php?fid=".$this->id))){
+			$image_info = getimagesize("get_file.php?fid=".$this->id);
+		}
+		else{
+			echo realpath("get_file.php?fid=".$this->id);
+			exit;
+		}
 		
 		$image_width = $image_info[0];
 		$image_height = $image_info[1];

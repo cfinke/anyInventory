@@ -16,7 +16,7 @@ elseif($admin_user->usertype != 'Administrator'){
 }
 else{
 	$title = DELETE_USER;
-	$breadcrumbs = ADMINISTRATION.' > <a href="users.php">'.USERS.'</a> > '.DELETE_USER;
+	$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="users.php">'.USERS.'</a> > '.DELETE_USER;
 	
 	$userToDelete = new user($_GET["id"]);
 	

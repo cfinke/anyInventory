@@ -3,7 +3,7 @@
 require_once("globals.php");
 
 $title = ADD_CATEGORY;
-$breadcrumbs = ADMINISTRATION.' > <a href="categories.php">'.CATEGORIES.'</a> > '.ADD_CATEGORY;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="categories.php">'.CATEGORIES.'</a> > '.ADD_CATEGORY;
 
 $output = '
 	<form method="post" action="category_processor.php">

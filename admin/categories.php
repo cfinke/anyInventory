@@ -3,7 +3,7 @@
 require_once("globals.php");
 
 $title = CATEGORIES;
-$breadcrumbs = ADMINISTRATION.' > '.CATEGORIES;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > '.CATEGORIES;
 
 $rows = get_category_array();
 

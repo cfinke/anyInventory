@@ -28,7 +28,7 @@ $inHead = '
 		// -->
 	</script>';
 $inBodyTag = ' onload="toggle();"';
-$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_FIELD;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_FIELD;
 
 $field = new field($_GET["id"]);
 $checked = ($field->highlight) ? ' checked="checked"' : '';

@@ -20,7 +20,7 @@ $inHead = '
 		// -->
 	</script>';
 $inBodyTag = ' onload="toggle();"';
-$breadcrumbs = ADMINISTRATION.' > <a href="users.php">'.USERS.'</a> > '.EDIT_USER;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="users.php">'.USERS.'</a> > '.EDIT_USER;
 
 $local_user = new user($_GET["id"]);
 

@@ -32,7 +32,7 @@ class item {
 		
 		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('item_id') . "='".$this->id."'";
 		$result = $db->query($query);
-		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		while($row = $result->fetchRow()){
 			$field = new field($row["field_id"]);
@@ -57,6 +57,9 @@ class item {
 							$this->fields[$field->name][$key] = trim($value);
 						}
 					}
+				}
+				else{
+					$this->fields[$field->name] = $row["value"];
 				}
 			}
 		}

@@ -13,7 +13,7 @@ if ($_GET["id"] == 0){
 }
 else{
 	$title = DELETE_CATEGORY;
-	$breadcrumbs = ADMINISTRATION.' > <a href="categories.php">'.CATEGORIES.'</a> > '.DELETE_CATEGORY;
+	$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="categories.php">'.CATEGORIES.'</a> > '.DELETE_CATEGORY;
 	
 	$category = new category($_GET["id"]);
 	

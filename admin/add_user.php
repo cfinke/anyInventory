@@ -19,7 +19,7 @@ $inHead = '
 		
 		// -->
 	</script>';
-$breadcrumbs = ADMINISTRATION.' > <a href="users.php">'.USERS.'</a> > '.ADD_USER;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="users.php">'.USERS.'</a> > '.ADD_USER;
 
 $output .= '
 	<table class="standardTable" cellspacing="0" cellpadding="3">

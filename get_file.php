@@ -19,8 +19,6 @@ if (isset($_REQUEST["fid"])){
 	$row = $result->fetchRow();
 	
 	header("Content-Type: " . $row["file_type"]);
-	header("Content-Length: " . strlen($file_string));
-	header("Content-Disposition: attachment; filename=\"".$row["file_name"]."\"");
 	echo $file_string;
 }
 

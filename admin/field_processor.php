@@ -80,15 +80,15 @@ if ($_POST["action"] == "do_add"){
 		
 		// Get the field order for this field.
 		$query = "SELECT MAX(" . $db->quoteIdentifier('importance') . ") as " . $db->quoteIdentifier('biggest') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . "";
-		$result= $db->query($query);
+		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$row_importance = $result->fetchRow();
-		$importance=$row_importance['biggest']+1;
+		$importance = $row_importance['biggest']+1;
 		
 		// Add this field.
 		$field_id = nextId("fields");
-        $query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_fields')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('input_type').",".$db->quoteIdentifier('values').",".$db->quoteIdentifier('default_value').",".$db->quoteIdentifier('size').",".$db->quoteIdentifier('categories').",".$db->quoteIdentifier('importance').",".$db->quoteIdentifier('highlight').") VALUES ('".$field_id."', '". $_POST["name"]."', '".$_POST["input_type"]."', '".$field_values."', '".$defval."', '".intval($_POST["size"])."', '".$categories."', '".intval($importance)."', '".intval(($_POST["highlight"] == "yes"))."')";
+        $query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_fields')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('input_type').",".$db->quoteIdentifier('values').",".$db->quoteIdentifier('default_value').",".$db->quoteIdentifier('size').",".$db->quoteIdentifier('categories').",".$db->quoteIdentifier('importance').",".$db->quoteIdentifier('highlight').") VALUES ('".$field_id."', '". $_POST["name"]."', '".$_POST["input_type"]."', '".$db->escapeSimple($values)."', '".$db->escapeSimple($_POST["default_value"])."', '".intval($_POST["size"])."', '".$categories."', '".intval($importance)."', '".intval(($_POST["highlight"] == "yes"))."')";
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);		
 		

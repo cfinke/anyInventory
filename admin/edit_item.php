@@ -10,7 +10,7 @@ $inHead = '
 	</script>
 	<script type="text/javascript" src="../htmlarea/htmlarea.js"></script>';
 $inBodyTag = ' onload="HTMLArea.replaceAll();"';
-$breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.EDIT_ITEM;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="items.php">'.ITEMS.'</a> > '.EDIT_ITEM;
 
 $item = new item($_GET["id"]);
 

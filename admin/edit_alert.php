@@ -23,7 +23,7 @@ $inHead = '
 		// -->
 	</script>';
 $inBodyTag = ' onload="toggle();"';
-$breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.EDIT_ALERT;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="alerts.php">'.ALERTS.'</a> > '.EDIT_ALERT;
 
 $alert = new alert($_GET["id"]);
 $checked = ($alert->expire_time == '99999999999999') ? '' : ' checked="checked"';

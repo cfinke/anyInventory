@@ -3,7 +3,7 @@
 require_once("globals.php");
 
 $title = DELETE_ITEM;
-$breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.Items.'</a> > '.DELETE_ITEM;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="items.php">'.Items.'</a> > '.DELETE_ITEM;
 
 $item = new item($_GET["id"]);
 

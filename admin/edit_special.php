@@ -10,7 +10,7 @@ if ($admin_user->usertype != 'Administrator'){
 switch($_GET["id"]){
 	case 'auto_inc_field':
 		$title = EDIT_AUTOINC_FIELD;
-		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_AUTOINC_FIELD;
+		$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_AUTOINC_FIELD;
 		
 		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('auto_inc_field') . "='1'";
 		$result = $db->query($query);
@@ -80,7 +80,7 @@ switch($_GET["id"]){
 		break;
 	case 'name_field_name':
 		$title = EDIT_NAME_FIELD;
-		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_NAME_FIELD;
+		$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_NAME_FIELD;
 		
 		$output = '
 				<form method="post" action="special_processor.php">
@@ -110,7 +110,7 @@ switch($_GET["id"]){
 		require_once("../label_templates.php");
 		
 		$title = EDIT_LABEL_TEMPLATE;
-		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_LABEL_TEMPLATE;
+		$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_LABEL_TEMPLATE;
 		
 		$output = '
 				<form method="post" action="special_processor.php">
@@ -157,7 +157,7 @@ switch($_GET["id"]){
 		break;
 	case 'label_padding':
 		$title = EDIT_LABEL_PADDING;
-		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_LABEL_PADDING;
+		$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_LABEL_PADDING;
 		
 		$output = '
 				<form method="post" action="special_processor.php">
@@ -184,7 +184,7 @@ switch($_GET["id"]){
 		break;
 	case 'pad_char':
 		$title = EDIT_PAD_CHAR;
-		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_PAD_CHAR;
+		$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_PAD_CHAR;
 		
 		$output = '
 				<form method="post" action="special_processor.php">
@@ -211,7 +211,7 @@ switch($_GET["id"]){
 		break;
 	case 'barcode':
 		$title = EDIT_BARCODE;
-		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_BARCODE;
+		$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_BARCODE;
 		
 		$output = '
 				<form method="post" action="special_processor.php">

@@ -3,7 +3,7 @@
 require_once("globals.php");
 
 $title = USERS;
-$breadcrumbs = ADMINISTRATION.' > '.USERS;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > '.USERS;
 
 $query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_users') . " ORDER BY " . $db->quoteIdentifier('username') . " ASC";
 $result = $db->query($query);

@@ -3,7 +3,7 @@
 require_once("globals.php");
 
 $title = ADD_ALERT;
-$breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.ADD_ALERT;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="alerts.php">'.ALERTS.'</a> > '.ADD_ALERT;
 
 if (!is_array($_GET["c"])){
 	$output = '

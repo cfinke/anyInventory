@@ -44,9 +44,6 @@ if ($_POST["action"] == "do_add"){
 						$_POST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
 						$query .= $_POST[str_replace(" ","_",$field->name)];
 					}
-					else{
-						$query .= "''";
-					}
 				}
 				elseif($field->input_type == 'item'){
 					if (is_array($_POST[str_replace(" ","_",$field->name)])){
@@ -194,11 +191,15 @@ elseif($_POST["action"] == "do_edit"){
 						if (is_uploaded_file($_FILES[str_replace(" ","_",$field->name)]["tmp_name"])){
 							$file_query = true;
 							
+							$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
+							$delresult = $db->query($delquery);
+							if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
+							
+							$remquery = "UPDATE " . $db->quoteIdentifier('anyInventory_values') . " SET " . $db->quoteIdentifier('value') . "='0' WHERE " . $db->quoteIdentifier('field_id') . "='".$field->id."' AND " . $db->quoteIdentifier('item_id') . "='".$item->id."'";
+							$remresult = $db->query($remquery);
+							if (DB::isError($remresult)) die($remresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $remquery);
+							
 							if (!$file->is_remote){
-								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
-								$delresult = $db->query($delquery);
-								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
-								
 								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_file_data') . " WHERE " . $db->quoteIdentifier('file_id') . "='".$file->id."'";
 								$delresult = $db->query($delquery);
 								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
@@ -217,11 +218,15 @@ elseif($_POST["action"] == "do_edit"){
 						elseif($_POST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
 							$file_query = true;
 							
+							$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
+							$delresult = $db->query($delquery);
+							if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);							
+							
+							$remquery = "UPDATE " . $db->quoteIdentifier('anyInventory_values') . " SET " . $db->quoteIdentifier('value') . "='0' WHERE " . $db->quoteIdentifier('field_id') . "='".$field->id."' AND " . $db->quoteIdentifier('item_id') . "='".$item->id."'";
+							$remresult = $db->query($remquery);
+							if (DB::isError($remresult)) die($remresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $remquery);
+							
 							if (!$file->is_remote){
-								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
-								$delresult = $db->query($delquery);
-								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
-								
 								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_file_data') . " WHERE " . $db->quoteIdentifier('file_id') . "='".$file->id."'";
 								$delresult = $db->query($delquery);
 								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
@@ -371,7 +376,17 @@ elseif($_POST["action"] == "do_delete"){
 	}
 }
 
+if (isset($_REQUEST["on_submit"])){
+	$_SESSION["ai_options"]["on_submit"] = $_REQUEST["on_submit"];
+	
+	if ($_REQUEST["on_submit"] == 'add_another'){
+		header("Location: add_item.php?c=".$_POST["c"]);
+		exit;
+	}
+}
+
 header("Location: items.php");
+exit;
 
 function write_file_to_db($file_id, $string){
 	global $db;

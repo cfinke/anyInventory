@@ -12,7 +12,7 @@ elseif ($_GET["id"] == '0'){
 }
 else{
 	$title = EDIT_CATEGORY;
-	$breadcrumbs = ADMINISTRATION.' > <a href="categories.php">'.CATEGORIES.'</a> > '.EDIT_CATEGORY;
+	$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="categories.php">'.CATEGORIES.'</a> > '.EDIT_CATEGORY;
 	
 	$category = new category($_GET["id"]);
 	

@@ -10,7 +10,7 @@ $inHead = '
 	</script>
 	<script type="text/javascript" src="../htmlarea/htmlarea.js"></script>';
 $inBodyTag = ' onload="HTMLArea.replaceAll();"';
-$breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.ADD_ITEM;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="items.php">'.ITEMS.'</a> > '.ADD_ITEM;
 
 if (!isset($_GET["c"])){
 	$output .= '
@@ -172,6 +172,22 @@ else{
 	}
 	
 	$output .= '
+								<tr>
+									<td class="form_label">On Submit:</td>
+									<td class="form_input"><input type="radio" name="on_submit" value="add_another" ';
+	
+	if($_SESSION["ai_options"]["on_submit"] == 'add_another'){
+		$output .= ' checked="checked"';
+	}
+	
+	$output .= ' />Add another item here <input type="radio" name="on_submit" value="return" ';
+	
+	if($_SESSION["ai_options"]["on_submit"] == 'return'){
+		$output .= ' checked="checked"';
+	}
+	
+	$output .= ' /> Return to Items page</td>
+								</tr>
 								<tr>
 									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="'.SUBMIT.'" /></td>
 								</tr>

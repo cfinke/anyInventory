@@ -8,7 +8,7 @@ if (!$admin_user->can_admin_field($_GET["id"])){
 }
 
 $title = DELETE_FIELD;
-$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.DELETE_FIELD;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.DELETE_FIELD;
 
 $field = new field($_GET["id"]);
 

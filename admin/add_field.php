@@ -23,7 +23,7 @@ $inHead = '
 		// -->
 	</script>';
 $inBodyTag = ' onload="toggle();"';
-$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.ADD_FIELD;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="fields.php">'.FIELDS.'</a> > '.ADD_FIELD;
 
 $output .= '
 	<table class="standardTable" cellspacing="0" cellpadding="3">

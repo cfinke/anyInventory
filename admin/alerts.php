@@ -3,7 +3,7 @@
 require_once("globals.php");
 
 $title = ALERTS;
-$breadcrumbs = ADMINISTRATION.' > '.ALERTS;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > '.ALERTS;
 
 $query = "SELECT *, UNIX_TIMESTAMP(" . $db->quoteIdentifier('time') . ") AS " . $db->quoteIdentifier('unix_time') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " ORDER BY " . $db->quoteIdentifier('title') . " ASC";
 $result = $db->query($query);

@@ -8,7 +8,7 @@ if (!$admin_user->can_admin_alert($_GET["id"])){
 }
 
 $title = DELETE_ALERT;
-$breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.DELETE_ALERT;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="alerts.php">'.ALERTS.'</a> > '.DELETE_ALERT;
 
 $alert = new alert($_GET["id"]);
 

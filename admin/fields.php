@@ -3,7 +3,7 @@
 require_once("globals.php");
 
 $title = FIELDS;
-$breadcrumbs = ADMINISTRATION.' > '.FIELDS;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > '.FIELDS;
 
 $query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('id') . " > 0 ORDER BY " . $db->quoteIdentifier('importance') . "";
 $result = $db->query($query);

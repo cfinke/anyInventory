@@ -3,7 +3,7 @@
 require_once("globals.php");
 
 $title = MOVE_ITEM;
-$breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.MOVE_ITEM;
+$breadcrumbs = '<a href="index.php">' .ADMINISTRATION.'</a> > <a href="items.php">'.ITEMS.'</a> > '.MOVE_ITEM;
 
 $item = new item($_GET["id"]);
 

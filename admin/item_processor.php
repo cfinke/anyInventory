@@ -37,12 +37,15 @@ if ($_POST["action"] == "do_add"){
 				}
 				elseif($field->input_type == "checkbox"){
 					if (is_array($_POST[str_replace(" ","_",$field->name)])){
-						foreach($_POST[str_replace(" ","_",$field->name)] as $key => $val){
-							$string .= $key.", ";
+						foreach($_POST[str_replace(" ","_",$field->name)] as $checkbox_key => $val){
+							$string .= $checkbox_key.", ";
 						}
 						
 						$_POST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
 						$query .= $_POST[str_replace(" ","_",$field->name)];
+					}
+					else{
+						$query .= "''";
 					}
 				}
 				elseif($field->input_type == 'item'){
@@ -61,9 +64,7 @@ if ($_POST["action"] == "do_add"){
 				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
 			}
 		}
-	}
-	
-	if (is_array($category->field_ids)){
+		
 		foreach($category->field_ids as $field_id){
 			$field = new field($field_id);
 			
@@ -314,8 +315,8 @@ elseif($_POST["action"] == "do_edit"){
 						}
 						elseif($field->input_type == "checkbox"){
 							if (is_array($_POST[str_replace(" ","_",$field->name)])){
-								foreach($_POST[str_replace(" ","_",$field->name)] as $key => $val){
-									$string .= $key.", ";
+								foreach($_POST[str_replace(" ","_",$field->name)] as $checkbox_key => $val){
+									$string .= $checkbox_key.", ";
 								}
 								
 								$_POST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);

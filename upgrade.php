@@ -16,6 +16,8 @@ $errors = array();
 // Set the text of globals.php
 $writetoglobals = '<?php
 
+session_start();
+
 error_reporting(E_ALL ^ E_NOTICE);
 
 $DIR_PREFIX .= "./";
@@ -25,14 +27,7 @@ $db_name = "'.$_REQUEST["db_name"].'";
 $db_user = "'.$_REQUEST["db_user"].'";
 $db_pass = "'.$_REQUEST["db_pass"].'";
 
-include($DIR_PREFIX."functions.php");
-include($DIR_PREFIX."category_class.php");
-include($DIR_PREFIX."field_class.php");
-include($DIR_PREFIX."item_class.php");
-include($DIR_PREFIX."file_class.php");
-include($DIR_PREFIX."alert_class.php");
-
-connect_to_database();
+include($DIR_PREFIX."environment.php");
 
 ?>';
 
@@ -50,6 +45,14 @@ if ($_REQUEST["action"] == "upgrade"){
 	}
 	if (strlen(trim($_REQUEST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
+	}
+	if ($_REQUEST["password_protect_admin"] || $_REQUEST["password_protect_view"]){
+		if (strlen(trim($_REQUEST["username"])) == 0){
+			$errors[] = 'Please enter a username.';
+		}
+		if (strlen(trim($_REQUEST["password"])) == 0){
+			$errors[] = 'Please enter a password.';
+		}
 	}
 	
 	$files_to_read = array("./","./admin","./docs","./docs/images","./fonts","./item_files");
@@ -243,6 +246,8 @@ if ($_REQUEST["action"] == "upgrade"){
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `name` `name` VARCHAR( 64 ) NOT NULL";
 				@mysql_query($query); 
 			case '1.7.1':
+				# Changes introduced in 1.8
+				
 				$query = "CREATE TABLE `anyInventory_config` (
 					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
 					`key` varchar( 64 ) NOT NULL default '',
@@ -258,8 +263,39 @@ if ($_REQUEST["action"] == "upgrade"){
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
 				@mysql_query($query);
 				
-				//$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file') DEFAULT 'text' NOT NULL ";
-				//@mysql_query($query);
+				$query = "CREATE TABLE `anyInventory_users` (
+					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
+					`username` varchar(32) NOT NULL default '',
+					`password` varchar(32) NOT NULL default '',
+					`usertype` ENUM( 'User', 'Administrator' ) DEFAULT 'User' NOT NULL,
+					`categories_view` text NOT NULL ,
+					`categories_admin` text NOT NULL ,
+					UNIQUE KEY `id` ( `id` ),
+					UNIQUE KEY `username` (`username`)
+					) TYPE=MyISAM";
+				@mysql_query($query);
+				
+				$blank = array();
+				
+				$_REQUEST["username"] = ($_REQUEST["username"] == '') ? 'username' : $_REQUEST["username"];
+				$_REQUEST["password"] = ($_REQUEST["password"] == '') ? 'password' : $_REQUEST["password"];
+				
+				$query = "INSERT INTO `anyInventory_users`
+							(`username`,
+							 `password`,
+							 `usertype`,
+							 `categories_admin`,
+							 `categories_view`)
+							VALUES
+							('".$_REQUEST["username"]."',
+							 '".md5($_REQUEST["password"]."',
+							 'Administrator',
+							 '".addslashes(serialize($blank))."',
+							 '".addslashes(serialize($blank))."')";
+				@mysql_query($query);
+				
+				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
+				@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.
@@ -290,8 +326,10 @@ if ($_REQUEST["action"] == "upgrade"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
-				<input type="hidden" name="password_protect" value="'.stripslashes($_REQUEST["password_protect"]).'" />
-				<input type="hidden" name="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" />
+				<input type="hidden" name="password_protect_view" value="'.stripslashes($_REQUEST["password_protect_view"]).'" />
+				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_REQUEST["password_protect_admin"]).'" />
+				<input type="hidden" name="username" value="'.stripslashes($_REQUEST["username"]).'" />
+				<input type="hidden" name="password" value="'.stripslashes($_REQUEST["password"]).'" />
 				<p>The following error occurred:</p>
 				<ul class="error">
 					<li>anyInventory could not write the globals.php file.  Either make this file writable by the Web server and click "Try Again", or replace the contents of the current globals.php file with the following code:<br /><pre>' . htmlentities($writetoglobals) . '</pre>If you choose to overwrite the file manually, do so, and then delete the install.php file.  Don\'t forget to change the permissions back on globals.php after you overwrite it.</li>
@@ -340,9 +378,10 @@ if($_REQUEST["action"] == "try_again"){
 			<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
 			<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
 			<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
-			<input type="hidden" name="password_protect" value="'.stripslashes($_REQUEST["password_protect"]).'" />
-			<input type="hidden" name="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" />
-			<p>The following error occurred:</p>
+			<input type="hidden" name="password_protect_view" value="'.stripslashes($_REQUEST["password_protect_view"]).'" />
+			<input type="hidden" name="password_protect_admin" value="'.stripslashes($_REQUEST["password_protect_admin"]).'" />
+			<input type="hidden" name="username" value="'.stripslashes($_REQUEST["username"]).'" />
+			<input type="hidden" name="password" value="'.stripslashes($_REQUEST["password"]).'" />			<p>The following error occurred:</p>
 			<ul class="error">
 				<li>anyInventory could not write the globals.php file.  Either make this file writable by the Web server and click "Try Again", or replace the contents of the current globals.php file with the following code:<br /><pre>' . htmlentities($writetoglobals) . '</pre>If you choose to overwrite the file manually, do so, and then delete the install.php file.  Don\'t forget to change the permissions back on globals.php after you overwrite it.</li>
 			</ul>
@@ -355,8 +394,9 @@ if($_REQUEST["action"] == "try_again"){
 }
 elseif(!$globals_error){
 	$db_host = ($_REQUEST["action"] != "") ? $_REQUEST["db_host"] : 'localhost';
-	$ppchecked = ($_REQUEST["password_protect"]) ? ' checked="true"' : '';
-	$inBodyTag = ($_REQUEST["password_protect"]) ? '' : ' onload="document.getElementById(\'admin_password\').disabled = true;"';
+	$pp_view_checked = ($_REQUEST["password_protect_view"]) ? ' checked="true"' : '';
+	$pp_admin_checked = ($_REQUEST["password_protect_admin"]) ? ' checked="true"' : '';
+	$inBodyTag = ' onload="toggle();"';
 	
 	if (count($errors) > 0){
 		$output .= '
@@ -376,7 +416,8 @@ elseif(!$globals_error){
 							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
 							<td class="form_input">
 								<select name="old_version">
-									<option value="1.6">1.7</option>
+									<option value="1.7.1">1.7.1</option>
+									<option value="1.7">1.7</option>
 									<option value="1.6">1.6</option>
 									<option value="1.5">1.5</option>
 									<option value="1.4">1.4.1</option>
@@ -404,13 +445,20 @@ elseif(!$globals_error){
 							<td class="form_label"><label for="db_name">MySQL Database:</label></td>
 							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
 						</tr>
-						<tr>
-							<td class="form_label"><label for="password_protect">Password protect admin directory:</label></td>
-							<td class="form_input"><input onclick="document.getElementById(\'admin_password\').disabled = !this.checked;" type="checkbox" name="password_protect" id="password_protect" value="yes"'.$ppchecked.' /></td>
+							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_view" id="password_protect_view" value="yes"'.$pp_view_checked.' /></td>
+							<td class="form_input"><label for="password_protect">Password protect entire inventory</label></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="admin_password">Admin Password:</label></td>
-							<td class="form_input"><input type="text" name="admin_password" id="admin_password" value="'.stripslashes($_REQUEST["admin_password"]).'" /></td>
+							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_admin" id="password_protect_admin" value="yes"'.$pp_admin_checked.' /></td>
+							<td class="form_input"><label for="password_protect">Password protect admin directory</label></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="username">Username:</label></td>
+							<td class="form_input"><input type="text" name="username" id="username" value="'.stripslashes($_REQUEST["username"]).'" /></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="password">Password:</label></td>
+							<td class="form_input"><input type="text" name="password" id="password" value="'.stripslashes($_REQUEST["password"]).'" /></td>
 						</tr>
 						<tr>
 							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Upgrade" /></td>
@@ -422,7 +470,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Upgrade anyInventory 1.7.1</title>
+		<title>Upgrade anyInventory 1.8</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 	</head>
@@ -430,7 +478,7 @@ echo '
 		<table style="width: 97%; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.7.1
+					anyInventory 1.8
 				</td>
 			</tr>
 			<tr>
@@ -447,7 +495,7 @@ echo '
 					<div style="min-height: 400px;">
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Upgrade anyInventory 1.7.1</td>
+								<td>Upgrade anyInventory 1.8</td>
 							</tr>
 							<tr>
 								<td class="tableData">

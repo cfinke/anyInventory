@@ -31,7 +31,7 @@ $links = array(array("url"=>$_SERVER["PHP_SELF"]."?action=add","name"=>"Add a Ca
 if ($_REQUEST["action"] == "add"){
 	$output = '
 		<form method="post" action="'.$_SERVER["PHP_SELF"].'" enctype="multipart/form-data">
-			<input type="hidden" name="action" value="add_category" />
+			<input type="hidden" name="action" value="do_add" />
 			<table>
 				<tr>
 					<td class="form_label"><label for="name">Name:</label></td>
@@ -61,21 +61,23 @@ if ($_REQUEST["action"] == "add"){
 else{
 	$output .= '<p><a href="'.$_SERVER["PHP_SELF"].'?action=add">Add a Category.</a></p>';
 	
-	$query = "SELECT *,'' as `nosortcol_`,`name` as `sortcol_Name`,'' as `nosortcol_Fields`, '' as `nosortcol_Items` FROM `anyInventory_categories`";
-	$data_obj = new dataset_library("Categories", $query, $_REQUEST, "mysql");
-	$result = $data_obj->get_result_resource();
-	$rows = $data_obj->get_result_set();
+	//$query = "SELECT *,'' as `nosortcol_`,`name` as `sortcol_Name`,'' as `nosortcol_Fields`, '' as `nosortcol_Items` FROM `anyInventory_categories`";
+	//$data_obj = new dataset_library("Categories", $query, $_REQUEST, "mysql");
+	//$result = $data_obj->get_result_resource();
+	//$rows = $data_obj->get_result_set();
 	
-	if (mysql_num_rows($result) > 0){
+	$rows = get_category_array();
+	
+	if (count($rows) > 0){
 		$i = 0;
 		
-		while($row = mysql_fetch_assoc($result)){
+		foreach($rows as $row){
 			$temp = new category($row["id"]);
 			
 			$color_code = (($i % 2) == 1) ? 'row_on' : 'row_off';
 			$table_set .= '<tr class="'.$color_code.'">';
 			$table_set .= '<td align="center" style="width: 10%; white-space: nowrap;"><a href="'.$_SERVER["PHP_SELF"].'?action=edit&amp;id='.$row["id"].'">[edit]</a> <a href="'.$_SERVER["PHP_SELF"].'?action=delete&amp;id='.$row["id"].'">[delete]</a></td>';
-			$table_set .= '<td>'.$temp->breadcrumb_names.'</td>';
+			$table_set .= '<td>'.$row["name"].'</td>';
 			$table_set .= '<td>';
 			
 			if (count($temp->fields) > 0){
@@ -96,10 +98,9 @@ else{
 		$table_set .= '<tr class="row_off"><td>There are no categories to display.</td></tr>';
 	}
 	
-	$table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();
+	//$table_set = $data_obj->get_sort_interface() . $table_set . $data_obj->get_paging_interface();
 	
 	$output .= '<table style="width: 100%; background-color: #000000;" cellspacing="1" cellpadding="2">'.$table_set.'</table>';
-	
 }
 
 include("header.php");
@@ -166,6 +167,33 @@ function get_fields_checkbox_area($checked = null){
 	$output .= '</div>';
 	
 	return $output;
+}
+
+function get_category_array(){
+	$array = array();
+	
+	get_array_children(0, $array);
+	
+	return $array;
+}
+
+function get_array_children($id, &$array, $pre = ""){
+	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
+	$result = query($query);
+	
+	if ($id != 0){
+		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
+		$newresult = query($newquery);
+		$pre .= result($newresult, 0, 'name') . ' > ';
+	}
+	
+	if (num_rows($result) > 0){
+		while ($row = fetch_array($result)){
+			$array[] = array("name"=>$pre.$row["name"],"id"=>$row["id"]);
+						
+			get_array_children($row["id"], $array, $pre);
+		}
+	}
 }
 
 ?>

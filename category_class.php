@@ -5,7 +5,7 @@ class category {
 	
 	var $name;
 	
-	var $parent_cat;
+	var $parent;
 	var $children = array();
 	
 	var $breadcrumbs = array();
@@ -17,12 +17,11 @@ class category {
 		$this->id = $cat_id;
 		
 		$query = "SELECT * FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
-		$result = query($query);
-		
+		$result = query($query);		
 		$row = fetch_array($result);
 		
 		$this->name = $row["name"];
-		$this->parent_cat = $row["parent"];
+		$this->parent = $row["parent"];
 		
 		$query = "SELECT * FROM `anyInventory_categories` WHERE `parent` = '".$this->id."'";
 		$result = query($query);
@@ -31,28 +30,18 @@ class category {
 			$this->children[] = $row["id"];
 		}
 		
-		$this->breadcrumbs[] = $this->id;
-		
-		$this->parent_cat = $this->find_parent($this->id);
-		$parent_cat = $this->parent_cat;
-		
-		while ($parent_cat != 0){
-			$this->breadcrumbs[] = $parent_cat;
+		$this->parent = $this->find_parent($this->id);
+		$parent = $this->parent;
+
+		$this->breadcrumbs[] = $this->id;		
+
+		while ($parent != 0){
+			$this->breadcrumbs[] = $parent;
 			
-			$parent_cat = $this->find_parent($parent_cat);
+			$parent = $this->find_parent($parent);
 		}
 		
 		$this->breadcrumbs = array_reverse($this->breadcrumbs);
-		
-		foreach($this->breadcrumbs as $crumb){
-			$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
-			$result = query($query);
-			$name = result($result, 0, 'name');
-			
-			$this->breadcrumb_names .= $name . ' > ';
-		}
-		
-		$this->breadcrumb_names = substr($this->breadcrumb_names, 0, strlen($this->breadcrumb_names) - 3);
 		
 		$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%,".$this->id.",' OR `categories` LIKE '%,".$this->id."'";
 		$result = query($query);

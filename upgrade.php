@@ -514,6 +514,7 @@ elseif(!$globals_error){
 							<td class="form_label"><label for="db_host">Language:</label></td>
 							<td class="form_input">
 								<select name="lang" id="lang">
+									<option value="de"';if($_REQUEST["lang"] == "de") $output .= ' selected="selected"'; $output .= '>Deutsch</option>
 									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
 									<option value="es"';if($_REQUEST["lang"] == "es") $output .= ' selected="selected"'; $output .= '>Espa&ntilde;ol</option>
 									<option value="fr"';if($_REQUEST["lang"] == "fr") $output .= ' selected="selected"'; $output .= '>Fran&ccedil;ais</option>

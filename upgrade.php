@@ -240,16 +240,19 @@ if ($_REQUEST["action"] == "upgrade"){
 				}
 			
 			case '1.7':
-				# Changes introduced in 1.8
-				
-				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'item' ) DEFAULT 'text' NOT NULL ";
-				@mysql_query($query);
+				# Changes introduced in 1.7.1
 				
 				$query = "ALTER TABLE `anyInventory_categories` ADD `auto_inc_field` TINYINT( 1 ) DEFAULT '0' NOT NULL";
 				@mysql_query($query);
 				
 				$query = "ALTER TABLE `anyInventory_fields` ADD `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL";
 				@mysql_query($query);
+				
+				$query = "ALTER TABLE `anyInventory_fields` CHANGE `name` `name` VARCHAR( 64 ) NOT NULL";
+				@mysql_query($query); 
+				
+				//$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file') DEFAULT 'text' NOT NULL ";
+				//@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.

@@ -64,7 +64,20 @@ class item {
 	function export_teaser(){
 		global $DIR_PREFIX;
 		
-		$output .= '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'">'.$this->name.'</a>';
+		$output .= '<b>'.$this->name.'</b> ';
+		
+		if(is_array($this->fields)){
+			$output .= '<span class="snippet">';
+			foreach($this->fields as $key => $value){
+				if (!is_array($value) && (trim($value) != '')){
+					$output .= '<b>'.$key.':</b> '.$value.', ';
+				}
+			}
+			$output .= '</span>';
+		}
+		
+		$output = '<a href="'.$DIR_PREFIX.'index.php?c='.$this->category->id.'&amp;id='.$this->id.'" style="text-decoration: none;">'.substr($output,0,135).'</a>';
+		
 		return $output;
 	}
 	

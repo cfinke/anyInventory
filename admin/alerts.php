@@ -15,7 +15,7 @@ if (mysql_num_rows($result) > 0){
 		
 		if (is_array($alert->category_ids)){
 			foreach($alert->category_ids as $cat_id){
-				if(!$admin_user->can_admin($cat_id)){
+				if (!$admin_user->can_admin($cat_id)){
 					break;
 				}
 				
@@ -30,13 +30,15 @@ if (mysql_num_rows($result) > 0){
 						<td>'.$row["title"].'</td>
 						<td>'.$item->name;
 				
-				if (count($item_ids) > 1){
+				if (count($alert->item_ids) > 1){
 					$table_rows .= ' et. al.';
 				}
 				
 				$table_rows .= '
 						</td>
 					</tr>';
+				
+				break;
 			}
 		}
 	}

@@ -20,6 +20,9 @@ if ($_REQUEST["action"] == "do_add"){
 				}
 			}
 		}
+		else{
+			$_REQUEST["c"] = addslashes(serialize(array()));
+		}
 		
 		$_REQUEST["title"] = stripslashes($_REQUEST["title"]);
 		$_REQUEST["title"] = str_replace($replace,"",$_REQUEST["title"]);
@@ -63,10 +66,6 @@ elseif($_REQUEST["action"] == "do_edit_cat_ids"){
 				exit;
 			}
 		}
-		
-		$_REQUEST["title"] = stripslashes($_REQUEST["title"]);
-		$_REQUEST["title"] = str_replace($replace,"",$_REQUEST["title"]);
-		$_REQUEST["title"] = trim(addslashes($_REQUEST["title"]));
 		
 		$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
 		

@@ -35,11 +35,19 @@ if ($_REQUEST["action"] == "do_add"){
 			}
 		}
 		
-		$admin_user->add_category_admin($this_id);
-		$admin_user->add_category_view($this_id);
+		if (is_array($_REQUEST["view_users"])){
+			foreach($_REQUEST["view_users"] as $user_id){
+				$temp_user = new user($user_id);
+				$temp_user->add_category_view($this_id);
+			}
+		}
 		
-		$view_user->add_category_view($this_id);
-		$view_user->add_category_admin($this_id);
+		if (is_array($_REQUEST["admin_users"])){
+			foreach($_REQUEST["admin_users"] as $user_id){
+				$temp_user = new user($user_id);
+				$temp_user->add_category_admin($this_id);
+			}
+		}
 	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
@@ -102,6 +110,38 @@ elseif($_REQUEST["action"] == "do_edit"){
 						$field = new field($field_id);
 						$field->add_category($child["id"]);
 					}
+				}
+			}
+		}
+	}
+	
+	$query = "SELECT `id` FROM `anyInventory_users` WHERE `usertype` != 'Administrator'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	
+	$pp_admin = get_config_value('PP_ADMIN');
+	$pp_view = get_config_value('PP_VIEW');
+	
+	if ($pp_admin || $pp_view){
+		while ($row = mysql_fetch_array($result)){
+			$temp_user = new user($row["id"]);
+			if ($pp_admin) $temp_user->remove_category_admin($_REQUEST["id"]);
+			if ($pp_view) $temp_user->remove_category_view($_REQUEST["id"]);
+		}
+		
+		if ($pp_view){
+			if (is_array($_REQUEST["view_users"])){
+				foreach($_REQUEST["view_users"] as $user_id){
+					$temp_user = new user($user_id);
+					$temp_user->add_category_view($_REQUEST["id"]);
+				}
+			}
+		}
+		
+		if ($pp_admin){
+			if (is_array($_REQUEST["admin_users"])){
+				foreach($_REQUEST["admin_users"] as $user_id){
+					$temp_user = new user($user_id);
+					$temp_user->add_category_admin($_REQUEST["id"]);
 				}
 			}
 		}

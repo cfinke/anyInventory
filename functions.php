@@ -86,6 +86,22 @@ function get_options_children($id, $pre = null, $selected = null, $multiple = tr
 	return $list;
 }
 
+function category_array_to_options($array, $selected = null){
+	if (!is_array($selected)) $selected = array($selected);
+	
+	if (is_array($array)){
+		foreach($array as $cat_id){
+			$category = new category($cat_id);
+			
+			$output .= '<option value="'.$cat_id.'"';
+			if (in_array($cat_id, $selected)) $output .= ' selected="selected"';
+			$output .= '>'.$category->breadcrumb_names.'</option>';
+		}
+	}
+	
+	return $output;
+}
+
 function get_item_options($cat_ids = 0, $selected = null){
 	// This function creates select box options for the items in the category $cat.
 	if (!is_array($selected)) $selected = array($selected);

@@ -396,7 +396,7 @@ elseif(!$set_config_error){
 							<td class="form_input">
 								<select name="db_type">
 									<option value="mysql"';if($_REQUEST["db_type"] == 'mysql') $output .= ' selected="selected"'; $output .= '>MySQL</option>
-									<option value="pgsql"';if($_REQUEST["db_type"] == 'pgsql') $output .= ' selected="selected"'; $output .= '>PosgreSQL</option>
+									<option value="pgsql"';if($_REQUEST["db_type"] == 'pgsql') $output .= ' selected="selected"'; $output .= '>PostgreSQL</option>
 									<option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
 								</select>
 							</td>

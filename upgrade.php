@@ -555,14 +555,14 @@ elseif(!$globals_error){
 							<td class="form_label"><label for="db_type">DB Type:</label></td>
 							<td class="form_input">
 								<select name="db_type">
-									<option';if($_REQUEST["db_type"] == 'MySQL') $output .= ' selected="selected"'; $output .= '>MySQL</option>
-									<option';if($_REQUEST["db_type"] == 'PostgreSQL') $output .= ' selected="selected"'; $output .= '>PostgreSQL</option>
-									<option';if($_REQUEST["db_type"] == 'MSSQL') $output .= ' selected="selected"'; $output .= '>MSSQL</option>
-									<option';if($_REQUEST["db_type"] == 'ODBC') $output .= ' selected="selected"'; $output .= '>ODBC</option>
-									<option';if($_REQUEST["db_type"] == 'FrontBase') $output .= ' selected="selected"'; $output .= '>FrontBase</option>
-									<option';if($_REQUEST["db_type"] == 'MiniSQL') $output .= ' selected="selected"'; $output .= '>MiniSQL</option>
-									<option';if($_REQUEST["db_type"] == 'SQLite') $output .= ' selected="selected"'; $output .= '>SQLite</option>
-									<option';if($_REQUEST["db_type"] == 'Oracle') $output .= ' selected="selected"'; $output .= '>SQLite</option>
+								       <option value="mysql"';if($_REQUEST["db_type"] == 'mysql') $output .= ' selected="selected"'; $output .= '>MySQL</option>
+								       <option value="pgsql"';if($_REQUEST["db_type"] == 'pgsql') $output .= ' selected="selected"'; $output .= '>PostgreSQL</option>
+								       <option value="mssql"';if($_REQUEST["db_type"] == 'mssql') $output .= ' selected="selected"'; $output .= '>MSSQL</option>
+								       <option value="odbc"';if($_REQUEST["db_type"] == 'odbc') $output .= ' selected="selected"'; $output .= '>ODBC</option>
+								       <option value="fbsql"';if($_REQUEST["db_type"] == 'fbsql') $output .= ' selected="selected"'; $output .= '>FrontBase</option>
+								       <option value="msql"';if($_REQUEST["db_type"] == 'msql') $output .= ' selected="selected"'; $output .= '>MiniSQL</option>
+								       <option value="SQLite"';if($_REQUEST["db_type"] == 'SQLite') $output .= ' selected="selected"'; $output .= '>SQLite</option>
+									   <option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
 								</select>
 							</td>
 						</tr>

@@ -78,7 +78,11 @@ class item {
 		
 		// Output each field with its value.
 		if (is_array($this->fields) && ((count($this->fields) - $num_empty_fields) > 0)){
-			$output .= '<table style="width: 100%;"><tr><td style="width: 50%; vertical-align: top;">';
+			$output .= '
+				<table style="width: 100%; margin: 0px; padding: 0px;">
+					<tr>
+						<td style="width: 50%; vertical-align: top;">';
+			
 			$i = 0;
 			foreach($this->fields as $key => $value){
 				if (is_array($value)){
@@ -94,11 +98,15 @@ class item {
 					}
 				}
 				elseif (trim($value) != ""){
-					$output .= '<p><b>'.$key.':</b> '.$value.'</p>';
+					$output .= '<p><b><a href="label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;" title="Create a barcode label for the '.$key.' field">'.$key.'</a>:</b> '.$value.'</p>';
 					if ($i++ == floor((count($this->fields) - $num_empty_fields)/ 2)) $output .= '</td><td style="width: 50%;">';
 				}
 			}
-			$output .= '</td></tr></table>';
+			
+			$output .= '
+						</td>
+					</tr>
+				</table>';
 		}
 		
 		// Output a preview of each file.

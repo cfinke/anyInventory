@@ -5,7 +5,7 @@ error_reporting(E_ALL ^ E_NOTICE);
 class alert {
 	var $id;
 	
-	var $item;
+	var $item_ids;
 	
 	var $title;
 	var $field_id;
@@ -24,7 +24,12 @@ class alert {
 		$row = mysql_fetch_array($result);
 		
 		$this->title = $row["title"];
-		
+		$this->item_ids = unserialize($row["item_ids"]);
+		$this->field_id = $row["field_id"];
+		$this->condition = $row["condition"];
+		$this->value = $row["value"];
+		$this->time = $row["time"];
+		$this->unix_time = $row["unix_time"];
 	}
 	
 	// This function returns a "teaser" or short description for the alert.

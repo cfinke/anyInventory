@@ -1,10 +1,15 @@
 2004/06/07
-Added support for remote files
-Added trimming of all REQUEST variables to functions
-Updated introductory text to have a link to the documentation
-Improved search ability for quick search
-Added remote files to the documentation
-Commented the categories.php file
-Commented the category_processor.php file
-Commented the field_processor.php file
-Commented the item_processor.php file
+Cleaned up layout.
+Removed dataset library due to conflicting licenses,
+Changed trimming not to trim arrays.
+Reorganized layout of search page.
+Changed 'Apply' default to checked
+Added ability to inherit fields from parent category on an edit.
+Changed 'Inherit' and 'Apply' checkbox defaults to checked
+Reorganized table of contents in documentation
+
+2004/06/08
+Validated HTML and updated layout.
+Added header image.
+Added charset header to display()
+Changed item teaser to be inline instead of block

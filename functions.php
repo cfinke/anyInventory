@@ -230,15 +230,30 @@ function delete_subcategory($category){
 		}
 	}
 	
-	// Delete all items in the current category.
+	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				
+	while ($row = mysql_fetch_array($result)){
+		$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
+		$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		
+		while ($newrow = mysql_fetch_array($newresult)){
+			$alert = new alert($newrow["id"]);
+			
+			$alert->remove_item($row["id"]);
+			
+			if (count($alert->item_ids) == 0){
+				$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
+				mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+			}
+		}
+	}
+				
+	// Delete all of the items in the category
 	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	// Reset the parent of this categories subcategories
-	$query = "UPDATE `anyInventory_categories` SET `parent`='".$category->parent_id."' WHERE `parent`='".$category->id."'";
-	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-	
-	// Delete this caegory.
+	// Delete this category.
 	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	

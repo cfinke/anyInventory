@@ -68,8 +68,8 @@ class category {
 						// Find the name of the current category
 						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
 						$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-						
-						$this->breadcrumb_names .= mysql_result($result, 0, 'name') . ' > ';
+						$row = mysql_fetch_array($result);
+						$this->breadcrumb_names .= $row["name"] . ' > ';
 					}
 				}
 			}

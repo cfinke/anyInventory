@@ -160,13 +160,55 @@ elseif($_POST["action"] == "do_delete"){
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			if ($_POST["item_action"] == "delete"){
+				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+				
+				while ($row = mysql_fetch_array($result)){
+					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
+					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		
+					while ($newrow = mysql_fetch_array($newresult)){
+						$alert = new alert($newrow["id"]);
+			
+						$alert->remove_item($row["id"]);
+			
+						if (count($alert->item_ids) == 0){
+							$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
+							mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+						}
+					}
+				}
+				
 				// Delete all of the items in the category
 				$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
 			elseif($_POST["item_action"] == "move"){
+				$newcategory = new category($_POST["move_items_to"]);
+				
+				$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+
+				while($row = mysql_fetch_array($result)){
+					$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
+					$newresult = mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
+		
+					while ($newrow = mysql_fetch_array($newresult)){
+						$alert = new alert($newrow["id"]);
+						
+						if (!in_array($alert->field_id, $newcategory->field_ids)){
+							$alert->remove_item($row["id"]);
+			
+							if (count($alert->item_ids) == 0){
+								$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
+								mysql_query($newerquery) or die(mysql_error() . '<br /><br />'. $newerquery);
+							}
+						}
+					}
+				}
+				
 				// Move the items to a different category
-				$query = "UPDATE `anyInventory_items` SET `item_category`='".$_POST["move_items_to"]."' WHERE `item_category`='".$category->id."'";
+								$query = "UPDATE `anyInventory_items` SET `item_category`='".$newcategory->id."' WHERE `item_category`='".$category->id."'";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
 			

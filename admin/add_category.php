@@ -25,7 +25,7 @@ $output = '
 							<td class="form_input">
 								<select name="parent" id="parent">
 									<option value="0">Top Level</option>
-									'.$admin_user->get_admin_categories_options($_GET["c"]).'
+									'.$admin_user->get_admin_categories_options($_GET["c"], false).'
 								</select>
 							</td>
 						</tr>';

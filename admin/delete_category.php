@@ -65,7 +65,11 @@ else{
 							</tr>
 							<tr>
 								<td class="form_label"><input type="radio" name="item_action" value="move" /></td>
-								<td>Move all items in this category to <select name="move_items_to" id="move_items_to">'.get_category_options($category->parent_id, false).'</select></td>
+								<td>Move all items in this category to 
+									<select name="move_items_to" id="move_items_to">
+										'.get_category_options($category->parent_id, false, $category->id).'
+									</select>
+								</td>
 							</tr>';
 	}
 	
@@ -76,6 +80,9 @@ else{
 							</tr>';
 	
 	if ($category->num_children > 0){
+		$exclude = $category->all_children_ids;
+		$exclude[] = $category->id;
+		
 		$output .= '
 			<tr>
 				<td class="form_label"><input type="radio" name="subcat_action" value="delete" /></td>
@@ -83,7 +90,12 @@ else{
 			</tr>
 			<tr>
 				<td class="form_label"><input type="radio" name="subcat_action" value="move" /></td>
-				<td>Move all sub-categories to <select name="move_subcats_to" id="move_subcats_to">'.get_category_options($category->parent_id, false).'</select></td>
+				<td>Move all sub-categories to 
+					<select name="move_subcats_to" id="move_subcats_to">
+						<option value="0">Top Level</option>
+						'.get_category_options($category->parent_id, false, $exclude).'
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td class="form_label">Number of items in this<br /> category and its subcategories:</td>

@@ -1,9 +1,11 @@
 <?php
 
 // German language file
-
-define('ID_MATCH','Unique ID Match');
-define('NAME_MATCH',NAME_FIELD_NAME.' Match');
+define('LANGUAGE','Sprache');
+define('SWITCH_TO_LIST','&Auml;ndern Sie zur Liste');
+define('SWITCH_TO_TABLE','&Auml;ndern Sie zum Rasterfield');
+define('ID_MATCH','&auml;hnliche '.AUTO_INC_FIELD_NAME);
+define('NAME_MATCH','&auml;hnliche '.NAME_FIELD_NAME);
 
 // Dates
 define('MONTH_1','Januar');
@@ -43,7 +45,7 @@ define('EDIT_LINK','editieren');
 define('DELETE_LINK','löschen');
 define('TYPE','Typ');
 define('SELECT_NONE','Keine Auswahl');
-define('SUBMIT_REPORT','Sie können bei der Entwicklung von anyInventory mitwirken, indem Sie diesen Fehlerreport an <a href="https://sourceforge.net/tracker/?func­d&amp;group_id.0239&amp;atide5777"> senden</a>.');
+define('SUBMIT_REPORT','Sie können bei der Entwicklung von anyInventory mitwirken, indem Sie diesen Fehlerreport an <a href="https://sourceforge.net/tracker/?func­d&amp;group_id.0239&amp;atide5777">senden</a>.');
 
 // Search
 define('SEARCH','Suchen');
@@ -162,7 +164,7 @@ define('CONDITION','Bedingung');
 define('ADD_ALERT','Warnung hinzufügen');
 define('ADD_ALERT_IN','Warnung hinzufügen zu');
 define('ALERT_TITLE','Titel der Warnung');
-define('TIMED_ONLY_LABEL','Diese Warnung nur  <a href="../docs/en/alerts.php#time_based">zeitbasiert einstellen.</a>.');
+define('TIMED_ONLY_LABEL','Diese Warnung nur  <a href="../docs/de/alerts.php#time_based">zeitbasiert einstellen.</a>.');
 define('TIMED_ONLY_EXPLANATION','Für zeitbasierte Warnungen brauchen Sie nicht das Feld, Bedingung oder Wert eingeben.');
 define('DELETE_ALERT','Warnung löschen');
 define('DELETE_ALERT_CONFIRM','Sind Sie sicher, die Warnung zu löschen?');

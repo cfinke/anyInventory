@@ -108,7 +108,7 @@ function get_options_children($id, $pre = null, $selected = null, $nonempty = nu
 
 function get_item_options($cat = 0, $selected = null){
 	// This function creates select box options for the items in the category $cat.
-	
+	if (!is_array($selected)) $selected = array($selected);
 	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category`='".$cat."' ORDER BY `name` ASC";
 	$result = query($query);
 	

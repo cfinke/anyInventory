@@ -1,6 +1,6 @@
 BEFORE 1.1
 ===================
-Searching within categories
+DONE - Searching within a category
 
 BEFORE 1.2
 ===================

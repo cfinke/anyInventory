@@ -18,6 +18,11 @@ If you do not wish to allow anyone who can view your inventory to add or
 edit it, you can password protect the admin directory to disallow access
 to these functions.
 
+Upgrading
+=========
+To upgrade to anyInventory 1.1, simply overwrite the files from version
+1.0.
+
 Using anyInventory
 ==================
 The best place to start is with the "Instructions for Use," found in the

@@ -23,7 +23,7 @@ include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");
 include($DIR_PREFIX."item_class.php");
 include($DIR_PREFIX."file_class.php");
-include($DIR_PREFIX."dataset_library.php");
+include($DIR_PREFIX."alert_class.php");
 
 connect_to_database();
 
@@ -150,6 +150,18 @@ if ($_REQUEST["action"] == "install"){
 						`id`
 					)
 				)";
+		mysql_query($query) or die(mysql_error() . '<br />'.$query);
+		
+		$query = "CREATE TABLE `anyInventory_alerts` (
+					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
+					`item_ids` text NOT NULL ,
+					`title` varchar( 255 ) NOT NULL default '',
+					`field_id` int( 11 ) NOT NULL default '0',
+					`condition` enum( '==', '!=', '<', '>', '<=', '>=' ) NOT NULL default '==',
+					`value` varchar( 255 ) NOT NULL default '',
+					`time` timestamp( 14 ) NOT NULL ,
+					UNIQUE KEY `id` ( `id` )
+					) TYPE = MYISAM ;";
 		mysql_query($query) or die(mysql_error() . '<br />'.$query);
 		
 		if (count($config_errors) == 0){

@@ -4,7 +4,7 @@ include("globals.php");
 
 if ($_REQUEST["action"] == "do_add"){
 	// Add a category.
-	$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["parent"]."')";
+	$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["parent"]."','".((int) (($_REQUEST["auto_inc"] == "yes") / 1))."')";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Get the id of the category
@@ -35,7 +35,11 @@ elseif($_REQUEST["action"] == "do_edit"){
 	$old_category = new category($_REQUEST["id"]);
 	
 	// Change the category information
-	$query = "UPDATE `anyInventory_categories` SET `name`='".$_REQUEST["name"]."',`parent`='".$_REQUEST["parent"]."' WHERE `id`='".$_REQUEST["id"]."'";
+	$query = "UPDATE `anyInventory_categories` SET 
+				`name`='".$_REQUEST["name"]."',
+				`parent`='".$_REQUEST["parent"]."',
+				`auto_inc_field`='".((int) (($_REQUEST["auto_inc"] == "yes") / 1))."'
+				WHERE `id`='".$_REQUEST["id"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Remove the category from all of the fields

@@ -21,6 +21,8 @@ class category {
 	var $field_ids = array();		// An array of all of the ids (found in anyInventory_fields) of the fields that this category uses.
 	var $field_names = array();		// An array of the field names that matches up with the ids found in $this->field_ids.
 	
+	var $auto_inc_field;
+	
 	function category($cat_id){
 		// Set the id of this category.
 		$this->id = $cat_id;
@@ -30,13 +32,14 @@ class category {
 			// Not the Top Level
 			
 			// Get all of the information about this category from the categories table.
-			$query = "SELECT `name`,`parent` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
+			$query = "SELECT `name`,`parent`,`auto_inc_field` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			$row = mysql_fetch_array($result);
 			
 			// Set the name and parent id
 			$this->name = $row["name"];
 			$this->parent_id = $row["parent"];
+			$this->auto_inc_field = $row["auto_inc_field"];
 			
 			// Begin setting the breadcrumbs of this category.
 			

@@ -244,6 +244,9 @@ if ($_REQUEST["action"] == "upgrade"){
 				
 				$query = "ALTER TABLE `anyInventory_fields` CHANGE `input_type` `input_type` ENUM( 'text', 'textarea', 'checkbox', 'radio', 'select', 'multiple', 'file', 'item' ) DEFAULT 'text' NOT NULL ";
 				@mysql_query($query);
+				
+				$query = "ALTER TABLE `anyInventory_categories` ADD `auto_inc_field` TINYINT( 1 ) DEFAULT '0' NOT NULL";
+				@mysql_query($query);
 		}
 		
 		// Attempt to write the globals file.

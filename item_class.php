@@ -83,6 +83,17 @@ class item {
 					<td class="tableData">
 						<table>';
 		
+		if ($this->category->auto_inc_field){
+			$output .= '
+				<tr>
+					<td style="width: 5%;">
+						&nbsp;
+					</td>
+					<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>anyInventory ID:</b></nobr></td>
+					<td style="width: 85%;"></b> '.$this->id.'</td>
+				</tr>';
+		}
+		
 		// Output each field with its value.
 		if (is_array($this->fields)){
 			foreach($this->fields as $key => $value){
@@ -131,7 +142,7 @@ class item {
 							<td style="width: 5%;">
 								<a href="'.$DIR_PREFIX.'label_processor.php?i='.$this->id.'&amp;f='.$key.'" style="color: #000000;" title="Create a barcode label for the '.$key.' field">Label</a>
 							</td>
-							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$key.'</a>:</nobr></td>
+							<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$key.'</b>:</nobr></td>
 							<td style="width: 85%;"></b> '.$value.'</td>
 						</tr>';
 				}

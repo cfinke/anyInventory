@@ -12,6 +12,8 @@ else{
 	
 	$category = new category($_REQUEST["id"]);
 	
+	$checked = ($category->auto_inc_field) ? ' checked="checked"' : '';
+	
 	$exclude = $category->all_children_ids;
 	$exclude[] = $category->id;
 	
@@ -42,7 +44,8 @@ else{
 						</tr>
 						<tr>
 							<td class="form_label">Fields:</td>
-							<td class="form_input">';
+							<td class="form_input">
+								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" '.$checked.' /> Show auto-increment field<br /><br />';
 	
 	if($category->id != 0){
 		$output .= '<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" checked="checked" /> Inherit fields from this category\'s parent.<br />';

@@ -128,6 +128,7 @@ if ($_REQUEST["action"] == "install"){
 				  `id` int(11) NOT NULL auto_increment,
 				  `parent` int(11) NOT NULL default '0',
 				  `name` varchar(32) NOT NULL default '',
+			 	  `auto_inc_field` TINYINT( 1 ) DEFAULT '0' NOT NULL,
 				  UNIQUE KEY `id` (`id`),
 				  KEY `parent` (`parent`)
 				) TYPE=MyISAM";

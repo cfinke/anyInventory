@@ -69,7 +69,21 @@ else{
 
 $output .= '			</td>
 						<td><b>'._NAME_FIELD_NAME.':</b> '.NAME_FIELD_NAME.'</td>
-					</tr>
+					</tr>';
+
+if ($admin_user->usertype == 'Administrator'){
+	$output .= '
+					<tr>
+						<td style="width: 10%; text-align: center;">
+							[<a href="xml_export.php">'.DOWNLOAD_LINK.'</a>]
+						</td>
+						<td>
+							<b>'.DOWNLOAD_AS_XML.'</b>
+						</td>
+					</tr>';
+}
+
+$output .= '
 				</table>
 			</td>
 		</tr>

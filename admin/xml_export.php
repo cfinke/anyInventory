@@ -2,6 +2,11 @@
 
 include("globals.php");
 
+if ($admin_user->usertype != 'Administrator'){
+	header("Location: index.php");
+	exit;
+}
+
 $cr = "\n";
 
 $output .= '<?xml version="1.0" ?>'.$cr.'<anyinventory>'.$cr;
@@ -66,15 +71,16 @@ if (is_array($cat_ids)){
 		while ($row = mysql_fetch_array($result)){
 			$item = new item($row["id"]);
 			$output .= '			<item id="'.$row["id"].'" category="'.htmlentities($item->name).'">'.$cr;
+			
 			if (is_array($category->field_ids)){
 				foreach($category->field_ids as $field_id){
 					$field = new field($field_id);
 					
-					if ($field->input_type != 'divider'){
+					if (($field->input_type != 'divider') && ($field->input_type != 'file') && (($item->fields[$field->name] != '') || is_array($item->fields[$field->name]))){
 						$output .= '				<'.str_replace(" ","_",$field->name).'>';
 						
 						if ($field->input_type == 'item'){
-							$item_ids = unserialize($row[$field->name]);
+							$item_ids = $item->fields[$field->name];
 							
 							if (is_array($item_ids)){
 								$output .= $cr;
@@ -89,7 +95,7 @@ if (is_array($cat_ids)){
 							}
 						}
 						else{
-							$output .= $row[$field->name];
+							$output .= $item->fields[$field->name];
 						}
 						
 						$output .= '</'.str_replace(" ","_",$field->name).'>'.$cr;

@@ -54,14 +54,12 @@ DONE - Download inventory as XML file
 BEFORE 1.9.1
 ===================
 DONE - Table view
-DONE - Label Sheets
+DONE - Lable Sheets
 
 BEFORE 2.0
 ===================
-DREW - Stronger CSS support
-DREW - Remote image thumbnailing - backup in case of missing libcurl
 Fill values field with data in inventory
-Sort by other field
+DONE - Sort by other field
 
 OTHER
 ===================

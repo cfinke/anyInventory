@@ -20,7 +20,7 @@ if (!isset($_REQUEST["c"])){
 								<td class="form_label"><label for="c">Add Item to:</label></td>
 								<td class="form_input">
 									<select name="c" id="c" style="width: 100%;">
-										'.get_category_options(null, false).'
+										'.$admin_user->get_admin_categories_options(null, false).'
 									</select>
 								</td>
 							</tr>
@@ -34,6 +34,11 @@ if (!isset($_REQUEST["c"])){
 		</form>';
 }
 else{
+	if (!$admin_user->can_admin($_REQUEST["c"])){
+		header("Location: ../error_handler.php?eid=13");
+		exit;
+	}
+	
 	$category = new category($_REQUEST["c"]);
 	
 	$output .= '

@@ -7,12 +7,12 @@ $cr = "\n";
 $output .= '<?xml version="1.0" ?>'.$cr.'<'.xmlize(APP_TITLE).'>'.$cr;
 
 $query = "SELECT * FROM `anyInventory_fields` ORDER BY `importance` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 
-if (mysql_num_rows($result) > 0){
+if ($result->numRows() > 0){
 	$output .= '	<'.xmlize(FIELDS).'>'.$cr;
 	
-	while ($row = mysql_fetch_array($result)){
+	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$field = new field($row["id"]);
 		$output .= '		<'.xmlize(FIELD).' id="'.$field->id.'">'.$cr;
 		
@@ -61,9 +61,9 @@ if (is_array($cat_ids)){
 		$output .= '		<'.xmlize(CATEGORY).' id="'.$category->id.'" '.xmlize(NAME).'="'.$category->breadcrumb_names.'">'.$cr;
 		
 		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$item = new item($row["id"]);
 			$output .= '			<'.xmlize(ITEM).' id="'.$row["id"].'" '.xmlize(CATEGORY).'="'.htmlentities($item->name).'">'.$cr;
 			if (is_array($category->field_ids)){

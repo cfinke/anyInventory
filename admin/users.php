@@ -6,12 +6,12 @@ $title = USERS;
 $breadcrumbs = ADMINISTRATION.' > '.USERS;
 
 $query = "SELECT * FROM `anyInventory_users` ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 
-if (mysql_num_rows($result) > 0){
+if ($result->numRows() > 0){
 	$i = 0;
 	
-	while($row = mysql_fetch_assoc($result)){
+	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$table_rows .= '
 			<tr>
 				<td align="center" style="width: 15ex; white-space: nowrap;">

@@ -8,9 +8,9 @@ $breadcrumbs = ITEMS;
 $category = new category(0);
 
 $query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 
-if (mysql_num_rows($result) > 0){
+if ($result->numRows() > 0){
 	$table_rows .= '
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
@@ -20,7 +20,7 @@ if (mysql_num_rows($result) > 0){
 				<td class="tableData">
 					<table>';
 	
-	while($row = mysql_fetch_assoc($result)){
+	while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$output .= '
 			<tr>
 				<td align="center" style="width: 18ex; white-space: nowrap;">
@@ -46,9 +46,9 @@ if (is_array($cat_ids)){
 			$category = new category($cat["id"]);
 			
 			$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 			
-			if (mysql_num_rows($result) > 0){
+			if ($result->numRows() > 0){
 				$table_rows .= '
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
@@ -59,7 +59,7 @@ if (is_array($cat_ids)){
 							<td class="tableData" colspan="2">
 								<table>';
 				
-				while($row = mysql_fetch_assoc($result)){
+				while($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 					$table_rows .= '
 						<tr>
 							<td style="width: 18ex; text-align: center; white-space: nowrap;">

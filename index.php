@@ -31,14 +31,14 @@ if ($_GET["id"]){
 	$output .= $item->export_description();
 	
 	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%' AND `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	if (mysql_num_rows($result) > 0){
+	if ($result->numRows() > 0){
 		$output .= '
 				</td>
 				<td style="padding-left: 5px;">';
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$alert = new alert($row["id"]);
 			$field = new field($row["field_id"]);
 			
@@ -58,10 +58,11 @@ if ($_GET["id"]){
 else{
 	if ($_GET["c"] == 0){
 		$query = "SELECT * FROM `anyInventory_config` WHERE `key`='FRONT_PAGE_TEXT'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		if (mysql_num_rows($result) > 0){
-			$output .= '<p style="padding: 0px 0px 15px 0px;">'.mysql_result($result, 0, 'value').'</p>';
+		if ($result->numRows() > 0){
+			$resultrows = $result->fetchRow(DB_FETCHMODE_ASSOC);
+			$output .= '<p style="padding: 0px 0px 15px 0px;">'.$resultrows['value'].'</p>';
 		}
 	}
 	
@@ -111,9 +112,9 @@ else{
 	
 	// Display any items in this category.
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	if (($_GET["c"] != 0) || (mysql_num_rows($result) > 0)){
+	if (($_GET["c"] != 0) || ($result->numRows() > 0)){
 		$output .= '
 			<tr class="tableHeader">
 				<td>'.ITEMS_IN_CAT;
@@ -129,8 +130,8 @@ else{
 					<td class="tableData" colspan="2">
 						<table>';
 		
-		if (mysql_num_rows($result) > 0){
-			while ($row = mysql_fetch_array($result)){
+		if ($result->numRows() > 0){
+			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 				$item = new item($row["id"]);
 				
 				$output .= '<tr>';
@@ -158,9 +159,9 @@ else{
 		<td style="padding-left: 5px;">';
 	
 	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
-	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 	
-	while ($row = mysql_fetch_array($result)){
+	while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 		$alert = new alert($row["id"]);
 		
 		if (is_array($alert->item_ids)){

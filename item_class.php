@@ -17,8 +17,8 @@ class item {
 		
 		// Get the information about this item.
 		$query = "SELECT * FROM `anyInventory_items` WHERE `id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		$row = mysql_fetch_array($result);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
+		$row = $result->fetchRow(DB_FETCHMODE_ASSOC);
 		
 		// Set the item name.
 		$this->name = $row["name"];
@@ -58,9 +58,9 @@ class item {
 		
 		// Get each of this item's files and add it to the array.
 		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		$result = $db->query($query) or die($db->error() . '<br /><br />'. $query);
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 			$this->files[] = new file_object($row["id"]);
 		}
 	}
@@ -118,15 +118,16 @@ class item {
 		
 		if ($this->category->auto_inc_field){
 			$query = "SELECT * FROM `anyInventory_config` WHERE `key`='AUTO_INC_FIELD_NAME'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 			
-			if (mysql_num_rows($result) > 0){
+			if ($result->numRows() > 0){
+				$resrow = $result->fetchRow(DB_FETCHMODE_ASSOC);
 				$output .= '
 					<tr class="highlighted_field">
 						<td style="width: 5%;">
 							&nbsp;
 						</td>
-						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.mysql_result($result, 0, 'value').':</b></nobr></td>
+						<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.$resrow['value'].':</b></nobr></td>
 						<td style="width: 85%;"></b> '.$this->id.'</td>
 					</tr>';
 			}
@@ -239,13 +240,13 @@ class item {
 			}
 			
 			$query = "SELECT `name` FROM `anyInventory_fields` WHERE `input_type`='item'";
-			$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
+			$result = $db->query($query) or die($db->error() . '<br /><br />' . $query);
 			
-			while ($row = mysql_fetch_array($result)){
+			while ($row = $result->fetchRow(DB_FETCHMODE_ASSOC)){
 				$new_query = "SELECT `id` FROM `anyInventory_items` WHERE `".$row["name"]."` LIKE '%\"".$this->id."\"%'";
-				$new_result = mysql_query($new_query) or die(mysql_error() . '<br /><br />' . $new_query);
+				$new_result = $db->query($new_query) or die($db->error() . '<br /><br />' . $new_query);
 				
-				while ($newrow = mysql_fetch_array($new_result)){
+				while ($newrow = $new_result->fetchRow(DB_FETCHMODE_ASSOC)){
 					$backlinks[] = $newrow["id"];
 				}
 			}

@@ -1,24 +1,11 @@
-2004/07/12
-Added item associations, WYSIWYG editor, and beginning language support
-
-2004/07/13
+Added item associations
+Added WYSIWYG editor for long text fields
+Added multiple language support
 Added alert expiration
-
-2004/07/14
-Adding XML export
-Removed extra "t" on the end of the "Edit" link.
+Adding XML export of inventory
 Added code to remove the extra ", " at the end of the item teaser.
 Added code so that item teaser now truncates with an ellipsis (...) instead of just getting cut off.
-
-2004/07/15
-Finished first round of changes due to item table change
-
-2004/07/17
-Added error checking for all DB queries, finished changes to INSERT queries
-Removed extra session_start()
-
-2004/07/22
+Changed the item table into two tables, one to track items and another for the field values
 Added exits after header redirects
-
-2004/07/25
-Added Spanish documentation
+Added Spanish translation, thanks to Isaac Uribe
+Added French translation, thanks to Cedric Arrabie

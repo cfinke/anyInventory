@@ -1,42 +1,12 @@
-BUG FIXES
-===========================================================================
-Fixed bug where first item or category in an alert would never be deleted
-Added anyInventory_values table to install file
-Fixed alignment for checkbox field names
-Suppressed all unlinks
-Fixed search page
-Fixed colspan error
-Fixed bug where all items in an item field would be selected by default
-Fixed some of the XML stuff
+2004/08/25
+Added log in button and sorting by field
 
-CHANGES
-===========================================================================
-Changed limit for input/WYSIWYG to 255 instead of 64
-Changed <item category= to <item name=
-Rewrote category deletion code
-Rewrote file deletion code
-Rewrote item deletion code
-Rewrote category deletion code
+2004/08/26
+Fixed field ordering problem
 
-NEW FEATURES
-===========================================================================
-Added table view
-Added label sheets
-Added Cancel buttons on edit pages
-Added more notices to the README about permissions
-Added default view config value
+2004/09/01
+Added code to hide alerts from people who don't have viewing rights to that item
 
-LANGUAGE
-===========================================================================
-Fixed French spellings, replaced Labels text with LABELS
-Set default language to English
-Added German language
-
-DOCUMENTATION
-===========================================================================
-Added German documentation placeholders
-Added link back to add item page from documentation
-Changed sample label to Shrek
-
-
-
+2004/09/20
+Added fixquote patch, submitted by Dale Osowski
+Added two other patches submitted by Dale Osowski.

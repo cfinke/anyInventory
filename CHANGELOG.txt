@@ -1,43 +1,37 @@
-2004/07/02
-Added customization of auto-increment field
+2004/07/12
+Added item associations, WYSIWYG editor, and beginning language support
 
-2004/07/05
-Added case for administrator in can_view() and can_admin()
-Made it so the admin user can't be deleted
-Added error codes for user system
-Moved some code to environment.php
-Removed old authentications in prep for new user system
-Added default admin user
-Changed install to allow for new user system
+2004/07/13
+Added alert expiration
 
-2004/07/06
-Added notice about chmodding files to README
-Added more permission checking
-Added more permission checking
-Added field dividers
-Fixed a problem with admin_user
-Finished first wave of permission checks in admin pages
-Added can_admin_field
-Added smart hiding of users link in header
-Added more information to item teasers
-Added users documentation
-Added functions to add and remove admin and viewing categories
-Added can_admin_alert member function
-Added member functions that return dropdwon lists for admin and view categories
-Fixed category list in add_alert.php
-Added index page for administration with front page text editing and ability to turn on/off the password protection
-Added a function that returns dropdown options for an array of category ids
+2004/07/14
+Adding XML export
+Multi-db support
+Removed extra "t" on the end of the "Edit" link.
+Added code to remove the extra ", " at the end of the item teaser.
+Added code so that item teaser now truncates with an ellipsis (...) instead of just getting cut off.
+Converting the mysql API calls to PEAR db API calls
 
-2004/07/07
-Changed applicable REQUEST calls to GET or POST
+2004/07/15
+Made $db global where it's needed (not sure if this is necessary) and also fixed the  definitions (for mysql, at least)
+Finished first round of changes due to item table change
 
-2004/07/08
-Fixed docs link to point to the correct directory.
-Fixed broken links
-Fixed logout routine.
+2004/07/16
+Working on finishing changeover to PEAR DB abstraction
 
-2004/07/09
-Working on fixing bugs with deleting and moving categories
-Removed get_config_value for pre-defined constants
-Fixed some mysql errors
-Added customization of the Name field
+2004/07/17
+Added error checking for all DB queries, finished changes to INSERT queries
+Added error checking for all DB queries, finished changes to INSERT queries
+Removed extra session_start()
+
+2004/07/20
+Fixed minor bug in error handling -- when an invalid DSN was given the site would crash
+
+2004/07/22
+Added exits after header redirects
+
+2004/07/23
+Changed the backtick symbols to db->quoteIdentifier
+
+2004/07/25
+Added Spanish documentation

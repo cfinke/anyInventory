@@ -79,23 +79,23 @@ else{
 						<td class="form_label"><label for="month">Effective as of:</label></td>
 						<td class="form_input">
 							<select name="month" id="month">
-								<option value="1">January</option>
-								<option value="2">February</option>
-								<option value="3">March</option>
-								<option value="4">April</option>
-								<option value="5">May</option>
-								<option value="6">June</option>
-								<option value="7">July</option>
-								<option value="8">August</option>
-								<option value="9">September</option>
-								<option value="10">October</option>
-								<option value="11">November</option>
-								<option value="12">December</option>
+								<option value="1"';if(date("n") == 1) $output .= ' selected="selected"'; $output .= '>January</option>
+								<option value="2"';if(date("n") == 2) $output .= ' selected="selected"'; $output .= '>February</option>
+								<option value="3"';if(date("n") == 3) $output .= ' selected="selected"'; $output .= '>March</option>
+								<option value="4"';if(date("n") == 4) $output .= ' selected="selected"'; $output .= '>April</option>
+								<option value="5"';if(date("n") == 5) $output .= ' selected="selected"'; $output .= '>May</option>
+								<option value="6"';if(date("n") == 6) $output .= ' selected="selected"'; $output .= '>June</option>
+								<option value="7"';if(date("n") == 7) $output .= ' selected="selected"'; $output .= '>July</option>
+								<option value="8"';if(date("n") == 8) $output .= ' selected="selected"'; $output .= '>August</option>
+								<option value="9"';if(date("n") == 9) $output .= ' selected="selected"'; $output .= '>September</option>
+								<option value="10"';if(date("n") == 10) $output .= ' selected="selected"'; $output .= '>October</option>
+								<option value="11"';if(date("n") == 11) $output .= ' selected="selected"'; $output .= '>November</option>
+								<option value="12"';if(date("n") == 12) $output .= ' selected="selected"'; $output .= '>December</option>
 							</select>
 							<select name="day" id="day">';
 	
 	for ($i = 1; $i <= 31; $i++){
-		$output .= '<option value="'.$i.'">'.$i.'</option>';
+		$output .= '<option value="'.$i.'"';if(date("j") == $i) $output .= ' selected="selected"'; $output .= '>'.$i.'</option>';
 	}
 	
 	

@@ -1,7 +1,5 @@
 <?php
 
-session_start();
-
 include("globals.php");
 
 // The default category is the top level.

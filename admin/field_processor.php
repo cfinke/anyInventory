@@ -105,106 +105,108 @@ elseif($_GET["action"] == "do_add_divider"){
 	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_POST["action"] == "do_edit"){
-	if (is_array($_POST["add_to"])){
-		foreach($_POST["add_to"] as $cat_id){
-	 		if (!$admin_user->can_admin($cat_id) || (!$admin_user->can_admin_field($_POST["id"]))){
-				header("Location: ../error_handler.php?eid=13");
+	if ($_POST["cancel"] != CANCEL){
+		if (is_array($_POST["add_to"])){
+			foreach($_POST["add_to"] as $cat_id){
+		 		if (!$admin_user->can_admin($cat_id) || (!$admin_user->can_admin_field($_POST["id"]))){
+					header("Location: ../error_handler.php?eid=13");
+					exit;
+				}
+			}
+		}
+		
+		$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		if ((mysql_num_rows($result) > 0) && (mysql_result($result, 0, 'id') != $_POST["id"])){
+			header("Location: ../error_handler.php?eid=0");
+			exit;
+		}
+		
+		$_POST["values"] = stripslashes($_POST["values"]);
+		$_POST["values"] = str_replace("'","",$_POST["values"]);
+		$_POST["values"] = trim(str_replace($replace,"",$_POST["values"]));
+		
+		$_POST["default_value"] = stripslashes($_POST["default_value"]);
+		$_POST["default_value"] = str_replace("'","",$_POST["default_value"]);
+		$_POST["default_value"] = trim(str_replace($replace,"",$_POST["default_value"]));
+		
+		$_POST["name"] = stripslashes($_POST["name"]);
+		$_POST["name"] = str_replace($replace,"",$_POST["name"]);
+		$_POST["name"] = str_replace("_"," ",$_POST["name"]);	
+		$_POST["name"] = trim(addslashes($_POST["name"]));
+		
+		if (($_POST["input_type"] == "select") || ($_POST["input_type"] == "radio")){
+			if (($_POST["default_value"] == '') || (stristr($_POST["values"],$_POST["default_value"]) === false)){
+				header("Location: ../error_handler.php?eid=1");
+				exit;
+			}
+			elseif($_POST["values"] == ''){
+				header("Location: ../error_handler.php?eid=8");
 				exit;
 			}
 		}
-	}
-	
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-	
-	if ((mysql_num_rows($result) > 0) && (mysql_result($result, 0, 'id') != $_POST["id"])){
-		header("Location: ../error_handler.php?eid=0");
-		exit;
-	}
-	
-	$_POST["values"] = stripslashes($_POST["values"]);
-	$_POST["values"] = str_replace("'","",$_POST["values"]);
-	$_POST["values"] = trim(str_replace($replace,"",$_POST["values"]));
-	
-	$_POST["default_value"] = stripslashes($_POST["default_value"]);
-	$_POST["default_value"] = str_replace("'","",$_POST["default_value"]);
-	$_POST["default_value"] = trim(str_replace($replace,"",$_POST["default_value"]));
-	
-	$_POST["name"] = stripslashes($_POST["name"]);
-	$_POST["name"] = str_replace($replace,"",$_POST["name"]);
-	$_POST["name"] = str_replace("_"," ",$_POST["name"]);	
-	$_POST["name"] = trim(addslashes($_POST["name"]));
-	
-	if (($_POST["input_type"] == "select") || ($_POST["input_type"] == "radio")){
-		if (($_POST["default_value"] == '') || (stristr($_POST["values"],$_POST["default_value"]) === false)){
-			header("Location: ../error_handler.php?eid=1");
-			exit;
-		}
-		elseif($_POST["values"] == ''){
-			header("Location: ../error_handler.php?eid=8");
-			exit;
-		}
-	}
-	elseif($_POST["input_type"] == "checkbox"){
-		$_POST["default_value"] = '';
-	}
-	
-	// Make an object from the unchanged field.
-	$old_field = new field($_POST["id"]);
-	
-	if ($_POST["input_type"] == "text"){
-		// Set the default text size
-		if(($_POST["size"] == 0) || (!is_numeric($_POST["size"]))){
-			$_POST["size"] = 255;
-		}
-	}
-	elseif($_POST["input_type"] == "multiple"){
-		$_POST["size"] = 64;
-	}
-	else{
-		$_POST["size"] = '';
-	}
-	
-	$values = explode(",",$_POST["values"]);
-	
-	if (is_array($values)){
-		foreach($values as $key => $value){
-			$values[$key] = trim($value);
+		elseif($_POST["input_type"] == "checkbox"){
+			$_POST["default_value"] = '';
 		}
 		
-		$values = array_unique($values);
-	}
-	else{
-		$values = array();
-	}
-	
-	$values = serialize($values);
-	
-	// Change the field.
-	$query = "UPDATE `anyInventory_fields` SET
-				`name`='".$_POST["name"]."',
-				`input_type`='".$_POST["input_type"]."',
-				`values`='".$values."',
-				`default_value`='".$_POST["default_value"]."',
-				`size`='".$_POST["size"]."',
-				`highlight`='".((int) (($_POST["highlight"] == "yes") / 1))."'
-				WHERE `id`='".$_POST["id"]."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-	
-	// Make an object from the new field.
-	$new_field = new field($_POST["id"]);
-	
-	// Remove all of the old categories.
-	if (is_array($old_field->categories)){
-		foreach($old_field->categories as $cat_id){
-			$new_field->remove_category($cat_id);
+		// Make an object from the unchanged field.
+		$old_field = new field($_POST["id"]);
+		
+		if ($_POST["input_type"] == "text"){
+			// Set the default text size
+			if(($_POST["size"] == 0) || (!is_numeric($_POST["size"]))){
+				$_POST["size"] = 255;
+			}
 		}
-	}
-	
-	// Add the new categories
-	if (is_array($_POST["add_to"])){
-		foreach($_POST["add_to"] as $cat_id){
-			$new_field->add_category($cat_id);
+		elseif($_POST["input_type"] == "multiple"){
+			$_POST["size"] = 64;
+		}
+		else{
+			$_POST["size"] = '';
+		}
+		
+		$values = explode(",",$_POST["values"]);
+		
+		if (is_array($values)){
+			foreach($values as $key => $value){
+				$values[$key] = trim($value);
+			}
+			
+			$values = array_unique($values);
+		}
+		else{
+			$values = array();
+		}
+		
+		$values = serialize($values);
+		
+		// Change the field.
+		$query = "UPDATE `anyInventory_fields` SET
+					`name`='".$_POST["name"]."',
+					`input_type`='".$_POST["input_type"]."',
+					`values`='".$values."',
+					`default_value`='".$_POST["default_value"]."',
+					`size`='".$_POST["size"]."',
+					`highlight`='".((int) (($_POST["highlight"] == "yes") / 1))."'
+					WHERE `id`='".$_POST["id"]."'";
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		// Make an object from the new field.
+		$new_field = new field($_POST["id"]);
+		
+		// Remove all of the old categories.
+		if (is_array($old_field->categories)){
+			foreach($old_field->categories as $cat_id){
+				$new_field->remove_category($cat_id);
+			}
+		}
+		
+		// Add the new categories
+		if (is_array($_POST["add_to"])){
+			foreach($_POST["add_to"] as $cat_id){
+				$new_field->add_category($cat_id);
+			}
 		}
 	}
 }

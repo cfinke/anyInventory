@@ -48,16 +48,18 @@ if (is_array($cat_ids)){
 			$query = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
 			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
+			$table_rows .= '
+				<table class="standardTable" cellspacing="0">
+					<tr class="tableHeader">
+						<td>'.$category->get_breadcrumb_admin_links().'</td>
+						<td style="text-align: right;">[<a href="add_item.php?c='.$category->id.'">'.ADD_ITEM_HERE.'</a>]</td>
+					</tr>';
+			
 			if (mysql_num_rows($result) > 0){
 				$table_rows .= '
-					<table class="standardTable" cellspacing="0">
-						<tr class="tableHeader">
-							<td>'.$category->get_breadcrumb_admin_links().'</td>
-							<td style="text-align: right;">[<a href="add_item.php?c='.$category->id.'">'.ADD_ITEM_HERE.'</a>]</td>
-						</tr>
-						<tr>
-							<td class="tableData" colspan="2">
-								<table>';
+					<tr>
+						<td class="tableData" colspan="2">
+							<table>';
 				
 				while($row = mysql_fetch_assoc($result)){
 					$table_rows .= '
@@ -76,9 +78,11 @@ if (is_array($cat_ids)){
 				$table_rows .= '
 								</table>
 							</td>
-						</tr>
-					</table>';
+						</tr>';
 			}
+			
+			$table_rows .= '
+				</table>';
 		}
 	}
 }

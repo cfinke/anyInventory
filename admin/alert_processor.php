@@ -69,37 +69,39 @@ if ($_POST["action"] == "do_add"){
 	}
 }
 elseif($_POST["action"] == "do_edit_cat_ids"){
-	if (!is_array($_POST["c"])){
-		header("Location: ../error_handler.php?eid=5");
-		exit;
-	}
-	else{
-		foreach($_POST["c"] as $cat_id){
-			if (!$admin_user->can_admin($cat_id)){
-				header("Location: ../error_handler.php?eid=13");
-				exit;
-			}
-		}
-		
-		$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
-		
-		foreach($_POST["c"] as $cat_id){
-			$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
-		}
-		
-		$query = substr($query, 0, strlen($query) - 4);
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		
-		if (mysql_num_rows($result) == 0){
-			header("Location: ../error_handler.php?eid=3");
+	if ($_POST["cancel"] != CANCEL){
+		if (!is_array($_POST["c"])){
+			header("Location: ../error_handler.php?eid=5");
 			exit;
 		}
 		else{
-			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($_POST["c"])."'";
-			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			foreach($_POST["c"] as $cat_id){
+				if (!$admin_user->can_admin($cat_id)){
+					header("Location: ../error_handler.php?eid=13");
+					exit;
+				}
+			}
 			
-			header("Location: edit_alert.php?id=".$_POST["id"]);
-			exit;
+			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
+			
+			foreach($_POST["c"] as $cat_id){
+				$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
+			}
+			
+			$query = substr($query, 0, strlen($query) - 4);
+			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			if (mysql_num_rows($result) == 0){
+				header("Location: ../error_handler.php?eid=3");
+				exit;
+			}
+			else{
+				$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($_POST["c"])."'";
+				mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+				
+				header("Location: edit_alert.php?id=".$_POST["id"]);
+				exit;
+			}
 		}
 	}
 }

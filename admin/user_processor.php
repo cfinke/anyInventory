@@ -33,39 +33,41 @@ if ($_POST["action"] == "do_add"){
 	}
 }
 elseif($_POST["action"] == "do_edit"){
-	if ($admin_user->usertype != 'Administrator'){
-		header("Location: ../error_handler.php?eid=11");
-		exit;
-	}
-	
-	// Check for duplicate username
-	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."' AND `id` != '".$_POST["id"]."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-	
-	if (mysql_num_rows($result) > 0){
-		header("Location: ../error_handler.php?eid=16");
-		exit;
-	}
-	else{
-		if (!is_array($_POST["c_view"])) $_POST["c_view"] = array();
-		if (!is_array($_POST["c_admin"])) $_POST["c_admin"] = array();
-		
-		$query = "UPDATE `anyInventory_users` SET 
-					`username`='".$_POST["username"]."'";
-		
-		if ($_POST["password"] != ''){
-			$query .= ", `password`='".md5($_POST["password"])."'";
+	if ($_POST["cancel"] != CANCEL){
+		if ($admin_user->usertype != 'Administrator'){
+			header("Location: ../error_handler.php?eid=11");
+			exit;
 		}
 		
-		if ($_POST["id"] != ADMIN_USER_ID){
+		// Check for duplicate username
+		$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."' AND `id` != '".$_POST["id"]."'";
+		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-			$query .= ", `usertype`='".$_POST["usertype"]."',
-						`categories_view`='".addslashes(serialize($_POST["c_view"]))."',
-						`categories_admin`='".addslashes(serialize($_POST["c_admin"]))."'";
+		if (mysql_num_rows($result) > 0){
+			header("Location: ../error_handler.php?eid=16");
+			exit;
 		}
-		
-		$query .= " WHERE `id`='".$_POST["id"]."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		else{
+			if (!is_array($_POST["c_view"])) $_POST["c_view"] = array();
+			if (!is_array($_POST["c_admin"])) $_POST["c_admin"] = array();
+			
+			$query = "UPDATE `anyInventory_users` SET 
+						`username`='".$_POST["username"]."'";
+			
+			if ($_POST["password"] != ''){
+				$query .= ", `password`='".md5($_POST["password"])."'";
+			}
+			
+			if ($_POST["id"] != ADMIN_USER_ID){
+			
+				$query .= ", `usertype`='".$_POST["usertype"]."',
+							`categories_view`='".addslashes(serialize($_POST["c_view"]))."',
+							`categories_admin`='".addslashes(serialize($_POST["c_admin"]))."'";
+			}
+			
+			$query .= " WHERE `id`='".$_POST["id"]."'";
+			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		}
 	}
 }
 elseif($_POST["action"] == "do_edit_own"){

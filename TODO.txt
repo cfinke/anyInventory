@@ -48,9 +48,9 @@ BEFORE 1.9
 DONE - Item associations ("Item" Field type)
 DONE - In-line editor for long text fields
 DONE - Alert Expirations
-Stronger CSS support
-Multi-language support
-Download inventory as XML file
+DONE - Multi-language support
+CHRIS - Download inventory as XML file
+? DREW - Stronger CSS support
 
 BEFORE 2.0
 ===================
@@ -59,7 +59,7 @@ Multiple-condition alerts
 Upload inventory as XML file
 Required fields
 ? Label Sheets
-Alert E-mails
+CHRIS - Alert E-mails
 
 BUGS
 ========================================

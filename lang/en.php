@@ -36,6 +36,7 @@ define('VALUE','Value');
 define('NAME','Name');
 define('EDIT_LINK','edit');
 define('DELETE_LINK','delete');
+define('TYPE','Type');
 
 // Search
 define('SEARCH','Search');
@@ -86,7 +87,9 @@ define('DEFAULT_VALUE','Default value');
 define('VALUES_INFO',"Only for data types 'Multiple', 'Select Box', 'Checkbox', and 'Radio Buttons.'  Separate with commas.");
 define('DEFAULT_VALUE_INFO',"Only for data types 'Multiple', 'Select Box', 'Text', and 'Radio Buttons.'");
 define('SIZE','Size, in characters');
+define('_SIZE','Size');
 define('SIZE_INFO',"Only for 'text' data type.");
+define('HIGHLIGHT','Highlight');
 define('HIGHLIGHT_FIELD','Highlight this field');
 define('DELETE_FIELD','Delete Field');
 define('DELETE_FIELD_CONFIRM','Are you sure you want to delete this field?');
@@ -94,6 +97,7 @@ define('NONE','None');
 define('FIELD_CATS_PRE','This field is used in');
 define('AUTO_INCREMENT','auto-increment');
 define('SHOW_AUTOINC_FIELD','Show auto-increment field');
+define('DIVIDER','Divider');
 define('ADD_DIVIDER','Add Divider');
 define('_FRONT_PAGE_TEXT','Front-page text');
 define('_NAME_FIELD_NAME','"Name" field name');

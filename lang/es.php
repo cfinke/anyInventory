@@ -34,6 +34,7 @@ define('VALUE','Valor');
 define('NAME','Nombre');
 define('EDIT_LINK','editar');
 define('DELETE_LINK','eliminar');
+define('TYPE','Tipo');
 
 // Buscar(Search)
 define('SEARCH','Buscar');
@@ -84,7 +85,9 @@ define('DEFAULT_VALUE','Valor por defecto');
 define('VALUES_INFO',"Solamente para tipos de dato '".MULTIPLE."', '".SELECT_BOX."', '".CHECKBOX."', y '".RADIO.".'  Separados por comas.");
 define('DEFAULT_VALUE_INFO',"Solamente para tipos de dato '".MULTIPLE."', '".SELECT_BOX."', '".TEXT."', y '".RADIO."'");
 define('SIZE','Tamaño, en caracteres');
+define('_SIZE','Tamaño');
 define('SIZE_INFO',"Solamente para tipo de dato '".TEXT."'.");
+define('HIGHLIGHT','Subrayar');
 define('HIGHLIGHT_FIELD','Subrayar este campo');
 define('DELETE_FIELD','Eliminar campo');
 define('DELETE_FIELD_CONFIRM','¿Realmente deseas eliminar este campo?');
@@ -92,6 +95,7 @@ define('NONE','Ninguno');
 define('FIELD_CATS_PRE','Este campo est&aacute; en uso en');
 define('AUTO_INCREMENT','auto-incrementar');
 define('SHOW_AUTOINC_FIELD','Mostrar campo auto-incrementar');
+define('DIVIDER','Separador');
 define('ADD_DIVIDER','Agregar separador');
 define('_FRONT_PAGE_TEXT','Texto de primera p&aacute;gina');
 define('_NAME_FIELD_NAME','T&iacute;tulo del campo "Nombre"');

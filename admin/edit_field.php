@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!$admin_user->can_admin_field($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
@@ -40,7 +40,7 @@ $output = '
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.EDIT_FIELD.'</td>
-					<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="../docs/editing_fields.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

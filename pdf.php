@@ -17,8 +17,8 @@ if (!function_exists('imagecreate') ||
 
 define('FPDF_FONTPATH','font/');
 
-include("fpdf/fpdf.php");
-include("label_templates.php");
+require_once("fpdf/fpdf.php");
+require_once("label_templates.php");
 
 // Set the template key
 if(isset($GET["template"])) $tk = intval($_GET["template"]);
@@ -56,9 +56,9 @@ $pdf->SetX($xpos);
 $pdf->SetY($ypos);
 
 if(isset($_GET["i"])){
- 	$item_id = $_GET["i"]; 
+	$item_id = $_GET["i"]; 
 	do {
-		$filename = rand() .'.png';
+		$filename = "item_files/" . rand() .'.png';
 	} while (is_file($filename));
 	
 	$files[] = $filename;
@@ -66,13 +66,14 @@ if(isset($_GET["i"])){
 	create_label($item_id,$_REQUEST["f"], $filename, ($label_width * 60));
 }
 else {
- foreach ($_REQUEST["i"] as $item_id){
-        do {
-                $filename = rand() .'.png';
-        } while (is_file($filename));
-        $files[] = $filename;
-        create_label($item_id,$_REQUEST["f"], $filename, ($label_width * 60));
- }
+	foreach ($_REQUEST["i"] as $item_id){
+		do {
+			$filename = "item_files/" . rand() .'.png';
+		} while (is_file($filename));
+		
+		$files[] = $filename;
+		create_label($item_id,$_REQUEST["f"], $filename, ($label_width * 60));
+	}
 }
 
 for ($i = 0; $i < count($files); $i++){

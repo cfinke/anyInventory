@@ -4,7 +4,8 @@
 
 error_reporting(E_ALL ^ E_NOTICE);
 
-include("functions.php");
+require_once("DB.php");
+require_once("functions.php");
 
 // Set the text of globals.php
 $writetoglobals = '<?php
@@ -19,8 +20,9 @@ $db_host = "'.$_POST["db_host"].'";
 $db_name = "'.$_POST["db_name"].'";
 $db_user = "'.$_POST["db_user"].'";
 $db_pass = "'.$_POST["db_pass"].'";
+$db_type = "'.$_POST["db_type"].'";
 
-include($DIR_PREFIX."environment.php");
+require_once($DIR_PREFIX."environment.php");
 
 ?>';
 
@@ -39,6 +41,9 @@ if ($_POST["action"] == "install"){
 	}
 	if (strlen(trim($_POST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
+	}
+	if (strlen(trim($_POST["db_type"])) == 0){
+		$errors[] = 'Please enter the Database Type.';
 	}
 	if ($_POST["password_protect_admin"] || $_POST["password_protect_view"]){
 		if (strlen(trim($_POST["username"])) == 0){
@@ -63,12 +68,16 @@ if ($_POST["action"] == "install"){
 	
 	// Check for the correct database information.	
 	if (count($errors) == 0){
-		if(!@mysql_connect($_POST["db_host"],$_POST["db_user"],$_POST["db_pass"])){
-			$errors[] = 'anyInventory could not connect to the MySQL host with the information you provided.';
+		if ($_POST["db_type"] == 'oci8'){
+			$dsn = "oci8://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_name'];
+		} else {
+			$dsn = $_POST["db_type"]."://".$_POST['db_user'].":".$_POST['db_pass']."@".$_POST['db_host']."/".$_POST['db_name'];
 		}
-		elseif(!mysql_select_db($_POST["db_name"])){
-			$errors[] = 'anyInventory connected to the MySQL host, but could not find the database '.$_POST["db_name"].'.';
-		}
+		
+		// Establish the connection
+		$db = DB::connect($dsn);
+		if(DB::isError($db)) $errors[] = 'anyInventory could not connect to the SQL server with the information you provided.';
+		else $db->setFetchMode(DB_FETCHMODE_ASSOC);
 	}
 	
 	// Try to write the globals.php file.
@@ -96,160 +105,237 @@ if ($_POST["action"] == "install"){
 		}
 		
 		// Begin writing the database information.
-		$query = "DROP TABLE `anyInventory_categories` ,
-			`anyInventory_fields`,
-			`anyInventory_items`,
-			`anyInventory_files`,
-			`anyInventory_alerts`,
-			`anyInventory_config`,
-			`anyInventory_users`,
-			`anyInventory_values`";
-		@mysql_query($query);
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_categories') . "";
+		$db->query($query);
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_fields') . "";
+		$db->query($query);
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_items') . "";
+		$db->query($query);
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_files') . "";
+		$db->query($query);
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_alerts') . "";
+		$db->query($query);
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_config') . "";
+		$db->query($query);
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_users') . "";
+		$db->query($query);
+		$query = "DROP TABLE " . $db->quoteIdentifier('anyInventory_values') . "";
+		$db->query($query);
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_categories') . " (
+		                  " . $db->quoteIdentifier('id') . " int ,
+		                  " . $db->quoteIdentifier('parent') . " int default '0',
+		                  " . $db->quoteIdentifier('name') . " varchar(32) default '',
+		                  " . $db->quoteIdentifier('auto_inc_field') . " int DEFAULT '0',
+		                  CONSTRAINT " . $db->quoteIdentifier('id1') . " UNIQUE (" . $db->quoteIdentifier('id') . "),
+		                  CONSTRAINT " . $db->quoteIdentifier('parent1') . " UNIQUE (" . $db->quoteIdentifier('parent') . ")
+		                )";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "CREATE TABLE `anyInventory_categories` (
-				  `id` int(11) NOT NULL auto_increment,
-				  `parent` int(11) NOT NULL default '0',
-				  `name` varchar(32) NOT NULL default '',
-			 	  `auto_inc_field` TINYINT( 1 ) DEFAULT '0' NOT NULL,
-				  UNIQUE KEY `id` (`id`),
-				  KEY `parent` (`parent`)
+        if($_POST['db_type'] == 'oci8'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_fields') . " (
+				" . $db->quoteIdentifier('id') . " int ,
+				" . $db->quoteIdentifier('name') . " varchar(64) default '',
+				" . $db->quoteIdentifier('input_type') . " varchar(30)
+				" . "default 'text', 
+				" . $db->quoteIdentifier('values') . " VARCHAR(2000),
+				" . $db->quoteIdentifier('default_value') . " varchar(32) default '',
+				" . $db->quoteIdentifier('size') . " int default '0',
+				" . $db->quoteIdentifier('categories') . " VARCHAR(2000),
+				" . $db->quoteIdentifier('importance') . " int default '0',
+				" . $db->quoteIdentifier('highlight') . " int DEFAULT '0',
+				CONSTRAINT " . $db->quoteIdentifier('id2') . " UNIQUE (" . $db->quoteIdentifier('id') . ")
 				)";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		
-		$query = "CREATE TABLE `anyInventory_fields` (
-				  `id` int(11) NOT NULL auto_increment,
-				  `name` varchar(64) NOT NULL default '',
-				  `input_type` enum('text','textarea','checkbox','radio','select','multiple','file','divider','item') NOT NULL default 'text',
-				  `values` text NOT NULL,
-				  `default_value` varchar(32) NOT NULL default '',
-				  `size` int(11) NOT NULL default '0',
-				  `categories` text NOT NULL,
-				  `importance` int(11) NOT NULL default '0',
-				  `highlight` TINYINT( 1 ) DEFAULT '0' NOT NULL,
-				  UNIQUE KEY `id` (`id`)
+		}
+		else if($_POST['db_type'] == 'mysql'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_fields') . " (
+				" . $db->quoteIdentifier('id') . " int ,
+				" . $db->quoteIdentifier('name') . " varchar(64) default '',
+				" . $db->quoteIdentifier('input_type') . " varchar(30) "
+				. "default 'text',
+				" . $db->quoteIdentifier('values') . " text,
+				" . $db->quoteIdentifier('default_value') . " varchar(32) default '',
+				" . $db->quoteIdentifier('size') . " int default '0',
+				" . $db->quoteIdentifier('categories') . " text,
+				" . $db->quoteIdentifier('importance') . " int default '0',
+				" . $db->quoteIdentifier('highlight') . " int DEFAULT '0',
+				CONSTRAINT " . $db->quoteIdentifier('id2') . " UNIQUE (" . $db->quoteIdentifier('id') . ")
 				)";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		}
 		
-		$query = "CREATE TABLE `anyInventory_items` (
-				  `id` int(11) NOT NULL auto_increment,
-				  `item_category` int(11) NOT NULL default '0',
-				  `name` varchar(64) NOT NULL default '',
-				  UNIQUE KEY `id` (`id`)
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_items') . " (
+			" . $db->quoteIdentifier('id') . " int ,
+			" . $db->quoteIdentifier('item_category') . " int default '0',
+			" . $db->quoteIdentifier('name') . " varchar(64) default '',
+			CONSTRAINT " . $db->quoteIdentifier('id3') . " UNIQUE (" . $db->quoteIdentifier('id') . ")
+			)";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		if($_POST['db_type'] == 'oci8'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_values') . " (
+				" . $db->quoteIdentifier('item_id') . " int default '0',
+				" . $db->quoteIdentifier('field_id') . " int default '0',
+				" . $db->quoteIdentifier('value') . " VARCHAR(2000) ,
+				CONSTRAINT " . $db->quoteIdentifier('item_id') . " UNIQUE ( " . $db->quoteIdentifier('item_id') . " , " . $db->quoteIdentifier('field_id') . " )
 				)";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		}
+		else if($_POST['db_type'] == 'mysql'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_values') . " (
+				" . $db->quoteIdentifier('item_id') . " int default '0',
+				" . $db->quoteIdentifier('field_id') . " int default '0',
+				" . $db->quoteIdentifier('value') . " text ,
+				CONSTRAINT " . $db->quoteIdentifier('item_id') . " UNIQUE ( " . $db->quoteIdentifier('item_id') . " , " . $db->quoteIdentifier('field_id') . " )                                           )";
+		}
 		
-		$query = "CREATE TABLE `anyInventory_values` (
-					`item_id` int( 11 ) NOT NULL default '0',
-					`field_id` int( 11 ) NOT NULL default '0',
-					`value` text NOT NULL ,
-					UNIQUE KEY `item_id` ( `item_id` , `field_id` )
-					)";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "CREATE TABLE `anyInventory_files` (
-					`id` INT NOT NULL AUTO_INCREMENT ,
-					`key` INT NOT NULL ,
-					`file_name` VARCHAR( 255 ) NOT NULL ,
-					`file_size` INT NOT NULL ,
-					`file_type` VARCHAR( 32 ) NOT NULL ,
-					`offsite_link` VARCHAR( 255 ) NOT NULL,
-					UNIQUE (
-						`id`
-					)
+		$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_files') . " (
+			" . $db->quoteIdentifier('id') . " INT  ,
+			" . $db->quoteIdentifier('key') . " INT ,
+			" . $db->quoteIdentifier('file_name') . " VARCHAR( 255 ) ,
+			" . $db->quoteIdentifier('file_size') . " INT ,
+			" . $db->quoteIdentifier('file_type') . " VARCHAR( 32 ) ,
+			" . $db->quoteIdentifier('offsite_link') . " VARCHAR( 255 ),
+			CONSTRAINT " . $db->quoteIdentifier('id4') . " UNIQUE (" . $db->quoteIdentifier('id') . "))";	
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		if($_POST['db_type'] == 'oci8'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_alerts') . " (
+				" . $db->quoteIdentifier('id') . " int  ,
+				" . $db->quoteIdentifier('item_ids') . " VARCHAR(2000) ,
+				" . $db->quoteIdentifier('title') . " varchar( 255 ) default '',
+				" . $db->quoteIdentifier('field_id') . " int default '0',
+				" . $db->quoteIdentifier('condition') .
+				" varchar(32) default '==',
+				" . $db->quoteIdentifier('value') . " varchar( 255 ) default '',
+				" . $db->quoteIdentifier('modified') . " timestamp ,
+				" . $db->quoteIdentifier('time') . " timestamp ,
+				" . $db->quoteIdentifier('expire_time') . " timestamp ,
+				" . $db->quoteIdentifier('timed') . " int DEFAULT '0',
+				" . $db->quoteIdentifier('category_ids') . " VARCHAR(2000),
+				CONSTRAINT " . $db->quoteIdentifier('id5') . " UNIQUE ( " . $db->quoteIdentifier('id') . " )
 				)";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		}
+		else if($_POST['db_type'] == 'mysql'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_alerts') . " (
+				" . $db->quoteIdentifier('id') . " int  ,
+				" . $db->quoteIdentifier('item_ids') . "text ,
+				" . $db->quoteIdentifier('title') . " varchar( 255 ) default '',
+				" . $db->quoteIdentifier('field_id') . " int default '0',
+				" . $db->quoteIdentifier('condition') .
+				" varchar(32) default '==',
+				" . $db->quoteIdentifier('value') . " varchar( 255 ) default '',
+				" . $db->quoteIdentifier('modified') . " timestamp ,
+				" . $db->quoteIdentifier('time') . " timestamp ,
+				" . $db->quoteIdentifier('expire_time') . " timestamp ,
+				" . $db->quoteIdentifier('timed') . " int DEFAULT '0',
+				" . $db->quoteIdentifier('category_ids') . " text,
+				CONSTRAINT " . $db->quoteIdentifier('id5') . " UNIQUE ( " . $db->quoteIdentifier('id') . " )
+				)";	
+		}
 		
-		$query = "CREATE TABLE `anyInventory_alerts` (
-					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
-					`item_ids` text NOT NULL ,
-					`title` varchar( 255 ) NOT NULL default '',
-					`field_id` int( 11 ) NOT NULL default '0',
-					`condition` enum( '==', '!=', '<', '>', '<=', '>=' ) NOT NULL default '==',
-					`value` varchar( 255 ) NOT NULL default '',
-					`modified` timestamp( 14 ) NOT NULL ,
-					`time` timestamp( 14 ) NOT NULL ,
-					`expire_time` timestamp( 14 ) NOT NULL ,
-				 	`timed` TINYINT( 1 ) DEFAULT '0' NOT NULL,
-					`category_ids` TEXT NOT NULL,
-					UNIQUE KEY `id` ( `id` )
-					)";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "CREATE TABLE `anyInventory_users` (
-					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
-					`username` varchar(32) NOT NULL default '',
-					`password` varchar(32) NOT NULL default '',
-					`usertype` ENUM( 'User', 'Administrator' ) DEFAULT 'User' NOT NULL,
-					`categories_view` text NOT NULL ,
-					`categories_admin` text NOT NULL ,
-					UNIQUE KEY `id` ( `id` ),
-					UNIQUE KEY `username` (`username`)
-					)";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		if($_POST['db_type'] == 'oci8'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_users') . " (
+				" . $db->quoteIdentifier('id') . " int  ,
+				" . $db->quoteIdentifier('username') . " varchar(32) default '',
+				" . $db->quoteIdentifier('password') . " varchar(255) default '',
+				" . $db->quoteIdentifier('usertype') .
+				" varchar(32) default 'User',
+				" . $db->quoteIdentifier('categories_view') . " VARCHAR(2000) ,
+				" . $db->quoteIdentifier('categories_admin') . " VARCHAR(2000) ,
+				CONSTRAINT " . $db->quoteIdentifier('id6') . " UNIQUE ( " . $db->quoteIdentifier('id') . " ),
+				CONSTRAINT " . $db->quoteIdentifier('username') . " UNIQUE (" . $db->quoteIdentifier('username') . ")
+				)";
+		}
+		else if($_POST['db_type'] == 'mysql'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_users') . " (
+				" . $db->quoteIdentifier('id') . " int  ,
+				" . $db->quoteIdentifier('username') . " varchar(32) default '',
+				" . $db->quoteIdentifier('password') . " varchar(255) default '',
+				" . $db->quoteIdentifier('usertype') .
+				" varchar(32) default 'User',
+				" . $db->quoteIdentifier('categories_view') . " text ,
+				" . $db->quoteIdentifier('categories_admin') . " text ,
+				CONSTRAINT " . $db->quoteIdentifier('id6') . " UNIQUE ( " . $db->quoteIdentifier('id') . " ),
+				CONSTRAINT " . $db->quoteIdentifier('username') . " UNIQUE (" . $db->quoteIdentifier('username') . ")
+				)";
+		}
 		
-		$query = "CREATE TABLE `anyInventory_config` (
-					`id` int( 11 ) NOT NULL AUTO_INCREMENT ,
-					`key` varchar( 64 ) NOT NULL default '',
-					`value` text NOT NULL ,
-					UNIQUE KEY `id` ( `id` ),
-					UNIQUE KEY `key` ( `key` )
-					)";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('AUTO_INC_FIELD_NAME','anyInventory ID')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		if($_POST['db_type'] == 'oci8'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_config') . " (
+				" . $db->quoteIdentifier('id') . " int  ,
+				" . $db->quoteIdentifier('key') . " varchar( 64 ) default '',
+				" . $db->quoteIdentifier('value') . " VARCHAR(2000) ,
+				CONSTRAINT " . $db->quoteIdentifier('id7') . " UNIQUE ( " . $db->quoteIdentifier('id') . " ),
+				CONSTRAINT " . $db->quoteIdentifier('key') . " UNIQUE ( " . $db->quoteIdentifier('key') . " )
+				)";
+		}
+		else if($_POST['db_type'] == 'mysql'){
+			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_config') . " (
+				" . $db->quoteIdentifier('id') . " int  ,
+				" . $db->quoteIdentifier('key') . " varchar( 64 ) default '',
+				" . $db->quoteIdentifier('value') . " text ,
+				CONSTRAINT " . $db->quoteIdentifier('id7') . " UNIQUE ( " . $db->quoteIdentifier('id') . " ),
+				CONSTRAINT " . $db->quoteIdentifier('key') . " UNIQUE ( " . $db->quoteIdentifier('key') . " )
+				)";
+		}
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/".$_REQUEST["lang"]."\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('LANG','".$_REQUEST["lang"]."')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'AUTO_INC_FIELD_NAME', 'anyInventory ID')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'FRONT_PAGE_TEXT', 'This is the front page and top-level category of anyInventory.  You can <a href=\"docs/".$_POST["lang"]."\/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.anyInventory ID.')";	
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'LANG', '". $_POST['lang'] ."')";	
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ITEM_VIEW','list')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'PP_VIEW', '".intval(($_POST['password_protect_view'] == 'yes'))."')";		
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'PP_ADMIN', '".intval(($_POST['password_protect_admin'] == 'yes'))."')";	
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'ITEM_VIEW', 'list')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$blank = array();
 		
 		$_POST["username"] = ($_POST["username"] == '') ? 'username' : $_POST["username"];
 		$_POST["password"] = ($_POST["password"] == '') ? 'password' : $_POST["password"];
+		$admin_user_id = $db->nextId('users');
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_users') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('username') . "," . $db->quoteIdentifier('password') . "," . $db->quoteIdentifier('usertype') . "," . $db->quoteIdentifier('categories_admin') . "," . $db->quoteIdentifier('categories_view') . ") VALUES ('" .$admin_user_id. "', '" . $_POST["username"] . "', '". md5($_POST["password"]). "' , 'Administrator', '". serialize($blank). "', '" .serialize($blank). "')";	
+		$pquery = $db->prepare($query);
+		$result = $db->execute($pquery); 
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_users`
-					(`username`,
-					 `password`,
-					 `usertype`,
-					 `categories_admin`,
-					 `categories_view`)
-					VALUES
-					('".$_POST["username"]."',
-					 '".md5($_POST["password"])."',
-					 'Administrator',
-					 '".addslashes(serialize($blank))."',
-					 '".addslashes(serialize($blank))."')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'ADMIN_USER_ID', '".$admin_user_id."')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('ADMIN_USER_ID','".mysql_insert_id()."')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('NAME_FIELD_NAME','Name')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		
-		$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('BAR_TEMPLATE', '6')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-
-		$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('LABEL_PADDING', '12')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-
-		$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('PAD_CHAR','0')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-
-		$query = "INSERT INTO `anyInventory_config` (`key`, `value`) VALUES ('BARCODE','C128C')";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('" .$db->nextId('config'). "', 'NAME_FIELD_NAME', '".NAME."')";	
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		if (count($config_errors) == 0){
 			header("Location: ./index.php");
@@ -267,6 +353,7 @@ if ($_POST["action"] == "install"){
 				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_POST["db_name"]).'" />
+				<input type="hidden" name="db_type" value="'.stripslashes($_POST["db_type"]).'" />
 				<input type="hidden" name="password_protect_view" value="'.stripslashes($_POST["password_protect_view"]).'" />
 				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_POST["password_protect_admin"]).'" />
 				<input type="hidden" name="username" value="'.stripslashes($_POST["username"]).'" />
@@ -316,10 +403,12 @@ if($_POST["action"] == "try_again"){
 		$output .= '
 				<input type="hidden" name="action" value="try_again" />
 				<input type="hidden" name="lang" value="'.$_REQUEST["lang"].'" />
+				<input type="hidden" name="db_type" value="'.stripslashes($_POST["db_type"]).'" />
 				<input type="hidden" name="db_host" value="'.stripslashes($_POST["db_host"]).'" />
 				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
 				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
 				<input type="hidden" name="db_name" value="'.stripslashes($_POST["db_name"]).'" />
+				<input type="hidden" name="db_type" value="'.stripslashes($_POST["db_type"]).'" />
 				<input type="hidden" name="password_protect_view" value="'.stripslashes($_POST["password_protect_view"]).'" />
 				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_POST["password_protect_admin"]).'" />
 				<input type="hidden" name="username" value="'.stripslashes($_POST["username"]).'" />
@@ -344,7 +433,7 @@ elseif(!$set_config_error){
 	$pp_admin_checked = ($_POST["password_protect_admin"]) ? ' checked="true"' : '';
 	$inBodyTag = ' onload="toggle();"';
 	if (!isset($_REQUEST["lang"])) $_REQUEST["lang"] = "en";
-		
+	
 	if (count($errors) > 0){
 		$output .= '<p>The following errors occurred:</p><ul class="error">';
 		
@@ -370,7 +459,6 @@ elseif(!$set_config_error){
 									<option value="en"';if($_REQUEST["lang"] == "en") $output .= ' selected="selected"'; $output .= '>English</option>
 									<option value="es"';if($_REQUEST["lang"] == "es") $output .= ' selected="selected"'; $output .= '>Espa&ntilde;ol</option>
 									<option value="fr"';if($_REQUEST["lang"] == "fr") $output .= ' selected="selected"'; $output .= '>Fran&ccedil;ais</option>
-									<option value="no"';if($_REQUEST["lang"] == "no") $output .= ' selected="selected"'; $output .= '>Norweigan (Bokmal)</option>
 								</select>
 							</td>
 						</tr>
@@ -380,19 +468,28 @@ elseif(!$set_config_error){
 							</td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_host">MySQL host:</label></td>
+					        <td class="form_label"><label for="db_type">Database Type:</label></td>
+					        <td class="form_input">
+								<select name="db_type" id="db_type">
+									<option value="mysql"';if($_REQUEST["db_type"] == 'mysql') $output .= ' selected="selected"'; $output .= '>MySQL</option>
+									<option value="oci8"';if($_REQUEST["db_type"] == 'oci8') $output .= ' selected="selected"'; $output .= '>Oracle</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="db_host">Database host:</label></td>
 							<td class="form_input"><input type="text" name="db_host" id="db_host" value="'.$db_host.'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_user">MySQL Username:</label></td>
+							<td class="form_label"><label for="db_user">Database Username:</label></td>
 							<td class="form_input"><input type="text" name="db_user" id="db_user" value="'.stripslashes($_POST["db_user"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_password">MySQL Password:</label></td>
+							<td class="form_label"><label for="db_password">Database Password:</label></td>
 							<td class="form_input"><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_POST["db_pass"]).'" /></td>
 						</tr>
 						<tr>
-							<td class="form_label"><label for="db_name">MySQL Database:</label></td>
+							<td class="form_label"><label for="db_name">Database Name:</label></td>
 							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_POST["db_name"]).'" /></td>
 						</tr>
 						<tr class="tableHeader">
@@ -428,7 +525,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Install anyInventory 1.9.3</title>
+		<title>Install anyInventory 2.0</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">
@@ -448,7 +545,7 @@ echo '
 		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.9.3
+					anyInventory 2.0
 				</td>
 			</tr>
 			<tr>
@@ -465,7 +562,7 @@ echo '
 					<div style="min-height: 400px;">
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Install anyInventory 1.9.3</td>
+								<td>Install anyInventory 2.0</td>
 							</tr>
 							<tr>
 								<td class="tableData">

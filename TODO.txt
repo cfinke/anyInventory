@@ -58,15 +58,12 @@ DONE - Lable Sheets
 
 BEFORE 2.0
 ===================
-Fill values field with data in inventory
+DONE - Oracle Support
 DONE - Sort by other field
 
 OTHER
 ===================
+Fill values field with data in inventory
 Multiple-condition alerts
-Upload inventory as XML file
 Required fields
 Alert E-mails
-
-BUGS
-========================================

@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!$admin_user->can_admin($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
@@ -24,7 +24,7 @@ else{
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.DELETE_CATEGORY.'</td>
-					<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_categories.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="../docs/deleting_categories.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

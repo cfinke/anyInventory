@@ -16,15 +16,16 @@ class file_object{
 	var $is_remote = false; // Whether or not this is a remote file
 	
 	function file_object($id){
-		global $DIR_PREFIX;
+		global $DIR_PREFIX
+		global $db;
 		
 		// Set the id of this file.
 		$this->id = $id;
 		
 		// Get the information about this file.
-		$query = "SELECT * FROM `anyInventory_files` WHERE `id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		$row = mysql_fetch_array($result);
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		// Set the id of the item that owns this file.
 		$this->item_id = $row["key"];
@@ -173,16 +174,18 @@ class file_object{
 		global $DIR_PREFIX;
 		
 		if ($this->is_remote){
-			$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$this->id."'";
-			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+			$result = $db->query($query);
+            if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 		else{
 			if (is_file(realpath($DIR_PREFIX."item_files/")."/".$this->file_name)){
 				@unlink(realpath($DIR_PREFIX."item_files/")."/".$this->file_name);
 			}
 			
-			$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$this->id."'";
-			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+			$result = $db->query($query);
+            if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($admin_user->usertype != 'Administrator'){
 	header("Location: ../error_handler.php?eid=15");
@@ -12,12 +12,13 @@ switch($_GET["id"]){
 		$title = EDIT_AUTOINC_FIELD;
 		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_AUTOINC_FIELD;
 		
-		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `auto_inc_field`='1'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('auto_inc_field') . "='1'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		$categories = array();
 		
-		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+		while ($row = $result->fetchRow()){	
 			$categories[] = $row["id"];
 		}
 		
@@ -27,7 +28,7 @@ switch($_GET["id"]){
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
 							<td>'.EDIT_AUTOINC_FIELD.'</td>
-							<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
+							<td style="text-align: right;">[<a href="../docs/editing_fields.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -87,7 +88,7 @@ switch($_GET["id"]){
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
 							<td>'.EDIT_NAME_FIELD.'</td>
-							<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
+							<td style="text-align: right;">[<a href="../docs/editing_fields.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -106,7 +107,8 @@ switch($_GET["id"]){
 				</form>';
 		break;
 	case 'label_template':
-		include("../label_templates.php");
+		require_once("../label_templates.php");
+		
 		$title = EDIT_LABEL_TEMPLATE;
 		$breadcrumbs = ADMINISTRATION.' > <a href="fields.php">'.FIELDS.'</a> > '.EDIT_LABEL_TEMPLATE;
 		
@@ -116,7 +118,7 @@ switch($_GET["id"]){
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
 							<td>'.EDIT_LABEL_TEMPLATE.'</td>
-							<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
+							<td style="text-align: right;">[<a href="../docs/editing_fields.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -163,7 +165,7 @@ switch($_GET["id"]){
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
 							<td>'.EDIT_LABEL_PADDING.'</td>
-							<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
+							<td style="text-align: right;">[<a href="../docs/editing_fields.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -190,7 +192,7 @@ switch($_GET["id"]){
 					<table class="standardTable" cellspacing="0">
 						<tr class="tableHeader">
 							<td>'.EDIT_PAD_CHAR.'</td>
-							<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
+							<td style="text-align: right;">[<a href="../docs/editing_fields.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -218,7 +220,7 @@ switch($_GET["id"]){
 						<tr class="tableHeader">
 							<td>&nbsp;</td>
 							<td>'.EDIT_BARCODE.'</td>
-							<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_fields.php">'.HELP.'</a>]</td>
+							<td style="text-align: right;">[<a href="../docs/editing_fields.php">'.HELP.'</a>]</td>
 						</tr>
 						  <tr>
 							<td width="4" valign="middle"><input name="type" type="radio" value="I25"';

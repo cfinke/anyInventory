@@ -170,7 +170,7 @@ define('CONDITION','Bedingung');
 define('ADD_ALERT','Warnung hinzufügen');
 define('ADD_ALERT_IN','Warnung hinzufügen zu');
 define('ALERT_TITLE','Titel der Warnung');
-define('TIMED_ONLY_LABEL','Diese Warnung nur  <a href="../docs/de/alerts.php#time_based">zeitbasiert einstellen.</a>.');
+define('TIMED_ONLY_LABEL','Diese Warnung nur  <a href="../docs/alerts.php#time_based">zeitbasiert einstellen.</a>.');
 define('TIMED_ONLY_EXPLANATION','Für zeitbasierte Warnungen brauchen Sie nicht das Feld, Bedingung oder Wert eingeben.');
 define('DELETE_ALERT','Warnung löschen');
 define('DELETE_ALERT_CONFIRM','Sind Sie sicher, die Warnung zu löschen?');

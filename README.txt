@@ -22,7 +22,7 @@ executable by PHP, or it may not be able to access them.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.9.3, simply overwrite the files from 
+To upgrade to anyInventory 2.0, simply overwrite the files from 
 your current version, and then run the included upgrade.php script from 
 the Web browser of your choice.
 

@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($_POST["action"] == "do_add"){
 	if (!$admin_user->can_admin($_POST["parent"])){
@@ -9,11 +9,12 @@ if ($_POST["action"] == "do_add"){
 	}
 	else{
 		// Add a category.
-		$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_POST["name"]."','".$_POST["parent"]."','".((int) (($_POST["auto_inc"] == "yes") / 1))."')";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_categories')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('parent').",".$db->quoteIdentifier('auto_inc_field').") VALUES ('".$db->nextId('categories')."', '".stripslashes($_POST['name'])."', '".$_POST['parent']."', '".intval(($_POST['auto_inc'] == 'yes'))."')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		// Get the id of the category
-		$this_id = mysql_insert_id();
+        $this_id = $db->nextId('categories') - 1; 
 		
 		if ($_POST["inherit_fields"] == "yes"){
 			// Add the fields from the parent category
@@ -61,12 +62,13 @@ elseif($_POST["action"] == "do_edit"){
 		$old_category = new category($_POST["id"]);
 		
 		// Change the category information
-		$query = "UPDATE `anyInventory_categories` SET 
-					`name`='".$_POST["name"]."',
-					`parent`='".$_POST["parent"]."',
-					`auto_inc_field`='".((int) (($_POST["auto_inc"] == "yes") / 1))."'
-					WHERE `id`='".$_POST["id"]."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_categories') . " SET 
+					" . $db->quoteIdentifier('name') . "='".$_POST["name"]."',
+					" . $db->quoteIdentifier('parent') . "='".$_POST["parent"]."',
+					" . $db->quoteIdentifier('auto_inc_field') . "='".((int) (($_POST["auto_inc"] == "yes") / 1))."'
+					WHERE " . $db->quoteIdentifier('id') . "='".$_POST["id"]."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		// Remove the category from all of the fields
 		if (is_array($old_category->field_ids)){
@@ -116,11 +118,12 @@ elseif($_POST["action"] == "do_edit"){
 			}
 		}
 		
-		$query = "SELECT `id` FROM `anyInventory_users` WHERE `usertype` != 'Administrator'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_users') . " WHERE " . $db->quoteIdentifier('usertype') . " != 'Administrator'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		if (PP_ADMIN || PP_VIEW){
-			while ($row = mysql_fetch_array($result)){
+				while ($row =$result->fetchRow()){
 				$temp_user = new user($row["id"]);
 				if (PP_ADMIN) $temp_user->remove_category_admin($_POST["id"]);
 				if (PP_VIEW) $temp_user->remove_category_view($_POST["id"]);

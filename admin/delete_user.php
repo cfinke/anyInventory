@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($_GET["id"] == ADMIN_USER_ID){
 	header("Location: ../error_handler.php?eid=12");
@@ -27,7 +27,7 @@ else{
 			<table class="standardTable" cellspacing="0" cellpadding="0">
 				<tr class="tableHeader">
 					<td>'.DELETE_USER.'</td>
-					<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_users.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="../docs/deleting_users.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

@@ -1,7 +1,7 @@
 <?php
 
 require("globals.php");
-include("label_templates.php");
+require_once("label_templates.php");
 
 $title = LABELS;
 $breadcrumbs = LABELS;
@@ -31,7 +31,7 @@ elseif (!isset($_POST["c"])){
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
 				<td>'.GENERATE_LABELS.'</td>
-				<td style="text-align: right;">[<a href="docs/'.LANG.'/labels.php">'.HELP.'</a>]</td>
+				<td style="text-align: right;">[<a href="docs/labels.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
@@ -72,9 +72,10 @@ elseif (!isset($_POST["i"])){
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$result = $db->query($query);  
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
 	
-	if (mysql_num_rows($result) == 0){
+	if ($result->numRows() == 0){
 		header("Location: error_handler.php?eid=3");
 		exit;
 	}
@@ -83,7 +84,7 @@ elseif (!isset($_POST["i"])){
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.GENERATE_LABELS.'</td>
-					<td style="text-align: right;">[<a href="docs/'.LANG.'/labels.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="docs/labels.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
@@ -98,14 +99,13 @@ elseif (!isset($_POST["i"])){
 										<select name="f" id="f">
 										';
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = $result->fetchRow()){
 			$field = new field($row["id"]);
 			
 			$output .= '<option value="'.$field->id.'" />'.$field->name.'</option>';
 		}
-		$output .= '<option value="0"/>AutoIncrement</option>';
 		
-		$output .= '
+		$output .= '<option value="0"/>AutoIncrement</option>
 										</select>
 									</td>
 								</tr>

@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = DELETE_ITEM;
 $breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.Items.'</a> > '.DELETE_ITEM;
@@ -19,7 +19,7 @@ $output .= '
 		<table class="standardTable" cellspacing="0" cellpadding="0">
 			<tr class="tableHeader">
 				<td>'.DELETE_ITEM.'</td>
-				<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_items.php">'.HELP.'</a>]</td>
+				<td style="text-align: right;">[<a href="../docs/deleting_items.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">

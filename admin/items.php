@@ -1,16 +1,17 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = ITEMS;
 $breadcrumbs = ITEMS;
 
 $category = new category(0);
 
-$query = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "='".$category->id."' ORDER BY " . $db->quoteIdentifier('name') . " ASC";
+$result = $db->query($query);
+if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
-if (mysql_num_rows($result) > 0){
+if ($result->numRows() > 0){
 	$table_rows .= '
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
@@ -19,8 +20,8 @@ if (mysql_num_rows($result) > 0){
 			<tr>
 				<td class="tableData">
 					<table>';
-	
-	while($row = mysql_fetch_assoc($result)){
+		
+		while($row=$result->fetchRow()){
 		$output .= '
 			<tr>
 				<td align="center" style="width: 18ex; white-space: nowrap;">
@@ -45,8 +46,9 @@ if (is_array($cat_ids)){
 		if ($admin_user->can_admin($cat["id"])){
 			$category = new category($cat["id"]);
 			
-			$query = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "='".$category->id."' ORDER BY " . $db->quoteIdentifier('name') . " ASC";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			$table_rows .= '
 				<table class="standardTable" cellspacing="0">
@@ -55,13 +57,13 @@ if (is_array($cat_ids)){
 						<td style="text-align: right;">[<a href="add_item.php?c='.$category->id.'">'.ADD_ITEM_HERE.'</a>]</td>
 					</tr>';
 			
-			if (mysql_num_rows($result) > 0){
+				if ($result->numRows() > 0){
 				$table_rows .= '
 					<tr>
 						<td class="tableData" colspan="2">
 							<table>';
 				
-				while($row = mysql_fetch_assoc($result)){
+					while($row = $result->fetchRow()){
 					$table_rows .= '
 						<tr>
 							<td style="width: 18ex; text-align: center; white-space: nowrap;">
@@ -94,7 +96,7 @@ $output .= '
 				'.ITEMS.'
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/'.LANG.'/items.php">'.HELP.'</a>]
+				[<a href="../docs/items.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>

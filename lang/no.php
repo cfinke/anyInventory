@@ -171,7 +171,7 @@ define('CONDITION','Tilstand');
 define('ADD_ALERT','Legg til varsel');
 define('ADD_ALERT_IN','Legg til varsel i');
 define('ALERT_TITLE','Navn p&aring; varsel');
-define('TIMED_ONLY_LABEL','Gj&oslash;r dette varslet kun <a href="../docs/en/alerts.php#time_based">tidsbasert</a>.');
+define('TIMED_ONLY_LABEL','Gj&oslash;r dette varslet kun <a href="../docs/alerts.php#time_based">tidsbasert</a>.');
 define('TIMED_ONLY_EXPLANATION','For tidsbaserte varsler trenger du ikke fylle inn feltet, tilstand eller verdi.');
 define('DELETE_ALERT','Slett varsel');
 define('DELETE_ALERT_CONFIRM','Er du sikker p&aring; at du &oslash;nsker &aring; slette dette varslet?');

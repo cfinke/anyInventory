@@ -20,6 +20,8 @@ class category {
 	var $auto_inc_field = false;
 	
 	function category($cat_id){
+		global $db;
+		
 		// Set the id of this category.
 		$this->id = $cat_id;
 		
@@ -28,9 +30,11 @@ class category {
 			// Not the Top Level
 			
 			// Get all of the information about this category from the categories table.
-			$query = "SELECT `name`,`parent`,`auto_inc_field` FROM `anyInventory_categories` WHERE `id`='".$this->id."'";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-			$row = mysql_fetch_array($result);
+			$query = "SELECT " . $db->quoteIdentifier('name') . "," . $db->quoteIdentifier('parent') . "," . $db->quoteIdentifier('auto_inc_field') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+			$result = $db->query($query);
+            if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+            
+			$row = $result->fetchRow();
 			
 			// Set the name and parent id
 			$this->name = $row["name"];
@@ -50,7 +54,7 @@ class category {
 				// Set the parent id to the parent of the current parent id
 				$parent_id = $this->find_parent_id($parent_id);
 			}
-			
+			 
 			// Add the top level to the breadcrumbs.
 			$this->breadcrumbs[] = 0;
 			
@@ -66,23 +70,25 @@ class category {
 					}
 					else{
 						// Find the name of the current category
-						$query  = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$crumb."'";
-						$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-						$row = mysql_fetch_array($result);
+						$query  = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$crumb."'";
+						$result = $db->query($query);
+                		if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+						
 						$this->breadcrumb_names .= $row["name"] . ' > ';
 					}
 				}
 			}
 			
-			// Cut off the last three characters from the breadcrumbs string
 			$this->breadcrumb_names = substr($this->breadcrumb_names, 0, strlen($this->breadcrumb_names) - 3);
 			
 			// Get all of the fields that this category uses.
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$this->id."\"%' OR `input_type`='divider'  ORDER BY `importance` ASC";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('categories') . " LIKE '%\"".$this->id."\"%' OR " . $db->quoteIdentifier('input_type') . "='divider'  ORDER BY " . $db->quoteIdentifier('importance') . " ASC";
+			$result = $db->query($query);
+			if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			// Add each field's id and name to the appropriate arrays.
-			while ($row = mysql_fetch_array($result)){
+			
+			while ($row = $result->fetchRow()){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
@@ -97,21 +103,23 @@ class category {
 			$this->breadcrumb_names = TOP_LEVEL_CATEGORY;
 			
 			// Get the fields that the Top Level uses.
-			$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"0\"%' OR `input_type`='divider' ORDER BY `importance`";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('categories') . " LIKE '%0%' OR " . $db->quoteIdentifier('input_type') . "='divider' ORDER BY " . $db->quoteIdentifier('importance') . "";
+			$result = $db->query($query); 
+            if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			// Add each field id and name to the arrays.
-			while ($row = mysql_fetch_array($result)){
+			while ($row = $result->fetchRow()){
 				$this->field_ids[] = $row["id"];
 				$this->field_names[] = $row["name"];
 			}
 		}
 		
 		// Find the children of the current category
-		$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . " = '".$this->id."' ORDER BY " . $db->quoteIdentifier('name') . " ASC";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		while($row = mysql_fetch_array($result)){
+		while($row = $result->fetchRow()){
 			$this->children_ids[] = $row["id"];
 			$this->num_children++;
 		}
@@ -122,10 +130,13 @@ class category {
 	// This function returns the number of items that are inventoried in this category.
 	
 	function num_items(){
-		$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		global $db;
 		
-		return mysql_num_rows($result);
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		return $result->numRows();
 	}
 	
 	// This function returns the number of items that are inventoried in this category AND its subcategories.
@@ -162,21 +173,24 @@ class category {
 	// This function returns the parent id of a given category id.
 	
 	function find_parent_id($cat_id){
+		global $db;
 		if ($cat_id == 0){
 			// The Top Level is its own category.
 			return 0;
 		}
 		else{
 			// Get the parent from the categories table.
-			$query = "SELECT `parent` FROM `anyInventory_categories` WHERE `id`='".$cat_id."'";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "SELECT " . $db->quoteIdentifier('parent') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$cat_id."'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			// If there is no parent, then, the parent is the Top Level.
-			if (mysql_num_rows($result) == 0){
+			if ($result->numRows() == 0){
 				return 0;
 			}
 			else{
-				return mysql_result($result, 0, 'parent');
+				$row = $result->fetchRow();
+				return $row['parent'];
 			}
 		}
 	}
@@ -263,41 +277,48 @@ class category {
 	}
 	
 	function move_subcats($parent_id = 0){
-		$query = "UPDATE `anyInventory_categories` SET `parent`='".$parent_id."' WHERE `parent`='".$this->id."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_categories') . " SET " . $db->quoteIdentifier('parent') . "='".$parent_id."' WHERE " . $db->quoteIdentifier('parent') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 	
 	function move_items($cat_id = null){
+		global $db;
 		if ($cat_id == null){
-			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$this->id."'";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "='".$this->id."'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
-			while ($row = mysql_fetch_array($result)){
+			while ($row = $result->fetchRow()){
 				$item = new item($row["id"]);
 				$item->delete_self();
 			}
 		}
 		else{
-			$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-
-			while($row = mysql_fetch_array($result)){
-				$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%' AND `category_ids` NOT LIKE '%\"".$cat_id."\"%' GROUP BY `id`";
-				$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
-		
-				while ($newrow = mysql_fetch_array($newresult)){
+			$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "='".$category->id."'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			while($row = $result->fetchRow()){
+				$newquery = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('item_ids') . " LIKE '%\"".$row["id"]."\"%' AND " . $db->quoteIdentifier('category_ids') . " NOT LIKE '%\"".$cat_id."\"%' GROUP BY " . $db->quoteIdentifier('id') . "";
+				$newresult = $db->query($newquery);
+				if(DB::isError($newresult)) die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
+				
+				while ($newrow = $newresult->fetchRow()){
 					$alert = new alert($newrow["id"]);
 					$alert->remove_item($row["id"]);
 				}
 			}
-	
-			$query = "UPDATE `anyInventory_items` SET `item_category`='".$cat_id."' WHERE `item_category`='".$this->id."'";
-			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			
+			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_items') . " SET " . $db->quoteIdentifier('item_category') . "='".$cat_id."' WHERE " . $db->quoteIdentifier('item_category') . "='".$this->id."'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 	}
 	
 	function delete_self(){
 		global $admin_user;
+		global $db;
 		
 		if (!$admin_user->can_admin($_POST["id"])){
 			header("Location: ../error_handler.php?eid=13");
@@ -305,8 +326,9 @@ class category {
 		}
 		else{
 			// Delete the category
-			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$this->id."'"; 
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'"; 
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
 			// Remove all of the fields from this category.
 			if (is_array($this->field_ids)){
@@ -316,10 +338,11 @@ class category {
 				}
 			}
 			
-			$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `category_ids` LIKE '%\"".$this->id."\"%'";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('category_ids') . " LIKE '%\"".$this->id."\"%'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
-			while ($row = mysql_fetch_array($result)){
+			while ($row = $result->fetchRow()){
 				$alert = new alert($row["id"]);
 				$alert->remove_category($this->id);
 			}

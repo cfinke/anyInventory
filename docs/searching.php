@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 switch (LANG){
 	case 'es':
@@ -24,8 +24,7 @@ switch (LANG){
 					</td>
 				</tr>
 			</table>
-			<div style="float: left;"><a href="labels.php">&lt;&lt; Anterior: Etiquetas</a></div>
-			<div style="text-align: right;"><a href="whats_next.php">Siguiente: ¿Qu&eacute; sigue? &gt;&gt;</a></div>';
+			<div style="float: left;"><a href="labels.php">&lt;&lt; Anterior: Etiquetas</a></div>';
 		break;
 	case 'fr':
 		$title = "anyInventory: Aide > Recherche";
@@ -48,8 +47,7 @@ switch (LANG){
 					</td>
 				</tr>
 			</table>
-			<div style="float: left;"><a href="labels.php">&lt;&lt; Précédent: Etiquettes</a></div>
-			<div style="text-align: right;"><a href="whats_next.php">Suivant: Quelles futures évolutions? &gt;&gt;</a></div>';
+			<div style="float: left;"><a href="labels.php">&lt;&lt; Précédent: Etiquettes</a></div>';
 		break;
 	case 'en':
 	default:
@@ -73,8 +71,7 @@ switch (LANG){
 					</td>
 				</tr>
 			</table>
-			<div style="float: left;"><a href="labels.php">&lt;&lt; Previous: Labels</a></div>
-			<div style="text-align: right;"><a href="whats_next.php">Next: What\'s Next? &gt;&gt;</a></div>';
+			<div style="float: left;"><a href="labels.php">&lt;&lt; Previous: Labels</a></div>';
 		break;
 }
 

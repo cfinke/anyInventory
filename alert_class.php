@@ -22,12 +22,14 @@ class alert {
 	var $expires = false;
 	
 	function alert($alert_id){
+		global $db;
 		$this->id = $alert_id;
 		
-		$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time`, UNIX_TIMESTAMP(`expire_time`) AS `unix_expire_time` FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		$row = mysql_fetch_array($result);
+		$query = "SELECT *, UNIX_TIMESTAMP(" . $db->quoteIdentifier('time') . ") AS " . $db->quoteIdentifier('unix_time') . ", UNIX_TIMESTAMP(" . $db->quoteIdentifier('expire_time') . ") AS " . $db->quoteIdentifier('unix_expire_time') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
+		$row = $result->fetchRow(); 
 		$this->title = $row["title"];
 		
 		$this->item_ids = unserialize($row["item_ids"]);
@@ -67,8 +69,9 @@ class alert {
 		// If the category id is in the array, remove it.
 		if ($key !== false) unset($this->item_ids[$key]);
 		
-		$query = "UPDATE `anyInventory_alerts` SET `item_ids`='".serialize($this->item_ids)."' WHERE `id`='".$this->id."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_alerts') . " SET " . $db->quoteIdentifier('item_ids') . "='".serialize($this->item_ids)."' WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 	
 	function remove_category($category_id){
@@ -83,19 +86,22 @@ class alert {
 			}
 		}
 		
-		// Find the key of the category id in the array.		$key = array_search($category_id, $this->category_ids);
+		// Find the key of the category id in the array.
+		$key = array_search($category_id, $this->category_ids);
 		
-		// If the category id is in the array, remove it.		if ($key !== false) unset($this->category_ids[$key]);
+		// If the category id is in the array, remove it.
+		if ($key !== false) unset($this->category_ids[$key]);
 		
 		// Update the database
 		if (count($this->category_ids) == 0){
-			$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$this->id."'";
+			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
 		}
 		else{
-			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($this->category_ids)."' WHERE `id`='".$this->id."'";
+			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_alerts') . " SET " . $db->quoteIdentifier('category_ids') . "='".serialize($this->category_ids)."' WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
 		}
 		
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$result = $db->query($query);
+        if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 	
 	// This function returns a full description of the item.
@@ -186,7 +192,7 @@ class alert {
 						'.ALERT.'
 					</td>
 					<td style="text-align: right;">
-						<a href="'.$DIR_PREFIX.'docs/'.LANG.'/alerts.php">?</a>
+						<a href="'.$DIR_PREFIX.'docs/alerts.php">?</a>
 					</td>
 				</tr>
 				<tr class="alertContent">

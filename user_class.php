@@ -11,11 +11,15 @@ class user {
 	var $categories_admin = array();	// The category ids of the categories that this user can administrate
 	
 	function user($user_id){
+		global $db;
+		
 		$this->id = $user_id;
 		
-		$query = "SELECT * FROM `anyInventory_users` WHERE `id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
-		$row = mysql_fetch_array($result, MYSQL_ASSOC);
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_users') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$row = $result->fetchRow();
 		
 		$this->username = $row["username"];
 		$this->usertype = $row["usertype"];
@@ -102,8 +106,9 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$this->categories_view[] = $category_id;
 			
-			$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
-			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . "='".addslashes(serialize($this->categories_view))."' WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 	}
 	
@@ -111,8 +116,9 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$this->categories_admin[] = $category_id;
 			
-			$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
-			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . "='".addslashes(serialize($this->categories_admin))."' WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 	}
 	
@@ -125,8 +131,9 @@ class user {
 				
 				$this->categories_view = array_unique($this->categories_view);
 				
-				$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
-				mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+				$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . "='".addslashes(serialize($this->categories_view))."' WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			}
 		}
 	}
@@ -140,8 +147,9 @@ class user {
 				
 				$this->categories_admin = array_unique($this->categories_admin);
 				
-				$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
-				mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+				$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . "='".addslashes(serialize($this->categories_admin))."' WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			}
 		}
 	}
@@ -149,15 +157,17 @@ class user {
 	function update_categories_view($category_ids){
 		$this->categories_view = $category_ids;
 		
-		$query = "UPDATE `anyInventory_users` SET `categories_view`='".addslashes(serialize($this->categories_view))."' WHERE `id`='".$this->id."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_view') . "='".addslashes(serialize($this->categories_view))."' WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 	
 	function update_categories_admin($category_ids){
 		$this->categories_admin = $category_ids;
 		
-		$query = "UPDATE `anyInventory_users` SET `categories_admin`='".addslashes(serialize($this->categories_admin))."' WHERE `id`='".$this->id."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_users') . " SET " . $db->quoteIdentifier('categories_admin') . "='".addslashes(serialize($this->categories_admin))."' WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 	
 	function export_description(){

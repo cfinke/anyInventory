@@ -1,13 +1,12 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 // The default category is the top level.
 if (!$_GET["c"]) $_GET["c"] = 0;
 
 // Create a category object for the current category.
 $category = new category($_GET["c"]);
-
 if (!$view_user->can_view($category->id)){
 	header("Location: error_handler.php?eid=12");
 	exit;
@@ -28,15 +27,16 @@ if ($_GET["id"]){
 	
 	$output .= $item->export_description();
 	
-	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%' AND `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('field_id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('item_ids') . " LIKE '%\"".$item->id."\"%' AND " . $db->quoteIdentifier('time') . " <= NOW() AND (" . $db->quoteIdentifier('expire_time') . " >= NOW() OR " . $db->quoteIdentifier('expire_time') . "='00000000000000')";
+	$result = $db->query($query);
+	if(DB::isError($result) die($query->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	if (mysql_num_rows($result) > 0){
+	if ($result->numRows()> 0){
 		$output .= '
 				</td>
 				<td style="padding-left: 5px;">';
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = $result->fetchRow()){
 			$alert = new alert($row["id"]);
 			$field = new field($row["field_id"]);
 			
@@ -55,11 +55,13 @@ if ($_GET["id"]){
 }
 else{
 	if ($_GET["c"] == 0){
-		$query = "SELECT * FROM `anyInventory_config` WHERE `key`='FRONT_PAGE_TEXT'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_config') . " WHERE " . $db->quoteIdentifier('key') . "='FRONT_PAGE_TEXT'";
+		$result = $db->query($query);
+		if(DB::isError($query)) die($query->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		if (mysql_num_rows($result) > 0){
-			$output .= '<p style="padding: 0px 0px 15px 0px;">'.mysql_result($result, 0, 'value').'</p>';
+		if ($result->numRows()> 0){
+			$row = $result->fetchRow();
+			$output .= '<p style="padding: 0px 0px 15px 0px;">'.$row[0].'</p>';
 		}
 	}
 	
@@ -83,7 +85,7 @@ else{
 	}
 	
 	$output .= '			</td>
-							<td style="text-align: right;">[<a href="docs/'.LANG.'/categories.php">'.HELP.'</a>]</td>
+							<td style="text-align: right;">[<a href="docs/categories.php">'.HELP.'</a>]</td>
 						</tr>
 						<tr>
 							<td class="tableData" colspan="2">
@@ -108,10 +110,11 @@ else{
 			</tr>';
 	
 	// Display any items in this category.
-	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "='".$category->id."' ORDER BY " . $db->quoteIdentifier('name') . " ASC";
+	$result = $db->query($query);
+    if(DB::isError($result))  die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	if (($_GET["c"] != 0) || (mysql_num_rows($result) > 0)){
+	if (($_GET["c"] != 0) || ($result->numRows()> 0)){
 		$output .= '
 			<tr class="tableHeader">
 				<td>'.ITEMS_IN_CAT;
@@ -125,16 +128,16 @@ else{
 		
 		$output .= (ITEM_VIEW == 'list') ? SWITCH_TO_TABLE : SWITCH_TO_LIST;
 		
-		$output .= '</a>]&nbsp;[<a href="docs/'.LANG.'/items.php">'.HELP.'</a>]</td>
+		$output .= '</a>]&nbsp;[<a href="docs/items.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
 						';
 		
-		if (mysql_num_rows($result) > 0){
+		if ($result->numRows() > 0){
 			if (ITEM_VIEW == 'list'){
 				$output .= '<table>';
-				while ($row = mysql_fetch_array($result)){
+				while ($row = $result->fetchRow()){
 					$item = new item($row["id"]);
 					
 					$output .= '<tr>';
@@ -151,7 +154,7 @@ else{
 				$output .= $category->export_table_header($_GET["fid"],$_GET["dir"]);
 				
 				if (isset($_GET["fid"])){
-					while ($row = mysql_fetch_array($result)){
+					while ($row = $result->fetchRow()){
 						$item = new item($row["id"]);
 						$item_rows[] = $item->export_assoc_array();
 					}
@@ -168,7 +171,7 @@ else{
 					}
 				}
 				else{
-					while ($row = mysql_fetch_array($result)){
+					while ($row = $result->fetchRow()){
 						$item = new item($row["id"]);
 						$output .= $item->export_table_row();
 					}
@@ -190,10 +193,14 @@ else{
 		</td>
 		<td style="padding-left: 5px;">';
 	
-	$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `time` <= NOW() AND (`expire_time` >= NOW() OR `expire_time`='00000000000000')";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('time') . " <= ? AND (" . $db->quoteIdentifier('expire_time') . " >= ? OR " . $db->quoteIdentifier('expire_time') . "= ?)";
+	$query_data = array(date("YmdHis"),date("YmdHis"),'00000000000000');
 	
-	while ($row = mysql_fetch_array($result)){
+	$pquery = $db->prepare($query);
+	$result = $db->execute($pquery, $query_data);
+    if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	
+	while ($row = $result->fetchRow()){
 		$alert = new alert($row["id"]);
 		
 		if (is_array($alert->item_ids)){

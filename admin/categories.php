@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = CATEGORIES;
 $breadcrumbs = ADMINISTRATION.' > '.CATEGORIES;
@@ -50,7 +50,7 @@ $output .= '
 				'.CATEGORIES.'
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/'.LANG.'/categories.php">'.HELP.'</a>]
+				[<a href="../docs/categories.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>

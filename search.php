@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = SEARCH_RESULTS;
 
@@ -13,11 +13,12 @@ $output .= '<table>';
 
 if (is_array($search_terms)){
 	if ((count($search_terms) == 1) && (is_numeric($search_terms[0]))){
-		$search_query = "SELECT `id` FROM `anyInventory_items` WHERE `id`='".$search_terms[0]."'";
-		$search_result = mysql_query($search_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $search_query);
+		$search_query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('id') . "='".$search_terms[0]."'";
+		$search_result = $db->query($search_query);
+		if(DB::isError($search_result)) die($search_result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $search_query);
 		
-		if (mysql_num_rows($search_result) > 0){
-			$row = mysql_fetch_array($search_result);
+		if ($search_result->numRows() > 0){
+			$row = $search_result->fetchRow();
 			
 			$item = new item($row["id"]);
 			
@@ -36,22 +37,23 @@ if (is_array($search_terms)){
 		}
 	}
 	
-	$search_query = "SELECT `id` FROM `anyInventory_items` WHERE 1 AND ";
+	$search_query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE 1 AND ";
 	
 	foreach($search_terms as $search_term){
-		$search_query .= " `name` LIKE '%".$search_term."%' AND ";
+		$search_query .= " " . $db->quoteIdentifier('name') . " LIKE '%".$search_term."%' AND ";
 	}
 	
 	$search_query = substr($search_query,0,strlen($search_query) - 5);
-	$search_result = mysql_query($search_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'  .$search_query);
+	$search_result = $db->query($search_query);
+	if(DB::isError($search_result)) die($search_result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $search_query);
 	
-	if (mysql_num_rows($search_result) > 0){
+	if ($search_result->numRows() > 0){
 		$output .= '
 			<tr class="tableHeader">
 				<td colspan="2">'.NAME_MATCH.'</td>
 			</tr>';
 		
-		while ($row = mysql_fetch_array($search_result)){
+		while ($row = $search_result->fetchRow()){
 			$item = new item($row["id"]);
 			
 			if ($view_user->can_view($item->category->id)){
@@ -64,24 +66,25 @@ if (is_array($search_terms)){
 		}
 	}
 	
-	$search_query = "SELECT `item_id`, COUNT(`item_id`) AS `num_matches` FROM `anyInventory_values` WHERE 1 AND ( ";
+	$search_query = "SELECT " . $db->quoteIdentifier('item_id') . ", COUNT(" . $db->quoteIdentifier('item_id') . ") AS " . $db->quoteIdentifier('num_matches') . " FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE 1 AND ( ";
 	
 	if (is_array($search_terms)){
 		foreach($search_terms as $search_term){
-			$search_query .= " `value` LIKE '%".$search_term."%' OR ";
+			$search_query .= " " . $db->quoteIdentifier('value') . " LIKE '%".$search_term."%' OR ";
 		}
 	}
 	
-	$search_query = substr($search_query,0,strlen($search_query) - 4).") GROUP BY `item_id` ORDER BY `num_matches` DESC";
-	$search_result = mysql_query($search_query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'  .$search_query);
+	$search_query = substr($search_query,0,strlen($search_query) - 4).") GROUP BY " . $db->quoteIdentifier('item_id') . " ORDER BY " . $db->quoteIdentifier('num_matches') . " DESC";
+	$search_result = $db->query($search_query);
+	if(DB::isError($search_result)) die($search_result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $search_query);
 	
-	if (mysql_num_rows($search_result) > 0){
+	if ($search_result->numRows() > 0){
 		$output .= '
 			<tr class="tableHeader">
 				<td colspan="2">'.SEARCH_RESULTS.'</td>
 			</tr>';
 		
-		while ($row = mysql_fetch_array($search_result)){
+		while ($row = $search_result->fetchRow()){
 			$item = new item($row["item_id"]);
 			
 			if ($view_user->can_view($item->category->id)){

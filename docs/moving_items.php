@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 switch (LANG){
 	case 'es':
@@ -58,6 +58,7 @@ switch (LANG){
 			<div style="float: left;"><a href="editing_items.php">&lt;&lt; Previous: Editing Items</a></div>
 			<div style="text-align: right;"><a href="deleting_items.php">Next: Deleting Items &gt;&gt;</a></div>';
 		break;
+}
 
 display($output);
 

@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (($admin_user->usertype != 'Administrator') && ($_GET["id"] != $_SESSION["user"]["id"])){
 	header("Location: ../error_handler.php?eid=11");
@@ -30,7 +30,7 @@ $output .= '
 			<td>'.EDIT_USER.'</td>
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/'.LANG.'/editing_users.php">'.HELP.'</a>]
+				[<a href="../docs/editing_users.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>

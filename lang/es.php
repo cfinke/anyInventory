@@ -166,7 +166,7 @@ define('CONDITION','Condici&oacute;n');
 define('ADD_ALERT','Agregar alerta');
 define('ADD_ALERT_IN','Agregar una alerta para');
 define('ALERT_TITLE','T&iacute;tulo de alerta');
-define('TIMED_ONLY_LABEL','La alerta estar&aacute; <a href="../docs/en/alerts.php#time_based">basada en fecha</a>.');
+define('TIMED_ONLY_LABEL','La alerta estar&aacute; <a href="../docs/alerts.php#time_based">basada en fecha</a>.');
 define('TIMED_ONLY_EXPLANATION','Para alertas basadas en fecha, no es necesario llenar el campo, condici&oacute;n o valor.');
 define('DELETE_ALERT','Eliminar Alarma');
 define('DELETE_ALERT_CONFIRM','¿Realmente deseas eliminar esta alerta?');

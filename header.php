@@ -12,7 +12,7 @@
 					<table cellspacing="0">
 						<tr>
 							<td id="appTitle">
-								<?php echo APP_TITLE; ?> 1.9.3
+								<?php echo APP_TITLE; ?> 2.0
 							</td>
 							<td>
 								<?php
@@ -47,7 +47,7 @@
 									<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="'.$DIR_PREFIX.'index.php">'.HOME.'</a></td>';
 							}
 							?>
-							<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="<?php echo $DIR_PREFIX; ?>docs/<?php echo LANG; ?>/"><?php echo HELP; ?></a></td>
+							<td style="width: 5%; text-align: center; vertical-align: middle;"><a href="<?php echo $DIR_PREFIX; ?>docs/"><?php echo HELP; ?></a></td>
 							<?php
 							
 							if (isset($_SESSION["user"]["id"]) || !PP_ADMIN){

@@ -2,15 +2,35 @@
 
 function connect_to_database(){
 	// This function opens and returns the database connection.
-	global $db_host;
-	global $db_name;
-	global $db_user;
-	global $db_pass;
+	// $dsn comes from environment.php
+	global $dsn;
 	
-	$link = mysql_connect($db_host, $db_user, $db_pass);
-	mysql_select_db($db_name, $link);
+	$db = DB::connect($dsn);
+	$db->setOption('portability',  DB_PORTABILITY_ALL);
+	$db->setOption('debug',  2);
 	
-	return $link;
+	if (DB::isError($db)) die($db->getMessage());
+	
+	$db->setFetchMode(DB_FETCHMODE_ASSOC);
+	
+	return $db;
+}
+
+function get_unique_id($table){
+	global $db;
+	
+	$query = "SELECT MAX(" . $db->quoteIdentifier('id') . ") AS " . $db->quoteIdentifier('seq_id') . " FROM " . $db->quoteIdentifier($table) . "";
+	$result = $db->query($query);
+	if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
+	
+	if ($result->numRows() == 0){
+		$row["seq_id"] = 0;
+	}
+	else{
+		$row = $result->fetchRow();
+	}
+	
+	return intval($row["seq_id"]) + 1;
 }
 
 function display($output){
@@ -26,9 +46,9 @@ function display($output){
 	global $DIR_PREFIX;
 	
 	header("Content-Type: text/html; charset=ISO-8859-1");
-	include($DIR_PREFIX."header.php");
+	require_once($DIR_PREFIX."header.php");
 	echo $output;
-	include($DIR_PREFIX."footer.php");
+	require_once($DIR_PREFIX."footer.php");
 	exit;
 }
 
@@ -48,21 +68,25 @@ function get_category_options($selected = null, $multiple = true, $exclude = nul
 function get_options_children($id, $pre = null, $selected = null, $multiple = true, $exclude){
 	// This function creates select box options for the children of a category
 	// with the id $id.
-	
-	$query = "SELECT `id`,`name` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	global $db;
+	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . "='".$id."' ORDER BY " . $db->quoteIdentifier('name') . " ASC";
+	$result = $db->query($query);
+	if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if ($id != 0){
-		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
-		$category_name = mysql_result($newresult, 0, 'name');
+		$newquery = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$id."'";
+		$newresult = $db->query($newquery);
+		if (DB::isError($newresult)) die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
+		
+		$row = $newresult->fetchRow();
+		$category_name = $row[0];
 		$pre .= $category_name . ' > ';
 	}
 	
 	$list = '';
 	
-	if (mysql_num_rows($result) > 0){
-		while ($row = mysql_fetch_array($result)){
+	if ($result->numRows() > 0){
+		while ($row = $result->fetchRow()){
 			$category = $row["name"];
 			
 			if (!in_array($row["id"],$exclude)){
@@ -99,29 +123,24 @@ function category_array_to_options($array, $selected = null, $exclude = null){
 
 function get_item_options($cat_ids = 0, $selected = null, $exclude = null, $select_all = true){
 	// This function creates select box options for the items in the category $cat.
+	global $db;
+	
 	if (!is_array($selected)) $selected = array($selected);
 	if (!is_array($cat_ids)) $cat_ids = array($cat_ids);
 	if (!is_array($exclude)) $exclude = array($exclude);
-		
-	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (";
 	
-	foreach($cat_ids as $cat_id){
-		$query .= $cat_id.", ";
-	}
+	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . " IN (".implode(", ", $cat_ids).") ORDER BY " . $db->quoteIdentifier('name') . "";
+	$result = $db->query($query);
+    if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	$query = substr($query, 0, strlen($query) - 2);
-	
-	$query .= ") ORDER BY `name`";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-	
-	while ($row = mysql_fetch_array($result)){
+	while ($row = $result->fetchRow()){
 		if (!in_array($row["id"], $exclude)){
 			$options .= '<option value="'.$row["id"].'"';
-
+			
 			if (in_array($row["id"],$selected) || (($selected[0] === null) && ($select_all))){
 				$options .= ' selected="selected"';
 			}
-		
+			
 			$options .= '>'.$row["name"].'</option>';
 		}
 	}
@@ -132,11 +151,13 @@ function get_item_options($cat_ids = 0, $selected = null, $exclude = null, $sele
 function get_fields_checkbox_area($checked = array()){
 	// This function returns the field checkboxes.
 	// Any field ids in the array $checked will be checked.
+	global $db;
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " ORDER BY " . $db->quoteIdentifier('importance') . " ASC";
+	$result = $db->query($query);
+    if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	while($row = mysql_fetch_array($result)){
+	while($row = $result->fetchRow()){
 		$field = new field($row["id"]);
 		
 		if ($field->input_type == 'divider'){
@@ -177,11 +198,13 @@ function get_category_array($top = 0){
 	$array = array();
 	
 	if ($top != 0){
-		$query = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$top."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$top."'";
+		$result = $db->query($query);
+    	if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		if (mysql_num_rows($result) > 0){
-			$array[] = array("name"=>mysql_result($result, 0, 'name'),"id"=>$top);
+		if ($result->numCols() > 0){
+			$row = $result->fetchRow();
+			$array[] = array("name"=>$row[0],"id"=>$top);
 		}
 		else{
 			return $array;
@@ -195,18 +218,23 @@ function get_category_array($top = 0){
 
 function get_array_children($id, &$array, $pre = ""){
 	// This function creates array entries for any child of $id.
+    global $db;
 	
-	$query = "SELECT `name`,`id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-	
+	$query = "SELECT " . $db->quoteIdentifier('name') . "," . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . "='".$id."' ORDER BY " . $db->quoteIdentifier('name') . " ASC";
+	$result = $db->query($query);
+	if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);	
 	if ($id != 0){
-		$newquery = "SELECT `name` FROM `anyInventory_categories` WHERE `id`='".$id."'";
-		$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
-		$pre .= mysql_result($newresult, 0, 'name') . ' > ';
+		$newquery = "SELECT " . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$id."'";
+		$newresult = $db->query($newquery);
+    	if (DB::isError($newresult)){
+        	die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
+    	}
+		$newrow = $newresult->fetchRow();
+		$pre .= $newrow[0] . ' > ';
 	}
 	
-	if (mysql_num_rows($result) > 0){
-		while ($row = mysql_fetch_array($result)){
+	if ($result->numRows() > 0){
+		while ($row = $result->fetchRow()){
 			$array[] = array("name"=>$pre.$row["name"],"id"=>$row["id"]);
 			
 			get_array_children($row["id"], $array, $pre);
@@ -221,7 +249,7 @@ function get_category_id_array($top = 0){
 	$array = array();
 	
 	if ($top != 0){
-		if (mysql_num_rows($result) > 0){
+		if ($result->numRows() > 0){
 			$array[] = $top;
 		}
 		else{
@@ -236,12 +264,14 @@ function get_category_id_array($top = 0){
 
 function get_array_id_children($id, &$array){
 	// This function creates array entries for any child of $id.
+	global $db;
 	
-	$query = "SELECT `id` FROM `anyInventory_categories` WHERE `parent`='".$id."' ORDER BY `name` ASC";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('parent') . "='".$id."' ORDER BY " . $db->quoteIdentifier('name') . " ASC";
+	$result = $db->query($query);
+    if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	if (mysql_num_rows($result) > 0){
-		while ($row = mysql_fetch_array($result)){
+	if ($result->numRows() > 0){
+		while ($row = $result->fetchRow()){
 			$array[] = $row["id"];
 			
 			get_array_id_children($row["id"], $array);
@@ -272,35 +302,41 @@ function delete_subcategory($category){
 		}
 	}
 	
-	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-				
-	while ($row = mysql_fetch_array($result)){
-		$newquery = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$row["id"]."\"%'";
-		$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "='".$category->id."'";
+	$result = $db->query($query);
+    if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	
+	while ($result->fetchRows()){
+		$newquery = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('item_ids') . " LIKE '%\"".$row["id"]."\"%'";
+		$newresult = $db->query($newquery);
+    	if (DB::isError($newresult)) die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 		
-		while ($newrow = mysql_fetch_array($newresult)){
+		while ($newrow = $newresult->fetchRow()){
 			$alert = new alert($newrow["id"]);
 			
 			$alert->remove_item($row["id"]);
 			
 			if (count($alert->item_ids) == 0){
-				$newerquery = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-				mysql_query($newerquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newerquery);
+				$newerquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('id') . "='".$alert->id."'";
+				$newerresult = $db->query($newerquery);
+    			if (DB::isError($newerresult)) die($newerresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newerquery);
 			}
 			
-			$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$newrow["id"]."'";
-			mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('item_id') . "='".$newrow["id"]."'";
+			$result = $db->query($query);
+    		if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 	}
 	
 	// Delete all of the items in the category
-	$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
-	mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . "='".$category->id."'";
+	$result = $db->query($query);
+    if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	// Delete this category.
-	$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$category->id."'";
-	mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_categories') . " WHERE " . $db->quoteIdentifier('id') . "='".$category->id."'";
+	$result = $db->query($query);
+    if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	remove_from_fields($category->id);
 	
@@ -309,11 +345,12 @@ function delete_subcategory($category){
 
 function remove_from_fields($cat_id){
 	// This function removes all fields from a category.
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `categories` LIKE '%\"".$cat_id."\"%'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('categories') . " LIKE '%\"".$cat_id."\"%'";
+	$result = $db->query($query);
+    if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	while($row = mysql_fetch_array($result)){
-		$field = new field($row["id"]);
+	while($result->fetchRow()){
+		$field = new field(intval($row["id"]));
 		$field->remove_category($cat_id);
 	}
 	
@@ -361,7 +398,7 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 	}
 	else{
 		if (count($c) > 0){
-			$query = "SELECT `id,`name` FROM `anyInventory_fields` WHERE 1 ";
+			$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE 1 ";
 			
 			foreach($c as $cat_id){
 				if (!$admin_user->can_admin($cat_id)){
@@ -369,30 +406,32 @@ function display_alert_form($c = null, $title = null, $i = null, $timed = false,
 					exit;
 				}
 				else{
-					$query .= " AND `categories` LIKE '%\"".$cat_id."\"%' AND `input_type` NOT IN ('divider','file','item') ";
+					$query .= " AND " . $db->quoteIdentifier('categories') . " LIKE '%".$cat_id."%' AND " . $db->quoteIdentifier('input_type') . " NOT IN ('divider','file','item') ";
 				}
 			}
 			
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);			
+			$result = $db->query($query);
+    		if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
-			if (mysql_num_rows($result) == 0){
+			if ($result->numRows() == 0){
 				header("Location: ../error_handler.php?eid=3");
 				exit;
 			}
 			else{
-				while ($row = mysql_fetch_array($result)){
+				while ($row = $result->fetchRow()){
 					$fields[] = $row;
 				}
 				
-				$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (".implode(", ",$c).")";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);				
+				$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . " IN (".implode(", ",$c).")";
+				$result = $db->query($query);
+    			if (DB::isError($result) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
-				if (mysql_num_rows($result) == 0){
+				if ($result->numRows() == 0){
 					header("Location: ../error_handler.php?eid=2");
 					exit;
 				}
 				else{
-					while ($row = mysql_fetch_array($result)){
+					while ($row = $result->fetchRow()){
 						$items[] = $row;
 					}
 				}
@@ -598,10 +637,10 @@ function create_label($item_id, $field_id, $as_file = null, $max_width = null){
 	require_once("barcode/c128bobject.php");	
 	require_once("barcode/c128cobject.php");
 	require_once("barcode/i25object.php");
-
-
+	
 	$item = new item($item_id);
-	if($field_id != 0){
+	
+	if ($field_id != 0){
 		$field = new field($field_id);
 	}
 	
@@ -616,9 +655,8 @@ function create_label($item_id, $field_id, $as_file = null, $max_width = null){
 		}
 	}
 	
-
 	settype($string, "string");
-
+	
 	// Create a barcode 120 by 25
 	if($field_id == 0){
 		// We want the autoincrement field.  Pad out the number if needed
@@ -636,38 +674,41 @@ function create_label($item_id, $field_id, $as_file = null, $max_width = null){
 		(string) $value = (string) $string . $item->id;
 	}
 	else{
-                if(strlen($item->fields[$field->name]) < LABEL_PADDING){
-                        $i = LABEL_PADDING - strlen($item->id);
-                }
-                while($i > 0){
-                        $string .= PAD_CHAR;
-                        $i--;
-                }
-                if(!strlen($item->fields[$field->name]) % 2  && (BARCODE == I25 || BARCODE == C128C)){
-                        // Pad a zero to make it even
-                        $string = PAD_CHAR;
-                }
+		if(strlen($item->fields[$field->name]) < LABEL_PADDING){
+			$i = LABEL_PADDING - strlen($item->id);
+		}
+		
+		while($i > 0){
+			$string .= PAD_CHAR;
+			$i--;
+		}
+		
+		if(!strlen($item->fields[$field->name]) % 2  && (BARCODE == I25 || BARCODE == C128C)){
+			// Pad a zero to make it even
+			$string = PAD_CHAR;
+		}
+		
 		(string) $value = (string) $string . $item->fields[$field->name];
 	}
 	
 	switch ($_GET["bar"]){
     	case "I25":
-                          $barcode = new I25Object(110, 26, 452, (string) $value);
-                          break;
+			$barcode = new I25Object(110, 26, 452, (string) $value);
+			break;
    		case "C39":
-                          $barcode = new C39Object(110, 26, 452, (string) $value);
-                          break;
+			$barcode = new C39Object(110, 26, 452, (string) $value);
+			break;
     	case "C128A":
-                          $barcode = new C128AObject(110, 26, 452, (string) $value);
-                          break;
+			$barcode = new C128AObject(110, 26, 452, (string) $value);
+			break;
     	case "C128B":
-                          $barcode = new C128BObject(110, 26, 452, (string) $value);
-                          break;
+			$barcode = new C128BObject(110, 26, 452, (string) $value);
+			break;
     	case "C128C":
-              			  $barcode = new C128CObject(110, 26, 452, (string) $value);
-                          break;
+			$barcode = new C128CObject(110, 26, 452, (string) $value);
+			break;
         default:
-                        $obj = false;
+			$obj = false;
   	}
 	
 	if($barcode){
@@ -681,7 +722,7 @@ function create_label($item_id, $field_id, $as_file = null, $max_width = null){
 	if(isset($barcode->mError)){
 		header("Location: error_handler.php?eid=17&mess=".$barcode->GetError());
 	}
-
+	
 	// Create the image.
 	// Write the item name to the label.
 	$new_image = ImageCreate(120,35);
@@ -690,9 +731,7 @@ function create_label($item_id, $field_id, $as_file = null, $max_width = null){
 	// Set the color for the text.
 	$black = imagecolorallocate($new_image, 0, 0, 0);
 	ImageString($new_image, 1, 60 - (ImageFontWidth(1) * strlen($item->name)) /2,0, $item->name, $black);
-	//ImageString($new_image, 1, 60 - (ImageFontWidth(1) * strlen($item->fields["Snurkle Part"])) /2,0, $item->fields["Snurkle Part"], $black);
 	imagecopy($new_image, $bar, 0, 7, 0, 0, 120, 26);
-	//imagecopyresized($new_image, $bar, 0, 10, 0, 0, 120, 22, 110, 22);
 	
 	// Delete the old image.
 	imagedestroy($bar);
@@ -724,7 +763,7 @@ function incision_sort($arr, $col){
 		
 		// Insert $t into the right place.
 		$arr[$i+1] = $t;
-	}	// End sort
+	}
 	
 	return $arr;
 }

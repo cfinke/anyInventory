@@ -56,24 +56,23 @@ $templates = array(
 			   "num_rows"=>6,
 			   "label_width"=>3.75,
 			   "label_height"=>1.25),
-        // 4 columns of 20 labels^M
-        // 1-3/4" X 1/2"^M
-        5 => array("page_width"=>8.5,
-                           "page_height"=>11,
-                           "left_margin"=>.27,
-                           "top_margin"=>.56,
-                           "num_cols"=>4,
-                           "num_rows"=>20,
-                           "label_width"=>1.78,
-                           "label_height"=>.37),
-        6 => array("page_width"=>1.75,
-                           "page_height"=>.5,
-                           "left_margin"=>.00001,
-                           "top_margin"=>.1,
-                           "num_cols"=>1,
-                           "num_rows"=>1,
-                           "label_width"=>1.78,
-                           "label_height"=>.37));
-
+	// 4 columns of 20 labels^M
+	// 1-3/4" X 1/2"^M
+	5 => array("page_width"=>8.5,
+				"page_height"=>11,
+				"left_margin"=>.27,
+				"top_margin"=>.56,
+				"num_cols"=>4,
+				"num_rows"=>20,
+				"label_width"=>1.78,
+				"label_height"=>.37),
+	6 => array("page_width"=>1.75,
+				"page_height"=>.5,
+				"left_margin"=>.00001,
+				"top_margin"=>.1,
+				"num_cols"=>1,
+				"num_rows"=>1,
+				"label_width"=>1.78,
+				"label_height"=>.37));
 
 ?>

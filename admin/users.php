@@ -1,17 +1,18 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = USERS;
 $breadcrumbs = ADMINISTRATION.' > '.USERS;
 
-$query = "SELECT * FROM `anyInventory_users` ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_users') . " ORDER BY " . $db->quoteIdentifier('username') . " ASC";
+$result = $db->query($query);
+if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
-if (mysql_num_rows($result) > 0){
+if ($result->numRows() > 0){
 	$i = 0;
 	
-	while($row = mysql_fetch_assoc($result)){
+	while($row = $result->fetchRow()){
 		$table_rows .= '
 			<tr>
 				<td align="center" style="width: 15ex; white-space: nowrap;">
@@ -43,7 +44,7 @@ $output .= '
 				'.USERS.'
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/'.LANG.'/users.php">'.HELP.'</a>]
+				[<a href="../docs/users.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>

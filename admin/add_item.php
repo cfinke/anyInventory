@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = ADD_ITEM;
 $inHead = '
@@ -18,7 +18,7 @@ if (!isset($_GET["c"])){
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.ADD_ITEM.'</td>
-					<td style="text-align: right;">[<a href="../docs/'.LANG.'/items.php#adding">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="../docs/items.php#adding">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
@@ -55,7 +55,7 @@ else{
 				<table class="standardTable" cellspacing="0">
 					<tr class="tableHeader">
 						<td>'.ADD_ITEM.': '.$category->get_breadcrumb_admin_links().'</td>
-						<td style="text-align: right;">[<a href="../docs/'.LANG.'/items.php#adding">'.HELP.'</a>]</td>
+						<td style="text-align: right;">[<a href="../docs/items.php#adding">'.HELP.'</a>]</td>
 					</tr>
 					<tr>
 						<td class="tableData" colspan="2">

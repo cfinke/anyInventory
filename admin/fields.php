@@ -1,12 +1,13 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = FIELDS;
 $breadcrumbs = ADMINISTRATION.' > '.FIELDS;
 
-$query = "SELECT * FROM `anyInventory_fields` WHERE `id` > 0 ORDER BY `importance`";
-$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('id') . " > 0 ORDER BY " . $db->quoteIdentifier('importance') . "";
+$result = $db->query($query);
+if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
 if ($admin_user->usertype == 'Administrator'){
 	$table_rows .= '
@@ -24,8 +25,8 @@ if ($admin_user->usertype == 'Administrator'){
 		</tr>';
 }
 
-if (mysql_num_rows($result) > 0){
-	while($row = mysql_fetch_assoc($result)){
+if ($result->numRows() > 0){
+	while($row = $result->fetchRow()){
 		if ($row["input_type"] != 'divider'){
 			$table_rows .= '
 				<tr>
@@ -80,7 +81,7 @@ $output .= '
 				'.FIELDS.'
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/'.LANG.'/fields.php">'.HELP.'</a>]
+				[<a href="../docs/fields.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>

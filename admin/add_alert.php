@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = ADD_ALERT;
 $breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.ADD_ALERT;
@@ -11,7 +11,7 @@ if (!is_array($_GET["c"])){
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.ADD_ALERT.'</td>
-					<td style="text-align: right;">[<a href="../docs/'.LANG.'/alerts.php#adding">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="../docs/alerts.php#adding">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData">
@@ -34,7 +34,7 @@ if (!is_array($_GET["c"])){
 		</form>';
 }
 else{
-	$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
+	$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE ";
 	
 	foreach($_GET["c"] as $cat_id){
 		if (!$admin_user->can_admin($cat_id)){
@@ -42,19 +42,20 @@ else{
 			exit;
 		}
 		else{
-			$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND `input_type` NOT IN ('divider','file','item') AND ";
+			$query .= " " . $db->quoteIdentifier('categories') . " LIKE '%\"".$cat_id."\"%' AND " . $db->quoteIdentifier('input_type') . " NOT IN ('divider','file','item') AND ";
 		}
 	}
 	
 	$query = substr($query, 0, strlen($query) - 4);
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	if (mysql_num_rows($result) == 0){
+	if ($result->numRows() == 0){
 		header("Location: ../error_handler.php?eid=3");
 		exit;
 	}
 	else{
-		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+		while ($row = $result->fetchRow()) {
 			$fields[] = $row;
 		}
 		
@@ -74,18 +75,11 @@ else{
 			</script>';
 		$inBodyTag = ' onload="toggle();"';
 		
-		$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (";
+		$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('item_category') . " IN (".implode(", ",$_GET["c"]).")";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		foreach($_GET["c"] as $cat_id){
-			$query .= $cat_id.", ";
-		}
-		
-		$query = substr($query, 0, strlen($query) - 2);
-		
-		$query .= ")";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		
-		if (mysql_num_rows($result) == 0){
+		if($result->numRows() == 0){
 			header("Location: ../error_handler.php?eid=2");
 			exit;
 		}
@@ -97,7 +91,7 @@ else{
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
 								<td>'.ADD_ALERT.'</td>
-								<td style="text-align: right;">[<a href="../docs/'.LANG.'/alerts.php#adding">'.HELP.'</a>]</td>
+								<td style="text-align: right;">[<a href="../docs/alerts.php#adding">'.HELP.'</a>]</td>
 							</tr>
 							<tr>
 								<td class="tableData">
@@ -111,7 +105,7 @@ else{
 											<td class="form_input">
 												<select name="i[]" id="i[]" multiple="multiple" size="10" style="width: 100%;">';
 			
-			while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			while ($row = $result->fetchRow()){
 				$output .= '<option value="'.$row["id"].'" selected="selected">'.$row["name"].'</option>';
 			}
 			
@@ -171,7 +165,7 @@ else{
 												<option value="12"';if(date("n") == 12) $output .= ' selected="selected"'; $output .= '>'.MONTH_12.'</option>
 											</select>
 											<select name="day" id="day">';
-					
+			
 			for ($i = 1; $i <= 31; $i++){
 				$output .= '<option value="'.$i.'"';if(date("j") == $i) $output .= ' selected="selected"'; $output .= '>'.$i.'</option>';
 			}
@@ -179,13 +173,12 @@ else{
 			
 			$output .= '			</select>,
 									<select name="year" id="year">';
-				
+			
 			$year = date("Y");
 			
 			for ($i = 0; $i < 20; $i++){
 				$output .= '<option value="'.($i + $year).'">'.($i + $year).'</option>';
 			}
-			
 			
 			$output .= '			</select>
 										</td>
@@ -208,21 +201,19 @@ else{
 												<option value="12"';if(date("n") == 12) $output .= ' selected="selected"'; $output .= '>'.MONTH_12.'</option>
 											</select>
 											<select name="expire_day" id="expire_day">';
-					
+			
 			for ($i = 1; $i <= 31; $i++){
 				$output .= '<option value="'.$i.'"';if(date("j") == $i) $output .= ' selected="selected"'; $output .= '>'.$i.'</option>';
 			}
 			
-			
 			$output .= '			</select>,
 									<select name="expire_year" id="expire_year">';
-				
+			
 			$year = date("Y");
 			
 			for ($i = 0; $i < 20; $i++){
 				$output .= '<option value="'.($i + $year).'">'.($i + $year).'</option>';
 			}
-			
 			
 			$output .= '					</select>
 											<input type="checkbox" name="expire" id="expire" value="yes" onclick="toggle();" /> '.ALLOW_EXPIRATION.'

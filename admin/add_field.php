@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = ADD_FIELD;
 $inHead = '
@@ -31,7 +31,7 @@ $output .= '
 			<td>'.ADD_FIELD.'</td>
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/'.LANG.'/adding_fields.php">'.HELP.'</a>]
+				[<a href="../docs/adding_fields.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>

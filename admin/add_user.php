@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($admin_user->usertype != 'Administrator'){
 	header("Location: ../error_handler.php?eid=11");
@@ -27,7 +27,7 @@ $output .= '
 			<td>'.ADD_USER.'</td>
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/'.LANG.'/adding_users.php">'.HELP.'</a>]
+				[<a href="../docs/adding_users.php">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>

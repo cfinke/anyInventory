@@ -1,7 +1,7 @@
 <?php
 
-include("globals.php");
-include("remote_functions.php");
+require_once("globals.php");
+require_once("remote_functions.php");
 
 if ($_POST["action"] == "do_add"){
 	if (!$admin_user->can_admin($_POST["c"])){
@@ -13,19 +13,19 @@ if ($_POST["action"] == "do_add"){
 	
 	// Create an object of the current category
 	$category = new category($_POST["c"]);
+    $key = $db->nextId('items');
 	
 	// Put the query together
-	$query = "INSERT INTO `anyInventory_items` (`name`,`item_category`) VALUES ('".$_POST["name"]."','".$_POST["c"]."')";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
-	
-	$key = mysql_insert_id();
+    $query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_items')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('item_category').",".$db->quoteIdentifier('name').") VALUES ('".$key."', '".$_POST["c"]."', '".$_POST["name"]."')";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	if (is_array($category->field_ids)){
 		foreach($category->field_ids as $field_id){
 			$field = new field($field_id);
 			
 			if (($field->input_type != 'file') && ($field->input_type != 'divider')){
-				$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$key."','".$field->id."','";
+				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_values') . " (" . $db->quoteIdentifier('item_id') . "," . $db->quoteIdentifier('field_id') . "," . $db->quoteIdentifier('value') . ") VALUES ('".$key."','".$field->id."','";
 				
 				if ($field->input_type == "multiple"){
 					if ($_POST[str_replace(" ","_",$field->name)."_text"] == ""){
@@ -61,7 +61,8 @@ if ($_POST["action"] == "do_add"){
 				}
 				
 				$query .= "')";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+				$result = $db->query($query);
+                if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			}
 		}
 		
@@ -134,24 +135,26 @@ if ($_POST["action"] == "do_add"){
 				}
 				
 				if ($has_file){
-					$query = "INSERT INTO `anyInventory_files`
-								(`key`,`file_name`,`file_size`,`file_type`,`offsite_link`)
+					$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_files') . "
+								(" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('file_name') . "," . $db->quoteIdentifier('file_size') . "," . $db->quoteIdentifier('file_type') . "," . $db->quoteIdentifier('offsite_link') . ")
 								VALUES
 								('".$key."',
 								 '".$filename."',
 								 '".$filesize."',
 								 '".$filetype."',
 								 '".$offsite_link."')";
-					$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);					
+					$result = $db->query($query);
+					if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 					
-					$new_key = mysql_insert_id();
+					$new_key = $db->nextId("files") - 1;
 				}
 				else{
 					$new_key = 0;
 				}
 				
-				$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$key."','".$field->id."','".$new_key."')";
-				$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+				$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_values') . " (" . $db->quoteIdentifier('item_id') . "," . $db->quoteIdentifier('field_id') . "," . $db->quoteIdentifier('value') . ") VALUES ('".$key."','".$field->id."','".$new_key."')";
+				$result = $db->query($query);
+				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				$has_file = false;
 			}
@@ -169,8 +172,9 @@ elseif($_POST["action"] == "do_edit"){
 		}
 		
 		// Put the query together
-		$query = "UPDATE `anyInventory_items` SET `name`='".$_REQUEST["name"]."' WHERE `id`='".$item->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_items') . " SET " . $db->quoteIdentifier('name') . "='".$_REQUEST["name"]."' WHERE " . $db->quoteIdentifier('id') . "='".$item->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		if (is_array($item->category->field_ids)){
 			foreach($item->category->field_ids as $field_id){
@@ -188,11 +192,13 @@ elseif($_POST["action"] == "do_edit"){
 								@unlink($file->server_path);
 							}
 							
-							$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id["file_id"]."'";
-							$delresult = mysql_query($delquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $delquery);
+							$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id["file_id"]."'";
+							$delresult = $db->query($delquery);
+							if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
 							
-							$remquery = "UPDATE `anyInventory_values` SET `value`='0' WHERE `field_id`='".$field->id."' AND `item_id`='".$item->id."'";
-							$remresult = mysql_query($remquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $remquery);
+							$remquery = "UPDATE " . $db->quoteIdentifier('anyInventory_values') . " SET " . $db->quoteIdentifier('value') . "='0' WHERE " . $db->quoteIdentifier('field_id') . "='".$field->id."' AND " . $db->quoteIdentifier('item_id') . "='".$item->id."'";
+							$remresult = $db->query($remquery);
+							if (DB::isError($remresult)) die($remresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $remquery);
 						}
 						
 						// Check if a file was uploaded in its place
@@ -205,8 +211,9 @@ elseif($_POST["action"] == "do_edit"){
 									@unlink($file->server_path);
 								}
 								
-								$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-								$delresult = mysql_query($delquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $delquery);
+								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
+								$delresult = $db->query($delquery);
+								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
 							}
 							
 							// Copy the uploaded file
@@ -237,8 +244,9 @@ elseif($_POST["action"] == "do_edit"){
 									@unlink($file->server_path);
 								}
 								
-								$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-								$delresult = mysql_query($delquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $delquery);
+								$delquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
+								$delresult = $db->query($delquery);
+								if (DB::isError($delresult)) die($delresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $delquery);
 							}
 							
 							// START new remote file upload ///////////////////////////////////////////////
@@ -284,32 +292,33 @@ elseif($_POST["action"] == "do_edit"){
 						}
 						
 						if ($file_query){
-							$query = "INSERT INTO `anyInventory_files`
-										(`key`,`file_name`,`file_size`,`file_type`,`offsite_link`)
+							$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_files') . "
+										(" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('file_name') . "," . $db->quoteIdentifier('file_size') . "," . $db->quoteIdentifier('file_type') . "," . $db->quoteIdentifier('offsite_link') . ")
 										VALUES
 										('".$key."',
 										 '".$filename."',
 										 '".$filesize."',
 										 '".$filetype."',
 										 '".$offsite_link."')";
-							$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);					
+							$result = $db->query($query);
+							if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);							$new_key = $db->nextId('seq_name');
 							
-							$new_key = mysql_insert_id();
+							$query = "UPDATE " . $db->quoteIdentifier('anyInventory_values') . " SET " . $db->quoteIdentifier('value') . "= '".$new_key."' WHERE " . $db->quoteIdentifier('item_id') . " = '".$item->id."' AND " . $db->quoteIdentifier('field_id') . " = '".$field->id."'";
+							$result = $db->query($query);
+							if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 							
-							$query = "UPDATE `anyInventory_values` SET `value`= '".$new_key."' WHERE `item_id` = '".$item->id."' AND `field_id` = '".$field->id."'";
-							$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
-							
-							if(mysql_affected_rows() == 0) // If a file did not exist previously, make sure the new file gets referenced
-							{
-								$query = "INSERT INTO `anyInventory_values` (`item_id`, `field_id`, `value`) VALUES('".$item->id."', '".$field->id."', '".$new_key."')";
-								$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+							if($db->affectedRows() == 0) {
+								//If a file did not exist previously, make sure the new file gets referenced
+								$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_values') . " (" . $db->quoteIdentifier('item_id') . ", " . $db->quoteIdentifier('field_id') . ", " . $db->quoteIdentifier('value') . ") VALUES('".$item->id."', '".$field->id."', '".$new_key."')";
+								$result = $db->query($query);
+								if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 							}
 						}
 						
 						// END new remote file upload /////////////////////////////////////////////////
 					}
 					else{
-						$query = "UPDATE `anyInventory_values` SET `value`=";
+						$query = "UPDATE " . $db->quoteIdentifier('anyInventory_values') . " SET " . $db->quoteIdentifier('value') . "=";
 						$query_data = '';
 						
 						if ($field->input_type == "multiple"){
@@ -345,12 +354,13 @@ elseif($_POST["action"] == "do_edit"){
 							$query_data .= "'".$_POST[str_replace(" ","_",$field->name)]."'";
 						}
 						
-						$query .= $query_data." WHERE `item_id`='".$item->id."' AND `field_id`='".$field->id."'";
-						$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+						$query .= $query_data." WHERE " . $db->quoteIdentifier('item_id') . "='".$item->id."' AND " . $db->quoteIdentifier('field_id') . "='".$field->id."'";
+						$result = $db->query($query);
+						if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 						
-						if (mysql_affected_rows() == 0){
-							$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES ('".$item->id."','".$field->id."',".$query_data.")";
-							@mysql_query($query);
+						if ($db->affectedRows() == 0){
+							$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_values') . " (" . $db->quoteIdentifier('item_id') . "," . $db->quoteIdentifier('field_id') . "," . $db->quoteIdentifier('value') . ") VALUES ('".$item->id."','".$field->id."',".$query_data.")";
+							$db->query($query);
 						}
 					}
 				}
@@ -369,8 +379,9 @@ elseif($_POST["action"] == "do_move"){
 	
 	// Move an item.
 	
-	$query = "UPDATE `anyInventory_items` SET `item_category`='".$_POST["c"]."' WHERE `id`='".$_POST["id"]."'";
-	mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_items') . " SET " . $db->quoteIdentifier('item_category') . "='".$_POST["c"]."' WHERE " . $db->quoteIdentifier('id') . "='".$_POST["id"]."'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_POST["action"] == "do_delete"){
 	// Delete an item

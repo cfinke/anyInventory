@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = EDIT_ITEM;
 $inHead = '
@@ -26,7 +26,7 @@ $output = '
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.EDIT_ITEM.'</td>
-					<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_items.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="../docs/editing_items.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

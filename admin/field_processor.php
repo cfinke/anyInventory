@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $replace = array("'",'"','&',"\\",':',';','`','[',']');
 
@@ -21,10 +21,11 @@ if ($_POST["action"] == "do_add"){
 	$_POST["name"] = str_replace("_"," ",$_POST["name"]);
 	$_POST["name"] = trim(addslashes($_POST["name"]));
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('name') . "='".$_POST["name"]."'";
+	$result = $db->query($query); 
+    if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	if (mysql_num_rows($result) > 0){
+	if($result->numRows > 0){
 		header("Location: ../error_handler.php?eid=0");
 		exit;
 	}
@@ -78,15 +79,19 @@ if ($_POST["action"] == "do_add"){
 		$categories = serialize($categories);
 		
 		// Get the field order for this field.
-		$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-		$importance = mysql_result($result, 0, 'biggest') + 1;
+		$query = "SELECT MAX(" . $db->quoteIdentifier('importance') . ") as " . $db->quoteIdentifier('biggest') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . "";
+		$result= $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		
+		$row_importance = $result->fetchRow();
+		$importance=$row_importance['biggest']+1;
 		
 		// Add this field.
-		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`,`highlight`) VALUES ('".$_POST["name"]."','".$_POST["input_type"]."','".$values."','".$_POST["default_value"]."','".$_POST["size"]."','".$categories."','".$importance."','".((int) (($_POST["highlight"] == "yes") / 1))."')";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+        $query = "INSERT INTO ".$db->quoteIdentifier('anyInventory_fields')." (".$db->quoteIdentifier('id').",".$db->quoteIdentifier('name').",".$db->quoteIdentifier('input_type').",".$db->quoteIdentifier('values').",".$db->quoteIdentifier('default_value').",".$db->quoteIdentifier('size').",".$db->quoteIdentifier('categories').",".$db->quoteIdentifier('importance').",".$db->quoteIdentifier('highlight').") VALUES ('".$db->nextId('fields')."', '". $_POST["name"]."', '".$_POST["input_type"]."', '".$field_values."', '".$defval."', '".intval($_POST["size"])."', '".$categories."', '".intval($importance)."', '".intval(($_POST["highlight"] == "yes"))."')";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);		
 		
-		$field = new field(mysql_insert_id());
+		$field = new field($db->nextId('fields')-1);
 		
 		// Add any categories that were selected.
 		if (is_array($_POST["add_to"])){
@@ -97,12 +102,16 @@ if ($_POST["action"] == "do_add"){
 	}
 }
 elseif($_GET["action"] == "do_add_divider"){
-	$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-	$importance = mysql_result($result, 0, 'biggest') + 1;
+	$query = "SELECT MAX(" . $db->quoteIdentifier('importance') . ") as " . $db->quoteIdentifier('biggest') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . "";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`importance`) VALUES ('divider','divider','".$importance."')";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$row_importance=$result->fetchRow();
+	$importance=$row_importance['biggest']+1;
+	
+	$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_fields') . " (".$db->quoteIdentifier('id').",". $db->quoteIdentifier('name') . "," . $db->quoteIdentifier('input_type') . "," . $db->quoteIdentifier('importance') . ") VALUES ('".$db->nextId('fields')."','divider','divider','".$importance."')";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_POST["action"] == "do_edit"){
 	if ($_POST["cancel"] != CANCEL){
@@ -115,10 +124,13 @@ elseif($_POST["action"] == "do_edit"){
 			}
 		}
 		
-		$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('name') . "='".$_POST["name"]."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		if ((mysql_num_rows($result) > 0) && (mysql_result($result, 0, 'id') != $_POST["id"])){
+		$id_result=$result->fetchRow();
+		$id_temp=$id_result['id'];
+		if (($result->numRows() > 0) && ($id_temp != $_POST["id"])){
 			header("Location: ../error_handler.php?eid=0");
 			exit;
 		}
@@ -182,15 +194,16 @@ elseif($_POST["action"] == "do_edit"){
 		$values = serialize($values);
 		
 		// Change the field.
-		$query = "UPDATE `anyInventory_fields` SET
-					`name`='".$_POST["name"]."',
-					`input_type`='".$_POST["input_type"]."',
-					`values`='".$values."',
-					`default_value`='".$_POST["default_value"]."',
-					`size`='".$_POST["size"]."',
-					`highlight`='".((int) (($_POST["highlight"] == "yes") / 1))."'
-					WHERE `id`='".$_POST["id"]."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_fields') . " SET
+					" . $db->quoteIdentifier('name') . "='".$_POST["name"]."',
+					" . $db->quoteIdentifier('input_type') . "='".$_POST["input_type"]."',
+					" . $db->quoteIdentifier('values') . "='".$values."',
+					" . $db->quoteIdentifier('default_value') . "='".$_POST["default_value"]."',
+					" . $db->quoteIdentifier('size') . "='".$_POST["size"]."',
+					" . $db->quoteIdentifier('highlight') . "='".((int) (($_POST["highlight"] == "yes") / 1))."'
+					WHERE " . $db->quoteIdentifier('id') . "='".$_POST["id"]."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		// Make an object from the new field.
 		$new_field = new field($_POST["id"]);
@@ -223,13 +236,14 @@ elseif($_REQUEST["action"] == "do_delete"){
 		}
 		
 		if ($field->input_type == 'file'){
-			$query = "SELECT `item_id` FROM `anyInventory_values` WHERE `field_id`='".$_REQUEST["id"]."' GROUP BY `item_id`";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "SELECT " . $db->quoteIdentifier('item_id') . " FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('field_id') . "='".$_REQUEST["id"]."' GROUP BY " . $db->quoteIdentifier('item_id') . "";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 			
-			while ($row = mysql_fetch_array($result)){
-				$newquery = "SELECT * FROM `anyInventory_files` WHERE `id`='".$row["value"]."'";
-				$newresult = mysql_query($newquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
-				$newrow = mysql_fetch_array($newresult);
+			while ($row = $result->fetchRow()){
+				$newquery = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$row["value"]."'";
+				$newresult = $db->query($newquery);
+				if (DB::isError($newresult)) die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newquery);
 				
 				$file = new file_object($newrow["id"]);
 				
@@ -237,24 +251,28 @@ elseif($_REQUEST["action"] == "do_delete"){
 					@unlink($file->server_path);
 				}
 				
-				$newestquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-				mysql_query($newestquery) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newestquery);
+				$newestquery = "DELETE FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('id') . "='".$file->id."'";
+				$newestresult = $db->query($newestquery);
+				if (DB::isError($newestresult)) die($newestresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $newestquery);
 			}
 		}
 		
 		// Change the importance of the fields below it.
-		$query = "UPDATE `anyInventory_fields` SET `importance`=(`importance` - 1) WHERE `importance` >= '".$field->importance."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_fields') . " SET " . $db->quoteIdentifier('importance') . "=(" . $db->quoteIdentifier('importance') . " - 1) WHERE " . $db->quoteIdentifier('importance') . " >= '".$field->importance."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
 		if ($field->input_type != 'divider'){
 			// Remove the field from the items table
-			$query = "DELETE FROM `anyInventory_values` WHERE `field_id`='".$field->id."'";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('field_id') . "='".$field->id."'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 		
 		// Delete the field 
-		$query = "DELETE FROM `anyInventory_fields` WHERE `id`='".$field->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('id') . "='".$field->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 }
 elseif($_GET["action"] == "moveup"){
@@ -264,11 +282,13 @@ elseif($_GET["action"] == "moveup"){
 	}
 	
 	// Move a field up
-	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_GET["i"]." WHERE `importance`='".($_GET["i"] - 1)."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_fields') . " SET " . $db->quoteIdentifier('importance') . "=".$_GET["i"]." WHERE " . $db->quoteIdentifier('importance') . "='".($_GET["i"] - 1)."'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_GET["i"] - 1)." WHERE `id`='".$_GET["id"]."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_fields') . " SET " . $db->quoteIdentifier('importance') . "=".($_GET["i"] - 1)." WHERE " . $db->quoteIdentifier('id') . "='".$_GET["id"]."'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_GET["action"] == "movedown"){
 	if (!$admin_user->can_admin_field($_GET["id"])){
@@ -277,11 +297,13 @@ elseif($_GET["action"] == "movedown"){
 	}
 	
 	// Move a field down
-	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_GET["i"]." WHERE `importance`='".($_GET["i"] + 1)."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_fields') . " SET " . $db->quoteIdentifier('importance') . "=".$_GET["i"]." WHERE " . $db->quoteIdentifier('importance') . "='".($_GET["i"] + 1)."'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_GET["i"] + 1)." WHERE `id`='".$_GET["id"]."'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_fields') . " SET " . $db->quoteIdentifier('importance') . "=".($_GET["i"] + 1)." WHERE " . $db->quoteIdentifier('id') . "='".$_GET["id"]."'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 
 header("Location: fields.php");

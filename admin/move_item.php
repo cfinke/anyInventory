@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = MOVE_ITEM;
 $breadcrumbs = ADMINISTRATION.' > <a href="items.php">'.ITEMS.'</a> > '.MOVE_ITEM;
@@ -19,7 +19,7 @@ $output = '
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.MOVE_ITEM.': '.$item->name.'</td>
-					<td style="text-align: right;">[<a href="../docs/'.LANG.'/moving_items.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="../docs/moving_items.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">

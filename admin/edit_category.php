@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!$admin_user->can_admin($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
@@ -28,7 +28,7 @@ else{
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>'.EDIT_CATEGORY.': '.$category->get_breadcrumb_admin_links().'</td>
-					<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_categories.php">'.HELP.'</a>]</td>
+					<td style="text-align: right;">[<a href="../docs/editing_categories.php">'.HELP.'</a>]</td>
 				</tr>
 				<tr>
 					<td class="tableData" colspan="2">
@@ -54,10 +54,11 @@ if (PP_VIEW){
 							<td class="form_input">
 								<select name="view_users[]" id="view_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
-$query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_users') . " WHERE " . $db->quoteIdentifier('usertype') . " != 'Administrator' ORDER BY " . $db->quoteIdentifier('username') . " ASC";
+$result = $db->query($query);
+if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
-while($row = mysql_fetch_array($result)){
+while($row = $result->fetchRow() ){
 	$temp_user = new user($row["id"]);
 	
 	$output .= '<option value="'.$row["id"].'"';
@@ -78,10 +79,11 @@ if (PP_ADMIN){
 							<td class="form_input">
 								<select name="admin_users[]" id="admin_users[]" multiple="multiple" size="10" style="width: 100%;">';
 
-$query = "SELECT * FROM `anyInventory_users` WHERE `usertype` != 'Administrator' ORDER BY `username` ASC";
-$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_users') . " WHERE " . $db->quoteIdentifier('usertype') . " != 'Administrator' ORDER BY " . $db->quoteIdentifier('username') . " ASC";
+$result = $db->query($query);
+if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
-while($row = mysql_fetch_array($result)){
+while($row = $result->fetchRow()){
 	$temp_user = new user($row["id"]);
 	
 	$output .= '<option value="'.$row["id"].'"';

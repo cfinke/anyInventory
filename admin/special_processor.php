@@ -1,12 +1,13 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if ($_GET["action"] == 'switch_view'){
-	$query = "UPDATE `anyInventory_config` SET `value` = '";
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . " = '";
 	$query .= (ITEM_VIEW == 'list') ? 'table' : 'list';
-	$query .= "' WHERE `key`='ITEM_VIEW'";
-	mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query .= "' WHERE " . $db->quoteIdentifier('key') . "='ITEM_VIEW'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	header("Location: ../index.php?c=".$_GET["c"]);
 	exit;
@@ -24,17 +25,20 @@ if ($_POST["action"] == "do_edit_auto_inc_field"){
 	$_POST["name"] = str_replace($replace,"",$_POST["name"]);
 	$_POST["name"] = trim(addslashes($_POST["name"]));
 	
-	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["name"]."' WHERE `key`='AUTO_INC_FIELD_NAME'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . "='".$_POST["name"]."' WHERE " . $db->quoteIdentifier('key') . "='AUTO_INC_FIELD_NAME'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
-	$query = "UPDATE `anyInventory_categories` SET `auto_inc_field`='0'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_categories') . " SET " . $db->quoteIdentifier('auto_inc_field') . "='0'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	
 	// Add any categories that were selected.
 	if (is_array($_POST["add_to"])){
 		foreach($_POST["add_to"] as $cat_id){
-			$query = "UPDATE `anyInventory_categories` SET `auto_inc_field`='1' WHERE `id`='".$cat_id."'";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+			$query = "UPDATE " . $db->quoteIdentifier('anyInventory_categories') . " SET " . $db->quoteIdentifier('auto_inc_field') . "='1' WHERE " . $db->quoteIdentifier('id') . "='".$cat_id."'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		}
 	}
 	
@@ -42,62 +46,77 @@ if ($_POST["action"] == "do_edit_auto_inc_field"){
 	exit;
 }
 elseif($_POST["action"] == 'do_edit_front_page_text'){
-	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["front_page_text"]."' WHERE `key`='FRONT_PAGE_TEXT'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . "='".$_POST["front_page_text"]."' WHERE " . $db->quoteIdentifier('key') . "='FRONT_PAGE_TEXT'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_GET["action"] == 'pp_admin_on'){
-	$query = "UPDATE `anyInventory_config` SET `value`='1' WHERE `key`='PP_ADMIN'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . "='1' WHERE " . $db->quoteIdentifier('key') . "='PP_ADMIN'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_GET["action"] == 'pp_admin_off'){
-	$query = "UPDATE `anyInventory_config` SET `value`='0' WHERE `key`='PP_ADMIN'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . "='0' WHERE " . $db->quoteIdentifier('key') . "='PP_ADMIN'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_GET["action"] == 'pp_view_on'){
-	$query = "UPDATE `anyInventory_config` SET `value`='1' WHERE `key`='PP_VIEW'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . "='1' WHERE " . $db->quoteIdentifier('key') . "='PP_VIEW'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_GET["action"] == 'pp_view_off'){
-	$query = "UPDATE `anyInventory_config` SET `value`='0' WHERE `key`='PP_VIEW'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . "='0' WHERE " . $db->quoteIdentifier('key') . "='PP_VIEW'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif ($_POST["action"] == "do_edit_name_field_name"){
 	$_POST["name"] = stripslashes($_POST["name"]);
 	$_POST["name"] = str_replace($replace,"",$_POST["name"]);
 	$_POST["name"] = trim(addslashes($_POST["name"]));
 	
-	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["name"]."' WHERE `key`='NAME_FIELD_NAME'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . "='".$_POST["name"]."' WHERE " . $db->quoteIdentifier('key') . "='NAME_FIELD_NAME'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_POST["action"] == "change_lang"){
-	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["lang"]."' WHERE `key`='LANG'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . "='".$_POST["lang"]."' WHERE " . $db->quoteIdentifier('key') . "='LANG'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_POST["action"] == "do_edit_label_template"){
-	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["template"]."' WHERE `key`='BAR_TEMPLATE'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . " = '".$_POST["template"]."' WHERE " . $db->quoteIdentifier('key') . "='BAR_TEMPLATE'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 elseif($_POST["action"] == "do_edit_label_padding"){
 	if(ctype_digit($_POST["padding"])){ 
-		$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["padding"]."' WHERE `key`='LABEL_PADDING'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . " = '".$_POST["padding"]."' WHERE " . $db->quoteIdentifier('key') . "='LABEL_PADDING'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
-	else header("Location: admin/edit_special.php?id=label_padding");
+	else{
+		header("Location: admin/edit_special.php?id=label_padding");
+	}
 }
 elseif($_POST["action"] == "do_edit_pad_char"){
 	$char = $_POST["char"];
-	if(!ctype_alnum($char)) header("Location: admin/edit_special.php?id=pad_char");
-	else{	
-		$query = "UPDATE `anyInventory_config` SET `value`='".$char."' WHERE `key`='PAD_CHAR'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	if(!ctype_alnum($char)){
+		header("Location: admin/edit_special.php?id=pad_char");
+	}
+	else{
+		$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . " = '".$char."' WHERE " . $db->quoteIdentifier('key') . "='PAD_CHAR'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 	}
 }
 elseif($_POST["action"] == "do_edit_barcode"){
 	$_POST["type"] = stripslashes($_POST["type"]);
 	$_POST["type"] = str_replace($replace,"",$_POST["type"]);
 	$_POST["type"] = trim(addslashes($_POST["type"]));
-	$query = "UPDATE `anyInventory_config` SET `value`='".$_POST["type"]."' WHERE `key`='BARCODE'";
-	$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+	$query = "UPDATE " . $db->quoteIdentifier('anyInventory_config') . " SET " . $db->quoteIdentifier('value') . " = '".$_POST["type"]."' WHERE " . $db->quoteIdentifier('key') . "='BARCODE'";
+	$result = $db->query($query);
+	if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 }
 
 header("Location: index.php");

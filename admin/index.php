@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = ADMINISTRATION;
 $breadcrumbs = ADMINISTRATION;
@@ -12,7 +12,7 @@ $output .= '
 				'.ADMINISTRATION.'
 			</td>
 			<td style="text-align: right;">
-				[<a href="../docs/'.LANG.'/">'.HELP.'</a>]
+				[<a href="../docs/">'.HELP.'</a>]
 			</td>
 		</tr>
 		<tr>
@@ -41,6 +41,8 @@ else{
 	if(LANG == "en") $output .= 'English';
 	elseif(LANG == "es") $output .= 'Espa&ntilde;ol';
 	elseif(LANG == "fr") $output .= 'Francais';
+	elseif(LANG == "no") $output .= 'Norweigan (Bokmal)';
+	elseif(LANG == "de") $output .= 'Deutsch';
 }
 
 $output .= '
@@ -74,7 +76,7 @@ $output .= '			</td>
 					</tr>';
 
 if ($admin_user->usertype == 'Administrator'){
-	include("../label_templates.php");
+	require_once("../label_templates.php");
 	$output .= '
 					<tr>
 						<td style="width: 10%; text-align: center;">

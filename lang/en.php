@@ -179,7 +179,7 @@ define('CONDITION','Condition');
 define('ADD_ALERT','Add Alert');
 define('ADD_ALERT_IN','Add alert in');
 define('ALERT_TITLE','Alert Title');
-define('TIMED_ONLY_LABEL','Make this alert <a href="../docs/en/alerts.php#time_based">time-based only</a>.');
+define('TIMED_ONLY_LABEL','Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.');
 define('TIMED_ONLY_EXPLANATION','For time-based alerts, you do not need to fill in the field, condition, or value.');
 define('DELETE_ALERT','Delete Alert');
 define('DELETE_ALERT_CONFIRM','Are you sure you want to delete this alert?');

@@ -12,13 +12,17 @@ class item {
 	var $files;		// An array of file objects that belong to this item.
 	
 	function item($item_id){
+        global $db;
+		
 		// Set the item id.
 		$this->id = $item_id;
 		
 		// Get the information about this item.
-		$query = "SELECT * FROM `anyInventory_items` WHERE `id` = '".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
-		$row = mysql_fetch_array($result);
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('id') . " = '".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
+		 
+		$row = $result->fetchRow();
 		
 		// Set the item name.
 		$this->name = $row["name"];
@@ -26,10 +30,11 @@ class item {
 		// Create the category object.
 		$this->category = new category($row["item_category"]);
 		
-		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
-				
-		while($row = mysql_fetch_array($result)){
+		$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('item_id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
+		
+		while($row = $result->fetchRow()){
 			$field = new field($row["field_id"]);
 			
 			if ($field->input_type == 'file'){
@@ -57,10 +62,11 @@ class item {
 		}
 		
 		// Get each of this item's files and add it to the array.
-		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key` = '".$this->id."'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_files') . " WHERE " . $db->quoteIdentifier('key') . " = '".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
 		
-		while ($row = mysql_fetch_array($result)){
+		while ($row = $result->fetchRow()){
 			$this->files[] = new file_object($row["id"]);
 		}
 	}
@@ -101,7 +107,7 @@ class item {
 		if ($this->category->auto_inc_field){
 			$output .= '
 				<tr class="highlighted_field">
-					<td style="width: 8%;">
+					<td style="width: 5%;">
 						<a href="./label_processor.php?i='.$this->id.'&amp;bar='.BARCODE.'&amp;f=0" style="color: #000000;">PNG</a>&nbsp;<a href="./pdf.php?i='.$this->id.'&amp;bar='.BARCODE.'&amp;template='.BAR_TEMPLATE.'&amp;f=0" style="color: #000000;">PDF</a>
 					</td>
 					<td style="text-align: right; width: 10%; white-space: nowrap;"><nobr><b>'.AUTO_INC_FIELD_NAME.':</b></nobr></td>
@@ -215,14 +221,16 @@ class item {
 				}
 			}
 			
-			$query = "SELECT `id` FROM `anyInventory_fields` WHERE `input_type` = 'item'";
-			$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query);
+			$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('input_type') . " = 'item'";
+			$result = $db->query($query);
+			if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
 			
-			while ($row = mysql_fetch_array($result)){
-				$query2 = "SELECT `item_id` FROM `anyInventory_values` WHERE `value` LIKE '%\"".$this->id."\"%' GROUP BY `item_id`";
-				$result2 = mysql_query($query2) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />' . $query2);				
-
-				while ($row2 = mysql_fetch_array($result2)){
+			while ($row = $result->fetchRow()){
+				$query2 = "SELECT " . $db->quoteIdentifier('item_id') . " FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('value') . " LIKE '%\"".$this->id."\"%' GROUP BY " . $db->quoteIdentifier('item_id') . "";
+				$result2 = $db->query($query2);
+				if(DB::isError($result2)) die($result2->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query2);
+				
+				while ($row2 = $result2->fetchRow()){
 					$backlinks[] = $row2["item_id"];
 				}
 			}
@@ -306,7 +314,7 @@ class item {
 	}
 	
 	function delete_self(){
-		global $admin_user;
+		global $admin_user,$db;
 		
 		if (!$admin_user->can_admin($item->category->id)){
 			header("Location: ../error_handler.php?eid=13");
@@ -318,23 +326,26 @@ class item {
 				$file->delete_self();
 			}
 		}
-
-		// Remove this item from any alerts
-		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$this->id."\"%'";
-		$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		while ($row = mysql_fetch_array($result)){
+		// Remove this item from any alerts
+		$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " WHERE " . $db->quoteIdentifier('item_ids') . " LIKE '%\"".$this->id."\"%'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
+		
+		while ($row = $result->fetchRow()){
 			$alert = new alert($row["id"]);
 			
 			$alert->remove_item($this->id);
 		}
 		
-		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$this->id."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+		$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_items') . " WHERE " . $db->quoteIdentifier('id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
 		
-		$query = "DELETE FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
-		mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-	
+		$query = "DELETE FROM " . $db->quoteIdentifier('anyInventory_values') . " WHERE " . $db->quoteIdentifier('item_id') . "='".$this->id."'";
+		$result = $db->query($query);
+		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);                    
+		
 		return;
 	}
 }

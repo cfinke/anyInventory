@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!$admin_user->can_admin_alert($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
@@ -19,7 +19,7 @@ $output .= '
 		<table class="standardHeader" cellspacing="0" cellpadding="0">
 			<tr class="tableHeader">
 				<td>'.DELETE_ALERT.'</td>
-				<td style="text-align: right;">[<a href="../docs/'.LANG.'/deleting_alerts.php">'.HELP.'</a>]</td>
+				<td style="text-align: right;">[<a href="../docs/deleting_alerts.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">

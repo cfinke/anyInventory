@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 if (!$admin_user->can_admin_alert($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
@@ -28,22 +28,23 @@ $breadcrumbs = ADMINISTRATION.' > <a href="alerts.php">'.ALERTS.'</a> > '.EDIT_A
 $alert = new alert($_GET["id"]);
 $checked = ($alert->expire_time == '99999999999999') ? '' : ' checked="checked"';
 
-$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `input_type` != 'divider' ";
+$query = "SELECT " . $db->quoteIdentifier('id') . "," . $db->quoteIdentifier('name') . " FROM " . $db->quoteIdentifier('anyInventory_fields') . " WHERE " . $db->quoteIdentifier('input_type') . " != 'divider' ";
 
 if (is_array($alert->category_ids)){
 	foreach($alert->category_ids as $cat_id){
-		$query .= " AND `categories` LIKE '%\"".$cat_id."\"%'";
+		$query .= " AND " . $db->quoteIdentifier('categories') . " LIKE '%\"".$cat_id."\"%'";
 	}
 }
 
-$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+$result = $db->query($query);
+if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
-if (mysql_num_rows($result) == 0){
+if ($result->numRows() == 0){
 	header("Location: ../error_handler.php?eid=3");
 	exit;
 }
 else{
-	while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+	while ($row=$result->fetchRow()) {
 		$fields[] = $row;
 	}
 	
@@ -51,7 +52,7 @@ else{
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
 				<td>'.EDIT_ALERT.': '.$alert->title.'</td>
-				<td style="text-align: right;">[<a href="../docs/'.LANG.'/editing_alerts.php">'.HELP.'</a>]</td>
+				<td style="text-align: right;">[<a href="../docs/editing_alerts.php">'.HELP.'</a>]</td>
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
@@ -162,7 +163,6 @@ else{
 		$output .= '<option value="'.($i + $year).'"';if(substr($alert->time,0,4) == ($i + $year)) $output .= ' selected="selected"'; $output .= '>'.($i + $year).'</option>';
 	}
 	
-	
 	$output .= '			</select>
 									</td>
 							</tr>
@@ -189,16 +189,14 @@ else{
 				$output .= '<option value="'.$i.'"';if((substr($alert->expire_time,6,2) / 1) == $i) $output .= ' selected="selected"'; $output .= '>'.$i.'</option>';
 			}
 			
-			
 			$output .= '			</select>,
 									<select name="expire_year" id="expire_year">';
-				
+			
 			$year = date("Y");
 			
 			for ($i = 0; $i < 20; $i++){
 				$output .= '<option value="'.($i + $year).'"';if(substr($alert->expire_time,0,4) == ($i + $year)) $output .= ' selected="selected"'; $output .= '>'.($i + $year).'</option>';
 			}
-			
 			
 			$output .= '					</select>
 											<input type="checkbox" name="expire" id="expire" value="yes" onclick="toggle();"'.$checked.' /> '.ALLOW_EXPIRATION.'

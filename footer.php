@@ -4,11 +4,12 @@
 			<tr class="footerCell">
 				<td>
 					 <?php echo FOOTER_TEXT_PRE; ?> <b><?php
+					 
+					$query = "SELECT " . $db->quoteIdentifier('id') . " FROM " . $db->quoteIdentifier('anyInventory_items') . "";
+					$result = $db->query($query);
+					if (DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 					
-					$query = "SELECT `id` FROM `anyInventory_items`";
-					$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
-					
-					echo (mysql_num_rows($result) / 1);
+					echo ($result->numRows() / 1);
 					
 					?></b>  <?php echo FOOTER_TEXT_POST; ?>
 				</td>

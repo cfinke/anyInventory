@@ -1,15 +1,16 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 $title = ALERTS;
 $breadcrumbs = ADMINISTRATION.' > '.ALERTS;
 
-$query = "SELECT *, UNIX_TIMESTAMP(`time`) AS `unix_time` FROM `anyInventory_alerts` ORDER BY `title` ASC";
-$result = mysql_query($query) or die(mysql_error().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
+$query = "SELECT *, UNIX_TIMESTAMP(" . $db->quoteIdentifier('time') . ") AS " . $db->quoteIdentifier('unix_time') . " FROM " . $db->quoteIdentifier('anyInventory_alerts') . " ORDER BY " . $db->quoteIdentifier('title') . " ASC";
+$result = $db->query($query);
+if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 
-if (mysql_num_rows($result) > 0){
-	while($row = mysql_fetch_assoc($result)){
+if ($result->numRows() > 0){
+	while($row = $result->fetchRow()){
 		$alert = new alert($row["id"]);
 		$item = new item($alert->item_ids[0]);
 		
@@ -53,7 +54,7 @@ $output .= '
 				'.ALERTS.'
 			</td>
 			<td style="text-align: right;">
-				[ <a href="../docs/'.LANG.'/alerts.php">'.HELP.'</a> ]
+				[ <a href="../docs/alerts.php">'.HELP.'</a> ]
 			</td>
 		</tr>
 		<tr>

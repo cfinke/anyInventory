@@ -1,6 +1,6 @@
 <?php
 
-include("globals.php");
+require_once("globals.php");
 
 switch (LANG){
 	case 'es':
@@ -27,7 +27,8 @@ switch (LANG){
 					</td>
 				</tr>
 			</table>
-			<div style="float: left;"><a href="introduction.php">&lt;&lt; Anterior: Introducci&oacute;n</a></div>';
+			<div style="float: left;"><a href="introduction.php">&lt;&lt; Anterior: Introducci&oacute;n</a></div>
+			<div style="text-align: right;"><a href="adding_users.php">Siguiente: Agregando Usuarios &gt;&gt;</a></div>';
 		break;
 	case 'fr':
 		$title = "anyInventory: Aide > Utilisateurs";
@@ -53,7 +54,8 @@ switch (LANG){
 					</td>
 				</tr>
 			</table>
-			<div style="float: left;"><a href="introduction.php">&lt;&lt; Précédent: Introduction</a></div>';
+			<div style="float: left;"><a href="introduction.php">&lt;&lt; Précédent: Introduction</a></div>
+			<div style="text-align: right;"><a href="adding_users.php">Suivant: Ajouter un Utilisateur &gt;&gt;</a></div>';
 		break;
 	case 'en':
 	default:
@@ -80,7 +82,8 @@ switch (LANG){
 					</td>
 				</tr>
 			</table>
-			<div style="float: left;"><a href="introduction.php">&lt;&lt; Previous: Introduction</a></div>';
+			<div style="float: left;"><a href="introduction.php">&lt;&lt; Previous: Introduction</a></div>
+			<div style="text-align: right;"><a href="adding_users.php">Next: Adding Users &gt;&gt;</a></div>';
 		break;
 }
 

@@ -58,8 +58,8 @@ class item {
 						}
 					}
 				}
-				else{
-					$this->fields[$field->name] = $row["value"];
+				elseif ($row["value"] != '') {
+					$this->fields[$field->name][0] = trim($row["value"]);
 				}
 			}
 		}

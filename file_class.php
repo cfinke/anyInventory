@@ -42,7 +42,7 @@ class file_object{
 			$this->file_size = $row["file_size"];
 			$this->file_type = $row["file_type"];
 			$this->web_path = $DIR_PREFIX."item_files/".$this->file_name;
-			$this->server_path = realpath($DIR_PREFIX.$this->file_name);
+			$this->server_path = realpath($DIR_PREFIX."item_files/".$this->file_name);
 		}
 	}
 	

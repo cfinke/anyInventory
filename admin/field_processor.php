@@ -2,9 +2,6 @@
 
 include("globals.php");
 
-// Remove the whitespace from each $_REQUEST value
-foreach($_REQUEST as $key => $value) $_REQUEST[$key] = trim($value);
-
 if ($_REQUEST["action"] == "do_add"){
 	// Add a field
 	if (($_REQUEST["size"] == '') && ($_REQUEST["input_type"] == "text")){

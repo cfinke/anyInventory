@@ -6,7 +6,13 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 set_time_limit(0);
 
-require_once("DB.php");
+$i = 0;
+
+do {
+	$found = require_once("DB.php");
+	$i++;
+} while ((!$found) && ($i < 10));
+
 require_once("functions.php");
 require_once("category_class.php");
 require_once("field_class.php");
@@ -428,7 +434,6 @@ if ($_POST["action"] == "upgrade"){
 						CONSTRAINT " . $db->quoteIdentifier('file_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
 				}
 				$result = $db->query($query);
-				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 				
 				// Add all of the files to it.
 				$query = "SELECT * FROM " . $db->quoteIdentifier('anyInventory_files');
@@ -449,6 +454,8 @@ if ($_POST["action"] == "upgrade"){
 			case '2.0rc1':
 				$query = "ALTER TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " CHANGE " . $db->quoteIdentifier('data_id') . " " . $db->quoteIdentifier('file_id') . " INT";
 				$result = $db->query($query);
+			case '2.0rc2':
+			case '2.0rc3':
 		}
 		
 		// Attempt to write the globals file.
@@ -570,6 +577,8 @@ elseif(!$globals_error){
 							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
 							<td class="form_input">
 								<select name="old_version">
+									<option value="2.0rc3"';if($_REQUEST["old_version"] == '2.0rc3')$output .= ' selected="selected"'; $output .= '>2.0rc3</option>
+									<option value="2.0rc2"';if($_REQUEST["old_version"] == '2.0rc2')$output .= ' selected="selected"'; $output .= '>2.0rc2</option>
 									<option value="2.0rc1"';if($_REQUEST["old_version"] == '2.0rc1')$output .= ' selected="selected"'; $output .= '>2.0rc1</option>
 									<option value="1.9.2"';if($_REQUEST["old_version"] == '1.9.2')$output .= ' selected="selected"'; $output .= '>1.9.2</option>
 									<option value="1.9.1"';if($_REQUEST["old_version"] == '1.9.1')$output .= ' selected="selected"'; $output .= '>1.9.1</option>
@@ -703,7 +712,7 @@ echo '
 							</tr>
 							<tr>
 								<td class="tableData">
-									<p>Welcome to the upgrade page of anyInventory.  To upgrade, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the upgrade will continue.  After the upgrade has finished, you will be redirected to the home page of your anyInventory installation.  If you need any help, feel free to contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
+									<p>Welcome to the upgrade page of anyInventory.  To upgrade, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the upgrade will continue.  After the upgrade has finished, you will be redirected to the home page of your anyInventory installation.  If you need any help, feel free to contact <a href="mailto:fink0120@umn.edu">fink0120@umn.edu</a>.</p>
 									<form action="upgrade.php" method="post">
 										'.$output.'
 									</form>

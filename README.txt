@@ -32,10 +32,10 @@ docs subdirectory and linked from the main menu of anyInventory.  If all
 of your questions are not answered there, you can view the project page
 at http://www.sourceforge.net/projects/anyinventory/.
 
-Also, you can contact me at chris@efinke.com for help with anything 
+Also, you can contact me at fink0120@umn.edu for help with anything 
 related to anyInventory; all comments and questions are welcomed.
 
 Other
 =====
 You can test out a demo of anyInventory at the anyInventory homepage, which is
-located at http://anyinventory.sf.net/ .
+located at http://anyinventory.sf.net/.

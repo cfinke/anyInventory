@@ -4,7 +4,13 @@
 
 error_reporting(E_ALL ^ E_NOTICE);
 
-require_once("DB.php");
+$i = 0;
+
+do {
+	$found = require_once("DB.php");
+	$i++;
+} while ((!$found) && ($i < 10));
+
 require_once("functions.php");
 
 // Set the text of globals.php
@@ -308,7 +314,7 @@ if ($_POST["action"] == "install"){
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('FRONT_PAGE_TEXT', 'This is the front page and top-level category of anyInventory.  You can <a href=\"docs/".$_POST["lang"]."\/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.anyInventory ID.')";	
+		$query = "INSERT INTO " . $db->quoteIdentifier('anyInventory_config') . " (" . $db->quoteIdentifier('key') . "," . $db->quoteIdentifier('value') . ") VALUES ('FRONT_PAGE_TEXT', 'This is the front page and top-level category of anyInventory.  You can <a href=\"docs/index.php\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.anyInventory ID.')";	
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
 		
@@ -591,7 +597,7 @@ echo '
 							</tr>
 							<tr>
 								<td class="tableData">
-									<p>Welcome to the installation page of anyInventory.  To install, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the installation will continue.  After the installation has finished, you will be redirected to the home page of your anyInventory installation.  If you need any help, feel free to contact <a href="mailto:chris@efinke.com">chris@efinke.com</a>.</p>
+									<p>Welcome to the installation page of anyInventory.  To install, simply fill out the following form.  If there are any errors, such as unexecutable files or incorrect data, you will be notified and ask to fix them before the installation will continue.  After the installation has finished, you will be redirected to the home page of your anyInventory installation.  If you need any help, feel free to contact <a href="mailto:fink0120@umn.edu">fink0120@umn.edu</a>.</p>
 									'.$output.'
 								</td>
 							</tr>

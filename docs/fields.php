@@ -92,7 +92,7 @@ $output .= '
 			</form>
 		</li>
 	</ul>
-	<p>As of version 1.7.1, you also have the option of displaying an auto-incrementing field for each item.  This option can be turned on or off in the administration for each category.</p>
+	<p>As of version 1.7.1, you also have the option of displaying an auto-incrementing field for each item.  This option can be turned on or off in the administration for each category.  The name of this field can be customized in the administration section, as well as the name of the built-in "Name" field (as of version 1.8).</p>
 	<p>If this all seems confusing, don\'t worry.  It should become clearer with an example.</p>
 	<h4>An Example</h4>
 	<p>

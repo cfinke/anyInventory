@@ -41,6 +41,7 @@ DONE - Customization of front-page text
 DONE - More information for each item in listing
 DONE - Field Dividers
 DONE - User system
+DONE - Customization of Name field
 
 BEFORE 1.9
 ===================

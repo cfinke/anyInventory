@@ -16,9 +16,6 @@ and executable by the Web server, as well as making sure that the item_files/
 subdirectory is writable, readable, and executable by the Web server.  
 (The install script will alert you if it is not writable.)
 
-Make sure that all files you upload are chmodded at least 755. Many users
-run into problems with unreadable files after they have run the install script.
-
 Upgrading
 =========
 To upgrade to anyInventory 1.8, simply overwrite the files from 
@@ -27,12 +24,13 @@ the Web browser of your choice.
 
 Using anyInventory
 ==================
-The best place to start is with the "Instructions for Use," found in the
+The best place to start is with the documentation, found in the
 docs subdirectory and linked from the main menu of anyInventory.  If all
 of your questions are not answered there, you can view the project page
-at http://www.sourceforge.net/projects/anyinventory/.  Also, you can
-contact me at chris@efinke.com for help with anything related to anyInventory;
-all comments and questions are welcomed.
+at http://www.sourceforge.net/projects/anyinventory/.
+
+Also, you can contact me at chris@efinke.com for help with anything 
+related to anyInventory; all comments and questions are welcomed.
 
 Other
 =====

@@ -74,7 +74,7 @@ $output .= '
 						<tr>
 							<td class="form_label">Fields:</td>
 							<td class="form_input">
-								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" checked="" /> Show auto-increment field<br /><br />
+								<input type="checkbox" name="auto_inc" id="auto_inc" value="yes" checked="checked" /> Show auto-increment field<br /><br />
 								<input type="checkbox" name="inherit_fields" id="inherit_fields" value="yes" checked="checked" /> Inherit fields from parent (in addition to fields checked below)<br /><br />
 								'.get_fields_checkbox_area().'
 							</td>

@@ -10,6 +10,7 @@ include("field_class.php");
 include("item_class.php");
 include("file_class.php");
 include("alert_class.php");
+include("user_class.php");
 
 $errors = array();
 
@@ -262,7 +263,7 @@ if ($_POST["action"] == "upgrade"){
 				
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
 				@mysql_query($query);
-
+				
 				$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('NAME_FIELD_NAME','Name')";
 				@mysql_query($query);
 				

@@ -111,7 +111,8 @@ class user {
 			$this->categories_view[] = $category_id;
 			
 			$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id`= ?";
-			$query_data = array(addslashes(serialize($this->categories_view)),$this->id);
+			#$query_data = array(addslashes(serialize($this->categories_view)),$this->id);
+			$query_data = array(serialize($this->categories_view),$this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
 			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
@@ -125,7 +126,8 @@ class user {
 			$this->categories_admin[] = $category_id;
 			
 			$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
-			$query_data = array(addslashes(serialize($this->categories_admin)),$this->id);
+			#$query_data = array(addslashes(serialize($this->categories_admin)),$this->id);
+			$query_data = array(serialize($this->categories_admin),$this->id);
 			$pquery = $db->prepare($query);
 			$result = $db->execute($pquery, $query_data);
 			if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
@@ -138,13 +140,14 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$key = array_search($category_id, $this->categories_view);
 			
-			if ($key){
+			if ($key!==FALSE){
 				unset($this->categories_view[$key]);
 				
 				$this->categories_view = array_unique($this->categories_view);
 				
 				$query = "UPDATE `anyInventory_users` SET `categories_view` = ? WHERE `id` = ?";
-				$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
+				#$query_data = array(addslashes(serialize($this->categories_view)), $this->id);
+				$query_data = array(serialize($this->categories_view), $this->id);
 				$pquery = $db->prepare($query);
 				$result = $db->execute($pquery, $query_data);
 				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);
@@ -158,13 +161,14 @@ class user {
 		if ($this->usertype != 'Administrator'){
 			$key = array_search($category_id, $this->categories_admin);
 			
-			if ($key){
+			if ($key!==FALSE){
 				unset($this->categories_admin[$key]);
 				
 				$this->categories_admin = array_unique($this->categories_admin);
 				
 				$query = "UPDATE `anyInventory_users` SET `categories_admin` = ? WHERE `id` = ?";
-				$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
+				#$query_data = array(addslashes(serialize($this->categories_admin)), $this->id);
+				$query_data = array(serialize($this->categories_admin), $this->id);
 				$pquery = $db->prepare($query);
 				$result = $db->execute($pquery, $query_data);
 				if (DB::isError($result)) die($result->getMessage().': '.__FILE__.', line '.__LINE__.'<br /><br />'.$result->userinfo.'<br /><br />'.SUBMIT_REPORT);

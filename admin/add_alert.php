@@ -116,7 +116,7 @@ else{
 									</tr>
 									<tr>
 										<td class="form_label"><input onclick="toggle();" type="checkbox" id="timed" name="timed" value="yes" /></td>
-										<td class="form_input">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a>.
+										<td class="form_input"><label for="timed">Make this alert <a href="../docs/alerts.php#time_based">time-based only</a></label>.
 										<br /><small>For time-based alerts, you do not need to fill in the field, condition, or value.</small></td>
 									</tr>
 									<tr>

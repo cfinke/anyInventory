@@ -42,11 +42,15 @@ $output .= '
 						</tr>
 						<tr>
 							<td class="form_label"><label for="default_value">Default value:</label></td>
-							<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
+							<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Text\', and \'Radio Buttons\'.</small></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="size">Size, in characters:</label></td>
 							<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label"><input type="checkbox" name="highlight" value="yes" /></td>
+							<td class="form_input"><label for="highlight">Highlight this field</label></td>
 						</tr>
 						<tr>
 							<td class="form_label">Apply field to:</td>
@@ -58,7 +62,8 @@ $output .= '
 					</table>
 				</form>
 				<p>Let\'s begin adding our fields, shall we?  First up is the date of purchase.</p>
-				<p>"But wait," you might say.  "Shouldn\'t we keep track of the name of each item?"  Don\'t worry.  You will never need to create a field to track an item name; that is the only built-in field in anyInventory.</p>
+				<p>"But wait," you might say.  "Shouldn\'t we keep track of the name of each item?"  Don\'t worry.  You will never need to create a field to track an item name; that is one of only two built-in fields in anyInventory, the other being the auto-incrementing field.</p>
+				<p>If you choose to check the box marked "Highlight this field," this field and its value will appear with a highlighted background in the item\'s description.  This might be useful for denoting special fields for an item, such as UPC, serial number, or product codes.</p>
 				<p>Back to the purchase date: first, we enter in the field name:</p>
 				<form method="post" action="#">
 					<table>
@@ -85,11 +90,15 @@ $output .= '
 						</tr>
 						<tr>
 							<td class="form_label"><label for="default_value">Default value:</label></td>
-							<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
+							<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Text\', and \'Radio Buttons\'.</small></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="size">Size, in characters:</label></td>
 							<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label"><input type="checkbox" name="highlight" value="yes" /></td>
+							<td class="form_input"><label for="highlight">Highlight this field</label></td>
 						</tr>
 						<tr>
 							<td class="form_label">Apply field to:</td>
@@ -127,11 +136,15 @@ $output .= '
 						</tr>
 						<tr>
 							<td class="form_label"><label for="default_value">Default value:</label></td>
-							<td class="form_input"><input type="text" name="default_value" id="default_value" value="YYYYMMDD" /></td>
+							<td class="form_input"><input type="text" name="default_value" id="default_value" value="YYYYMMDD" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Text\', and \'Radio Buttons\'.</small></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="size">Size, in characters:</label></td>
 							<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label"><input type="checkbox" name="highlight" value="yes" /></td>
+							<td class="form_input"><label for="highlight">Highlight this field</label></td>
 						</tr>
 						<tr>
 							<td class="form_label">Apply field to:</td>
@@ -173,11 +186,15 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="form_label"><label for="default_value">Default value:</label></td>
-				<td class="form_input"><input type="text" name="default_value" id="default_value" value="YYYYMMDD" /></td>
+				<td class="form_input"><input type="text" name="default_value" id="default_value" value="YYYYMMDD" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Text\', and \'Radio Buttons\'.</small></td>
 			</tr>
 			<tr>
 				<td class="form_label"><label for="size">Size, in characters:</label></td>
 				<td class="form_input"><input type="text" name="size" id="size" value="8" /><br /><small>Only for \'text\' data type.</small></td>
+			</tr>
+			<tr>
+				<td class="form_label"><input type="checkbox" name="highlight" value="yes" /></td>
+				<td class="form_input"><label for="highlight">Highlight this field</label></td>
 			</tr>
 			<tr>
 				<td class="form_label">Apply field to:</td>
@@ -219,11 +236,15 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="form_label"><label for="default_value">Default value:</label></td>
-				<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
+				<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Text\', and \'Radio Buttons\'.</small></td>
 			</tr>
 			<tr>
 				<td class="form_label"><label for="size">Size, in characters:</label></td>
 				<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+			</tr>
+			<tr>
+				<td class="form_label"><input type="checkbox" name="highlight" value="yes" /></td>
+				<td class="form_input"><label for="highlight">Highlight this field</label></td>
 			</tr>
 			<tr>
 				<td class="form_label">Apply field to:</td>
@@ -260,11 +281,15 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="form_label"><label for="default_value">Default value:</label></td>
-				<td class="form_input"><input type="text" name="default_value" id="default_value" value="Office Max" /></td>
+				<td class="form_input"><input type="text" name="default_value" id="default_value" value="Office Max" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Text\', and \'Radio Buttons\'.</small></td>
 			</tr>
 			<tr>
 				<td class="form_label"><label for="size">Size, in characters:</label></td>
 				<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+			</tr>
+			<tr>
+				<td class="form_label"><input type="checkbox" name="highlight" value="yes" /></td>
+				<td class="form_input"><label for="highlight">Highlight this field</label></td>
 			</tr>
 			<tr>
 				<td class="form_label">Apply field to:</td>

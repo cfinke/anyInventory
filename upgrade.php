@@ -369,6 +369,7 @@ elseif(!$globals_error){
 							<td class="form_label">From which version of anyInventory are you upgrading?<br /><small style="font-weight: normal;">If you are not sure, select 1.0.</small></td>
 							<td class="form_input">
 								<select name="old_version">
+									<option value="1.6">1.7</option>
 									<option value="1.6">1.6</option>
 									<option value="1.5">1.5</option>
 									<option value="1.4">1.4.1</option>
@@ -414,7 +415,7 @@ echo '
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Upgrade anyInventory 1.7</title>
+		<title>Upgrade anyInventory 1.7.1</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 	</head>
@@ -422,7 +423,7 @@ echo '
 		<table style="width: 97%; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.7
+					anyInventory 1.7.1
 				</td>
 			</tr>
 			<tr>
@@ -439,7 +440,7 @@ echo '
 					<div style="min-height: 400px;">
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
-								<td>Upgrade anyInventory 1.7</td>
+								<td>Upgrade anyInventory 1.7.1</td>
 							</tr>
 							<tr>
 								<td class="tableData">

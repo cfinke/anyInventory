@@ -13,7 +13,7 @@ session_start();
 		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
-					anyInventory 1.7
+					anyInventory 1.7.1
 				</td>
 			</tr>
 			<tr>

@@ -115,7 +115,7 @@ function get_fields_checkbox_area($checked = array()){
 	// This function returns the field checkboxes.
 	// Any field ids in the array $checked will be checked.
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `name` ASC";
+	$query = "SELECT `id` FROM `anyInventory_fields` ORDER BY `importance` ASC";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	while($row = mysql_fetch_array($result)){

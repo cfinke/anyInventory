@@ -22,6 +22,7 @@ $output .= '
 	<p>The first category you add must be a child of the "Top Level," a special category that cannot be deleted or edited.  (If you deleted the top level, you\'d be deleting your entire inventory.)</p>
 	<p>The only other information you must fill in to create a category is what <a href="fields.php">fields</a> you want it to contain.  This allows you to tailor each category, saving only the data that is relevant for each item.</p>
 	<p>When choosing the fields, you have the option of having the category "Inherit fields from parent (in addition to fields checked below)."  This simply gives the category you are adding the same fields as its parent, with the option of selecting additional fields.  For example, if you created a "Books" top-level category and gave it the fields Author, UPC, and ISBN, you could check the "Inherit..." box when adding the many subcategories to have them all use the same fields without individully checking them each time.</p>
+	<p>You also have the option of displaying the auto-incrementing field.  This will display the unique numerical ID of each item in the inventory at the top of its description page and to the left of its link on each category page.  This can be activated and deactivated on a category by category basis.</p>
 	<p>Once you have added a category, it will appear in the <a href="../admin/categories.php">categories list</a>, and you can start <a href="items.php#adding">adding items</a> to it.</p> 
 		</td>
 	</tr>

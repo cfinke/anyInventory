@@ -12,7 +12,13 @@ $output .= '
 		</tr>
 		<tr>
 			<td class="tableData">
-<p>The search page allows you to specify conditions for each available field.  (The fields you leave blank will be ignored.)  As of version 1.1, you can limit your search to a category and its subcategories.</p>
+				<p>When you enter search terms in the box at the top of any page in anyInventory, the search is made in the following manner:</p>
+				<ol>
+					<li>If you enter a number and no other terms, anyInventory will search each field <em>plus</em> the unique auto-incrementing field for that number.</li>
+					<li>If you enter one term that is not numeric, anyInventory will search each field that you defined <em>plus</em> the "name" field.</li>
+					<li>If you enter more than one term, anyInventory will seach for an item that has each of the search terms contained somewhere within one or more of its fields.</li>
+				</ol>
+				<p>anyInventory will then return the results ordered by category.  Boolean searches are not currently supported (ie. using "AND" or "OR" will not affect the search).</p>
 		</td>
 	</tr>
 	</table><div style="float: left;"><a href="labels.php">&lt;&lt; Previous: Labels</a></div>

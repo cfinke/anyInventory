@@ -123,7 +123,7 @@ else{
 				$output .= '<tr>';
 				
 				if ($item->category->auto_inc_field){
-					$output .= '<td>'.$item->id.'</td>';
+					$output .= '<td style="width: 8%;">'.$item->id.'</td>';
 				}
 				
 				$output .= '<td>'.$item->export_teaser().'</td></tr>';

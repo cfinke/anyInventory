@@ -3,6 +3,11 @@
 include("globals.php");
 
 if ($_REQUEST["action"] == "do_add"){
+	if (!is_array($_REQUEST["i"])){
+		header("Location: ../error_handler.php?eid=6");
+		exit;
+	}
+	
 	$timestamp = $_REQUEST["year"];
 	$timestamp .= ($_REQUEST["month"] < 10) ? '0' . $_REQUEST["month"] : $_REQUEST["month"];
 	$timestamp .= ($_REQUEST["day"] < 10) ? '0' . $_REQUEST["day"] : $_REQUEST["day"];
@@ -15,7 +20,8 @@ if ($_REQUEST["action"] == "do_add"){
 				 `condition`,
 				 `value`,
 				 `time`,
-				 `timed`)
+				 `timed`,
+				 `category_ids`)
 				VALUES
 				('".$_REQUEST["title"]."',
 				 '".serialize($_REQUEST["i"])."',
@@ -23,8 +29,37 @@ if ($_REQUEST["action"] == "do_add"){
 				 '".$_REQUEST["condition"]."',
 				 '".$_REQUEST["value"]."',
 				 '".$timestamp."',
-				 '".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."')";
+				 '".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."',
+				 '".$_REQUEST["c"]."')";
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+}
+elseif($_REQUEST["action"] == "do_edit_cat_ids"){
+	if (!is_array($_REQUEST["c"])){
+		header("Location: ../error_handler.php?eid=5");
+		exit;
+	}
+	else{
+		$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
+		
+		foreach($_REQUEST["c"] as $cat_id){
+			$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
+		}
+		
+		$query = substr($query, 0, strlen($query) - 4);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+		
+		if (mysql_num_rows($result) == 0){
+			header("Location: ../error_handler.php?eid=3");
+			exit;
+		}
+		else{
+			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($_REQUEST["c"])."'";
+			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			
+			header("Location: edit_alert.php?id=".$_REQUEST["id"]);
+			exit;
+		}
+	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
 	$timestamp = $_REQUEST["year"];

@@ -15,12 +15,22 @@ $breadcrumbs = $category->get_breadcrumb_links();
 if ($_REQUEST["id"]){
 	// A specific item has been requested.
 	$item = new item($_REQUEST["id"]);
+	
+	$output .= '
+		<table cellspacing="0" cellpadding="0">
+			<tr>
+				<td style="width: 100%;">';
+	
 	$output .= $item->export_description();
 	
 	$query = "SELECT `id`,`field_id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
+		$output .= '
+				</td>
+				<td style="padding-left: 5px;">';
+		
 		while ($row = mysql_fetch_array($result)){
 			$alert = new alert($row["id"]);
 			$field = new field($row["field_id"]);
@@ -35,10 +45,12 @@ if ($_REQUEST["id"]){
 			}
 		}
 	}
+	
+	$output .= '</td></tr></table>';
 }
 else{
 	if ($_REQUEST["c"] == 0){
-		$output .= '<p style="padding: 15px 0px 15px 0px;">This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.</p>';
+		$output .= '<p style="padding: 0px 0px 15px 0px;">This is the front page and top-level category of anyInventory.  You can <a href="docs/">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.</p>';
 	}
 	
 	$output .= '

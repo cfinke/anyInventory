@@ -20,10 +20,12 @@ $errors[4] = array("Sign In",'
 			</tr>
 			<tr>
 				<td class="form_label">&nbsp;</td>
-				<td class="form_input" style="text-align: center;"><input type="submit" name="submit" value="Submit" class="submitButton" /></td>
+				<td class="form_input" style="text-align: center;"><input type="submit" name="submit" value="Submit" /></td>
 			</tr>
 		</table>
 	</form>',"breadcrumbs"=>'Administration > Sign in');
+$errors[5] = array('Error','An alert must apply to at least one category.','breadcrumbs'=>'Error');
+$errors[6] = array('Error','An alert must apply to at least one item.','breadcrumbs'=>'Error');
 
 $breadcrumbs = $errors[$_REQUEST["eid"]]["breadcrumbs"];
 

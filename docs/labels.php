@@ -3,9 +3,15 @@
 include("globals.php");
 
 $title = "anyInventory: Help > Labels";
+$breadcrumbs = '<a href="./">Help</a> > Labels';
 
 $output .= '
-	<h2>Labels</h2>
+	<table class="standardTable" cellspacing="0">
+		<tr class="tableHeader">
+			<td>Labels</td>
+		</tr>
+		<tr>
+			<td class="tableData">
 	<p>anyInventory, as of version 1.5, allows you to create a barcode label from any field of an item.  For example, let\'s say that you had bought the DVD of the movie "Animal House," and you added it to your inventory, tracking the UPC, the ISBN, and the name.  You could produce a label from the UPC in one of two ways:</p>
 	<ol>
 		<li>On the item page for "Animal House," each field name is a link to a barcode label of that field\'s value.  To get the UPC label, you would just click on UPC.</li>
@@ -28,7 +34,9 @@ if (!function_exists('imagecreate') ||
 }
 
 $output .= ' installed.</b></i></p>
-	<div style="float: left;"><a href="deleting_alerts.php">&lt;&lt; Previous: Deleting Alerts</a></div>
+		</td>
+	</tr>
+	</table><div style="float: left;"><a href="deleting_alerts.php">&lt;&lt; Previous: Deleting Alerts</a></div>
 	<div style="text-align: right;"><a href="searching.php">Next: Searching &gt;&gt;</a></div>';
 
 display($output);

@@ -3,9 +3,15 @@
 include("globals.php");
 
 $title = "anyInventory: Help";
+$breadcrumbs = 'Help';
 
 $output .= '
-	<h2>Table of Contents</h2>
+	<table class="standardTable" cellspacing="0">
+		<tr class="tableHeader">
+			<td>Table of Contents</td>
+		</tr>
+		<tr>
+			<td class="tableData">
 	<p>Welcome to the help section for anyInventory.  You can read through the pages in order, or use the table of contents below to help you find what you\'re looking for.</p>
 	<ol style="margin-left: 5%;">
 		<li><a href="introduction.php">Introduction</a></li>
@@ -40,7 +46,9 @@ $output .= '
 		<li><a href="searching.php">Searching</a></li>
 		<li><a href="whats_next.php">What\'s Next?</a></li>
 	</ol>
-	<p style="text-align: right;"><a href="introduction.php">First: Introduction &gt;&gt;</a></p>';
+		</td>
+	</tr>
+	</table><p style="text-align: right;"><a href="introduction.php">First: Introduction &gt;&gt;</a></p>';
 
 display($output);
 

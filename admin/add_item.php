@@ -26,7 +26,7 @@ if (!isset($_REQUEST["c"])){
 							</tr>
 							<tr>
 								<td class="form_label">&nbsp;</td>
-								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" class="submitButton" /></td>
+								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 							</tr>
 						</table>
 					</td>
@@ -44,7 +44,7 @@ else{
 				<input type="hidden" name="c" value="'.$_REQUEST["c"].'" />
 				<table class="standardTable" cellspacing="0">
 					<tr class="tableHeader">
-						<td>Add an Item</td>
+						<td>Add an Item: '.$category->get_breadcrumb_admin_links().'</td>
 						<td style="text-align: right;">[<a href="../docs/items.php#adding">Help</a>]</td>
 					</tr>
 					<tr>
@@ -129,8 +129,7 @@ else{
 	
 	$output .= '
 								<tr>
-									<td class="form_label">&nbsp;</td>
-									<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" class="submitButton" /></td>
+									<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 								</tr>
 							</table>
 						</td>

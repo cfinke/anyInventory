@@ -137,7 +137,7 @@ class alert {
 					</td>
 				</tr>
 				<tr class="alertContent">
-					<td style="text-align: center;" colspan="2">
+					<td colspan="2">
 						<b>'.$this->title.'</b>'.$item_link.'
 					</td>
 				</tr>

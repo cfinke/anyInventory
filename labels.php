@@ -55,8 +55,7 @@ elseif (!isset($_REQUEST["c"])){
 								</td>
 							</tr>
 							<tr>
-								<td>&nbsp;</td>
-								<td style="text-align: center;"><input type="submit" name="submit" value="Submit" class="submitButton" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Submit" /></td>
 							</tr>
 						</table>
 					</form>
@@ -121,14 +120,13 @@ elseif (!isset($_REQUEST["i"])){
 		}
 		
 		$output .= '
-									<select name="i[]" id="i[]" multiple="multiple" size="10">
+									<select name="i[]" id="i[]" multiple="multiple" size="10" style="width: 100%;">
 										'.$options.'
 									</select>
 								</td>
 							</tr>
 							<tr>
-								<td>&nbsp;</td>
-								<td style="text-align: center;"><input type="submit" name="submit" value="Submit" class="submitButton" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Submit" /></td>
 							</tr>
 						</table>
 					</form>

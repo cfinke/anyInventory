@@ -102,8 +102,7 @@ $output = '
 								</td>
 							</tr>
 							<tr>
-								<td class="form_label">&nbsp;</td>
-								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" class="submitButton" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 							</tr>
 						</table>
 					</td>

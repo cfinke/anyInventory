@@ -3,142 +3,150 @@
 include("globals.php");
 
 $title = "anyInventory: Help > Fields > Adding Fields";
+$breadcrumbs = '<a href="./">Help</a> > <a href="fields.php">Fields</a> > Adding Fields';
 
 $output .= '
-	<h2>Adding Fields</h2>
-	<p>To begin tracking your receipts, you must add the fields listed on the previous page so that you can enter in the data later.
-	   For this, proceed to the <a href="'.$DIR_PREFIX.'admin/add_field.php">field addition</a> page.  There, you will see
-	   something that looks like this:</p>
-   <form method="post" action="#">
-		<table>
-			<tr>
-				<td class="form_label"><label for="name">Name:</label></td>
-				<td class="form_input"><input type="text" name="name" id="name" value="" /></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="name">Data type:</label></td>
-				<td class="form_input">
-					<select name="input_type" id="input_type">
-						<option value="text">Text</option>
-						<option value="select">Select Box</option>
-						<option value="multiple">Multiple (Select + Text)</option>
-						<option value="checkbox">Checkboxes</option>
-						<option value="radio">Radio Buttons</option>
-						<option value="file">File</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="values">Values:</label></td>
-				<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="default_value">Default value:</label></td>
-				<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="size">Size, in characters:</label></td>
-				<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
-			</tr>
-			<tr>
-				<td class="form_label">Apply field to:</td>
-				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
-					</select>
-				</td>
-			</tr>
-		</table>
-	</form>
-	<p>Let\'s begin adding our fields, shall we?  First up is the date of purchase.</p>
-	<p>"But wait," you might say.  "Shouldn\'t we keep track of the name of each item?"  Don\'t worry.  You will never need to create a field to track an item name; that is the only built-in field in anyInventory.</p>
-	<p>Back to the purchase date: first, we enter in the field name:</p>
-   <form method="post" action="#">
-		<table>
-			<tr>
-				<td class="form_label"><label for="name">Name:</label></td>
-				<td class="form_input"><input type="text" name="name" id="name" value="Purchase Date" /></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="name">Data type:</label></td>
-				<td class="form_input">
-					<select name="input_type" id="input_type">
-						<option value="text">Text</option>
-						<option value="select">Select Box</option>
-						<option value="multiple">Multiple (Select + Text)</option>
-						<option value="checkbox">Checkboxes</option>
-						<option value="radio">Radio Buttons</option>
-						<option value="file">File</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="values">Values:</label></td>
-				<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="default_value">Default value:</label></td>
-				<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="size">Size, in characters:</label></td>
-				<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
-			</tr>
-			<tr>
-				<td class="form_label">Apply field to:</td>
-				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
-					</select>
-				</td>
-			</tr>
-		</table>
-	</form>
-	<p>There we go.  Now, we select what type of field we want.  Since "text" is already selected here, there\'s no need to change the data type.</p>
-	<p>The "default value" defines what will appear in a field by default when you add an item.  For this, maybe we want to remember what format in which to enter the date, so we set the default as YYYY/MM/DD:</p>
-		   <form method="post" action="#">
-		<table>
-			<tr>
-				<td class="form_label"><label for="name">Name:</label></td>
-				<td class="form_input"><input type="text" name="name" id="name" value="Purchase Date" /></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="name">Data type:</label></td>
-				<td class="form_input">
-					<select name="input_type" id="input_type">
-						<option value="text">Text</option>
-						<option value="select">Select Box</option>
-						<option value="multiple">Multiple (Select + Text)</option>
-						<option value="checkbox">Checkboxes</option>
-						<option value="radio">Radio Buttons</option>
-						<option value="file">File</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="values">Values:</label></td>
-				<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="default_value">Default value:</label></td>
-				<td class="form_input"><input type="text" name="default_value" id="default_value" value="YYYYMMDD" /></td>
-			</tr>
-			<tr>
-				<td class="form_label"><label for="size">Size, in characters:</label></td>
-				<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
-			</tr>
-			<tr>
-				<td class="form_label">Apply field to:</td>
-				<td class="form_input">
-					<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
-					</select>
-				</td>
-			</tr>
-		</table>
-	</form>
-	<p>Next is the size of the field.  This limits how many characters can be entered in the field.  Since we already know the format of our date, we can set this to 10, exactly enough to hold our format of date.</p>
-	<p><em>Note: if this is set to 65 or more, you will be given a text box rather than a text field to enter your data.  The text box, shown below, simply makes more data visible as your enter it.</em></p>
-	<form style="padding-left: 50px; margin: 10px;">
-		<textarea rows="4" cols="60">This is a text box.  Feel free to type in it.</textarea>
-	</form>
+	<table class="standardTable" cellspacing="0">
+		<tr class="tableHeader">
+			<td>Adding Fields</td>
+		</tr>
+		<tr>
+			<td class="tableData">
+				<p>
+					To begin tracking your receipts, you must add the fields listed on the previous page so that you can enter in the data later.
+					For this, proceed to the <a href="'.$DIR_PREFIX.'admin/add_field.php">field addition</a> page.  There, you will see
+					something that looks like this:
+				</p>
+				<form method="post" action="#">
+					<table>
+						<tr>
+							<td class="form_label"><label for="name">Name:</label></td>
+							<td class="form_input"><input type="text" name="name" id="name" value="" /></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="name">Data type:</label></td>
+							<td class="form_input">
+								<select name="input_type" id="input_type">
+									<option value="text">Text</option>
+									<option value="select">Select Box</option>
+									<option value="multiple">Multiple (Select + Text)</option>
+									<option value="checkbox">Checkboxes</option>
+									<option value="radio">Radio Buttons</option>
+									<option value="file">File</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="values">Values:</label></td>
+							<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="default_value">Default value:</label></td>
+							<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="size">Size, in characters:</label></td>
+							<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label">Apply field to:</td>
+							<td class="form_input">
+								<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
+								</select>
+							</td>
+						</tr>
+					</table>
+				</form>
+				<p>Let\'s begin adding our fields, shall we?  First up is the date of purchase.</p>
+				<p>"But wait," you might say.  "Shouldn\'t we keep track of the name of each item?"  Don\'t worry.  You will never need to create a field to track an item name; that is the only built-in field in anyInventory.</p>
+				<p>Back to the purchase date: first, we enter in the field name:</p>
+				<form method="post" action="#">
+					<table>
+						<tr>
+							<td class="form_label"><label for="name">Name:</label></td>
+							<td class="form_input"><input type="text" name="name" id="name" value="Purchase Date" /></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="name">Data type:</label></td>
+							<td class="form_input">
+								<select name="input_type" id="input_type">
+									<option value="text">Text</option>
+									<option value="select">Select Box</option>
+									<option value="multiple">Multiple (Select + Text)</option>
+									<option value="checkbox">Checkboxes</option>
+									<option value="radio">Radio Buttons</option>
+									<option value="file">File</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="values">Values:</label></td>
+							<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="default_value">Default value:</label></td>
+							<td class="form_input"><input type="text" name="default_value" id="default_value" value="" /></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="size">Size, in characters:</label></td>
+							<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label">Apply field to:</td>
+							<td class="form_input">
+								<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
+								</select>
+							</td>
+						</tr>
+					</table>
+				</form>
+				<p>There we go.  Now, we select what type of field we want.  Since "text" is already selected here, there\'s no need to change the data type.</p>
+				<p>The "default value" defines what will appear in a field by default when you add an item.  For this, maybe we want to remember what format in which to enter the date, so we set the default as YYYY/MM/DD:</p>
+				<form method="post" action="#">
+					<table>
+						<tr>
+							<td class="form_label"><label for="name">Name:</label></td>
+							<td class="form_input"><input type="text" name="name" id="name" value="Purchase Date" /></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="name">Data type:</label></td>
+							<td class="form_input">
+								<select name="input_type" id="input_type">
+									<option value="text">Text</option>
+									<option value="select">Select Box</option>
+									<option value="multiple">Multiple (Select + Text)</option>
+									<option value="checkbox">Checkboxes</option>
+									<option value="radio">Radio Buttons</option>
+									<option value="file">File</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="values">Values:</label></td>
+							<td class="form_input"><input type="text" name="values" id="values" value="" /><br /><small>Only for data types \'Multiple\',\'Select Box\',\'Checkboxes\', and \'Radio Buttons\'.  Separate with commas.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="default_value">Default value:</label></td>
+							<td class="form_input"><input type="text" name="default_value" id="default_value" value="YYYYMMDD" /></td>
+						</tr>
+						<tr>
+							<td class="form_label"><label for="size">Size, in characters:</label></td>
+							<td class="form_input"><input type="text" name="size" id="size" value="" /><br /><small>Only for \'text\' data type.</small></td>
+						</tr>
+						<tr>
+							<td class="form_label">Apply field to:</td>
+							<td class="form_input">
+								<select name="add_to[]" id="add_to[]" multiple="multiple" size="10">
+								</select>
+							</td>
+						</tr>
+					</table>
+				</form>
+				<p>Next is the size of the field.  This limits how many characters can be entered in the field.  Since we already know the format of our date, we can set this to 10, exactly enough to hold our format of date.</p>
+				<p><em>Note: if this is set to 65 or more, you will be given a text box rather than a text field to enter your data.  The text box, shown below, simply makes more data visible as your enter it.</em></p>
+				<form style="padding-left: 50px; margin: 10px;">
+					<textarea rows="4" cols="60">This is a text box.  Feel free to type in it.</textarea>
+				</form>
 	<br />
    <form method="post" action="#">
 				<table>
@@ -281,6 +289,9 @@ $output .= '
 	</form>
 	<p>Adding a radio button, checkbox, or select field works in the same way.</p>
 	<p>Adding a field of type \'file\' allows you to upload a file for that field instead of typing or selecting a value.  As of version 1.6, this replaced the built-in "File Upload" and "Remote File" fields.</p>
+	</td>
+	</tr>
+	</table>
 	<div style="float: left;"><a href="fields.php#types">&lt;&lt; Previous: Field Types</a></div>
 	<div style="text-align: right;"><a href="editing_fields.php">Next: Editing Fields &gt;&gt;</a></div>';
 

@@ -10,7 +10,6 @@ $item = new item($_REQUEST["id"]);
 $output = '
 		<form method="post" action="item_processor.php" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="do_edit" />
-			<input type="hidden" name="c" value="'.$_REQUEST["c"].'" />
 			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
@@ -106,8 +105,7 @@ if (is_array($item->category->field_ids)){
 
 $output .= '
 							<tr>
-								<td class="form_label">&nbsp;</td>
-								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" class="submitButton" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 							</tr>
 						</table>
 					</td>

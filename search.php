@@ -29,8 +29,7 @@ if (!$_REQUEST["action"]){
 								</td>
 							</tr>
 							<tr>
-								<td class="form_label">&nbsp;</td>
-								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" value="Update Categories" class="submitButton" /></td>
+								<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" value="Update Categories" /></td>
 							</tr>
 						</form>
 						</tr>
@@ -116,8 +115,7 @@ if (!$_REQUEST["action"]){
 	
 	$output .= '		
 						<tr>
-							<td class="form_label">&nbsp;</td>
-							<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Search" class="submitButton" /></td>
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Search" /></td>
 						</tr>
 					</form>
 				</td>

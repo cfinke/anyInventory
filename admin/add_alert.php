@@ -26,7 +26,7 @@ if (!is_array($_REQUEST["c"])){
 							</tr>
 							<tr>
 								<td class="form_label">&nbsp;</td>
-								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" class="submitButton" /></td>
+								<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 							</tr>
 						</table>
 					</td>
@@ -83,6 +83,7 @@ else{
 			$output = '
 					<form method="post" action="alert_processor.php">
 						<input type="hidden" name="action" value="do_add" />
+						<input type="hidden" name="c" value="'.htmlentities(serialize($_REQUEST["c"])).'" />
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
 								<td>Add Alert</td>
@@ -180,8 +181,7 @@ else{
 										</td>
 									</tr>
 									<tr>
-										<td class="form_label">&nbsp;</td>
-										<td class="form_input" style="text-align: center;"><input type="submit" name="submit" id="submit" value="Submit" class="submitButton" /></td>
+										<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Submit" /></td>
 									</tr>
 								</table>
 							</td>

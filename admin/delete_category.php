@@ -17,14 +17,18 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
+					<p>Are you sure you want to delete this category?</p>
+				</td>
+			</tr>
+			<tr class="tableHeader"
+				<td colspan="2">'.$category->breadcrumb_names.'</td>
+			</tr>
+			<tr>
+				<td class="tableData" colspan="2">
 					<table>
-						<tr>
-							<td class="form_label">Name:</td>
-							<td>'.$category->breadcrumb_names.'</td>
-						</tr>
-						<tr>
-							<td class="form_label">Fields:</td>
-							<td>';
+					<tr>
+						<td class="form_label">Fields:</td>
+						<td>';
 
 if(is_array($category->field_names)){
 	foreach($category->field_names as $field){
@@ -71,14 +75,13 @@ if ($category->num_children > 0){
 			<td>Move all sub-categories to <select name="move_subcats_to" id="move_subcats_to">'.get_category_options($category->parent_id, false).'</select></td>
 		</tr>
 		<tr>
-			<td class="form_label">Number of items in this category and its subcategories:</td>
+			<td class="form_label">Number of items in this<br /> category and its subcategories:</td>
 			<td>'.$category->num_items_r().'</td>
 		</tr>';
 }
 
 $output .= '<tr>
-							<td class="form_label">&nbsp;</td>
-							<td style="text-align: center;"><input type="submit" name="delete" value="Delete" class="submitButton" /> <input type="submit" name="cancel" value="Cancel" class="submitButton" /></td>
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></td>
 						</tr>
 					</table>
 				</td>

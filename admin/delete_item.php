@@ -18,10 +18,11 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
+					<p>Are you sure you want to delete this item?</p>
 					'.$item->export_description().'
-					<p style="text-align: center; clear: both;">
-						<input type="submit" name="delete" value="Delete" class="submitButton" />
-						<input type="submit" name="cancel" value="Cancel" class="submitButton" />
+					<p class="submitButtonRow">
+						<input type="submit" name="delete" value="Delete" />
+						<input type="submit" name="cancel" value="Cancel" />
 					</p>
 				</td>
 			</tr>

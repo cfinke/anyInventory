@@ -3,12 +3,22 @@
 include("globals.php");
 
 $title = "anyInventory: Help > Fields";
+$breadcrumbs = '<a href="./">Help</a> > Fields';
 
 $output .= '
-	<h2>Fields</h2>
+	<table class="standardTable" cellspacing="0">
+		<tr class="tableHeader">
+			<td>Fields</td>
+		</tr>
+		<tr>
+			<td class="tableData">
 	<p>Fields are the basis of anyInventory.  They define the type of data that you want to track. Let\'s take a look at the different types of fields.
 	</p>
-	<h2><a name="types">Field Types</a></h2>
+	</td>		</tr>	<tr class="tableHeader">
+			<td><a name="types">Field Types</a></td>
+		</tr>
+		<tr>
+			<td class="tableData">
 	<p>There are six types of fields from which to choose when setting up anyInventory.  Each one
 	   is described below, with an example shown below it.</p>
 	<ul>
@@ -94,7 +104,9 @@ $output .= '
 	<p>Now that we have a group of items we want to track, let\'s see how we would go about <a href="adding_fields.php">adding
 		the fields.</a>
 	</p>
-	<div style="float: left;"><a href="introduction.php">&lt;&lt; Previous: Introduction</a></div>
+		</td>
+	</tr>
+	</table><div style="float: left;"><a href="introduction.php">&lt;&lt; Previous: Introduction</a></div>
 	<div style="text-align: right;"><a href="adding_fields.php">Next: Adding Fields &gt;&gt;</a></div>';
 
 display($output);

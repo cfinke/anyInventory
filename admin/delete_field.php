@@ -18,11 +18,15 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
+					<p>Are you sure you want to delete this field?</p>
+				</td>
+			</tr>
+			<tr class="tableHeader">
+				<td colspan="2">'.$field->name.'</td>
+			</tr>
+			<tr>
+				<td class="tableData" colspan="2">
 					<table>
-						<tr>
-							<td class="form_label">Field:</td>
-							<td>'.$field->name.'</td>
-						</tr>
 						<tr>
 							<td class="form_label">Input type:</td>
 							<td>'.$field->input_type.'</td>
@@ -60,9 +64,8 @@ $output .= '
 							<td><b>This field is used in '.count($field->categories).' categories.</b></td>
 						</tr>
 						<tr>
-							<td>&nbsp;</td>
-							<td style="text-align: center;"><input type="submit" name="delete" value="Delete" class="submitButton" /> <input type="submit" name="cancel" value="Cancel" class="submitButton" /></td>
-						</tr>	
+							<td class="submitButtonRow" colspan="2"><input type="submit" name="delete" value="Delete" /> <input type="submit" name="cancel" value="Cancel" /></td>
+						</tr>
 					</table>
 				</td>
 			</tr>

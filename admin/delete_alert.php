@@ -18,8 +18,9 @@ $output .= '
 			</tr>
 			<tr>
 				<td class="tableData" colspan="2">
+					<p>Are you sure you want to delete this alert?</p>
 					'.$alert->export_description().'
-					<p style="text-align: center; clear: both;">
+					<p class="submitButtonRow">
 						<input type="submit" name="delete" value="Delete" />
 						<input type="submit" name="cancel" value="Cancel" />
 					</p>

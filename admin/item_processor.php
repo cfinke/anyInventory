@@ -59,7 +59,6 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 	
 	$query .= " '".$_REQUEST["c"]."','".$_REQUEST["name"]."')";
-	//$result = query($query);
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Get the id of the item
@@ -119,13 +118,11 @@ if ($_REQUEST["action"] == "do_add"){
 								VALUES
 								('".$key."',
 								 '".$_REQUEST[str_replace(" ","_",$field->name)."remote"]."')";
-					//query($query);
 					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 					
 					$new_key = mysql_insert_id();
 					
 					$query = "UPDATE `anyInventory_items` SET `".str_replace("_"," ",$field->name)."`='".$new_key."' WHERE `id`='".$key."'";
-					//query($query);
 					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 					}
 				}
@@ -168,17 +165,14 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
-	// Create an object of the current category
-	$category = new category($_REQUEST["c"]);
-	
 	// Create an object of the old item
 	$item = new item($_REQUEST["id"]);
 	
 	// Put the query together
 	$query = "UPDATE `anyInventory_items` SET ";
 	
-	if (is_array($category->field_ids)){
-		foreach($category->field_ids as $field_id){
+	if (is_array($item->category->field_ids)){
+		foreach($item->category->field_ids as $field_id){
 			$field = new field($field_id);
 			
 			if ($field->input_type == 'file'){
@@ -192,11 +186,9 @@ elseif($_REQUEST["action"] == "do_edit"){
 					}
 					
 					$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id["file_id"]."'";
-					//query($delquery);
 					mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
 					
 					$remquery = "UPDATE `anyInventory_items` SET `".$field->name."`='0' WHERE `id`='".$item->id."'";
-					//query($remquery);
 					mysql_query($remquery) or die(mysql_error() . '<br /><br />'. $remquery);
 				}
 				
@@ -209,7 +201,6 @@ elseif($_REQUEST["action"] == "do_edit"){
 						}
 						
 						$delquery = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-						//query($delquery);
 						mysql_query($delquery) or die(mysql_error() . '<br /><br />'. $delquery);
 					}
 					
@@ -237,7 +228,6 @@ elseif($_REQUEST["action"] == "do_edit"){
 							 '".$filename."',
 							 '".$_FILES[str_replace(" ","_",$field->name)]["size"]."',
 							 '".$_FILES[str_replace(" ","_",$field->name)]["type"]."')";
-					//query($newquery);
 					mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 					
 					$new_key = mysql_insert_id();
@@ -344,14 +334,13 @@ elseif($_REQUEST["action"] == "do_edit"){
 	}
 	
 	$query .= " `name`='".$_REQUEST["name"]."' WHERE `id`='".$_REQUEST["id"]."'";
-	//$result = query($query);
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 elseif($_REQUEST["action"] == "do_move"){
 	// Move an item.
 	
 	$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["c"]."' WHERE `id`='".$_REQUEST["id"]."'";
-	$result = query($query);
+	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 elseif($_REQUEST["action"] == "do_delete"){
 	// Delete an item
@@ -364,7 +353,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 				if (!$file->is_remote){
 					if (unlink(realpath($DIR_PREFIX."item_files/")."/".$file->file_name)){
 						$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-						query($query);
+						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 					}
 					else{
 						echo "Could not delete ".$file->file_name.'<br />';
@@ -373,7 +362,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 				}
 				else{
 					$query = "DELETE FROM `anyInventory_files` WHERE `id`='".$file->id."'";
-					query($query);
+					mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 				}
 			}
 		}
@@ -381,7 +370,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 		// Remove this item from any alerts
 		
 		$query = "SELECT `id` FROM `anyInventory_alerts` WHERE `item_ids` LIKE '%\"".$item->id."\"%'";
-		$result = query($query);
+		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		while ($row = mysql_fetch_array($result)){
 			$alert = new alert($row["id"]);
@@ -390,12 +379,12 @@ elseif($_REQUEST["action"] == "do_delete"){
 			
 			if (count($alert->item_ids) == 0){
 				$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$alert->id."'";
-				query($query);
+				mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
 		}
 		
 		$query = "DELETE FROM `anyInventory_items` WHERE `id`='".$item->id."'";
-		$result = query($query);
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
 

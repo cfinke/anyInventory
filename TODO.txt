@@ -38,21 +38,23 @@ DONE - Ability to have auto-increment field
 DONE - Administration Hiding
 DONE - Customization of auto-inc field
 CHRIS - Customization of front-page text
+More information for each item in listing
 Item associations ("Item" Field type)
 Field Dividers
-Required fields
+
 
 BEFORE 1.9
 ===================
 Remote image thumbnailing - backup in case of missing libcurl
-Better advanced search, like phpMyAdmin's Search page
+? Better advanced search, like phpMyAdmin's Search page
 Multiple-condition alerts
+Required fields
 
 BEFORE 2.0
 ===================
 Download inventory as XML file
 Upload inventory as XML file
-Label Sheets
+? Label Sheets
 
 BUGS
 ========================================

@@ -87,6 +87,19 @@ function get_options_children($id, $pre = "", $selected = 0){
 	return $list;
 }
 
+function get_item_options($cat = 0){
+	// This function creates select box options for the items in the category $cat.
+	
+	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category`='".$cat."' ORDER BY `name` ASC";
+	$result = query($query);
+	
+	while ($row = mysql_fetch_array($result)){
+		$options .= '<option value="'.$row["id"].'">'.$row["name"].'</option>';
+	}
+	
+	return $options;
+}
+
 function get_fields_checkbox_area($checked = array()){
 	// This function returns the field checkboxes.
 	// Any field ids in the array $checked will be checked.

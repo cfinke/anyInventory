@@ -20,9 +20,10 @@ to these functions.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.4.1, simply overwrite the files from 
-your current version.  If you are upgrading from a version before 1.4, you 
-should then run the included upgrade.php script from the Web browser
+To upgrade to anyInventory 1.5, simply overwrite the files from 
+your current version, except for the globals.php file.  If you are upgrading 
+from a version before 1.4, or if you accidentally overwrote the globals.php
+file, you should then run the included upgrade.php script from the Web browser 
 of your choice.
 
 Using anyInventory

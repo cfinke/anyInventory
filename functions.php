@@ -105,8 +105,6 @@ function get_options_children($id, $pre = "", $selected = 0, $nonempty = false){
 }
 
 function get_item_options($cat = 0, $selected = null){
-	if (!is_array($selected)) $selected = array($selected);
-	
 	// This function creates select box options for the items in the category $cat.
 	
 	$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category`='".$cat."' ORDER BY `name` ASC";
@@ -114,7 +112,8 @@ function get_item_options($cat = 0, $selected = null){
 	
 	while ($row = mysql_fetch_array($result)){
 		$options .= '<option value="'.$row["id"].'"';
-		if (in_array($row["id"],$selected)) $options .= ' selected="selected"';
+		if (!is_array($selected)) $options .= ' selected="selected"';
+		elseif (in_array($row["id"],$selected)) $options .= ' selected="selected"';
 		$options .= '>'.$row["name"].'</option>';
 	}
 	
@@ -252,6 +251,7 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 	switch($input_type){
 		case 'text':
 		case 'multiple':
+			$size = 64;
 		case 'checkbox':
 			if ($size < 256){
 				$type = " VARCHAR(".$size.") DEFAULT '".$default_value."' ";
@@ -266,7 +266,7 @@ function get_mysql_column_type($input_type, $size, $values, $default_value){
 			$type = " ENUM(";
 			
 			$enums = explode(",",$values);
-					
+			
 			foreach($enums as $enum){
 				$type .= "'".trim(str_replace("'","",str_replace('"','',$enum)))."',";
 			}

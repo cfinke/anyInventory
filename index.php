@@ -85,34 +85,44 @@ else{
 	
 	$output .= '</table>
 				</td>
-			</tr>
-			<tr class="tableHeader">
-				<td>Items in this Category ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )</td>
-				<td style="text-align: right;">[<a href="../docs/items.php">Help</a>]</td>
-			</tr>
-			<tr>
-				<td class="tableData" colspan="2">
-					<table>';
+			</tr>';
 	
 	// Display any items in this category.
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	if (mysql_num_rows($result) > 0){
-		while ($row = mysql_fetch_array($result)){
-			$item = new item($row["id"]);
+	if (($_REQUEST["c"] != 0) || (mysql_num_rows($result) > 0)){
+		$output .= '
+			<tr class="tableHeader">
+				<td>Items in this Category';
+		
+		if ($_REQUEST["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )';
+		
+		$output .= '</td>
+					<td style="text-align: right;">[<a href="../docs/items.php">Help</a>]</td>
+				</tr>
+				<tr>
+					<td class="tableData" colspan="2">
+						<table>';
+		
+		if (mysql_num_rows($result) > 0){
+			while ($row = mysql_fetch_array($result)){
+				$item = new item($row["id"]);
 			
-			$output .= '<tr><td>'.$item->export_teaser().'</td></tr>';
+				$output .= '<tr><td>'.$item->export_teaser().'</td></tr>';
+			}
 		}
-	}
-	else{
-		$output .= '<tr><td style="text-align: center;">There are no items in this category.</td></tr>';
+		else{
+			$output .= '<tr><td style="text-align: center;">There are no items in this category.</td></tr>';
+		}
+		
+		$output .= '
+					</table>
+				</td>
+			</tr>';
 	}
 	
 	$output .= '
-						</table>
-					</td>
-				</tr>
 			</table>
 		</td>
 		<td style="padding-left: 5px;">';

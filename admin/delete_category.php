@@ -2,12 +2,12 @@
 
 include("globals.php");
 
-if (!$admin_user->can_admin($_REQUEST["id"])){
+if (!$admin_user->can_admin($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
 	exit;
 }
 
-if ($_REQUEST["id"] == 0){
+if ($_GET["id"] == 0){
 	header("Location: ../error_handler.php?eid=7");
 	exit;
 }
@@ -15,11 +15,11 @@ else{
 	$title = "anyInventory: Delete Category";
 	$breadcrumbs = 'Administration > <a href="categories.php">Categories</a> > Delete Category';
 	
-	$category = new category($_REQUEST["id"]);
+	$category = new category($_GET["id"]);
 	
 	$output .= '
 		<form method="post" action="category_processor.php">
-			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+			<input type="hidden" name="id" value="'.$_GET["id"].'" />
 			<input type="hidden" name="action" value="do_delete" />
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">

@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if (($admin_user->usertype != 'Administrator') && ($_REQUEST["id"] != $_SESSION["user"]["id"])){
+if (($admin_user->usertype != 'Administrator') && ($_GET["id"] != $_SESSION["user"]["id"])){
 	header("Location: ../error_handler.php?eid=11");
 	exit;
 }
@@ -22,7 +22,7 @@ $inHead = '
 $inBodyTag = ' onload="toggle();"';
 $breadcrumbs = 'Administration > <a href="users.php">Users</a> > Edit User';
 
-$local_user = new user($_REQUEST["id"]);
+$local_user = new user($_GET["id"]);
 
 $output .= '
 	<table class="standardTable" cellspacing="0" cellpadding="3">
@@ -39,7 +39,7 @@ $output .= '
 					<input type="hidden" name="id" value="'.$local_user->id.'" />
 					<table>';
 	
-	if ($_REQUEST["id"] != $_SESSION["user"]["id"]){
+	if ($_GET["id"] != $_SESSION["user"]["id"]){
 		$output .= '
 				<input type="hidden" name="action" value="do_edit" />
 				<tr>
@@ -58,7 +58,7 @@ $output .= '
 								<br /><small>If you do not enter a new password, it will remain unchanged.</small></td>
 						</tr>';
 	
-	if (($local_user->id != get_config_value('ADMIN_USER_ID')) && ($_REQUEST["id"] != $_SESSION["user"]["id"])){
+	if (($local_user->id != get_config_value('ADMIN_USER_ID')) && ($_GET["id"] != $_SESSION["user"]["id"])){
 		$output .= '
 						<tr>
 							<td class="form_label"><label for="usertype">User Type:</label></td>

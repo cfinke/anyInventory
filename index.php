@@ -5,10 +5,10 @@ session_start();
 include("globals.php");
 
 // The default category is the top level.
-if (!$_REQUEST["c"]) $_REQUEST["c"] = 0;
+if (!$_GET["c"]) $_GET["c"] = 0;
 
 // Create a category object for the current category.
-$category = new category($_REQUEST["c"]);
+$category = new category($_GET["c"]);
 
 if (!$view_user->can_view($category->id)){
 	header("Location: error_handler.php?eid=12");
@@ -19,9 +19,9 @@ $title = "anyInventory: ".$category->breadcrumb_names;
 $breadcrumbs = $category->get_breadcrumb_links();
 
 // Display the breadcrumb links to this category.
-if ($_REQUEST["id"]){
+if ($_GET["id"]){
 	// A specific item has been requested.
-	$item = new item($_REQUEST["id"]);
+	$item = new item($_GET["id"]);
 	$breadcrumbs = $item->category->get_breadcrumb_links();
 	$output .= '
 		<table cellspacing="0" cellpadding="0">
@@ -56,7 +56,7 @@ if ($_REQUEST["id"]){
 	$output .= '</td></tr></table>';
 }
 else{
-	if ($_REQUEST["c"] == 0){
+	if ($_GET["c"] == 0){
 		$query = "SELECT * FROM `anyInventory_config` WHERE `key`='FRONT_PAGE_TEXT'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
@@ -75,13 +75,13 @@ else{
 	
 	if($admin_user->can_admin($category->id)){
 		if ($category->id != 0){
-			$output .= ' ( <a href="admin/edit_category.php?id='.$_REQUEST["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_REQUEST["c"].'">Delete</a> | ';
+			$output .= ' ( <a href="admin/edit_category.php?id='.$_GET["c"].'">Edit</a> | <a href="admin/delete_category.php?id='.$_GET["c"].'">Delete</a> | ';
 		}
 		else{
 			$output .= ' (';
 		}
 		
-		$output .= ' <a href="admin/add_category.php?c='.$_REQUEST["c"].'">Add a category here</a> )';
+		$output .= ' <a href="admin/add_category.php?c='.$_GET["c"].'">Add a category here</a> )';
 	}
 	
 	$output .= '			</td>
@@ -113,13 +113,13 @@ else{
 	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	if (($_REQUEST["c"] != 0) || (mysql_num_rows($result) > 0)){
+	if (($_GET["c"] != 0) || (mysql_num_rows($result) > 0)){
 		$output .= '
 			<tr class="tableHeader">
 				<td>Items in this Category';
 		
-		if($admin_user->can_admin($_REQUEST["c"])){
-			if ($_REQUEST["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_REQUEST["c"].'">Add an item here</a> )';
+		if($admin_user->can_admin($_GET["c"])){
+			if ($_GET["c"] != 0) $output .= ' ( <a href="admin/add_item.php?c='.$_GET["c"].'">Add an item here</a> )';
 		}
 		
 		$output .= '</td>

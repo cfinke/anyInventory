@@ -2,16 +2,16 @@
 
 include("globals.php");
 
-if ($_REQUEST["action"] == "log_in"){
-	$query = "SELECT * FROM `anyInventory_users` WHERE `username`='".$_REQUEST["username"]."'";
+if ($_POST["action"] == "log_in"){
+	$query = "SELECT * FROM `anyInventory_users` WHERE `username`='".$_POST["username"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 	
 	if (mysql_num_rows($result) == 0){
-		header("Location: login.php?f=1&return_to=".$_REQUEST["return_to"]);
+		header("Location: login.php?f=1&return_to=".$_POST["return_to"]);
 		exit;
 	}
 	else{
-		if (md5($_REQUEST["password"]) == mysql_result($result, 0, 'password')){
+		if (md5($_POST["password"]) == mysql_result($result, 0, 'password')){
 			unset($_SESSION["user"]);
 			
 			$_SESSION["user"] = array();
@@ -19,20 +19,20 @@ if ($_REQUEST["action"] == "log_in"){
 			$_SESSION["user"]["username"] = mysql_result($result, 0, 'username');
 			$_SESSION["user"]["usertype"] = mysql_result($result, 0, 'usertype');
 			
-			if ($_REQUEST["return_to"] == ''){
-				$_REQUEST["return_to"] = './admin/index.php';
+			if ($_POST["return_to"] == ''){
+				$_POST["return_to"] = './admin/index.php';
 			}
 			
-			header("Location: ".$_REQUEST["return_to"]);
+			header("Location: ".$_POST["return_to"]);
 			exit;
 		}
 		else{
-			header("Location: login.php?f=1&return_to=".$_REQUEST["return_to"]);
+			header("Location: login.php?f=1&return_to=".$_POST["return_to"]);
 			exit;
 		}
 	}
 }
-elseif($_REQUEST["action"] == "log_out"){
+elseif($_POST["action"] == "log_out"){
 	unset($_SESSION["user"]);
 	session_destroy();
 	

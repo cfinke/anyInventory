@@ -2,11 +2,11 @@
 
 include("globals.php");
 
-if ($_REQUEST["id"] == get_config_value('ADMIN_USER_ID')){
+if ($_GET["id"] == get_config_value('ADMIN_USER_ID')){
 	header("Location: ../error_handler.php?eid=12");
 	exit;
 }
-elseif($_REQUEST["id"] == $admin_user->id){
+elseif($_GET["id"] == $admin_user->id){
 	header("Location: ../error_handler.php?eid=14");
 	exit;
 }
@@ -18,12 +18,12 @@ else{
 	$title = "anyInventory: Delete User";
 	$breadcrumbs = 'Administration > <a href="users.php">Users</a> > Delete User';
 	
-	$user = new user($_REQUEST["id"]);
+	$user = new user($_GET["id"]);
 	
 	$output .= '
 		<form action="user_processor.php" method="post">
 			<input type="hidden" name="action" value="do_delete" />
-			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+			<input type="hidden" name="id" value="'.$_GET["id"].'" />
 			<table class="standardTable" cellspacing="0" cellpadding="0">
 				<tr class="tableHeader">
 					<td>Delete User</td>

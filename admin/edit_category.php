@@ -2,11 +2,11 @@
 
 include("globals.php");
 
-if (!$admin_user->can_admin($_REQUEST["id"])){
+if (!$admin_user->can_admin($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
 	exit;
 }
-elseif ($_REQUEST["id"] == '0'){
+elseif ($_GET["id"] == '0'){
 	header("Location: ../error_handler.php?eid=7");
 	exit;
 }
@@ -14,7 +14,7 @@ else{
 	$title = "anyInventory: Edit Category";
 	$breadcrumbs = 'Administration > <a href="categories.php">Categories</a> > Edit Category';
 	
-	$category = new category($_REQUEST["id"]);
+	$category = new category($_GET["id"]);
 	
 	$checked = ($category->auto_inc_field) ? ' checked="checked"' : '';
 	
@@ -61,7 +61,7 @@ while($row = mysql_fetch_array($result)){
 	$temp_user = new user($row["id"]);
 	
 	$output .= '<option value="'.$row["id"].'"';
-	if ($temp_user->can_view($_REQUEST["id"])) $output .= ' selected="selected"';
+	if ($temp_user->can_view($_GET["id"])) $output .= ' selected="selected"';
 	$output .= '>'.$row["username"].'</option>';
 }
 
@@ -85,7 +85,7 @@ while($row = mysql_fetch_array($result)){
 	$temp_user = new user($row["id"]);
 	
 	$output .= '<option value="'.$row["id"].'"';
-	if ($temp_user->can_admin($_REQUEST["id"])) $output .= ' selected="selected"';
+	if ($temp_user->can_admin($_GET["id"])) $output .= ' selected="selected"';
 	$output .= '>'.$row["username"].'</option>';
 }
 

@@ -4,13 +4,13 @@ include("globals.php");
 
 $replace = array("'",'"','&',"\\",':',';','`','[',']');
 
-if ($_REQUEST["action"] == "do_add"){
-	if (!is_array($_REQUEST["i"])){
+if ($_POST["action"] == "do_add"){
+	if (!is_array($_POST["i"])){
 		header("Location: ../error_handler.php?eid=6");
 		exit;
 	}
 	else{
-		$cat_ids = unserialize(stripslashes($_REQUEST["c"]));
+		$cat_ids = unserialize(stripslashes($_POST["c"]));
 		
 		if (is_array($cat_ids)){
 			foreach($cat_ids as $cat_id){
@@ -21,16 +21,16 @@ if ($_REQUEST["action"] == "do_add"){
 			}
 		}
 		else{
-			$_REQUEST["c"] = addslashes(serialize(array()));
+			$_POST["c"] = addslashes(serialize(array()));
 		}
 		
-		$_REQUEST["title"] = stripslashes($_REQUEST["title"]);
-		$_REQUEST["title"] = str_replace($replace,"",$_REQUEST["title"]);
-		$_REQUEST["title"] = trim(addslashes($_REQUEST["title"]));
+		$_POST["title"] = stripslashes($_POST["title"]);
+		$_POST["title"] = str_replace($replace,"",$_POST["title"]);
+		$_POST["title"] = trim(addslashes($_POST["title"]));
 		
-		$timestamp = $_REQUEST["year"];
-		$timestamp .= ($_REQUEST["month"] < 10) ? '0' . $_REQUEST["month"] : $_REQUEST["month"];
-		$timestamp .= ($_REQUEST["day"] < 10) ? '0' . $_REQUEST["day"] : $_REQUEST["day"];
+		$timestamp = $_POST["year"];
+		$timestamp .= ($_POST["month"] < 10) ? '0' . $_POST["month"] : $_POST["month"];
+		$timestamp .= ($_POST["day"] < 10) ? '0' . $_POST["day"] : $_POST["day"];
 		$timestamp .= '000000';
 		
 		$query = "INSERT INTO `anyInventory_alerts` 
@@ -43,24 +43,24 @@ if ($_REQUEST["action"] == "do_add"){
 					 `timed`,
 					 `category_ids`)
 					VALUES
-					('".$_REQUEST["title"]."',
-					 '".serialize($_REQUEST["i"])."',
-					 '".$_REQUEST["field"]."',
-					 '".$_REQUEST["condition"]."',
-					 '".$_REQUEST["value"]."',
+					('".$_POST["title"]."',
+					 '".serialize($_POST["i"])."',
+					 '".$_POST["field"]."',
+					 '".$_POST["condition"]."',
+					 '".$_POST["value"]."',
 					 '".$timestamp."',
-					 '".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."',
-					 '".$_REQUEST["c"]."')";
+					 '".(((bool) ($_POST["timed"] == "yes")) / 1)."',
+					 '".$_POST["c"]."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
-elseif($_REQUEST["action"] == "do_edit_cat_ids"){
-	if (!is_array($_REQUEST["c"])){
+elseif($_POST["action"] == "do_edit_cat_ids"){
+	if (!is_array($_POST["c"])){
 		header("Location: ../error_handler.php?eid=5");
 		exit;
 	}
 	else{
-		foreach($_REQUEST["c"] as $cat_id){
+		foreach($_POST["c"] as $cat_id){
 			if (!$admin_user->can_admin($cat_id)){
 				header("Location: ../error_handler.php?eid=13");
 				exit;
@@ -69,7 +69,7 @@ elseif($_REQUEST["action"] == "do_edit_cat_ids"){
 		
 		$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
 		
-		foreach($_REQUEST["c"] as $cat_id){
+		foreach($_POST["c"] as $cat_id){
 			$query .= " `categories` LIKE '%\"".$cat_id."\"%' AND ";
 		}
 		
@@ -81,21 +81,21 @@ elseif($_REQUEST["action"] == "do_edit_cat_ids"){
 			exit;
 		}
 		else{
-			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($_REQUEST["c"])."'";
+			$query = "UPDATE `anyInventory_alerts` SET `category_ids`='".serialize($_POST["c"])."'";
 			mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
-			header("Location: edit_alert.php?id=".$_REQUEST["id"]);
+			header("Location: edit_alert.php?id=".$_POST["id"]);
 			exit;
 		}
 	}
 }
-elseif($_REQUEST["action"] == "do_edit"){
-	if (!is_array($_REQUEST["i"])){
+elseif($_POST["action"] == "do_edit"){
+	if (!is_array($_POST["i"])){
 		header("Location: ../error_handler.php?eid=6");
 		exit;
 	}
 	else{
-		$cat_ids = unserialize(stripslashes($_REQUEST["c"]));
+		$cat_ids = unserialize(stripslashes($_POST["c"]));
 		
 		if (is_array($cat_ids)){
 			foreach($cat_ids as $cat_id){
@@ -106,26 +106,26 @@ elseif($_REQUEST["action"] == "do_edit"){
 			}
 		}
 		
-		$timestamp = $_REQUEST["year"];
-		$timestamp .= ($_REQUEST["month"] < 10) ? '0' . $_REQUEST["month"] : $_REQUEST["month"];
-		$timestamp .= ($_REQUEST["day"] < 10) ? '0' . $_REQUEST["day"] : $_REQUEST["day"];
+		$timestamp = $_POST["year"];
+		$timestamp .= ($_POST["month"] < 10) ? '0' . $_POST["month"] : $_POST["month"];
+		$timestamp .= ($_POST["day"] < 10) ? '0' . $_POST["day"] : $_POST["day"];
 		$timestamp .= '000000';
 		
 		$query = "UPDATE `anyInventory_alerts` SET 
-					`title`='".$_REQUEST["title"]."',
-					`item_ids`='".serialize($_REQUEST["i"])."',
-					`field_id`='".$_REQUEST["field"]."',
-					`condition`='".$_REQUEST["condition"]."',
-					`value`='".$_REQUEST["value"]."',
+					`title`='".$_POST["title"]."',
+					`item_ids`='".serialize($_POST["i"])."',
+					`field_id`='".$_POST["field"]."',
+					`condition`='".$_POST["condition"]."',
+					`value`='".$_POST["value"]."',
 					`time`='".$timestamp."',
-					`timed`='".(((bool) ($_REQUEST["timed"] == "yes")) / 1)."'
-					 WHERE `id`='".$_REQUEST["id"]."'";
+					`timed`='".(((bool) ($_POST["timed"] == "yes")) / 1)."'
+					 WHERE `id`='".$_POST["id"]."'";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
-elseif($_REQUEST["action"] == "do_delete"){
-	if ($_REQUEST["delete"] == "Delete"){
-		$alert = new alert($_REQUEST["id"]);
+elseif($_POST["action"] == "do_delete"){
+	if ($_POST["delete"] == "Delete"){
+		$alert = new alert($_POST["id"]);
 		
 		if (is_array($alert->category_ids)){
 			foreach($alert->category_ids as $cat_id){
@@ -136,7 +136,7 @@ elseif($_REQUEST["action"] == "do_delete"){
 			}
 		}
 		
-		$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_REQUEST["id"]."'";
+		$query = "DELETE FROM `anyInventory_alerts` WHERE `id`='".$_POST["id"]."'";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }

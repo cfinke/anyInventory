@@ -10,7 +10,7 @@
 					
 					echo (mysql_num_rows($result) / 1);
 					
-					?></b> items with <a href="http://anyinventory.sourceforge.net/">anyInventory, the web's most flexible and powerful inventory system</a>
+					?></b> items with <a href="http://anyinventory.sourceforge.net/">anyInventory, the most flexible and powerful web-based inventory system</a>
 				</td>
 			</tr>
 		</table>

@@ -3,8 +3,8 @@
 include("globals.php");
 include("remote_functions.php");
 
-if ($_REQUEST["action"] == "do_add"){
-	if (!$admin_user->can_admin($_REQUEST["c"])){
+if ($_POST["action"] == "do_add"){
+	if (!$admin_user->can_admin($_POST["c"])){
 		header("Location: ../error_handler.php?eid=13");
 		exit;
 	}
@@ -12,7 +12,7 @@ if ($_REQUEST["action"] == "do_add"){
 	// Add an item
 	
 	// Create an object of the current category
-	$category = new category($_REQUEST["c"]);
+	$category = new category($_POST["c"]);
 	
 	// Put the query together
 	$query = "INSERT INTO `anyInventory_items` (";
@@ -35,21 +35,21 @@ if ($_REQUEST["action"] == "do_add"){
 			
 			if ($field->input_type != 'divider'){
 				if ($field->input_type == "multiple"){
-					if ($_REQUEST[str_replace(" ","_",$field->name)."_text"] == ""){
-						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_select"]."', ";
+					if ($_POST[str_replace(" ","_",$field->name)."_text"] == ""){
+						$query .= "'".$_POST[str_replace(" ","_",$field->name)."_select"]."', ";
 					}
 					else{
-						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_text"]."', ";
+						$query .= "'".$_POST[str_replace(" ","_",$field->name)."_text"]."', ";
 					}
 				}
 				elseif($field->input_type == "checkbox"){
-					if (is_array($_REQUEST[str_replace(" ","_",$field->name)])){
-						foreach($_REQUEST[str_replace(" ","_",$field->name)] as $key => $val){
+					if (is_array($_POST[str_replace(" ","_",$field->name)])){
+						foreach($_POST[str_replace(" ","_",$field->name)] as $key => $val){
 							$string .= $key.", ";
 						}
 						
-						$_REQUEST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
-						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
+						$_POST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
+						$query .= "'".$_POST[str_replace(" ","_",$field->name)]."', ";
 					}
 					else{
 						$query .= "'', ";
@@ -59,13 +59,13 @@ if ($_REQUEST["action"] == "do_add"){
 					continue;
 				}
 				else{
-					$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
+					$query .= "'".$_POST[str_replace(" ","_",$field->name)]."', ";
 				}
 			}
 		}
 	}
 	
-	$query .= " '".$_REQUEST["c"]."','".$_REQUEST["name"]."')";
+	$query .= " '".$_POST["c"]."','".$_POST["name"]."')";
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Get the id of the item
@@ -76,10 +76,10 @@ if ($_REQUEST["action"] == "do_add"){
 			$field = new field($field_id);
 			
 			if ($field->input_type == 'file'){
-				if ($_REQUEST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
+				if ($_POST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
 					// Determine what to do - is the remote file an image?
-					// $_REQUEST[str_replace(" ","_",$field->name)."remote"]  = remote filename
-					$remote_url = $_REQUEST[str_replace(" ","_",$field->name)."remote"];
+					// $_POST[str_replace(" ","_",$field->name)."remote"]  = remote filename
+					$remote_url = $_POST[str_replace(" ","_",$field->name)."remote"];
 					if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
 						// Remote URL is an image; download it and add it as a local image
 						
@@ -124,7 +124,7 @@ if ($_REQUEST["action"] == "do_add"){
 									 `offsite_link`)
 									VALUES
 									('".$key."',
-									 '".$_REQUEST[str_replace(" ","_",$field->name)."remote"]."')";
+									 '".$_POST[str_replace(" ","_",$field->name)."remote"]."')";
 						mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 						
 						$new_key = mysql_insert_id();
@@ -169,9 +169,9 @@ if ($_REQUEST["action"] == "do_add"){
 		}
 	}
 }
-elseif($_REQUEST["action"] == "do_edit"){
+elseif($_POST["action"] == "do_edit"){
 	// Create an object of the old item
-	$item = new item($_REQUEST["id"]);
+	$item = new item($_POST["id"]);
 	
 	if (!$admin_user->can_admin($item->category->id)){
 		header("Location: ../error_handler.php?eid=13");
@@ -190,7 +190,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 					$file = new file_object($item->fields[$field->name]["file_id"]);
 					
 					// Check if the delete file box was checked	
-					if (is_array($_REQUEST["delete_files"]) && (in_array($file->id, $_REQUEST["delete_files"]))){
+					if (is_array($_POST["delete_files"]) && (in_array($file->id, $_POST["delete_files"]))){
 						// If so, delete the file first (and erase the value from the item entry).
 						if (!$file->is_remote){
 							unlink($file->server_path);
@@ -246,7 +246,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 						$query .= " `".$field->name."`='".$new_key."', ";
 					}
 					// If not, check for a remote file.
-					elseif($_REQUEST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
+					elseif($_POST[str_replace(" ","_",$field->name)."remote"] != 'http://'){
 						if (!$file->is_remote){
 							if (is_file($file->server_path)){
 								unlink($file->server_path);
@@ -259,8 +259,8 @@ elseif($_REQUEST["action"] == "do_edit"){
 						
 						// START new remote file upload ///////////////////////////////////////////////
 						// Determine what to do - is the remote file an image?
-						// $_REQUEST[str_replace(" ","_",$field->name)."remote"]  = remote filename
-						$remote_url = $_REQUEST[str_replace(" ","_",$field->name)."remote"];
+						// $_POST[str_replace(" ","_",$field->name)."remote"]  = remote filename
+						$remote_url = $_POST[str_replace(" ","_",$field->name)."remote"];
 						if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
 							// Remote URL is an image; download it and add it as a local image
 							
@@ -303,7 +303,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 									 `offsite_link`)
 									VALUES
 									('".$key."',
-									 '".$_REQUEST[str_replace(" ","_",$field->name)."remote"]."')";
+									 '".$_POST[str_replace(" ","_",$field->name)."remote"]."')";
 						//query($newquery);
 						mysql_query($newquery) or die(mysql_error() . '<br /><br />'. $newquery);
 						
@@ -317,56 +317,56 @@ elseif($_REQUEST["action"] == "do_edit"){
 					$query .= "`".str_replace("_"," ",$field->name)."`= ";
 					
 					if ($field->input_type == "multiple"){
-						if ($_REQUEST[str_replace(" ","_",$field->name)."_text"] == ""){
-							$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_select"]."', ";
+						if ($_POST[str_replace(" ","_",$field->name)."_text"] == ""){
+							$query .= "'".$_POST[str_replace(" ","_",$field->name)."_select"]."', ";
 						}
 						else{
-							$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)."_text"]."', ";
+							$query .= "'".$_POST[str_replace(" ","_",$field->name)."_text"]."', ";
 						}
 					}
 					elseif($field->input_type == "checkbox"){
-						if (is_array($_REQUEST[str_replace(" ","_",$field->name)])){
-							foreach($_REQUEST[str_replace(" ","_",$field->name)] as $key => $val){
+						if (is_array($_POST[str_replace(" ","_",$field->name)])){
+							foreach($_POST[str_replace(" ","_",$field->name)] as $key => $val){
 								$string .= $key.", ";
 							}
 							
-							$_REQUEST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
-							$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
+							$_POST[str_replace(" ","_",$field->name)] = substr($string,0,strlen($string) - 2);
+							$query .= "'".$_POST[str_replace(" ","_",$field->name)]."', ";
 						}
 						else{
 							$query .= "'', ";
 						}
 					}
 					else{
-						$query .= "'".$_REQUEST[str_replace(" ","_",$field->name)]."', ";
+						$query .= "'".$_POST[str_replace(" ","_",$field->name)]."', ";
 					}
 				}
 			}
 		}
 	}
 	
-	$query .= " `name`='".$_REQUEST["name"]."' WHERE `id`='".$_REQUEST["id"]."'";
+	$query .= " `name`='".$_POST["name"]."' WHERE `id`='".$_POST["id"]."'";
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
-elseif($_REQUEST["action"] == "do_move"){
+elseif($_POST["action"] == "do_move"){
 	// Create an object of the old item
-	$item = new item($_REQUEST["id"]);
+	$item = new item($_POST["id"]);
 	
-	if (!$admin_user->can_admin($item->category->id) || !$admin_user->can_admin($_REQUEST["c"])){
+	if (!$admin_user->can_admin($item->category->id) || !$admin_user->can_admin($_POST["c"])){
 		header("Location: ../error_handler.php?eid=13");
 		exit;
 	}
 	
 	// Move an item.
 	
-	$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["c"]."' WHERE `id`='".$_REQUEST["id"]."'";
+	$query = "UPDATE `anyInventory_items` SET `item_category`='".$_POST["c"]."' WHERE `id`='".$_POST["id"]."'";
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
-elseif($_REQUEST["action"] == "do_delete"){
+elseif($_POST["action"] == "do_delete"){
 	// Delete an item
 	
-	if ($_REQUEST["delete"] == "Delete"){
-		$item = new item($_REQUEST["id"]);
+	if ($_POST["delete"] == "Delete"){
+		$item = new item($_POST["id"]);
 		
 		if (!$admin_user->can_admin($item->category->id)){
 			header("Location: ../error_handler.php?eid=13");

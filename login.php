@@ -6,7 +6,7 @@ $title = "anyInventory: Login";
 $breadcrumbs = "Login";
 
 $output .= '<form method="post" action="login_processor.php">
-				<input type="hidden" name="return_to" value="'.$_REQUEST["return_to"].'" />
+				<input type="hidden" name="return_to" value="'.$_GET["return_to"].'" />
 				<input type="hidden" name="action" value="log_in" />
 				<table class="standardTable" cellspacing="0">
 					<tr class="tableHeader">
@@ -17,7 +17,7 @@ $output .= '<form method="post" action="login_processor.php">
 							<center>
 							';
 
-if ($_REQUEST["f"]){
+if ($_GET["f"]){
 	$output .= '<p style="text-align: center; color: #ff0000;">Login failed</p>';
 }
 

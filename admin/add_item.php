@@ -5,7 +5,7 @@ include("globals.php");
 $title = "anyInventory: Add Item";
 $breadcrumbs = 'Administration > <a href="items.php">Items</a> > Add Item';
 
-if (!isset($_REQUEST["c"])){
+if (!isset($_GET["c"])){
 	$output .= '
 		<form method="get" action="add_item.php">
 			<table class="standardTable" cellspacing="0">
@@ -34,17 +34,17 @@ if (!isset($_REQUEST["c"])){
 		</form>';
 }
 else{
-	if (!$admin_user->can_admin($_REQUEST["c"])){
+	if (!$admin_user->can_admin($_GET["c"])){
 		header("Location: ../error_handler.php?eid=13");
 		exit;
 	}
 	
-	$category = new category($_REQUEST["c"]);
+	$category = new category($_GET["c"]);
 	
 	$output .= '
 			<form method="post" action="item_processor.php" enctype="multipart/form-data">
 				<input type="hidden" name="action" value="do_add" />
-				<input type="hidden" name="c" value="'.$_REQUEST["c"].'" />
+				<input type="hidden" name="c" value="'.$_GET["c"].'" />
 				<table class="standardTable" cellspacing="0">
 					<tr class="tableHeader">
 						<td>Add an Item: '.$category->get_breadcrumb_admin_links().'</td>

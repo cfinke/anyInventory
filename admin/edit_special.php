@@ -7,7 +7,7 @@ if ($admin_user->usertype != 'Administrator'){
 	exit;
 }
 
-switch($_REQUEST["id"]){
+switch($_GET["id"]){
 	case 'auto_inc_field':
 		$title = "anyInventory: Edit Auto-Increment Field";
 		$breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Edit Auto-Increment Field';

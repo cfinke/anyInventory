@@ -14,7 +14,6 @@ $errors[5] = array('Error','An alert must apply to at least one category.','brea
 $errors[6] = array('Error','An alert must apply to at least one item.','breadcrumbs'=>'Error');
 $errors[7] = array('Error','The Top Level category cannot be edited or deleted.','breadcrumbs'=>'Error');
 $errors[8] = array('Error','You must supply a list of values for this field.','breadcrumbs'=>'Error');
-$errors[9] = array('Error','Not logged in. Please <a href='.$DIR_PREFIX.'index.php">click here</a> to login. ','breadcrumbs'=>'Error');
 $errors[10] = array('Access Denied','You must be a privileged used to edit, add, or delete. ','breadcrumbs'=>'Access Denied');
 $errors[11] = array('Access Denied','You must be an administrator to add, edit, or delete users. ','breadcrumbs'=>'Access Denied');
 $errors[12] = array('Access Denied','You do not have viewing priveleges for this category.','breadcrumbs'=>'Access Denied');
@@ -23,18 +22,18 @@ $errors[14] = array('Access Denied','You cannot delete your own user account.','
 $errors[15] = array('Access Denied','You must be an administrator to access this page.','breadcrumbs'=>'Access Denied');
 $errors[16] = array('Error','A user with that name already exists.','breadcrumbs'=>'Error');
 
-$breadcrumbs = $errors[$_REQUEST["eid"]]["breadcrumbs"];
+$breadcrumbs = $errors[$_GET["eid"]]["breadcrumbs"];
 
 $output = '
 	<table class="standardTable" cellspacing="0">
 		<tr class="tableHeader">
-			<td>'.$errors[$_REQUEST["eid"]][0].'</td>
+			<td>'.$errors[$_GET["eid"]][0].'</td>
 		</tr>
 		<tr>
 			<td class="tableData">
 				<table>
 					<tr>
-						<td>'.$errors[$_REQUEST["eid"]][1].'</td>
+						<td>'.$errors[$_GET["eid"]][1].'</td>
 					</tr>
 				</table>
 			</td>

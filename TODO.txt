@@ -38,10 +38,9 @@ DONE - Ability to have auto-increment field
 DONE - Administration Hiding
 DONE - Customization of auto-inc field
 DONE - Customization of front-page text
-More information for each item in listing
-Field Dividers
-User system
-
+DONE - More information for each item in listing
+DONE - Field Dividers
+DONE - User system
 
 BEFORE 1.9
 ===================
@@ -59,6 +58,3 @@ Upload inventory as XML file
 
 BUGS
 ========================================
-Remove multiple checkbox values
-DONE - Make "Highlight this field" a label
-Highlight fields on edit page as well

@@ -5,7 +5,7 @@ include("globals.php");
 $title = "anyInventory: Add Alert";
 $breadcrumbs = 'Administration > <a href="alerts.php">Alerts</a> > Add Alert';
 
-if (!is_array($_REQUEST["c"])){
+if (!is_array($_GET["c"])){
 	$output = '
 		<form method="get" action="add_alert.php">
 			<table class="standardTable" cellspacing="0">
@@ -36,7 +36,7 @@ if (!is_array($_REQUEST["c"])){
 else{
 	$query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE ";
 	
-	foreach($_REQUEST["c"] as $cat_id){
+	foreach($_GET["c"] as $cat_id){
 		if (!$admin_user->can_admin($cat_id)){
 			header("Location: ../error_handler.php?eid=13");
 			exit;
@@ -71,7 +71,7 @@ else{
 		
 		$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (";
 		
-		foreach($_REQUEST["c"] as $cat_id){
+		foreach($_GET["c"] as $cat_id){
 			$query .= $cat_id.", ";
 		}
 		
@@ -88,7 +88,7 @@ else{
 			$output = '
 					<form method="post" action="alert_processor.php">
 						<input type="hidden" name="action" value="do_add" />
-						<input type="hidden" name="c" value="'.htmlentities(serialize($_REQUEST["c"])).'" />
+						<input type="hidden" name="c" value="'.htmlentities(serialize($_GET["c"])).'" />
 						<table class="standardTable" cellspacing="0">
 							<tr class="tableHeader">
 								<td>Add Alert</td>
@@ -173,7 +173,7 @@ else{
 			
 			
 			$output .= '			</select>,
-											<select name="year" id="year">';
+									<select name="year" id="year">';
 				
 			$year = date("Y");
 			

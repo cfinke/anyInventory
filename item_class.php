@@ -178,10 +178,8 @@ class item {
 					foreach($this->fields[$field->name] as $val){
 						$output .= $val.", ";
 					}
-						
-					$output = substr($output, 0, strlen($output) - 2);
-						
-					$output .= '</td></tr>';
+					
+					$output = substr($output, 0, strlen($output) - 2) . '</td></tr>';
 					
 					$last_divider = false;
 				}
@@ -213,18 +211,6 @@ class item {
 		}
 		
 		return $output;
-	}
-	
-	// This function returns true if the item is in a subcategory that is, or
-	// is a child of, $cat_id.
-	
-	function in_or_below($cat_id){
-		if (in_array($cat_id, $this->category->breadcrumbs)){
-			return true;
-		}
-		else{
-			return false;
-		}
 	}
 }
 

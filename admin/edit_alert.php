@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if (!$admin_user->can_admin_alert($_REQUEST["id"])){
+if (!$admin_user->can_admin_alert($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
 	exit;
 }
@@ -21,7 +21,7 @@ $inHead = '
 $inBodyTag = ' onload="toggle();"';
 $breadcrumbs = 'Administration > <a href="alerts.php">Alerts</a> > Edit Alert';
 
-$alert = new alert($_REQUEST["id"]);
+$alert = new alert($_GET["id"]);
 $query = "SELECT `id`,`name` FROM `anyInventory_fields` WHERE `input_type` != 'divider' ";
 
 if (is_array($alert->category_ids)){
@@ -51,7 +51,7 @@ else{
 				<td class="tableData" colspan="2">
 					<form method="post" action="alert_processor.php">
 						<input type="hidden" name="action" value="do_edit_cat_ids" />
-						<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+						<input type="hidden" name="id" value="'.$_GET["id"].'" />
 						<table>
 							<tr>
 								<td class="form_label">Categories:</td>
@@ -68,7 +68,7 @@ else{
 					</form>
 					<form method="post" action="alert_processor.php">
 						<input type="hidden" name="action" value="do_edit" />
-						<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+						<input type="hidden" name="id" value="'.$_GET["id"].'" />
 						<table>
 						<tr>
 							<td class="form_label"><label for="name">Alert Title:</label></td>

@@ -1,12 +1,5 @@
 <?php
 
-// Remove the whitespace from the ends of each $_REQUEST value
-if (is_array($_REQUEST)){
-	foreach($_REQUEST as $key => $value){
-		if (!is_array($_REQUEST[$key])) $_REQUEST[$key] = trim($value);
-	}
-}
-
 function connect_to_database(){
 	// This function opens and returns the database connection.
 	global $db_host;
@@ -29,7 +22,7 @@ function display($output){
 	global $inBodyTag;
 	global $breadcrumbs;
 	global $sectionTitle;
-	global $admin_pass;
+	global $appTitle;
 	
 	global $DIR_PREFIX;
 	

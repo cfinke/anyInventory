@@ -2,22 +2,22 @@
 
 include("globals.php");
 
-if ($_REQUEST["action"] == "do_add"){
-	if (!$admin_user->can_admin($_REQUEST["parent"])){
+if ($_POST["action"] == "do_add"){
+	if (!$admin_user->can_admin($_POST["parent"])){
 		header("Location: ../error_handler.php?eid=13");
 		exit;
 	}
 	else{
 		// Add a category.
-		$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["parent"]."','".((int) (($_REQUEST["auto_inc"] == "yes") / 1))."')";
+		$query = "INSERT INTO `anyInventory_categories` (`name`,`parent`,`auto_inc_field`) VALUES ('".$_POST["name"]."','".$_POST["parent"]."','".((int) (($_POST["auto_inc"] == "yes") / 1))."')";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		// Get the id of the category
 		$this_id = mysql_insert_id();
 		
-		if ($_REQUEST["inherit_fields"] == "yes"){
+		if ($_POST["inherit_fields"] == "yes"){
 			// Add the fields from the parent category
-			$parent = new category($_REQUEST["parent"]);
+			$parent = new category($_POST["parent"]);
 			
 			if(is_array($parent->field_ids)){
 				foreach($parent->field_ids as $field_id){
@@ -28,43 +28,43 @@ if ($_REQUEST["action"] == "do_add"){
 		}
 		
 		// Add the checked fields
-		if (is_array($_REQUEST["fields"])){
-			foreach($_REQUEST["fields"] as $key => $value){
+		if (is_array($_POST["fields"])){
+			foreach($_POST["fields"] as $key => $value){
 				$field = new field($key);
 				$field->add_category($this_id);
 			}
 		}
 		
-		if (is_array($_REQUEST["view_users"])){
-			foreach($_REQUEST["view_users"] as $user_id){
+		if (is_array($_POST["view_users"])){
+			foreach($_POST["view_users"] as $user_id){
 				$temp_user = new user($user_id);
 				$temp_user->add_category_view($this_id);
 			}
 		}
 		
-		if (is_array($_REQUEST["admin_users"])){
-			foreach($_REQUEST["admin_users"] as $user_id){
+		if (is_array($_POST["admin_users"])){
+			foreach($_POST["admin_users"] as $user_id){
 				$temp_user = new user($user_id);
 				$temp_user->add_category_admin($this_id);
 			}
 		}
 	}
 }
-elseif($_REQUEST["action"] == "do_edit"){
-	if (!$admin_user->can_admin($_REQUEST["parent"]) || (!$admin_user->can_admin($_REQUEST["id"]))){
+elseif($_POST["action"] == "do_edit"){
+	if (!$admin_user->can_admin($_POST["parent"]) || (!$admin_user->can_admin($_POST["id"]))){
 		header("Location: ../error_handler.php?eid=13");
 		exit;
 	}
 	
 	// Make an object from the unchanged category
-	$old_category = new category($_REQUEST["id"]);
+	$old_category = new category($_POST["id"]);
 	
 	// Change the category information
 	$query = "UPDATE `anyInventory_categories` SET 
-				`name`='".$_REQUEST["name"]."',
-				`parent`='".$_REQUEST["parent"]."',
-				`auto_inc_field`='".((int) (($_REQUEST["auto_inc"] == "yes") / 1))."'
-				WHERE `id`='".$_REQUEST["id"]."'";
+				`name`='".$_POST["name"]."',
+				`parent`='".$_POST["parent"]."',
+				`auto_inc_field`='".((int) (($_POST["auto_inc"] == "yes") / 1))."'
+				WHERE `id`='".$_POST["id"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Remove the category from all of the fields
@@ -75,29 +75,29 @@ elseif($_REQUEST["action"] == "do_edit"){
 		}
 	}
 	
-	if ($_REQUEST["inherit_fields"] == "yes"){
+	if ($_POST["inherit_fields"] == "yes"){
 		// Add the fields from the parent category
-		$parent = new category($_REQUEST["parent"]);
+		$parent = new category($_POST["parent"]);
 		
 		if(is_array($parent->field_ids)){
 			foreach($parent->field_ids as $field_id){
 				$field = new field($field_id);
-				$field->add_category($_REQUEST["id"]);
+				$field->add_category($_POST["id"]);
 			}
 		}
 	}
 	
 	// Add the checked fields
-	if (is_array($_REQUEST["fields"])){
-		foreach($_REQUEST["fields"] as $key => $value){
+	if (is_array($_POST["fields"])){
+		foreach($_POST["fields"] as $key => $value){
 			$temp_field2 = new field($key);
-			$temp_field2->add_category($_REQUEST["id"]);
+			$temp_field2->add_category($_POST["id"]);
 		}
 	}
 	
-	if ($_REQUEST["apply_fields"] == "yes"){
+	if ($_POST["apply_fields"] == "yes"){
 		// Apply the fields of this category to all of the children
-		$category = new category($_REQUEST["id"]);
+		$category = new category($_POST["id"]);
 		
 		$children = get_category_array($category->id);
 		
@@ -124,62 +124,62 @@ elseif($_REQUEST["action"] == "do_edit"){
 	if ($pp_admin || $pp_view){
 		while ($row = mysql_fetch_array($result)){
 			$temp_user = new user($row["id"]);
-			if ($pp_admin) $temp_user->remove_category_admin($_REQUEST["id"]);
-			if ($pp_view) $temp_user->remove_category_view($_REQUEST["id"]);
+			if ($pp_admin) $temp_user->remove_category_admin($_POST["id"]);
+			if ($pp_view) $temp_user->remove_category_view($_POST["id"]);
 		}
 		
 		if ($pp_view){
-			if (is_array($_REQUEST["view_users"])){
-				foreach($_REQUEST["view_users"] as $user_id){
+			if (is_array($_POST["view_users"])){
+				foreach($_POST["view_users"] as $user_id){
 					$temp_user = new user($user_id);
-					$temp_user->add_category_view($_REQUEST["id"]);
+					$temp_user->add_category_view($_POST["id"]);
 				}
 			}
 		}
 		
 		if ($pp_admin){
-			if (is_array($_REQUEST["admin_users"])){
-				foreach($_REQUEST["admin_users"] as $user_id){
+			if (is_array($_POST["admin_users"])){
+				foreach($_POST["admin_users"] as $user_id){
 					$temp_user = new user($user_id);
-					$temp_user->add_category_admin($_REQUEST["id"]);
+					$temp_user->add_category_admin($_POST["id"]);
 				}
 			}
 		}
 	}
 }
-elseif($_REQUEST["action"] == "do_delete"){
+elseif($_POST["action"] == "do_delete"){
 	// Make sure the user clicked "Delete" and not "Cancel"
-	if ($_REQUEST["delete"] == "Delete"){
-		if (!$admin_user->can_admin($_REQUEST["id"])){
+	if ($_POST["delete"] == "Delete"){
+		if (!$admin_user->can_admin($_POST["id"])){
 			header("Location: ../error_handler.php?eid=13");
 			exit;
 		}
 		else{
 			// Create an object from the category
-			$category = new category($_REQUEST["id"]);
+			$category = new category($_POST["id"]);
 			
 			// Delete the category
-			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_REQUEST["id"]."'"; 
+			$query = "DELETE FROM `anyInventory_categories` WHERE `id`='".$_POST["id"]."'"; 
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
-			if ($_REQUEST["item_action"] == "delete"){
+			if ($_POST["item_action"] == "delete"){
 				// Delete all of the items in the category
 				$query = "DELETE FROM `anyInventory_items` WHERE `item_category`='".$category->id."'";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
-			elseif($_REQUEST["item_action"] == "move"){
+			elseif($_POST["item_action"] == "move"){
 				// Move the items to a different category
-				$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["move_items_to"]."' WHERE `item_category`='".$category->id."'";
+				$query = "UPDATE `anyInventory_items` SET `item_category`='".$_POST["move_items_to"]."' WHERE `item_category`='".$category->id."'";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
 			
-			if ($_REQUEST["subcat_action"] == "delete"){
+			if ($_POST["subcat_action"] == "delete"){
 				// Delete the subcategories
 				delete_subcategories($category);
 			}
-			elseif($_REQUEST["subcat_action"] == "move"){
+			elseif($_POST["subcat_action"] == "move"){
 				// Move the subcategories
-				$query = "UPDATE `anyInventory_categories` SET `parent`='".$_REQUEST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
+				$query = "UPDATE `anyInventory_categories` SET `parent`='".$_POST["move_subcats_to"]."' WHERE `parent`='".$category->id."'";
 				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			}
 			

@@ -4,15 +4,15 @@ include("globals.php");
 
 $title = "anyInventory: Search Results";
 
-if ($_REQUEST["action"] == "quick_search"){
-	$breadcrumbs = "Search Results: ".stripslashes($_REQUEST["q"]);
+if ($_GET["action"] == "quick_search"){
+	$breadcrumbs = "Search Results: ".stripslashes($_GET["q"]);
 	
-	$search_terms = explode(" ",$_REQUEST["q"]);
+	$search_terms = explode(" ",$_GET["q"]);
 	$search_fields = array("name");
 	
 	$output .= '<table>';
 	
-	if (trim($_REQUEST["q"]) != ''){
+	if ($_GET["q"] != ''){
 		$query = "SELECT `name` FROM `anyInventory_fields`";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 		

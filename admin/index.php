@@ -30,7 +30,7 @@ else{
 
 $output .= '			</td>
 						<td><b>Front page text:</b> '.get_config_value('FRONT_PAGE_TEXT').'</td>
-					</tr>
+			<!--	</tr>
 					<tr>
 						<td style="width: 10%; text-align: center; white-space: nowrap;">
 							<nobr>';
@@ -60,8 +60,7 @@ else{
 $output .= '				</nobr>
 						</td>
 						<td>Administration Password Protection</td>
-					</tr>
-					
+					</tr>-->
 				</table>
 			</td>
 		</tr>

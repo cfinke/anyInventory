@@ -1,7 +1,5 @@
 <?php
 
-error_reporting(E_ALL ^ E_NOTICE);
-
 class field {
 	var $id;					// The id of this field, matches up with id field in anyInventory_fields
 	
@@ -12,7 +10,7 @@ class field {
 	var $size = 0;				// The size (number of characters allowed) of this field, only entered by the user for input type text
 	var $categories = array();	// The ids of the categories that use this field
 	
-	var $highlight = false;
+	var $highlight = false;		// Whether or not the field is highlighted
 	
 	function field($field_id){
 		// Set the id of this field.

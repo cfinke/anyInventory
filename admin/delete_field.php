@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if (!$admin_user->can_admin_field($_REQUEST["id"])){
+if (!$admin_user->can_admin_field($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
 	exit;
 }
@@ -10,11 +10,11 @@ if (!$admin_user->can_admin_field($_REQUEST["id"])){
 $title = "anyInventory: Delete Field";
 $breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Delete Field';
 
-$field = new field($_REQUEST["id"]);
+$field = new field($_GET["id"]);
 
 $output .= '
 	<form method="post" action="field_processor.php">
-		<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+		<input type="hidden" name="id" value="'.$_GET["id"].'" />
 		<input type="hidden" name="action" value="do_delete" />
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">

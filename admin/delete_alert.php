@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if (!$admin_user->can_admin_alert($_REQUEST["id"])){
+if (!$admin_user->can_admin_alert($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
 	exit;
 }
@@ -10,12 +10,12 @@ if (!$admin_user->can_admin_alert($_REQUEST["id"])){
 $title = "anyInventory: Delete Alert";
 $breadcrumbs = 'Administration > <a href="alerts.php">Alerts</a> > Delete Alert';
 
-$alert = new alert($_REQUEST["id"]);
+$alert = new alert($_GET["id"]);
 
 $output .= '
 	<form action="alert_processor.php" method="post">
 		<input type="hidden" name="action" value="do_delete" />
-		<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+		<input type="hidden" name="id" value="'.$_GET["id"].'" />
 		<table class="standardHeader" cellspacing="0" cellpadding="0">
 			<tr class="tableHeader">
 				<td>Delete Alert</td>

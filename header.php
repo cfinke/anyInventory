@@ -12,7 +12,7 @@
 					<table cellspacing="0">
 						<tr>
 							<td id="appTitle">
-								anyInventory 1.8
+								<?php echo $appTitle; ?>
 							</td>
 							<td>
 								<?php

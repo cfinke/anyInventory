@@ -5,7 +5,7 @@ include("globals.php");
 $title = "anyInventory: Edit Item";
 $breadcrumbs = 'Administration > <a href="items.php">Items</a> > Edit Item';
 
-$item = new item($_REQUEST["id"]);
+$item = new item($_GET["id"]);
 
 if (!$admin_user->can_admin($item->category->id)){
 	header("Location: ../error_handler.php?eid=13");
@@ -15,7 +15,7 @@ if (!$admin_user->can_admin($item->category->id)){
 $output = '
 		<form method="post" action="item_processor.php" enctype="multipart/form-data">
 			<input type="hidden" name="action" value="do_edit" />
-			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+			<input type="hidden" name="id" value="'.$_GET["id"].'" />
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>Edit an Item

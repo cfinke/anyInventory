@@ -1,16 +1,14 @@
 <?php
 
-error_reporting(E_ALL ^ E_NOTICE);
-
 class user {
-	var $id;
+	var $id;							// The id of this user
 	
-	var $username;
+	var $username;						// This user's username
 	
-	var $usertype;
+	var $usertype;						// Either 'Administrator' or 'User'
 	
-	var $categories_view = array();
-	var $categories_admin = array();
+	var $categories_view = array();		// The category ids of the categories that this user can view.
+	var $categories_admin = array();	// The category ids of the categories that this user can administrate
 	
 	function user($user_id){
 		$this->id = $user_id;
@@ -22,8 +20,11 @@ class user {
 		$this->username = $row["username"];
 		$this->usertype = $row["usertype"];
 		
-		$this->categories_view = (is_array(unserialize($row["categories_view"]))) ? unserialize($row["categories_view"]) : array();
-		$this->categories_admin = (is_array(unserialize($row["categories_admin"]))) ? unserialize($row["categories_admin"]) : array();
+		$categories_view = unserialize($row["categories_view"]);
+		$categories_admin = unserialize($row["categories_admin"]);
+		
+		$this->categories_view = (is_array($categories_view)) ? $categories_view : array();
+		$this->categories_admin = (is_array($categories_admin)) ? $categories_admin : array();
 	}
 	
 	function can_view($cat_id){

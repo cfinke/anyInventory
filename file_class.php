@@ -3,20 +3,20 @@
 error_reporting(E_ALL ^ E_NOTICE);
 
 class file_object{
-	var $id;			// The id of this file, matches up with the id field in anyInventory_files
-	var $item_id;		// The id of the item that owns this file, matches up with the id field in anyInventory_items
+	var $id;				// The id of this file, matches up with the id field in anyInventory_files
+	var $item_id;			// The id of the item that owns this file, matches up with the id field in anyInventory_items
 	
-	var $file_name;		// The name of this file.
-	var $file_type;		// The mime type of this file.
-	var $file_size;		// The size of this file, in bytes
+	var $file_name;			// The name of this file.
+	var $file_type;			// The mime type of this file.
+	var $file_size;			// The size of this file, in bytes
 	
-	var $web_path;		// The path to this file on the Web.
-	var $server_path;	// The path to this file on the server.
+	var $web_path;			// The path to this file on the Web.
+	var $server_path;		// The path to this file on the server.
 	
 	var $is_remote = false; // Whether or not this is a remote file
 	
 	function file_object($id){
-		global $DIR_PREFIX;		// The depth of the current directory we are in.
+		global $DIR_PREFIX;
 		
 		// Set the id of this file.
 		$this->id = $id;
@@ -82,7 +82,7 @@ class file_object{
 	
 	function has_thumbnail(){
 		// The only supported types currently are jpeg and png.
-		if ((stristr($this->file_type, "/jpg") !== false) || (stristr($this->file_type, "/png") !== false) || (stristr($this->file_type, "/jpeg") !== false)){
+		if ((stristr($this->file_type, "jpg") !== false) || (stristr($this->file_type, "png") !== false) || (stristr($this->file_type, "jpeg") !== false)){
 			// Make sure the necessary functions exist.
 			if (function_exists('getimagesize') && 
 			    function_exists('imagecreate') && 

@@ -4,9 +4,9 @@ include("globals.php");
 
 $replace = array("'",'"','&',"\\",':',';','`','[',']');
 
-if ($_REQUEST["action"] == "do_add"){
-	if (is_array($_REQUEST["add_to"])){
-		foreach($_REQUEST["add_to"] as $cat_id){
+if ($_POST["action"] == "do_add"){
+	if (is_array($_POST["add_to"])){
+		foreach($_POST["add_to"] as $cat_id){
 			if (!$admin_user->can_admin($cat_id)){
 				header("Location: ../error_handler.php?eid=13");
 				exit;
@@ -16,12 +16,12 @@ if ($_REQUEST["action"] == "do_add"){
 	
 	// Check for duplicate fields
 	
-	$_REQUEST["name"] = stripslashes($_REQUEST["name"]);
-	$_REQUEST["name"] = str_replace($replace,"",$_REQUEST["name"]);
-	$_REQUEST["name"] = str_replace("_"," ",$_REQUEST["name"]);
-	$_REQUEST["name"] = trim(addslashes($_REQUEST["name"]));
+	$_POST["name"] = stripslashes($_POST["name"]);
+	$_POST["name"] = str_replace($replace,"",$_POST["name"]);
+	$_POST["name"] = str_replace("_"," ",$_POST["name"]);
+	$_POST["name"] = trim(addslashes($_POST["name"]));
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_REQUEST["name"]."'";
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	if (mysql_num_rows($result) > 0){
@@ -29,47 +29,49 @@ if ($_REQUEST["action"] == "do_add"){
 		exit;
 	}
 	else{
-		$_REQUEST["values"] = stripslashes($_REQUEST["values"]);
-		$_REQUEST["values"] = str_replace("'","",$_REQUEST["values"]);
-		$_REQUEST["values"] = trim(str_replace($replace,"",$_REQUEST["values"]));
+		$_POST["values"] = stripslashes($_POST["values"]);
+		$_POST["values"] = str_replace("'","",$_POST["values"]);
+		$_POST["values"] = trim(str_replace($replace,"",$_POST["values"]));
 		
-		$_REQUEST["default_value"] = stripslashes($_REQUEST["default_value"]);
-		$_REQUEST["default_value"] = str_replace("'","",$_REQUEST["default_value"]);
-		$_REQUEST["default_value"] = trim(str_replace($replace,"",$_REQUEST["default_value"]));
+		$_POST["default_value"] = stripslashes($_POST["default_value"]);
+		$_POST["default_value"] = str_replace("'","",$_POST["default_value"]);
+		$_POST["default_value"] = trim(str_replace($replace,"",$_POST["default_value"]));
 		
-		if (($_REQUEST["input_type"] == "select") || ($_REQUEST["input_type"] == "radio")){
-			if (($_REQUEST["default_value"] == '') || (stristr($_REQUEST["values"],$_REQUEST["default_value"]) === false)){
+		if (($_POST["input_type"] == "select") || ($_POST["input_type"] == "radio")){
+			if (($_POST["default_value"] == '') || (stristr($_POST["values"],$_POST["default_value"]) === false)){
 				header("Location: ../error_handler.php?eid=1");
 				exit;
 			}
-			elseif($_REQUEST["values"] == ''){
-				header("Location: ../error_handler.php?eid=7");
+			elseif($_POST["values"] == ''){
+				header("Location: ../error_handler.php?eid=8");
 				exit;
 			}
 		}
-		elseif($_REQUEST["input_type"] == "checkbox"){
-			$_REQUEST["default_value"] = '';
+		elseif($_POST["input_type"] == "checkbox"){
+			$_POST["default_value"] = '';
 		}
 		
 		// Add a field
-		if (($_REQUEST["size"] == '') && ($_REQUEST["input_type"] == "text")){
+		if (($_POST["size"] == '') && ($_POST["input_type"] == "text")){
 			// Set the default text size to 255
-			$_REQUEST["size"] = 255;
+			$_POST["size"] = 255;
 		}
-		elseif(($_REQUEST["size"] != '') && (!is_numeric($_REQUEST["size"]))){
-			$_REQUEST["size"] = 255;
+		elseif(($_POST["size"] != '') && (!is_numeric($_POST["size"]))){
+			$_POST["size"] = 255;
 		}
 		
 		// Add the field to the items table
-		$query = "ALTER TABLE `anyInventory_items` ADD `".$_REQUEST["name"]."` ".get_mysql_column_type($_REQUEST["input_type"],$_REQUEST["size"],$_REQUEST["values"],$_REQUEST["default_value"]);
+		$query = "ALTER TABLE `anyInventory_items` ADD `".$_POST["name"]."` ".get_mysql_column_type($_POST["input_type"],$_POST["size"],$_POST["values"],$_POST["default_value"]);
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		$values = explode(",",$_REQUEST["values"]);
+		$values = explode(",",$_POST["values"]);
 		
 		if (is_array($values)){
 			foreach($values as $key => $value){
 				$values[$key] = trim($value);
 			}
+			
+			$values = array_unique($values);
 		}
 		else{
 			$values = array();
@@ -85,20 +87,20 @@ if ($_REQUEST["action"] == "do_add"){
 		$importance = mysql_result($result, 0, 'biggest') + 1;
 		
 		// Add this field.
-		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`,`highlight`) VALUES ('".$_REQUEST["name"]."','".$_REQUEST["input_type"]."','".$values."','".$_REQUEST["default_value"]."','".$_REQUEST["size"]."','".$categories."','".$importance."','".((int) (($_REQUEST["highlight"] == "yes") / 1))."')";
+		$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`values`,`default_value`,`size`,`categories`,`importance`,`highlight`) VALUES ('".$_POST["name"]."','".$_POST["input_type"]."','".$values."','".$_POST["default_value"]."','".$_POST["size"]."','".$categories."','".$importance."','".((int) (($_POST["highlight"] == "yes") / 1))."')";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$field = new field(mysql_insert_id());
 		
 		// Add any categories that were selected.
-		if (is_array($_REQUEST["add_to"])){
-			foreach($_REQUEST["add_to"] as $cat_id){
+		if (is_array($_POST["add_to"])){
+			foreach($_POST["add_to"] as $cat_id){
 				$field->add_category($cat_id);
 			}
 		}
 	}
 }
-elseif($_REQUEST["action"] == "do_add_divider"){
+elseif($_GET["action"] == "do_add_divider"){
 	$query = "SELECT MAX(`importance`) as `biggest` FROM `anyInventory_fields`";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	$importance = mysql_result($result, 0, 'biggest') + 1;
@@ -106,73 +108,75 @@ elseif($_REQUEST["action"] == "do_add_divider"){
 	$query = "INSERT INTO `anyInventory_fields` (`name`,`input_type`,`importance`) VALUES ('divider','divider','".$importance."')";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
-elseif($_REQUEST["action"] == "do_edit"){
-	if (is_array($_REQUEST["add_to"])){
-		foreach($_REQUEST["add_to"] as $cat_id){
-	 		if (!$admin_user->can_admin($cat_id) || (!$admin_user->can_admin_field($_REQUEST["id"]))){
+elseif($_POST["action"] == "do_edit"){
+	if (is_array($_POST["add_to"])){
+		foreach($_POST["add_to"] as $cat_id){
+	 		if (!$admin_user->can_admin($cat_id) || (!$admin_user->can_admin_field($_POST["id"]))){
 				header("Location: ../error_handler.php?eid=13");
 				exit;
 			}
 		}
 	}
 	
-	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_REQUEST["name"]."'";
+	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_POST["name"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	if ((mysql_num_rows($result) > 0) && (mysql_result($result, 0, 'id') != $_REQUEST["id"])){
+	if ((mysql_num_rows($result) > 0) && (mysql_result($result, 0, 'id') != $_POST["id"])){
 		header("Location: ../error_handler.php?eid=0");
 		exit;
 	}
 	
-	$_REQUEST["values"] = stripslashes($_REQUEST["values"]);
-	$_REQUEST["values"] = str_replace("'","",$_REQUEST["values"]);
-	$_REQUEST["values"] = trim(str_replace($replace,"",$_REQUEST["values"]));
+	$_POST["values"] = stripslashes($_POST["values"]);
+	$_POST["values"] = str_replace("'","",$_POST["values"]);
+	$_POST["values"] = trim(str_replace($replace,"",$_POST["values"]));
 	
-	$_REQUEST["default_value"] = stripslashes($_REQUEST["default_value"]);
-	$_REQUEST["default_value"] = str_replace("'","",$_REQUEST["default_value"]);
-	$_REQUEST["default_value"] = trim(str_replace($replace,"",$_REQUEST["default_value"]));
+	$_POST["default_value"] = stripslashes($_POST["default_value"]);
+	$_POST["default_value"] = str_replace("'","",$_POST["default_value"]);
+	$_POST["default_value"] = trim(str_replace($replace,"",$_POST["default_value"]));
 	
-	$_REQUEST["name"] = stripslashes($_REQUEST["name"]);
-	$_REQUEST["name"] = str_replace($replace,"",$_REQUEST["name"]);
-	$_REQUEST["name"] = str_replace("_"," ",$_REQUEST["name"]);	
-	$_REQUEST["name"] = trim(addslashes($_REQUEST["name"]));
+	$_POST["name"] = stripslashes($_POST["name"]);
+	$_POST["name"] = str_replace($replace,"",$_POST["name"]);
+	$_POST["name"] = str_replace("_"," ",$_POST["name"]);	
+	$_POST["name"] = trim(addslashes($_POST["name"]));
 	
-	if (($_REQUEST["input_type"] == "select") || ($_REQUEST["input_type"] == "radio")){
-		if (($_REQUEST["default_value"] == '') || (stristr($_REQUEST["values"],$_REQUEST["default_value"]) === false)){
+	if (($_POST["input_type"] == "select") || ($_POST["input_type"] == "radio")){
+		if (($_POST["default_value"] == '') || (stristr($_POST["values"],$_POST["default_value"]) === false)){
 			header("Location: ../error_handler.php?eid=1");
 			exit;
 		}
-		elseif($_REQUEST["values"] == ''){
-			header("Location: ../error_handler.php?eid=7");
+		elseif($_POST["values"] == ''){
+			header("Location: ../error_handler.php?eid=8");
 			exit;
 		}
 	}
-	elseif($_REQUEST["input_type"] == "checkbox"){
-		$_REQUEST["default_value"] = '';
+	elseif($_POST["input_type"] == "checkbox"){
+		$_POST["default_value"] = '';
 	}
 	
 	// Make an object from the unchanged field.
-	$old_field = new field($_REQUEST["id"]);
+	$old_field = new field($_POST["id"]);
 	
-	if ($_REQUEST["input_type"] == "text"){
+	if ($_POST["input_type"] == "text"){
 		// Set the default text size
-		if(($_REQUEST["size"] == 0) || (!is_numeric($_REQUEST["size"]))){
-			$_REQUEST["size"] = 255;
+		if(($_POST["size"] == 0) || (!is_numeric($_POST["size"]))){
+			$_POST["size"] = 255;
 		}
 	}
-	elseif($_REQUEST["input_type"] == "multiple"){
-		$_REQUEST["size"] = 64;
+	elseif($_POST["input_type"] == "multiple"){
+		$_POST["size"] = 64;
 	}
 	else{
-		$_REQUEST["size"] = '';
+		$_POST["size"] = '';
 	}
 	
-	$values = explode(",",$_REQUEST["values"]);
+	$values = explode(",",$_POST["values"]);
 	
 	if (is_array($values)){
 		foreach($values as $key => $value){
 			$values[$key] = trim($value);
 		}
+		
+		$values = array_unique($values);
 	}
 	else{
 		$values = array();
@@ -182,22 +186,22 @@ elseif($_REQUEST["action"] == "do_edit"){
 	
 	// Change the field.
 	$query = "UPDATE `anyInventory_fields` SET
-				`name`='".$_REQUEST["name"]."',
-				`input_type`='".$_REQUEST["input_type"]."',
+				`name`='".$_POST["name"]."',
+				`input_type`='".$_POST["input_type"]."',
 				`values`='".$values."',
-				`default_value`='".$_REQUEST["default_value"]."',
-				`size`='".$_REQUEST["size"]."',
-				`highlight`='".((int) (($_REQUEST["highlight"] == "yes") / 1))."'
-				WHERE `id`='".$_REQUEST["id"]."'";
+				`default_value`='".$_POST["default_value"]."',
+				`size`='".$_POST["size"]."',
+				`highlight`='".((int) (($_POST["highlight"] == "yes") / 1))."'
+				WHERE `id`='".$_POST["id"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Change the items table name.
-	$query = "ALTER TABLE `anyInventory_items` CHANGE `".$old_field->name."` `".$_REQUEST["name"]."` ";
- 	$query .= get_mysql_column_type($_REQUEST["input_type"], $_REQUEST["size"], $_REQUEST["values"], $_REQUEST["default_value"]);
+	$query = "ALTER TABLE `anyInventory_items` CHANGE `".$old_field->name."` `".$_POST["name"]."` ";
+ 	$query .= get_mysql_column_type($_POST["input_type"], $_POST["size"], $_POST["values"], $_POST["default_value"]);
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
 	// Make an object from the new field.
-	$new_field = new field($_REQUEST["id"]);
+	$new_field = new field($_POST["id"]);
 	
 	// Remove all of the old categories.
 	if (is_array($old_field->categories)){
@@ -207,8 +211,8 @@ elseif($_REQUEST["action"] == "do_edit"){
 	}
 	
 	// Add the new categories
-	if (is_array($_REQUEST["add_to"])){
-		foreach($_REQUEST["add_to"] as $cat_id){
+	if (is_array($_POST["add_to"])){
+		foreach($_POST["add_to"] as $cat_id){
 			$new_field->add_category($cat_id);
 		}
 	}
@@ -260,30 +264,30 @@ elseif($_REQUEST["action"] == "do_delete"){
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
-elseif($_REQUEST["action"] == "moveup"){
-	if (!$admin_user->can_admin_field($_REQUEST["id"])){
+elseif($_GET["action"] == "moveup"){
+	if (!$admin_user->can_admin_field($_GET["id"])){
 		header("Location: ../error_handler.php?eid=13");
 		exit;
 	}
 	
 	// Move a field up
-	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_REQUEST["i"]." WHERE `importance`='".($_REQUEST["i"] - 1)."'";
+	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_GET["i"]." WHERE `importance`='".($_GET["i"] - 1)."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_REQUEST["i"] - 1)." WHERE `id`='".$_REQUEST["id"]."'";
+	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_GET["i"] - 1)." WHERE `id`='".$_GET["id"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
-elseif($_REQUEST["action"] == "movedown"){
-	if (!$admin_user->can_admin_field($_REQUEST["id"])){
+elseif($_GET["action"] == "movedown"){
+	if (!$admin_user->can_admin_field($_GET["id"])){
 		header("Location: ../error_handler.php?eid=13");
 		exit;
 	}
 	
 	// Move a field down
-	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_REQUEST["i"]." WHERE `importance`='".($_REQUEST["i"] + 1)."'";
+	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_GET["i"]." WHERE `importance`='".($_GET["i"] + 1)."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
-	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_REQUEST["i"] + 1)." WHERE `id`='".$_REQUEST["id"]."'";
+	$query = "UPDATE `anyInventory_fields` SET `importance`=".($_GET["i"] + 1)." WHERE `id`='".$_GET["id"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 

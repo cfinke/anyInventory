@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if (!$admin_user->can_admin_field($_REQUEST["id"])){
+if (!$admin_user->can_admin_field($_GET["id"])){
 	header("Location: ../error_handler.php?eid=13");
 	exit;
 }
@@ -30,13 +30,13 @@ $inHead = '
 $inBodyTag = ' onload="toggle();"';
 $breadcrumbs = 'Administration > <a href="fields.php">Fields</a> > Edit Field';
 
-$field = new field($_REQUEST["id"]);
+$field = new field($_GET["id"]);
 $checked = ($field->highlight) ? ' checked="checked"' : '';
 
 $output = '
 		<form method="post" action="field_processor.php">
 			<input type="hidden" name="action" value="do_edit" />
-			<input type="hidden" name="id" value="'.$_REQUEST["id"].'" />
+			<input type="hidden" name="id" value="'.$_GET["id"].'" />
 			<table class="standardTable" cellspacing="0">
 				<tr class="tableHeader">
 					<td>Edit a Field</td>

@@ -1,5 +1,21 @@
 <?php
 
+// Trim all of the global variables
+
+if (is_array($_GET)){
+	foreach($_GET as $key => $value){
+		if (!is_array($_GET[$key])) $_GET[$key] = trim($value);
+	}
+}
+
+if (is_array($_POST)){
+	foreach($_POST as $key => $value){
+		if (!is_array($_POST[$key])) $_POST[$key] = trim($value);
+	}
+}
+
+$appTitle = 'anyInventory 1.8';
+
 include($DIR_PREFIX."functions.php");
 include($DIR_PREFIX."category_class.php");
 include($DIR_PREFIX."field_class.php");
@@ -15,7 +31,11 @@ if (!stristr($_SERVER["PHP_SELF"], "/login") && !stristr($_SERVER["PHP_SELF"], "
 		(($DIR_PREFIX == '.././') && get_config_value('PP_ADMIN') && !isset($_SESSION["user"]["id"]))){
 		$return_to = $_SERVER["PHP_SELF"]."?";
 		
-		foreach($_REQUEST as $key => $value){
+		foreach($_POST as $key => $value){
+			$return_to .= $key . '=' . $value . '&';
+		}
+		
+		foreach($_GET as $key => $value){
 			$return_to .= $key . '=' . $value . '&';
 		}
 		

@@ -1,9 +1,5 @@
 <?php
 
-error_reporting(E_ALL ^ E_NOTICE);
-
-// This class keeps track of all the information related to a category.
-
 class category {
 	var $id;						// The id in the database anyInventory_categories for this category
 	
@@ -21,7 +17,7 @@ class category {
 	var $field_ids = array();		// An array of all of the ids (found in anyInventory_fields) of the fields that this category uses.
 	var $field_names = array();		// An array of the field names that matches up with the ids found in $this->field_ids.
 	
-	var $auto_inc_field;
+	var $auto_inc_field = false;
 	
 	function category($cat_id){
 		// Set the id of this category.

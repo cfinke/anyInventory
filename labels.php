@@ -25,16 +25,16 @@ if (!function_exists('imagecreate') ||
 			</tr>
 		</table>';
 }
-elseif ($_REQUEST["action"] == "generate"){
-	if (!is_array($_REQUEST["i"])) $_REQUEST["i"] = array($_REQUEST["i"]);
+elseif ($_POST["action"] == "generate"){
+	if (!is_array($_POST["i"])) $_POST["i"] = array($_POST["i"]);
 	
-	foreach($_REQUEST["i"] as $item_id){
+	foreach($_POST["i"] as $item_id){
 		$item = new item($item_id);
 		
-		if ($item->fields[$_REQUEST["f"]] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_REQUEST["f"].'" style="height: 61px;" /><br />';
+		if ($item->fields[$_POST["f"]] != '') $output .= '<img src="label_processor.php?i='.$item_id.'&amp;f='.$_POST["f"].'" style="height: 61px;" /><br />';
 	}
 }
-elseif (!isset($_REQUEST["c"])){
+elseif (!isset($_POST["c"])){
 	$output .= '
 		<table class="standardTable" cellspacing="0">
 			<tr class="tableHeader">
@@ -63,14 +63,14 @@ elseif (!isset($_REQUEST["c"])){
 			</tr>
 		</table>';
 }
-elseif (!isset($_REQUEST["i"])){
-	if (!is_array($_REQUEST["c"])){
-		$_REQUEST["c"] = array($_REQUEST["c"]);
+elseif (!isset($_POST["i"])){
+	if (!is_array($_POST["c"])){
+		$_POST["c"] = array($_POST["c"]);
 	}
 	
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `id` > 0 AND ";
 	
-	foreach($_REQUEST["c"] as $cat_id){
+	foreach($_POST["c"] as $cat_id){
 		if (!$view_user->can_view($cat_id)){
 			header("Location: error_handler.php?eid=12");
 			exit;
@@ -120,7 +120,7 @@ elseif (!isset($_REQUEST["i"])){
 									</td>
 									<td class="form_input">';
 		
-		foreach($_REQUEST["c"] as $cat_id){
+		foreach($_POST["c"] as $cat_id){
 			$options .= get_item_options($cat_id);
 		}
 		

@@ -15,10 +15,10 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 $DIR_PREFIX .= "./";
 
-$db_host = "'.$_REQUEST["db_host"].'";
-$db_name = "'.$_REQUEST["db_name"].'";
-$db_user = "'.$_REQUEST["db_user"].'";
-$db_pass = "'.$_REQUEST["db_pass"].'";
+$db_host = "'.$_POST["db_host"].'";
+$db_name = "'.$_POST["db_name"].'";
+$db_user = "'.$_POST["db_user"].'";
+$db_pass = "'.$_POST["db_pass"].'";
 
 include($DIR_PREFIX."environment.php");
 
@@ -26,25 +26,25 @@ include($DIR_PREFIX."environment.php");
 
 $output .= '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
 
-if ($_REQUEST["action"] == "install"){
+if ($_POST["action"] == "install"){
 	// First, check for missing data.
-	if (strlen(trim($_REQUEST["db_host"])) == 0){
+	if (strlen(trim($_POST["db_host"])) == 0){
 		$errors[] = 'Please enter the name of your MySQL host.';
 	}
-	if (strlen(trim($_REQUEST["db_user"])) == 0){
+	if (strlen(trim($_POST["db_user"])) == 0){
 		$errors[] = 'Please enter the MySQL username.';
 	}
-	if (strlen(trim($_REQUEST["db_name"])) == 0){
+	if (strlen(trim($_POST["db_name"])) == 0){
 		$errors[] = 'Please enter the MySQL database name.';
 	}
-	if (strlen(trim($_REQUEST["db_pass"])) == 0){
+	if (strlen(trim($_POST["db_pass"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
 	}
-	if ($_REQUEST["password_protect_admin"] || $_REQUEST["password_protect_view"]){
-		if (strlen(trim($_REQUEST["username"])) == 0){
+	if ($_POST["password_protect_admin"] || $_POST["password_protect_view"]){
+		if (strlen(trim($_POST["username"])) == 0){
 			$errors[] = 'Please enter a username.';
 		}
-		if (strlen(trim($_REQUEST["password"])) == 0){
+		if (strlen(trim($_POST["password"])) == 0){
 			$errors[] = 'Please enter a password.';
 		}
 	}
@@ -63,11 +63,11 @@ if ($_REQUEST["action"] == "install"){
 	
 	// Check for the correct database information.	
 	if (count($errors) == 0){
-		if(!@mysql_connect($_REQUEST["db_host"],$_REQUEST["db_user"],$_REQUEST["db_pass"])){
+		if(!@mysql_connect($_POST["db_host"],$_POST["db_user"],$_POST["db_pass"])){
 			$errors[] = 'anyInventory could not connect to the MySQL host with the information you provided.';
 		}
-		elseif(!mysql_select_db($_REQUEST["db_name"])){
-			$errors[] = 'anyInventory connected to the MySQL host, but could not find the database '.$_REQUEST["db_name"].'.';
+		elseif(!mysql_select_db($_POST["db_name"])){
+			$errors[] = 'anyInventory connected to the MySQL host, but could not find the database '.$_POST["db_name"].'.';
 		}
 	}
 	
@@ -191,16 +191,16 @@ if ($_REQUEST["action"] == "install"){
 		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('FRONT_PAGE_TEXT','This is the front page and top-level category of anyInventory.  You can <a href=\"docs/\">read the documentation</a> for instructions on using anyInventory, or you can navigate the inventory by clicking on any of the subcategories below; any items in a category will appear below the subcategories.  You can tell where you are in the inventory by the breadcrumb links at the top of each category page.')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_REQUEST["password_protect_view"] == "yes")) / 1)."')";
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_VIEW','".(((int) ($_POST["password_protect_view"] == "yes")) / 1)."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
-		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_REQUEST["password_protect_admin"] == "yes")) / 1)."')";
+		$query = "INSERT INTO `anyInventory_config` (`key`,`value`) VALUES ('PP_ADMIN','".(((int) ($_POST["password_protect_admin"] == "yes")) / 1)."')";
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		$blank = array();
 		
-		$_REQUEST["username"] = ($_REQUEST["username"] == '') ? 'username' : $_REQUEST["username"];
-		$_REQUEST["password"] = ($_REQUEST["password"] == '') ? 'password' : $_REQUEST["password"];
+		$_POST["username"] = ($_POST["username"] == '') ? 'username' : $_POST["username"];
+		$_POST["password"] = ($_POST["password"] == '') ? 'password' : $_POST["password"];
 		
 		$query = "INSERT INTO `anyInventory_users`
 					(`username`,
@@ -209,8 +209,8 @@ if ($_REQUEST["action"] == "install"){
 					 `categories_admin`,
 					 `categories_view`)
 					VALUES
-					('".$_REQUEST["username"]."',
-					 '".md5($_REQUEST["password"])."',
+					('".$_POST["username"]."',
+					 '".md5($_POST["password"])."',
 					 'Administrator',
 					 '".addslashes(serialize($blank))."',
 					 '".addslashes(serialize($blank))."')";
@@ -232,14 +232,14 @@ if ($_REQUEST["action"] == "install"){
 			
 			$output .= '
 				<input type="hidden" name="action" value="try_again" />
-				<input type="hidden" name="db_host" value="'.stripslashes($_REQUEST["db_host"]).'" />
-				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
-				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
-				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
-				<input type="hidden" name="password_protect_view" value="'.stripslashes($_REQUEST["password_protect_view"]).'" />
-				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_REQUEST["password_protect_admin"]).'" />
-				<input type="hidden" name="username" value="'.stripslashes($_REQUEST["username"]).'" />
-				<input type="hidden" name="password" value="'.stripslashes($_REQUEST["password"]).'" />
+				<input type="hidden" name="db_host" value="'.stripslashes($_POST["db_host"]).'" />
+				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
+				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
+				<input type="hidden" name="db_name" value="'.stripslashes($_POST["db_name"]).'" />
+				<input type="hidden" name="password_protect_view" value="'.stripslashes($_POST["password_protect_view"]).'" />
+				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_POST["password_protect_admin"]).'" />
+				<input type="hidden" name="username" value="'.stripslashes($_POST["username"]).'" />
+				<input type="hidden" name="password" value="'.stripslashes($_POST["password"]).'" />
 				<p>The following errors occurred:</p><ul class="error">';
 			
 			foreach($config_errors as $error){
@@ -256,7 +256,7 @@ if ($_REQUEST["action"] == "install"){
 	}
 }
 
-if($_REQUEST["action"] == "try_again"){
+if($_POST["action"] == "try_again"){
 	// The user has done the database setup, but the globals.php file has not been written.
 	$handle = @fopen(realpath("./globals.php"),"w");
 	if ($handle){
@@ -285,14 +285,14 @@ if($_REQUEST["action"] == "try_again"){
 	else{
 		$output .= '
 				<input type="hidden" name="action" value="try_again" />
-				<input type="hidden" name="db_host" value="'.stripslashes($_REQUEST["db_host"]).'" />
-				<input type="hidden" name="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" />
-				<input type="hidden" name="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" />
-				<input type="hidden" name="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" />
-				<input type="hidden" name="password_protect_view" value="'.stripslashes($_REQUEST["password_protect_view"]).'" />
-				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_REQUEST["password_protect_admin"]).'" />
-				<input type="hidden" name="username" value="'.stripslashes($_REQUEST["username"]).'" />
-				<input type="hidden" name="password" value="'.stripslashes($_REQUEST["password"]).'" />
+				<input type="hidden" name="db_host" value="'.stripslashes($_POST["db_host"]).'" />
+				<input type="hidden" name="db_user" value="'.stripslashes($_POST["db_user"]).'" />
+				<input type="hidden" name="db_pass" value="'.stripslashes($_POST["db_pass"]).'" />
+				<input type="hidden" name="db_name" value="'.stripslashes($_POST["db_name"]).'" />
+				<input type="hidden" name="password_protect_view" value="'.stripslashes($_POST["password_protect_view"]).'" />
+				<input type="hidden" name="password_protect_admin" value="'.stripslashes($_POST["password_protect_admin"]).'" />
+				<input type="hidden" name="username" value="'.stripslashes($_POST["username"]).'" />
+				<input type="hidden" name="password" value="'.stripslashes($_POST["password"]).'" />
 				<p>The following errors occurred:</p><ul class="error">';
 		
 		foreach($config_errors as $error){
@@ -308,9 +308,9 @@ if($_REQUEST["action"] == "try_again"){
 	}
 }
 elseif(!$set_config_error){
-	$db_host = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["db_host"]) : 'localhost';
-	$pp_view_checked = ($_REQUEST["password_protect_view"]) ? ' checked="true"' : '';
-	$pp_admin_checked = ($_REQUEST["password_protect_admin"]) ? ' checked="true"' : '';
+	$db_host = ($_POST["action"] != "") ? stripslashes($_POST["db_host"]) : 'localhost';
+	$pp_view_checked = ($_POST["password_protect_view"]) ? ' checked="true"' : '';
+	$pp_admin_checked = ($_POST["password_protect_admin"]) ? ' checked="true"' : '';
 	$inBodyTag = ' onload="toggle();"';
 	
 	if (count($errors) > 0){
@@ -331,15 +331,15 @@ elseif(!$set_config_error){
 						</tr>
 						<tr>
 							<td class="form_label"><label for="db_user">MySQL Username:</label></td>
-							<td class="form_input"><input type="text" name="db_user" id="db_user" value="'.stripslashes($_REQUEST["db_user"]).'" /></td>
+							<td class="form_input"><input type="text" name="db_user" id="db_user" value="'.stripslashes($_POST["db_user"]).'" /></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="db_password">MySQL Password:</label></td>
-							<td class="form_input"><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_REQUEST["db_pass"]).'" /></td>
+							<td class="form_input"><input type="text" name="db_pass" id="db_pass" value="'.stripslashes($_POST["db_pass"]).'" /></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="db_name">MySQL Database:</label></td>
-							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_REQUEST["db_name"]).'" /></td>
+							<td class="form_input"><input type="text" name="db_name" id="db_name" value="'.stripslashes($_POST["db_name"]).'" /></td>
 						</tr>
 						<tr>
 							<td class="form_label"><input onclick="toggle();" type="checkbox" name="password_protect_view" id="password_protect_view" value="yes"'.$pp_view_checked.' /></td>
@@ -351,11 +351,11 @@ elseif(!$set_config_error){
 						</tr>
 						<tr>
 							<td class="form_label"><label for="username">Username:</label></td>
-							<td class="form_input"><input type="text" name="username" id="username" value="'.stripslashes($_REQUEST["username"]).'" /></td>
+							<td class="form_input"><input type="text" name="username" id="username" value="'.stripslashes($_POST["username"]).'" /></td>
 						</tr>
 						<tr>
 							<td class="form_label"><label for="password">Password:</label></td>
-							<td class="form_input"><input type="text" name="password" id="password" value="'.stripslashes($_REQUEST["password"]).'" /></td>
+							<td class="form_input"><input type="text" name="password" id="password" value="'.stripslashes($_POST["password"]).'" /></td>
 						</tr>
 						<tr>
 							<td class="submitButtonRow" colspan="2"><input type="submit" name="submit" id="submit" value="Install" /></td>
@@ -373,16 +373,20 @@ echo '
 		<link rel="stylesheet" type="text/css" href="style.css">
 		'.$inHead.'
 		<script type="text/javascript">
+			<!--
+			
 			function toggle(){
 				document.getElementById(\'username\').disabled = !(document.getElementById(\'password_protect_view\').checked || document.getElementById(\'password_protect_admin\').checked);
 				document.getElementById(\'password\').disabled = !(document.getElementById(\'password_protect_view\').checked || document.getElementById(\'password_protect_admin\').checked);
 				
 				document.getElementById(\'password_protect_admin\').checked = (document.getElementById(\'password_protect_view\').checked || document.getElementById(\'password_protect_admin\').checked);
 			}
+			
+			// -->
 		</script>
 	</head>
 	<body'.$inBodyTag.'>
-		<table style="width: 97%; padding: 10px; margin: 5px; border: 1px black solid; background-color: #ffffff;" cellspacing="0">
+		<table style="width: 99%; margin: 5px; background-color: #ffffff;" cellspacing="0">
 			<tr>
 				<td id="appTitle">
 					anyInventory 1.8
@@ -416,7 +420,7 @@ echo '
 			</tr>
 			<tr class="footerCell">
 				<td>
-					<a href="http://anyinventory.sourceforge.net/">anyInventory, the web\'s most flexible and powerful inventory system</a>
+					<a href="http://anyinventory.sourceforge.net/">anyInventory, the most flexible and powerful web-based inventory system</a>
 				</td>
 			</tr>
 		</table>

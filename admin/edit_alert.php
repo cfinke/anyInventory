@@ -2,6 +2,11 @@
 
 include("globals.php");
 
+if (!$admin_user->can_admin_alert($_REQUEST["id"])){
+	header("Location: ../error_handler.php?eid=13");
+	exit;
+}
+
 $title = "anyInventory: Edit Alert";
 $inHead = '
 	<script type="text/javascript">

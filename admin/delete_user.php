@@ -6,6 +6,14 @@ if ($_REQUEST["id"] == get_config_value('ADMIN_USER_ID')){
 	header("Location: ../error_handler.php?eid=12");
 	exit;
 }
+elseif($_REQUEST["id"] == $admin_user->id){
+	header("Location: ../error_handler.php?eid=14");
+	exit;
+}
+elseif($admin_user->usertype != 'Administrator'){
+	header("Location: ../error_handler.php?eid=11");
+	exit;
+}
 else{
 	$title = "anyInventory: Delete User";
 	$breadcrumbs = 'Administration > <a href="users.php">Users</a> > Delete User';

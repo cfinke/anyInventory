@@ -228,10 +228,8 @@ if ($_POST["action"] == "install"){
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 		
 		if (count($config_errors) == 0){
-			// Delete the install file.
-			if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);
-			
 			header("Location: ./index.php");
+			exit;
 		}
 		else{
 			$set_config_error = true;
@@ -287,9 +285,8 @@ if($_POST["action"] == "try_again"){
 	}
 	
 	if (count($config_errors) == 0){
-		if (is_file($_SERVER["PATH_TRANSLATED"])) @unlink($_SERVER["PATH_TRANSLATED"]);
-		
 		header("Location: index.php");
+		exit;
 	}
 	else{
 		$output .= '

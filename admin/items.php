@@ -7,7 +7,7 @@ $breadcrumbs = ITEMS;
 
 $category = new category(0);
 
-$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
+$query = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
 $result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 
 if (mysql_num_rows($result) > 0){
@@ -45,7 +45,7 @@ if (is_array($cat_ids)){
 		if ($admin_user->can_admin($cat["id"])){
 			$category = new category($cat["id"]);
 			
-			$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
+			$query = "SELECT * FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
 			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 			
 			if (mysql_num_rows($result) > 0){

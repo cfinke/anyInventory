@@ -345,10 +345,13 @@ if ($_POST["action"] == "upgrade"){
 					
 					while ($newestrow = mysql_fetch_array($newestresult)){
 						while ($newrow = mysql_fetch_array($newresult)){
-							$query = "INSERT INTO `anyInventory_values` (`item_id`,`field_id`,`value`) VALUES (?, ?, ?)";
-							$query_data = array($newestrow["id"],$newrow["id"],$newestrow[$newrow["name"]]);
-							$pquery = $db->prepare($query);
-							$xresult = $db->execute($pquery, $query_data);
+							$insert_query = "INSERT INTO `anyInventory_values` 
+										(`item_id`,`field_id`,`value`)
+										VALUES
+										('".$newestrow["id"]."',
+										 '".$newrow["id"]."',
+										 '".$newestrow[$newrow["name"]]."')";
+							@mysql_query($insert_query);
 						}
 						
 						@mysql_data_seek($newresult, 0);
@@ -380,10 +383,8 @@ if ($_POST["action"] == "upgrade"){
 		}
 		
 		if ($globals_written){
-			if (is_file(realpath("install.php"))) @unlink(realpath("install.php"));
-			if (is_file(realpath("upgrade.php"))) @unlink(realpath("upgrade.php"));
-			
 			header("Location: index.php");
+			exit;
 		}
 		else{
 			$globals_error = true;
@@ -435,10 +436,8 @@ if($_POST["action"] == "try_again"){
 	}
 	
 	if ($globals_written){
-		if (is_file(realpath("install.php"))) @unlink(realpath("install.php"));
-		if (is_file(realpath("upgrade.php"))) @unlink(realpath("upgrade.php"));
-		
 		header("Location: index.php");
+		exit;
 	}
 	else{
 		$output .= '

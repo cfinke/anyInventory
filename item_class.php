@@ -3,23 +3,30 @@
 error_reporting(E_ALL ^ E_NOTICE);
 
 class item {
-	var $id;					// The id of the item, matches up with id field in anyInventory_items	
-	var $category;				// A category object of the category to which this item belongs.	
+	var $id;					// The id of the item, matches up with id field in anyInventory_items
+	
+	var $category;				// A category object of the category to which this item belongs.
+	
 	var $name;					// The name of this item.
-	var $fields = array();		// An associative array, keyed by the field name, consisting of the field values.	var $files = array();		// An array of file objects that belong to this item.	
+	var $fields = array();		// An associative array, keyed by the field name, consisting of the field values.
+	var $files = array();		// An array of file objects that belong to this item.
+	
 	function item($item_id){
 		global $db;
 		
-		// Set the item id.		$this->id = $item_id;
+		// Set the item id.
+		$this->id = $item_id;
 		
 		// Get the information about this item.
 		$query = "SELECT * FROM `anyInventory_items` WHERE `id` = '".$this->id."'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
 		$row = mysql_fetch_array($result);
 		
-		// Set the item name.		$this->name = $row["name"];
+		// Set the item name.
+		$this->name = $row["name"];
 		
-		// Create the category object.		$this->category = new category($row["item_category"]);
+		// Create the category object.
+		$this->category = new category($row["item_category"]);
 		
 		$query = "SELECT * FROM `anyInventory_values` WHERE `item_id`='".$this->id."'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
@@ -52,9 +59,9 @@ class item {
 		}
 		
 		// Get each of this item's files and add it to the array.
-		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key_value` = '".$this->id."'";
+		$query = "SELECT `id` FROM `anyInventory_files` WHERE `key` = '".$this->id."'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />' . $query);
-				
+		
 		while ($row = mysql_fetch_array($result)){
 			$this->files[] = new file_object($row["id"]);
 		}

@@ -37,7 +37,7 @@ else{
 		foreach($category->children as $child){
 			if ($i == $num_per_column) $output .= '</td><td style="width: 50%; vertical-align: top;">';
 			
-			$output .= '<a href="'.$_SERVER["PHP_SELF"].'?c='.$child->id.'">'.$child->name.'</a><br />';
+			$output .= '<p><a href="'.$_SERVER["PHP_SELF"].'?c='.$child->id.'"><b>'.$child->name.'</b></a></p>';
 			
 			$i++;
 		}
@@ -46,7 +46,7 @@ else{
 	}
 	
 	// Display any items in this category.
-	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name`";
+	$query = "SELECT `id` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
 	$result = query($query);
 	
 	if (mysql_num_rows($result) > 0){

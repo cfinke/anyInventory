@@ -105,7 +105,7 @@ class category {
 		}
 		
 		// Find the children of the current category
-		$query = "SELECT * FROM `anyInventory_categories` WHERE `parent` = '".$this->id."'";
+		$query = "SELECT * FROM `anyInventory_categories` WHERE `parent` = '".$this->id."' ORDER BY `name` ASC";
 		$result = query($query);
 		
 		// Create a category object for each child and increment the number of children.

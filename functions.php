@@ -313,4 +313,275 @@ function remove_from_fields($cat_id){
 	return;
 }
 
+function display_alert_form($c = null, $title = null, $i = null, $timed = false, $field = null, $condition = null, $value = null, $month = null, $day = null, $year = null, $expire = false, $expire_month = null, $expire_day = null, $expire_year = null){
+	global $db;
+	global $admin_user;
+	
+	if (!is_array($c)) $c = array($c);
+	
+	if ($c[0] == 'doc'){
+		$documentation = true;
+	}
+	else{
+		$documentation = false;
+	}
+	
+	if (!is_array($i)) $i = array($i);
+	
+	if ($timed) $timed_checked = ' checked="checked"';
+	if ($expire) $expire_checked = ' checked="checked"';
+	
+	if ($day == null) $day = date("j");
+	if ($expire_day == null) $expire_day = date("j");
+	
+	if ($month == null) $month = date("n");
+	if ($expire_month == null) $expire_month = date("n");
+	
+	if ($year == null) $year = date("Y");
+	if ($expire_year == null) $expire_year = date("Y");
+	
+	$items = array();
+	$fields = array();
+	
+	if ($documentation){
+		$fields = array(array("id"=>1,"name"=>"Brand"),
+						array("id"=>2,"name"=>"Quantity"),
+						array("id"=>3,"name"=>"UPC"));
+		
+		$items = array(array("id"=>1,"name"=>"Printer Cartridges"),
+					   array("id"=>2,"name"=>"Paper"),
+					   array("id"=>3,"name"=>"Toner"));
+	}
+	else{
+		if (count($c) > 0){
+			$query = "SELECT `id,`name` FROM `anyInventory_fields` WHERE 1 ";
+			
+			foreach($c as $cat_id){
+				if (!$admin_user->can_admin($cat_id)){
+					header("Location: ../error_handler.php?eid=13");
+					exit;
+				}
+				else{
+					$query .= " AND `categories` LIKE '%\"".$cat_id."\"%' AND `input_type` NOT IN ('divider','file','item') ";
+				}
+			}
+			
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);			
+			
+			if (mysql_num_rows($result) == 0){
+				header("Location: ../error_handler.php?eid=3");
+				exit;
+			}
+			else{
+				while ($row = mysql_fetch_array($result)){
+					$fields[] = $row;
+				}
+				
+				$query = "SELECT `id`,`name` FROM `anyInventory_items` WHERE `item_category` IN (".implode(", ",$c).")";
+				$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);				
+				
+				if (mysql_num_rows($result) == 0){
+					header("Location: ../error_handler.php?eid=2");
+					exit;
+				}
+				else{
+					while ($row = mysql_fetch_array($result)){
+						$items[] = $row;
+					}
+				}
+			}
+		}
+		else{
+			header("Location: ../error_handler.php?eid=3");
+			exit;
+		}
+	}
+	
+	$output .= '
+		<tr>
+			<td class="form_label"><label for="title">'.ALERT_TITLE.':</label></td>
+			<td class="form_input"><input type="text" name="title" id="title" value="'.$title.'" maxlength="255" style="width: 100%;" />
+		</tr>
+		<tr>
+			<td class="form_label"><label for="i[]">'.APPLIES_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'i[]\');">'.SELECT_NONE.'</a></small></td>
+			<td class="form_input">
+				<select name="i[]" id="i[]" multiple="multiple" size="10" style="width: 100%;">';
+	
+	foreach($items as $item){
+		$output .= '<option value="'.$item["id"].'"';
+		if (($i == array(null)) || (in_array($item["id"], $i))) $output .= ' selected="selected"';
+		$output .= '>'.$item["name"].'</option>';
+	}
+	
+	$output .= '
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_label"><input onclick="toggle();" type="checkbox" id="timed" name="timed" value="yes"'.$timed_checked.' /></td>
+			<td class="form_input"><label for="timed">'.TIMED_ONLY_LABEL.'</label>.
+			<br /><small>'.TIMED_ONLY_EXPLANATION.'</small></td>
+		</tr>
+		<tr>
+			<td class="form_label"><label for="field">'.FIELD.':</label></td>
+			<td class="form_input">
+				<select name="field" id="field" style="width: 100%;">';
+	
+	foreach($fields as $field_id){
+		$output .= '<option value="'.$field_id["id"].'"';
+		if ($field_id["id"] == $field) $output .= ' selected="selected"';
+		$output .= '> '.$field_id["name"].'</option>';
+	}
+	
+	$output .= '
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_label"><label for="condition">'.CONDITION.':</label></td>
+				<td class="form_input">
+					<select name="condition" id="condition" style="width: 100%;">
+						<option value="=="';if ($condition == '==') $output .= ' selected="selected"'; $output .= '>=</option>
+						<option value="!="';if ($condition == '!=') $output .= ' selected="selected"'; $output .= '>!=</option>
+						<option value="<"';if ($condition == '<') $output .= ' selected="selected"'; $output .= '>&lt;</option>
+						<option value=">"';if ($condition == '>') $output .= ' selected="selected"'; $output .= '>&gt;</option>
+						<option value="<="';if ($condition == '<=') $output .= ' selected="selected"'; $output .= '>&lt;=</option>
+						<option value=">="';if ($condition == '>=') $output .= ' selected="selected"'; $output .= '>&gt;=</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_label"><label for="value">'.VALUE.':</label></td>
+				<td class="form_input"><input type="text" name="value" id="value" value="'.$value.'" style="width: 100%;" /></td>
+			</tr>
+			<tr>
+				<td class="form_label"><label for="month">'.EFFECTIVE_DATE.':</label></td>
+				<td class="form_input">
+					<select name="month" id="month">
+						<option value="1"';if($month == 1) $output .= ' selected="selected"'; $output .= '>'.MONTH_1.'</option>
+						<option value="2"';if($month == 2) $output .= ' selected="selected"'; $output .= '>'.MONTH_2.'</option>
+						<option value="3"';if($month == 3) $output .= ' selected="selected"'; $output .= '>'.MONTH_3.'</option>
+						<option value="4"';if($month == 4) $output .= ' selected="selected"'; $output .= '>'.MONTH_4.'</option>
+						<option value="5"';if($month == 5) $output .= ' selected="selected"'; $output .= '>'.MONTH_5.'</option>
+						<option value="6"';if($month == 6) $output .= ' selected="selected"'; $output .= '>'.MONTH_6.'</option>
+						<option value="7"';if($month == 7) $output .= ' selected="selected"'; $output .= '>'.MONTH_7.'</option>
+						<option value="8"';if($month == 8) $output .= ' selected="selected"'; $output .= '>'.MONTH_8.'</option>
+						<option value="9"';if($month == 9) $output .= ' selected="selected"'; $output .= '>'.MONTH_9.'</option>
+						<option value="10"';if($month == 10) $output .= ' selected="selected"'; $output .= '>'.MONTH_10.'</option>
+						<option value="11"';if($month == 11) $output .= ' selected="selected"'; $output .= '>'.MONTH_11.'</option>
+						<option value="12"';if($month == 12) $output .= ' selected="selected"'; $output .= '>'.MONTH_12.'</option>
+					</select>
+					<select name="day" id="day">';
+	
+	for ($i = 1; $i <= 31; $i++){
+		$output .= '<option value="'.$i.'"';if($day == $i) $output .= ' selected="selected"'; $output .= '>'.$i.'</option>';
+	}
+	
+	$output .= '
+					</select>,
+					<select name="year" id="year">';
+	
+	for ($i = 0; $i < 20; $i++){
+		$output .= '<option value="'.($i + date("Y")).'"';
+		if ($year == ($i + date("Y"))) $output .= ' selected="selected"';
+		$output .= '>'.($i + $year).'</option>';
+	}
+	
+	$output .= '
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="form_label"><label for="expire_month">'.EXPIRATION_DATE.':</label></td>
+				<td class="form_input">
+					<select name="expire_month" id="expire_month">
+						<option value="1"';if($expire_month == 1) $output .= ' selected="selected"'; $output .= '>'.MONTH_1.'</option>
+						<option value="2"';if($expire_month == 2) $output .= ' selected="selected"'; $output .= '>'.MONTH_2.'</option>
+						<option value="3"';if($expire_month == 3) $output .= ' selected="selected"'; $output .= '>'.MONTH_3.'</option>
+						<option value="4"';if($expire_month == 4) $output .= ' selected="selected"'; $output .= '>'.MONTH_4.'</option>
+						<option value="5"';if($expire_month == 5) $output .= ' selected="selected"'; $output .= '>'.MONTH_5.'</option>
+						<option value="6"';if($expire_month == 6) $output .= ' selected="selected"'; $output .= '>'.MONTH_6.'</option>
+						<option value="7"';if($expire_month == 7) $output .= ' selected="selected"'; $output .= '>'.MONTH_7.'</option>
+						<option value="8"';if($expire_month == 8) $output .= ' selected="selected"'; $output .= '>'.MONTH_8.'</option>
+						<option value="9"';if($expire_month == 9) $output .= ' selected="selected"'; $output .= '>'.MONTH_9.'</option>
+						<option value="10"';if($expire_month == 10) $output .= ' selected="selected"'; $output .= '>'.MONTH_10.'</option>
+						<option value="11"';if($expire_month == 11) $output .= ' selected="selected"'; $output .= '>'.MONTH_11.'</option>
+						<option value="12"';if($expire_month == 12) $output .= ' selected="selected"'; $output .= '>'.MONTH_12.'</option>
+					</select>
+					<select name="expire_day" id="expire_day">';
+	
+	for ($i = 1; $i <= 31; $i++){
+		$output .= '<option value="'.$i.'"';if($expire_day == $i) $output .= ' selected="selected"'; $output .= '>'.$i.'</option>';
+	}
+	
+	$output .= '
+					</select>,
+					<select name="expire_year" id="expire_year">';
+	
+	for ($i = 0; $i < 20; $i++){
+		$output .= '<option value="'.($i + date("Y")).'"';
+		if ($expire_year == ($i + date("Y"))) $output .= ' selected="selected"';
+		$output .= '>'.($i + $year).'</option>';
+	}
+	
+	$output .= '
+					</select>
+					<input type="checkbox" name="expire" id="expire" value="yes" onclick="toggle();"'.$expire_checked.' /> <label for="expire">'.ALLOW_EXPIRATION.'</label>
+				</td>
+			</tr>';
+	
+	return $output;
+}
+
+function display_field_form($c_options = null, $name = null, $input_type = null, $field_values = null, $default_value = null, $size = null, $highlight = false){
+	if ($highlight) $checked = ' checked="checked"';
+	if (!is_array($field_values)) $field_values = array($field_values);
+	
+	$output .= '
+		<tr>
+			<td class="form_label"><label for="name">'.NAME.':</label></td>
+			<td class="form_input"><input type="text" name="name" id="name" value="'.$name.'" maxlength="64" /></td>
+		</tr>
+		<tr>
+			<td class="form_label"><label for="name">'.DATA_TYPE.':</label></td>
+			<td class="form_input">
+				<select name="input_type" id="input_type" onchange="toggle();">
+					<option value="text"';if ($input_type == 'text') $output .= ' selected="selected"'; $output .= '>'.TEXT.'</option>
+					<option value="select"';if ($input_type == 'select') $output .= ' selected="selected"'; $output .= '>'.SELECT_BOX.'</option>
+					<option value="multiple"';if ($input_type == 'multiple') $output .= ' selected="selected"'; $output .= '>'.MULTIPLE.'</option>
+					<option value="checkbox"';if ($input_type == 'checkbox') $output .= ' selected="selected"'; $output .= '>'.CHECKBOX.'</option>
+					<option value="radio"';if ($input_type == 'radio') $output .= ' selected="selected"'; $output .= '>'.RADIO.'</option>
+					<option value="item"';if ($input_type == 'item') $output .= ' selected="selected"'; $output .= '>'.ITEMS.'</option>
+					<option value="file"';if ($input_type == 'file') $output .= ' selected="selected"'; $output .= '>'.FILE.'</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="form_label"><label for="field_values">'.VALUES.':</label></td>
+			<td class="form_input"><input type="text" name="field_values" id="field_values" value="'.implode(", ",$field_values).'" /><br /><small>'.VALUES_INFO.'</small></td>
+		</tr>
+		<tr>
+			<td class="form_label"><label for="default_value">'.DEFAULT_VALUE.':</label></td>
+			<td class="form_input"><input type="text" name="default_value" id="default_value" value="'.$default_value.'" /><br /><small>'.DEFAULT_VALUE_INFO.'</small></td>
+		</tr>
+		<tr>
+			<td class="form_label"><label for="size">'.SIZE.':</label></td>
+			<td class="form_input"><input type="text" name="size" id="size" value="'.$size.'" /><br /><small>'.SIZE_INFO.'</small></td>
+		</tr>
+		<tr>
+			<td class="form_label"><input type="checkbox" name="highlight" id="highlight" value="yes"'.$checked.' /></td>
+			<td class="form_input"><label for="highlight">'.HIGHLIGHT_FIELD.'</label></td>
+		</tr>
+		<tr>
+			<td class="form_label"><label for="add_to[]">'.APPLIES_TO.':</label><br /><small><a href="javascript:void(0);" onclick="selectNone(\'\add_to[]\');">'.SELECT_NONE.'</a></small></td>
+			<td class="form_input">
+				<select name="add_to[]" id="add_to[]" multiple="multiple" size="10" style="width: 100%;">
+					'.$c_options.'
+				</select>
+			</td>
+		</tr>';
+	
+	return $output;
+}
+
 ?>

@@ -2,6 +2,11 @@
 
 include("globals.php");
 
+if (!$admin_user->can_admin_field($_REQUEST["id"])){
+	header("Location: ../error_handler.php?eid=13");
+	exit;
+}
+
 $title = "anyInventory: Edit Field";
 $inHead = '
 	<script type="text/javascript">
@@ -84,7 +89,7 @@ $output = '
 								<td class="form_label">Apply field to:</td>
 								<td class="form_input">
 									<select name="add_to[]" id="add_to[]" multiple="multiple" size="10" style="width: 100%;">
-										'.get_category_options($field->categories).'
+										'.$admin_user->get_admin_categories_options($field->categories).'
 									</select>
 								</td>
 							</tr>

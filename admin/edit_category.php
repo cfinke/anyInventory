@@ -2,7 +2,11 @@
 
 include("globals.php");
 
-if ($_REQUEST["id"] == '0'){
+if (!$admin_user->can_admin($_REQUEST["id"])){
+	header("Location: ../error_handler.php?eid=13");
+	exit;
+}
+elseif ($_REQUEST["id"] == '0'){
 	header("Location: ../error_handler.php?eid=7");
 	exit;
 }
@@ -38,7 +42,7 @@ else{
 							<td class="form_input">
 								<select name="parent" id="parent">
 									<option value="0">Top Level</option>
-									'.get_category_options($category->parent_id, false, $exclude).'
+									'.$admin_user->get_admin_categories_options($category->parent_id, false, $exclude).'
 								</select>
 							</td>
 						</tr>

@@ -17,11 +17,14 @@ if (mysql_num_rows($result) > 0){
 		$table_rows .= '
 			<tr>
 				<td align="center" style="width: 15ex; white-space: nowrap;">
-					<nobr>
-						[<a href="edit_user.php?id='.$row["id"].'">edit</a>]';
+					<nobr>';
 		
-		if ($row["id"] != $admin_id){
-			$table_rows .= ' [<a href="delete_user.php?id='.$row["id"].'">delete</a>] ';
+		if (($admin_user->usertype == 'Administrator') || ($_SESSION["user"]["id"] == $row["id"])){
+			$table_rows .= ' [<a href="edit_user.php?id='.$row["id"].'">edit</a>] ';
+			
+			if ($row["id"] != $admin_id){
+				$table_rows .= ' [<a href="delete_user.php?id='.$row["id"].'">delete</a>] ';
+			}
 		}
 		
 		$table_rows .= '

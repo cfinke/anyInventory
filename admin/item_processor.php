@@ -4,6 +4,11 @@ include("globals.php");
 include("remote_functions.php");
 
 if ($_REQUEST["action"] == "do_add"){
+	if (!$admin_user->can_admin($_REQUEST["c"])){
+		header("Location: ../error_handler.php?eid=13");
+		exit;
+	}
+	
 	// Add an item
 	
 	// Create an object of the current category
@@ -166,6 +171,11 @@ elseif($_REQUEST["action"] == "do_edit"){
 	// Create an object of the old item
 	$item = new item($_REQUEST["id"]);
 	
+	if (!$admin_user->can_admin($item->category->id)){
+		header("Location: ../error_handler.php?eid=13");
+		exit;
+	}
+	
 	// Put the query together
 	$query = "UPDATE `anyInventory_items` SET ";
 	
@@ -250,7 +260,7 @@ elseif($_REQUEST["action"] == "do_edit"){
 					$remote_url = $_REQUEST[str_replace(" ","_",$field->name)."remote"];
 					if (extension_loaded('curl') && url_is_type($remote_url,array("image/jpeg", "image/jpg", "image/png"))) {
 						// Remote URL is an image; download it and add it as a local image
-
+						
 						// Make the correct extension
 						$remote_headers = url_headers($remote_url);
 						$remote_content_type = $remote_headers["content-type"]; // image/xyz
@@ -262,12 +272,12 @@ elseif($_REQUEST["action"] == "do_edit"){
 						do {
 							$filename = $key.".".$i++.".".$parsed_url["host"].str_replace(array("/"," "),"_",$parsed_url["path"]).".".$extension[1];
 						} while (is_file(realpath($DIR_PREFIX."item_files/")."/".$filename));
-
+						
 						// Copy file
 						if(!curl_copy($remote_url, realpath($DIR_PREFIX."item_files/")."/".$filename)){
 							die("Could not download/store remote file.");
 						}
-
+						
 						// Update DB
 						$newquery = "INSERT INTO `anyInventory_files` 
 							(`key`,
@@ -335,6 +345,14 @@ elseif($_REQUEST["action"] == "do_edit"){
 	mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 elseif($_REQUEST["action"] == "do_move"){
+	// Create an object of the old item
+	$item = new item($_REQUEST["id"]);
+	
+	if (!$admin_user->can_admin($item->category->id) || !$admin_user->can_admin($_REQUEST["c"])){
+		header("Location: ../error_handler.php?eid=13");
+		exit;
+	}
+	
 	// Move an item.
 	
 	$query = "UPDATE `anyInventory_items` SET `item_category`='".$_REQUEST["c"]."' WHERE `id`='".$_REQUEST["id"]."'";
@@ -345,6 +363,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 	
 	if ($_REQUEST["delete"] == "Delete"){
 		$item = new item($_REQUEST["id"]);
+		
+		if (!$admin_user->can_admin($item->category->id)){
+			header("Location: ../error_handler.php?eid=13");
+			exit;
+		}
 		
 		if (is_array($item->files)){
 			foreach($item->files as $file){

@@ -2,7 +2,7 @@
 
 include("globals.php");
 
-if ($admin_user->can_admin_field($_REQUEST["id"])){
+if (!$admin_user->can_admin_field($_REQUEST["id"])){
 	header("Location: ../error_handler.php?eid=13");
 	exit;
 }

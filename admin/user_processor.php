@@ -3,6 +3,11 @@
 include("globals.php");
 
 if ($_REQUEST["action"] == "do_add"){
+	if (!$admin_user->usertype != 'Administrator'){
+		header("Location: ../error_handler.php?eid=11");
+		exit;
+	}
+	
 	// Check for duplicate username
 	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_REQUEST["username"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -28,6 +33,11 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
+	if (!$admin_user->usertype != 'Administrator'){
+		header("Location: ../error_handler.php?eid=11");
+		exit;
+	}
+	
 	// Check for duplicate username
 	$query = "SELECT `username` FROM `anyInventory_users` WHERE `username`='".$_REQUEST["username"]."' AND `id` != '".$_REQUEST["id"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -51,7 +61,23 @@ elseif($_REQUEST["action"] == "do_edit"){
 		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	}
 }
+elseif($_REQUEST["action"] == "do_edit_own"){
+	if ($_REQUEST["id"] != $_SESSION["user"]["id"]){
+		header("Location: ../error_handler.php?eid=10");
+		exit;
+	}
+	
+	if ($_REQUEST["password"] != ''){
+		$query = "UPDATE `anyInventory_users` SET `password`='".md5($_REQUEST["password"])."' WHERE `id`='".$_REQUEST["id"]."'";
+		mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+	}
+}
 elseif($_REQUEST["action"] == "do_delete"){
+	if (!$admin_user->usertype != 'Administrator'){
+		header("Location: ../error_handler.php?eid=11");
+		exit;
+	}
+	
 	if ($_REQUEST["delete"] == "Delete"){
 		$query = "DELETE FROM `anyInventory_users` WHERE `id`='".$_REQUEST["id"]."'";
 		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);

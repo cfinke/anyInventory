@@ -57,7 +57,7 @@ else{
 								<td class="form_label">Categories:</td>
 								<td class="form_input">
 									<select name="c[]" id="c[]" multiple="multiple" size="10" style="width: 100%;">
-										'.get_category_options($alert->category_ids).'
+										'.$admin_user->get_admin_categories_options($alert->category_ids).'
 									</select>
 								</td>
 							</tr>

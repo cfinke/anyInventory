@@ -12,10 +12,16 @@ if ($_REQUEST["action"] == "log_in"){
 	}
 	else{
 		if (md5($_REQUEST["password"]) == mysql_result($result, 0, 'password')){
+			unset($_SESSION["user"]);
+			
 			$_SESSION["user"] = array();
 			$_SESSION["user"]["id"] = mysql_result($result, 0, 'id');
 			$_SESSION["user"]["username"] = mysql_result($result, 0, 'username');
 			$_SESSION["user"]["usertype"] = mysql_result($result, 0, 'usertype');
+			
+			if ($_REQUEST["return_to"] == ''){
+				$_REQUEST["return_to"] = './admin/items.php';
+			}
 			
 			header("Location: ".$_REQUEST["return_to"]);
 			exit;

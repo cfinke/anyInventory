@@ -42,41 +42,43 @@ $cat_ids = get_category_array();
 
 if (is_array($cat_ids)){
 	foreach($cat_ids as $cat){
-		$category = new category($cat["id"]);
-		
-		$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
-		$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
-		
-		if (mysql_num_rows($result) > 0){
-			$table_rows .= '
-				<table class="standardTable" cellspacing="0">
-					<tr class="tableHeader">
-						<td>'.$category->get_breadcrumb_admin_links().'</td>
-						<td style="text-align: right;">[<a href="add_item.php?c='.$category->id.'">Add an item here</a>]</td>
-					</tr>
-					<tr>
-						<td class="tableData" colspan="2">
-							<table>';
+		if ($admin_user->can_admin($cat["id"])){
+			$category = new category($cat["id"]);
 			
-			while($row = mysql_fetch_assoc($result)){
+			$query = "SELECT `id`,`name`,`item_category` FROM `anyInventory_items` WHERE `item_category`='".$category->id."' ORDER BY `name` ASC";
+			$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
+			
+			if (mysql_num_rows($result) > 0){
 				$table_rows .= '
-					<tr>
-						<td style="width: 18ex; text-align: center; white-space: nowrap;">
-							<nobr>
-								<a href="edit_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[edit]</a>
-								<a href="move_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[move]</a>
-								<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[delete]</a>
-							</nobr>
-						</td>
-						<td><a href="../index.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.$row["name"].'</a></td>
-					</tr>';
+					<table class="standardTable" cellspacing="0">
+						<tr class="tableHeader">
+							<td>'.$category->get_breadcrumb_admin_links().'</td>
+							<td style="text-align: right;">[<a href="add_item.php?c='.$category->id.'">Add an item here</a>]</td>
+						</tr>
+						<tr>
+							<td class="tableData" colspan="2">
+								<table>';
+				
+				while($row = mysql_fetch_assoc($result)){
+					$table_rows .= '
+						<tr>
+							<td style="width: 18ex; text-align: center; white-space: nowrap;">
+								<nobr>
+									<a href="edit_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[edit]</a>
+									<a href="move_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[move]</a>
+									<a href="delete_item.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">[delete]</a>
+								</nobr>
+							</td>
+							<td><a href="../index.php?c='.$row["item_category"].'&amp;id='.$row["id"].'">'.$row["name"].'</a></td>
+						</tr>';
+				}
+				
+				$table_rows .= '
+								</table>
+							</td>
+						</tr>
+					</table>';
 			}
-			
-			$table_rows .= '
-							</table>
-						</td>
-					</tr>
-				</table>';
 		}
 	}
 }

@@ -7,6 +7,11 @@ $breadcrumbs = 'Administration > <a href="items.php">Items</a> > Move Item';
 
 $item = new item($_REQUEST["id"]);
 
+if (!$admin_user->can_admin($item->category->id)){
+	header("Location: ../error_handler.php?eid=13");
+	exit;
+}
+
 $output = '
 		<form method="post" action="item_processor.php">
 			<input type="hidden" name="action" value="do_move" />

@@ -33,6 +33,7 @@ $errors[11] = array('Access Denied','You must be an administrator to add, edit, 
 $errors[12] = array('Access Denied','You do not have viewing priveleges for this category.','breadcrumbs'=>'Access Denied');
 $errors[13] = array('Access Denied','You do not have editing priveleges for this category.','breadcrumbs'=>'Access Denied');
 $errors[14] = array('Access Denied','You cannot delete your own user account.','breadcrumbs'=>'Access Denied');
+$errors[15] = array('Access Denied','You must be an administrator to access this page.','breadcrumbs'=>'Access Denied');
 $breadcrumbs = $errors[$_REQUEST["eid"]]["breadcrumbs"];
 
 $output = '

@@ -2,6 +2,11 @@
 
 include("globals.php");
 
+if (!$admin_user->usertype != 'Administrator'){
+	header("Location: ../error_handler.php?eid=15");
+	exit;
+}
+
 $replace = array('"','&',"\\",':',';','`','[',']');
 
 if ($_REQUEST["action"] == "do_edit_auto_inc_field"){

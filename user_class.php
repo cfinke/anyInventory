@@ -68,12 +68,12 @@ class user {
 		}
 	}
 	
-	function get_admin_categories_options($selected = null, $multiple = true){
+	function get_admin_categories_options($selected = null, $multiple = true, $exclude = null){
 		if ($this->usertype == 'Administration'){
-			return get_category_options($selected, $multiple);
+			return get_category_options($selected, $multiple, $exclude);
 		}
 		else{
-			return category_array_to_options($this->categories_admin, $selected);
+			return category_array_to_options($this->categories_admin, $selected, $exclude);
 		}
 	}
 	

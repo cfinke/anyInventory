@@ -2,6 +2,11 @@
 
 include("globals.php");
 
+if (!$admin_user->usertype != 'Administrator'){
+	header("Location: ../error_handler.php?eid=15");
+	exit;
+}
+
 switch($_REQUEST["id"]){
 	case 'auto_inc_field':
 		$title = "anyInventory: Edit Auto-Increment Field";

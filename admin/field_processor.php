@@ -5,6 +5,15 @@ include("globals.php");
 $replace = array("'",'"','&',"\\",':',';','`','[',']');
 
 if ($_REQUEST["action"] == "do_add"){
+	if (is_array($_REQUEST["add_to"])){
+		foreach($_REQUEST["add_to"] as $cat_id){
+			if (!$admin_user->can_admin($cat_id)){
+				header("Location: ../error_handler.php?eid=13");
+				exit;
+			}
+		}
+	}
+	
 	// Check for duplicate fields
 	
 	$_REQUEST["name"] = stripslashes($_REQUEST["name"]);
@@ -90,6 +99,15 @@ if ($_REQUEST["action"] == "do_add"){
 	}
 }
 elseif($_REQUEST["action"] == "do_edit"){
+	if (is_array($_REQUEST["add_to"])){
+		foreach($_REQUEST["add_to"] as $cat_id){
+	 		if (!$admin_user->can_admin($cat_id) || (!$admin_user->can_admin_field($_REQUEST["id"]))){
+				header("Location: ../error_handler.php?eid=13");
+				exit;
+			}
+		}
+	}
+	
 	$query = "SELECT `id` FROM `anyInventory_fields` WHERE `name`='".$_REQUEST["name"]."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 	
@@ -191,6 +209,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 	// Delete a field.
 	
 	if ($_REQUEST["delete"] == "Delete"){
+		if (!$admin_user->can_admin_field($_REQUEST["id"])){
+			header("Location: ../error_handler.php?eid=13");
+			exit;
+		}
+		
 		// Create an object of the field.
 		$field = new field($_REQUEST["id"]);
 		
@@ -228,6 +251,11 @@ elseif($_REQUEST["action"] == "do_delete"){
 	}
 }
 elseif($_REQUEST["action"] == "moveup"){
+	if (!$admin_user->can_admin_field($_REQUEST["id"])){
+		header("Location: ../error_handler.php?eid=13");
+		exit;
+	}
+	
 	// Move a field up
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_REQUEST["i"]." WHERE `importance`='".($_REQUEST["i"] - 1)."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
@@ -236,6 +264,11 @@ elseif($_REQUEST["action"] == "moveup"){
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);
 }
 elseif($_REQUEST["action"] == "movedown"){
+	if (!$admin_user->can_admin_field($_REQUEST["id"])){
+		header("Location: ../error_handler.php?eid=13");
+		exit;
+	}
+	
 	// Move a field down
 	$query = "UPDATE `anyInventory_fields` SET `importance`=".$_REQUEST["i"]." WHERE `importance`='".($_REQUEST["i"] + 1)."'";
 	$result = mysql_query($query) or die(mysql_error() . '<br /><br />'. $query);

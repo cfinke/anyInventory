@@ -5,7 +5,7 @@ include("globals.php");
 $title = 'anyInventory: Items';
 
 $output .= '<p><a href="add_item.php">Add an item.</a></p>';
-$query = "SELECT * FROM `anyInventory_items`";
+$query = "SELECT * FROM `anyInventory_items` ORDER BY `name` ASC";
 $result = query($query);
 
 $table_set .= '<tr class="row_head"><td>&nbsp;</td><td>Name</td></tr>';

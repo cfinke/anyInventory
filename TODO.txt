@@ -55,3 +55,5 @@ Label Sheets
 BUGS
 ========================================
 Remove multiple checkbox values
+Make "Highlight this field" a label
+Highlight fields on edit page as well

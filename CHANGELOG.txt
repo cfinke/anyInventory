@@ -1,18 +1,25 @@
-2004/06/27
-Finished up with the new layout
-Added request variables to admin globals redirect
-Removed image directory check from install file
-Added class includes to upgrade.php
-Updated documentation
+2004/06/28
+Fixed bug when trying to move a category to its own subcategory
+Added if-extension-is-installed for curl
 
-2004/06/25
-Added automatic remote image downloading and thumbnailing.
+2004/07/01
+Added admin hiding to header and links to category list
+Rewrote version features
+Added auto-increment field option
+Added error for empty value list
+Fixed empty default value bug
+Removed commented query() calls
+Added link back to item page on item admin
+Added admin hiding to header and links to category list
+Removed item id from add_item page
+Removed advanced search and brought back quick search
+Removed item listing from top level category if there are no items there
+Added field highlight column
 
-2004/06/24
-Fixed category drop-down bug, added multiple-caegory alerts
-
-2004/06/23
-Add built-in password protection for the admin directory
-Removed query() function and replaced with mysql_query calls
-Fixed too-long URL bug
-Fixed bug in item_processor when deleting a file
+2004/07/02
+Added field highlighting
+Fixed alert display for individual items
+Made field name up to 64 characters
+Added error checking to alert processor
+Fixed alert submit button
+Added lots of error checking to field_processor

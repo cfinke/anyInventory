@@ -372,7 +372,7 @@ if ($_POST["action"] == "upgrade"){
 					if (($row["Field"] != 'id') && ($row["Field"] != 'name') && ($row["Field"] != 'item_category')){
 						$newquery = "ALTER TABLE `anyInventory_items` DROP `".$row["Field"]."`";
 						$newresult = $db->query($newquery);
-                                                if(DB::isError($newresult)) die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newquery);
+                        if(DB::isError($newresult)) die($newresult->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br />' . $newquery);
 					}
 				}
 			case '1.9':
@@ -418,14 +418,14 @@ if ($_POST["action"] == "upgrade"){
 						" . $db->quoteIdentifier('file_id') . " INT,
 						" . $db->quoteIdentifier('part_id') . " INT,
 						" . $db->quoteIdentifier('data') . " LONG,
-						CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
+						CONSTRAINT " . $db->quoteIdentifier('file_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
 				}
 				elseif($_POST["db_type"] == 'mysql'){
 					$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
 						" . $db->quoteIdentifier('file_id') . " INT,
 						" . $db->quoteIdentifier('part_id') . " INT,
 						" . $db->quoteIdentifier('data') . " LONGTEXT,
-						CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
+						CONSTRAINT " . $db->quoteIdentifier('file_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
 				}
 				$result = $db->query($query);
 				if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);
@@ -447,6 +447,8 @@ if ($_POST["action"] == "upgrade"){
 				
 				@exec("rm -rf item_files");
 			case '2.0rc1':
+				$query = "ALTER TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " CHANGE " . $db->quoteIdentifier('data_id') . " " . $db->quoteIdentifier('file_id') . " INT";
+				$result = $db->query($query);
 		}
 		
 		// Attempt to write the globals file.

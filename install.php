@@ -164,17 +164,17 @@ if ($_POST["action"] == "install"){
 		
 		if($_POST['db_type'] == 'oci8'){
 			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
-				" . $db->quoteIdentifier('data_id') . " INT,
+				" . $db->quoteIdentifier('file_id') . " INT,
 				" . $db->quoteIdentifier('part_id') . " INT,
 				" . $db->quoteIdentifier('data') . " LONG,
-				CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . "))";
+				CONSTRAINT " . $db->quoteIdentifier('file_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
 		}
 		elseif($_POST["db_type"] == 'mysql'){
 			$query = "CREATE TABLE " . $db->quoteIdentifier('anyInventory_file_data') . " (
-				" . $db->quoteIdentifier('data_id') . " INT,
+				" . $db->quoteIdentifier('file_id') . " INT,
 				" . $db->quoteIdentifier('part_id') . " INT,
 				" . $db->quoteIdentifier('data') . " LONGTEXT,
-				CONSTRAINT " . $db->quoteIdentifier('data_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("data_id") .", " . $db->quoteIdentifier("part_id") . "))";
+				CONSTRAINT " . $db->quoteIdentifier('file_id_part_id'). " UNIQUE (" . $db->quoteIdentifier("file_id") .", " . $db->quoteIdentifier("part_id") . "))";
 		}
 		$result = $db->query($query);
 		if(DB::isError($result)) die($result->getMessage().'<br /><br />'.SUBMIT_REPORT . '<br /><br />'. $query);

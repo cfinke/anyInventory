@@ -20,7 +20,7 @@ to these functions.
 
 Upgrading
 =========
-To upgrade to anyInventory 1.2, simply overwrite the files from your current
+To upgrade to anyInventory 1.3, simply overwrite the files from your current
 version.
 
 Using anyInventory

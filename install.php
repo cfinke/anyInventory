@@ -233,9 +233,9 @@ if ($_POST["action"] == "install"){
 				" . $db->quoteIdentifier('condition') .
 				" varchar(32) default '==',
 				" . $db->quoteIdentifier('value') . " varchar( 255 ) default '',
-				" . $db->quoteIdentifier('modified') . " timestamp ,
-				" . $db->quoteIdentifier('time') . " timestamp ,
-				" . $db->quoteIdentifier('expire_time') . " timestamp ,
+				" . $db->quoteIdentifier('modified') . " timestamp DEFAULT CURRENT_TIMESTAMP,
+				" . $db->quoteIdentifier('time') . " timestamp DEFAULT CURRENT_TIMESTAMP,
+				" . $db->quoteIdentifier('expire_time') . " timestamp DEFAULT CURRENT_TIMESTAMP,
 				" . $db->quoteIdentifier('timed') . " int DEFAULT '0',
 				" . $db->quoteIdentifier('category_ids') . " VARCHAR(2000),
 				CONSTRAINT " . $db->quoteIdentifier('id5') . " UNIQUE ( " . $db->quoteIdentifier('id') . " )
@@ -250,9 +250,9 @@ if ($_POST["action"] == "install"){
 				" . $db->quoteIdentifier('condition') .
 				" varchar(32) default '==',
 				" . $db->quoteIdentifier('value') . " varchar( 255 ) default '',
-				" . $db->quoteIdentifier('modified') . " timestamp ,
-				" . $db->quoteIdentifier('time') . " timestamp ,
-				" . $db->quoteIdentifier('expire_time') . " timestamp ,
+				" . $db->quoteIdentifier('modified') . " timestamp DEFAULT CURRENT_TIMESTAMP,
+				" . $db->quoteIdentifier('time') . " timestamp DEFAULT CURRENT_TIMESTAMP,
+				" . $db->quoteIdentifier('expire_time') . " timestamp DEFAULT CURRENT_TIMESTAMP,
 				" . $db->quoteIdentifier('timed') . " int DEFAULT '0',
 				" . $db->quoteIdentifier('category_ids') . " text,
 				CONSTRAINT " . $db->quoteIdentifier('id5') . " UNIQUE ( " . $db->quoteIdentifier('id') . " )
